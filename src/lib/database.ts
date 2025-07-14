@@ -13,17 +13,50 @@ import type {
 // User operations
 export const userService = {
   async getProfile(userId: string) {
-    const { data, error } = await supabase
-      .from('users')
-      .select(`
-        *,
-        organization:organizations(*)
-      `)
-      .eq('id', userId)
-      .single();
+    try {
+      // First try to get user with organization
+      const { data, error } = await supabase
+        .from('users')
+        .select(`
+          *,
+          organization:organizations(*)
+        `)
+        .eq('id', userId)
+        .single();
 
-    if (error) throw error;
-    return data;
+      if (error) {
+        // If the join fails, try without the organization join
+        console.warn('Failed to get user with organization, trying without join:', error.message);
+        const { data: userData, error: userError } = await supabase
+          .from('users')
+          .select('*')
+          .eq('id', userId)
+          .single();
+
+        if (userError) throw userError;
+
+        // Try to get organization separately
+        if (userData.organization_id) {
+          const { data: orgData } = await supabase
+            .from('organizations')
+            .select('*')
+            .eq('id', userData.organization_id)
+            .single();
+
+          return {
+            ...userData,
+            organization: orgData
+          };
+        }
+
+        return userData;
+      }
+
+      return data;
+    } catch (error) {
+      console.error('Error in getProfile:', error);
+      throw error;
+    }
   },
 
   async updateProfile(userId: string, updates: Partial<User>) {
