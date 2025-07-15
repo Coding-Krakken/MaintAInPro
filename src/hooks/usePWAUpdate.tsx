@@ -21,7 +21,9 @@ interface PWAUpdateProviderProps {
   children: React.ReactNode;
 }
 
-export const PWAUpdateProvider: React.FC<PWAUpdateProviderProps> = ({ children }) => {
+export const PWAUpdateProvider: React.FC<PWAUpdateProviderProps> = ({
+  children,
+}) => {
   const [updateAvailable, setUpdateAvailable] = useState(false);
   const [wb, setWb] = useState<Workbox | null>(null);
 
@@ -31,14 +33,11 @@ export const PWAUpdateProvider: React.FC<PWAUpdateProviderProps> = ({ children }
 
       workbox.addEventListener('waiting', () => {
         setUpdateAvailable(true);
-        toast(
-          'A new version is available! Click to update.',
-          {
-            duration: 0,
-            icon: '🔄',
-            id: 'app-update',
-          }
-        );
+        toast('A new version is available! Click to update.', {
+          duration: 0,
+          icon: '🔄',
+          id: 'app-update',
+        });
       });
 
       workbox.addEventListener('controlling', () => {

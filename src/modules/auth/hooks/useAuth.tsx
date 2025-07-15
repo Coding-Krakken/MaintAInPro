@@ -3,11 +3,14 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { authService } from '../services/authService';
 import { AuthState } from '../types/auth';
 
-const AuthContext = createContext<AuthState & {
-  signIn: (email: string, password: string) => Promise<void>;
-  signOut: () => Promise<void>;
-  refetchUser: () => Promise<void>;
-} | null>(null);
+const AuthContext = createContext<
+  | (AuthState & {
+      signIn: (email: string, password: string) => Promise<void>;
+      signOut: () => Promise<void>;
+      refetchUser: () => Promise<void>;
+    })
+  | null
+>(null);
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
@@ -34,24 +37,59 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     enabled: !!session,
     staleTime: 5 * 60 * 1000, // 5 minutes
     retry: false,
+    refetchOnWindowFocus: false,
+    // Add a timeout to prevent hanging
+    meta: {
+      timeout: 10000, // 10 seconds
+    },
   });
 
   useEffect(() => {
     let mounted = true;
 
-    // Get initial session
-    authService.getSession().then((session) => {
-      if (mounted) {
-        setSession(session);
+    const initAuth = async () => {
+      try {
+        console.log('🔍 Initializing auth...');
+
+        // Get initial session
+        const session = await authService.getSession();
+        if (mounted) {
+          console.log('📊 Initial session:', session ? 'found' : 'not found');
+          setSession(session);
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.error('❌ Error initializing auth:', error);
+        if (mounted) {
+          setSession(null);
+          setIsLoading(false);
+        }
+      }
+    };
+
+    // Set a timeout to prevent infinite loading
+    const timeoutId = setTimeout(() => {
+      if (mounted && isLoading) {
+        console.warn('⚠️ Auth initialization timed out, stopping loading');
+        setSession(null);
         setIsLoading(false);
       }
-    });
+    }, 5000); // 5 seconds timeout (reduced from 10)
+
+    initAuth();
 
     // Listen to auth changes
-    const { data: { subscription } } = authService.onAuthStateChange(async (authState) => {
+    const {
+      data: { subscription },
+    } = authService.onAuthStateChange(async authState => {
       if (!mounted) return;
 
-      setSession(authState.user ? {} : null); // Simplified session handling
+      console.log(
+        '🔄 Auth state changed:',
+        authState.user ? 'signed in' : 'signed out'
+      );
+
+      setSession(authState.session); // Use the actual session object
       setIsLoading(false);
 
       if (authState.user) {
@@ -65,9 +103,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     return () => {
       mounted = false;
+      clearTimeout(timeoutId);
       subscription.unsubscribe();
     };
-  }, [queryClient]);
+  }, [queryClient, isLoading]);
 
   const signIn = async (email: string, password: string) => {
     setIsLoading(true);
@@ -100,7 +139,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const value = {
     user: user || null,
     session,
-    isLoading: isLoading || isUserLoading,
+    isLoading: isLoading || (!!session && isUserLoading),
     isAuthenticated: !!session && !!user,
     error: error?.message || null,
     signIn,

@@ -1,0 +1,14 @@
+<testsuites id="" name="" tests="2" failures="0" skipped="0" errors="0" time="4.098075">
+<testsuite name="auth.setup.ts" timestamp="2025-07-15T18:06:11.395Z" hostname="setup" tests="1" failures="0" skipped="0" time="0.917" errors="0">
+<testcase name="authenticate" classname="auth.setup.ts" time="0.917">
+</testcase>
+</testsuite>
+<testsuite name="simple.spec.ts" timestamp="2025-07-15T18:06:11.395Z" hostname="chromium" tests="1" failures="0" skipped="0" time="0.926" errors="0">
+<testcase name="Simple Test › should load the application" classname="simple.spec.ts" time="0.926">
+<system-out>
+<![CDATA[Page title: MaintainPro CMMS
+]]>
+</system-out>
+</testcase>
+</testsuite>
+</testsuites>

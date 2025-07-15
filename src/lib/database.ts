@@ -1,39 +1,61 @@
 import { supabase } from './supabase';
-import type { 
-  User, 
-  Equipment, 
-  WorkOrder, 
-  Part, 
+import type {
+  User,
+  Equipment,
+  WorkOrder,
+  Part,
   Inventory,
   Vendor,
   PMSchedule,
-  Warehouse
+  Warehouse,
 } from '../types';
 
 // User operations
 export const userService = {
   async getProfile(userId: string) {
     try {
-      // First try to get user with organization
-      const { data, error } = await supabase
+      console.log('🔍 Getting profile for user:', userId);
+
+      // Add timeout to prevent hanging
+      const profilePromise = supabase
         .from('users')
-        .select(`
+        .select(
+          `
           *,
           organization:organizations(*)
-        `)
+        `
+        )
         .eq('id', userId)
         .single();
 
+      // Create a timeout promise
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Profile query timeout')), 8000)
+      );
+
+      // Race the profile query against the timeout
+      const { data, error } = (await Promise.race([
+        profilePromise,
+        timeoutPromise,
+      ])) as any;
+
       if (error) {
+        console.warn('Failed to get user with organization:', error.message);
+
         // If the join fails, try without the organization join
-        console.warn('Failed to get user with organization, trying without join:', error.message);
         const { data: userData, error: userError } = await supabase
           .from('users')
           .select('*')
           .eq('id', userId)
           .single();
 
-        if (userError) throw userError;
+        if (userError) {
+          console.warn(
+            'Failed to get user without organization:',
+            userError.message
+          );
+          return null;
+        }
 
         // Try to get organization separately
         if (userData.organization_id) {
@@ -45,25 +67,67 @@ export const userService = {
 
           return {
             ...userData,
-            organization: orgData
+            organization: orgData,
           };
         }
 
         return userData;
       }
 
+      console.log('✅ Successfully got user profile');
       return data;
     } catch (error) {
-      console.error('Error in getProfile:', error);
-      throw error;
+      console.error('❌ Error in getProfile:', error);
+      return null;
     }
   },
 
   async updateProfile(userId: string, updates: Partial<User>) {
+    // Transform camelCase to snake_case for database
+    const dbUpdates: any = {};
+
+    Object.entries(updates).forEach(([key, value]) => {
+      switch (key) {
+        case 'firstName':
+          dbUpdates.first_name = value;
+          break;
+        case 'lastName':
+          dbUpdates.last_name = value;
+          break;
+        case 'lastLoginAt':
+          dbUpdates.last_login =
+            value instanceof Date ? value.toISOString() : value;
+          break;
+        case 'organizationId':
+          dbUpdates.organization_id = value;
+          break;
+        case 'isActive':
+          dbUpdates.is_active = value;
+          break;
+        case 'avatarUrl':
+          dbUpdates.avatar_url = value;
+          break;
+        case 'employeeId':
+          dbUpdates.employee_id = value;
+          break;
+        case 'createdAt':
+          dbUpdates.created_at =
+            value instanceof Date ? value.toISOString() : value;
+          break;
+        case 'updatedAt':
+          dbUpdates.updated_at =
+            value instanceof Date ? value.toISOString() : value;
+          break;
+        default:
+          // For fields that don't need transformation (email, role, permissions, phone, department)
+          dbUpdates[key] = value;
+      }
+    });
+
     const { data, error } = await supabase
       .from('users')
       .update({
-        ...updates,
+        ...dbUpdates,
         updated_at: new Date().toISOString(),
       })
       .eq('id', userId)
@@ -91,11 +155,13 @@ export const equipmentService = {
   async getEquipment(organizationId: string) {
     const { data, error } = await supabase
       .from('equipment')
-      .select(`
+      .select(
+        `
         *,
         warehouse:warehouses(name),
         created_by:users(first_name, last_name)
-      `)
+      `
+      )
       .eq('organization_id', organizationId)
       .order('created_at', { ascending: false });
 
@@ -106,7 +172,8 @@ export const equipmentService = {
   async getEquipmentById(id: string) {
     const { data, error } = await supabase
       .from('equipment')
-      .select(`
+      .select(
+        `
         *,
         warehouse:warehouses(*),
         created_by:users(first_name, last_name, email),
@@ -117,7 +184,8 @@ export const equipmentService = {
           priority,
           created_at
         )
-      `)
+      `
+      )
       .eq('id', id)
       .single();
 
@@ -125,7 +193,9 @@ export const equipmentService = {
     return data;
   },
 
-  async createEquipment(equipment: Omit<Equipment, 'id' | 'created_at' | 'updated_at'>) {
+  async createEquipment(
+    equipment: Omit<Equipment, 'id' | 'created_at' | 'updated_at'>
+  ) {
     const { data, error } = await supabase
       .from('equipment')
       .insert([equipment])
@@ -152,10 +222,7 @@ export const equipmentService = {
   },
 
   async deleteEquipment(id: string) {
-    const { error } = await supabase
-      .from('equipment')
-      .delete()
-      .eq('id', id);
+    const { error } = await supabase.from('equipment').delete().eq('id', id);
 
     if (error) throw error;
   },
@@ -166,13 +233,15 @@ export const workOrderService = {
   async getWorkOrders(organizationId: string) {
     const { data, error } = await supabase
       .from('work_orders')
-      .select(`
+      .select(
+        `
         *,
         equipment:equipment(name, code),
         warehouse:warehouses(name),
         requested_by:users!work_orders_requested_by_fkey(first_name, last_name),
         assigned_to:users!work_orders_assigned_to_fkey(first_name, last_name)
-      `)
+      `
+      )
       .eq('organization_id', organizationId)
       .order('created_at', { ascending: false });
 
@@ -183,7 +252,8 @@ export const workOrderService = {
   async getWorkOrderById(id: string) {
     const { data, error } = await supabase
       .from('work_orders')
-      .select(`
+      .select(
+        `
         *,
         equipment:equipment(*),
         warehouse:warehouses(*),
@@ -193,7 +263,8 @@ export const workOrderService = {
           *,
           part:parts(*)
         )
-      `)
+      `
+      )
       .eq('id', id)
       .single();
 
@@ -201,7 +272,9 @@ export const workOrderService = {
     return data;
   },
 
-  async createWorkOrder(workOrder: Omit<WorkOrder, 'id' | 'created_at' | 'updated_at'>) {
+  async createWorkOrder(
+    workOrder: Omit<WorkOrder, 'id' | 'created_at' | 'updated_at'>
+  ) {
     const { data, error } = await supabase
       .from('work_orders')
       .insert([workOrder])
@@ -228,10 +301,7 @@ export const workOrderService = {
   },
 
   async deleteWorkOrder(id: string) {
-    const { error } = await supabase
-      .from('work_orders')
-      .delete()
-      .eq('id', id);
+    const { error } = await supabase.from('work_orders').delete().eq('id', id);
 
     if (error) throw error;
   },
@@ -242,11 +312,13 @@ export const inventoryService = {
   async getParts(organizationId: string) {
     const { data, error } = await supabase
       .from('parts')
-      .select(`
+      .select(
+        `
         *,
         warehouse:warehouses(name),
         inventory:inventory(*)
-      `)
+      `
+      )
       .eq('organization_id', organizationId)
       .order('created_at', { ascending: false });
 
@@ -257,7 +329,8 @@ export const inventoryService = {
   async getPartById(id: string) {
     const { data, error } = await supabase
       .from('parts')
-      .select(`
+      .select(
+        `
         *,
         warehouse:warehouses(*),
         inventory:inventory(*),
@@ -266,7 +339,8 @@ export const inventoryService = {
           performed_by:users(first_name, last_name),
           work_order:work_orders(work_order_number, title)
         )
-      `)
+      `
+      )
       .eq('id', id)
       .single();
 
@@ -300,7 +374,11 @@ export const inventoryService = {
     return data;
   },
 
-  async updateInventory(partId: string, warehouseId: string, updates: Partial<Inventory>) {
+  async updateInventory(
+    partId: string,
+    warehouseId: string,
+    updates: Partial<Inventory>
+  ) {
     const { data, error } = await supabase
       .from('inventory')
       .upsert({
@@ -390,10 +468,7 @@ export const vendorService = {
   },
 
   async deleteVendor(id: string) {
-    const { error } = await supabase
-      .from('vendors')
-      .delete()
-      .eq('id', id);
+    const { error } = await supabase.from('vendors').delete().eq('id', id);
 
     if (error) throw error;
   },
@@ -404,11 +479,13 @@ export const pmService = {
   async getSchedules(organizationId: string) {
     const { data, error } = await supabase
       .from('pm_schedules')
-      .select(`
+      .select(
+        `
         *,
         equipment:equipment(name, code),
         assigned_to:users(first_name, last_name)
-      `)
+      `
+      )
       .eq('organization_id', organizationId)
       .order('next_due', { ascending: true });
 
@@ -419,11 +496,13 @@ export const pmService = {
   async getScheduleById(id: string) {
     const { data, error } = await supabase
       .from('pm_schedules')
-      .select(`
+      .select(
+        `
         *,
         equipment:equipment(*),
         assigned_to:users(*)
-      `)
+      `
+      )
       .eq('id', id)
       .single();
 
@@ -431,7 +510,9 @@ export const pmService = {
     return data;
   },
 
-  async createSchedule(schedule: Omit<PMSchedule, 'id' | 'created_at' | 'updated_at'>) {
+  async createSchedule(
+    schedule: Omit<PMSchedule, 'id' | 'created_at' | 'updated_at'>
+  ) {
     const { data, error } = await supabase
       .from('pm_schedules')
       .insert([schedule])
@@ -458,10 +539,7 @@ export const pmService = {
   },
 
   async deleteSchedule(id: string) {
-    const { error } = await supabase
-      .from('pm_schedules')
-      .delete()
-      .eq('id', id);
+    const { error } = await supabase.from('pm_schedules').delete().eq('id', id);
 
     if (error) throw error;
   },
@@ -472,10 +550,12 @@ export const warehouseService = {
   async getWarehouses(organizationId: string) {
     const { data, error } = await supabase
       .from('warehouses')
-      .select(`
+      .select(
+        `
         *,
         manager:users(first_name, last_name, email)
-      `)
+      `
+      )
       .eq('organization_id', organizationId)
       .order('created_at', { ascending: false });
 
@@ -486,10 +566,12 @@ export const warehouseService = {
   async getWarehouseById(id: string) {
     const { data, error } = await supabase
       .from('warehouses')
-      .select(`
+      .select(
+        `
         *,
         manager:users(*)
-      `)
+      `
+      )
       .eq('id', id)
       .single();
 
@@ -497,7 +579,9 @@ export const warehouseService = {
     return data;
   },
 
-  async createWarehouse(warehouse: Omit<Warehouse, 'id' | 'created_at' | 'updated_at'>) {
+  async createWarehouse(
+    warehouse: Omit<Warehouse, 'id' | 'created_at' | 'updated_at'>
+  ) {
     const { data, error } = await supabase
       .from('warehouses')
       .insert([warehouse])
@@ -524,10 +608,7 @@ export const warehouseService = {
   },
 
   async deleteWarehouse(id: string) {
-    const { error } = await supabase
-      .from('warehouses')
-      .delete()
-      .eq('id', id);
+    const { error } = await supabase.from('warehouses').delete().eq('id', id);
 
     if (error) throw error;
   },
@@ -541,21 +622,21 @@ export const analyticsService = {
       activeWorkOrders,
       overdueWorkOrders,
       lowStockParts,
-      overduePM
+      overduePM,
     ] = await Promise.all([
       // Total equipment count
       supabase
         .from('equipment')
         .select('id', { count: 'exact' })
         .eq('organization_id', organizationId),
-      
+
       // Active work orders
       supabase
         .from('work_orders')
         .select('id', { count: 'exact' })
         .eq('organization_id', organizationId)
         .in('status', ['pending', 'in_progress']),
-      
+
       // Overdue work orders
       supabase
         .from('work_orders')
@@ -563,30 +644,35 @@ export const analyticsService = {
         .eq('organization_id', organizationId)
         .lt('scheduled_end', new Date().toISOString())
         .in('status', ['pending', 'in_progress']),
-      
+
       // Low stock parts
       supabase
         .from('parts')
-        .select(`
+        .select(
+          `
           id,
           inventory!inner(quantity_on_hand, quantity_reserved)
-        `)
+        `
+        )
         .eq('organization_id', organizationId),
-      
+
       // Overdue PM schedules
       supabase
         .from('pm_schedules')
         .select('id', { count: 'exact' })
         .eq('organization_id', organizationId)
         .eq('is_active', true)
-        .lt('next_due', new Date().toISOString())
+        .lt('next_due', new Date().toISOString()),
     ]);
 
     // Calculate low stock count
-    const lowStockCount = lowStockParts.data?.filter(part => {
-      const inventory = part.inventory?.[0];
-      return inventory && inventory.quantity_on_hand <= (part as any).reorder_point;
-    }).length || 0;
+    const lowStockCount =
+      lowStockParts.data?.filter(part => {
+        const inventory = part.inventory?.[0];
+        return (
+          inventory && inventory.quantity_on_hand <= (part as any).reorder_point
+        );
+      }).length || 0;
 
     return {
       totalEquipment: equipmentCount.count || 0,
@@ -605,10 +691,13 @@ export const analyticsService = {
 
     if (error) throw error;
 
-    const statusCounts = data.reduce((acc, wo) => {
-      acc[wo.status] = (acc[wo.status] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    const statusCounts = data.reduce(
+      (acc, wo) => {
+        acc[wo.status] = (acc[wo.status] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
     return statusCounts;
   },

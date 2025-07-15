@@ -1,9 +1,13 @@
 import { supabase } from '../../../lib/supabase';
 import { userService } from '../../../lib/database';
 import type { User, AuthState } from '../types/auth';
+import type { Permission } from '../../../types';
 
 export class AuthService {
-  async signIn(email: string, password: string): Promise<{ user: User | null; error: string | null }> {
+  async signIn(
+    email: string,
+    password: string
+  ): Promise<{ user: User | null; error: string | null }> {
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
@@ -16,21 +20,25 @@ export class AuthService {
 
       // Get user profile from our users table
       const userProfile = await userService.getProfile(data.user.id);
-      
+
       // Update last login
       await userService.updateProfile(data.user.id, {
         lastLoginAt: new Date(),
       });
-      
-      return { user: userProfile as any, error: null };
-    } catch (error: any) {
-      return { user: null, error: error.message };
+
+      return { user: userProfile, error: null };
+    } catch (error: unknown) {
+      return {
+        user: null,
+        error:
+          error instanceof Error ? error.message : 'An unknown error occurred',
+      };
     }
   }
 
   async signUp(
-    email: string, 
-    password: string, 
+    email: string,
+    password: string,
     userData: {
       first_name: string;
       last_name: string;
@@ -54,11 +62,13 @@ export class AuthService {
         // Create user profile in our users table
         const { data: userProfile, error: profileError } = await supabase
           .from('users')
-          .insert([{
-            id: data.user.id,
-            email: data.user.email!,
-            ...userData,
-          }])
+          .insert([
+            {
+              id: data.user.id,
+              email: data.user.email!,
+              ...userData,
+            },
+          ])
           .select()
           .single();
 
@@ -66,12 +76,16 @@ export class AuthService {
           return { user: null, error: profileError.message };
         }
 
-        return { user: userProfile as any, error: null };
+        return { user: userProfile, error: null };
       }
 
       return { user: null, error: 'User registration failed' };
-    } catch (error: any) {
-      return { user: null, error: error.message };
+    } catch (error: unknown) {
+      return {
+        user: null,
+        error:
+          error instanceof Error ? error.message : 'An unknown error occurred',
+      };
     }
   }
 
@@ -79,27 +93,52 @@ export class AuthService {
     try {
       const { error } = await supabase.auth.signOut();
       return { error: error?.message || null };
-    } catch (error: any) {
-      return { error: error.message };
+    } catch (error: unknown) {
+      return {
+        error:
+          error instanceof Error ? error.message : 'An unknown error occurred',
+      };
     }
   }
 
   async getCurrentUser(): Promise<User | null> {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) return null;
+      console.log('🔍 Getting current user...');
 
-      return await userService.getProfile(user.id) as any;
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) {
+        console.log('❌ No authenticated user found');
+        return null;
+      }
+
+      console.log('✅ Auth user found, getting profile...');
+
+      // Try to get the user profile from our users table
+      const userProfile = await userService.getProfile(user.id);
+
+      // If user exists in auth but not in our users table, return null for now
+      // This will cause the auth hook to not be in a loading state
+      if (!userProfile) {
+        console.warn('⚠️ User exists in auth but not in users table:', user.id);
+        return null;
+      }
+
+      console.log('✅ User profile retrieved successfully');
+      return userProfile as User;
     } catch (error) {
-      console.error('Error getting current user:', error);
+      console.error('❌ Error getting current user:', error);
       return null;
     }
   }
 
   async getSession() {
     try {
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       return session;
     } catch (error) {
       console.error('Error getting session:', error);
@@ -107,18 +146,26 @@ export class AuthService {
     }
   }
 
-  async updateProfile(updates: Partial<User>): Promise<{ user: User | null; error: string | null }> {
+  async updateProfile(
+    updates: Partial<User>
+  ): Promise<{ user: User | null; error: string | null }> {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
       if (!user) {
         return { user: null, error: 'No authenticated user' };
       }
 
       const updatedProfile = await userService.updateProfile(user.id, updates);
-      return { user: updatedProfile as any, error: null };
-    } catch (error: any) {
-      return { user: null, error: error.message };
+      return { user: updatedProfile, error: null };
+    } catch (error: unknown) {
+      return {
+        user: null,
+        error:
+          error instanceof Error ? error.message : 'An unknown error occurred',
+      };
     }
   }
 
@@ -127,20 +174,23 @@ export class AuthService {
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: `${window.location.origin}/reset-password`,
       });
-      
+
       return { error: error?.message || null };
-    } catch (error: any) {
-      return { error: error.message };
+    } catch (error: unknown) {
+      return {
+        error:
+          error instanceof Error ? error.message : 'An unknown error occurred',
+      };
     }
   }
 
   onAuthStateChange(callback: (state: AuthState) => void) {
     return supabase.auth.onAuthStateChange(async (_, session) => {
       let user: User | null = null;
-      
+
       if (session?.user) {
         try {
-          user = await userService.getProfile(session.user.id) as any;
+          user = await userService.getProfile(session.user.id);
         } catch (error) {
           console.error('Error fetching user profile:', error);
         }
@@ -158,28 +208,32 @@ export class AuthService {
   // Permission checking methods
   hasPermission(user: User | null, permission: string): boolean {
     if (!user) return false;
-    
+
     // Super admins have all permissions
     if (user.role === 'super_admin') return true;
-    
+
     // Check if user has specific permission
-    return user.permissions?.includes(permission as any) || false;
+    return user.permissions?.includes(permission as Permission) || false;
   }
 
   hasRole(user: User | null, role: string | string[]): boolean {
     if (!user) return false;
-    
+
     const roles = Array.isArray(role) ? role : [role];
     return roles.includes(user.role);
   }
 
   canAccessModule(user: User | null, module: string): boolean {
     if (!user) return false;
-    
+
     // Define module permissions
     const modulePermissions: Record<string, string[]> = {
       equipment: ['equipment.view', 'equipment.create', 'equipment.edit'],
-      work_orders: ['work_orders.view', 'work_orders.create', 'work_orders.edit'],
+      work_orders: [
+        'work_orders.view',
+        'work_orders.create',
+        'work_orders.edit',
+      ],
       inventory: ['inventory.view', 'inventory.create', 'inventory.edit'],
       vendors: ['vendors.view', 'vendors.create', 'vendors.edit'],
       preventive_maintenance: ['pm.view', 'pm.create', 'pm.edit'],
@@ -188,7 +242,9 @@ export class AuthService {
     };
 
     const requiredPermissions = modulePermissions[module] || [];
-    return requiredPermissions.some(permission => this.hasPermission(user, permission));
+    return requiredPermissions.some(permission =>
+      this.hasPermission(user, permission)
+    );
   }
 }
 

@@ -2,7 +2,8 @@
 
 ## 🚀 IMPORTANT: Follow These Steps in Order
 
-Your Supabase credentials are already configured. Now you need to set up the database and create user accounts.
+Your Supabase credentials are already configured. Now you need to set up the database and create
+user accounts.
 
 ### Step 1: Set up Supabase Database Schema
 
@@ -61,6 +62,7 @@ node setup-database.js
 ```
 
 This will create:
+
 - Demo organization (Demo Manufacturing Corp)
 - Main warehouse
 - User profiles linked to the auth accounts
@@ -80,12 +82,12 @@ Then visit: http://localhost:3001
 
 Try logging in with any of the test accounts:
 
-| Email | Password | Role | Access |
-|-------|----------|------|--------|
-| admin@demo.com | password123 | Super Admin | Full Access |
-| manager@demo.com | password123 | Admin | Management Access |
-| tech@demo.com | password123 | Technician | Work Orders & Equipment |
-| inventory@demo.com | password123 | User | Inventory Management |
+| Email              | Password    | Role        | Access                  |
+| ------------------ | ----------- | ----------- | ----------------------- |
+| admin@demo.com     | password123 | Super Admin | Full Access             |
+| manager@demo.com   | password123 | Admin       | Management Access       |
+| tech@demo.com      | password123 | Technician  | Work Orders & Equipment |
+| inventory@demo.com | password123 | User        | Inventory Management    |
 
 ## 🔧 If You Still See a White Screen
 
@@ -99,6 +101,6 @@ Try logging in with any of the test accounts:
 ✅ Supabase credentials configured  
 ❌ Database schema (needs Step 1)  
 ❌ Auth users (needs Step 2)  
-❌ User profiles (needs Step 3)  
+❌ User profiles (needs Step 3)
 
 Follow the steps above in order to complete the setup!

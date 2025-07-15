@@ -39,7 +39,7 @@ export interface Warehouse {
   updatedAt: Date;
 }
 
-export type UserRole = 
+export type UserRole =
   | 'super_admin'
   | 'org_admin'
   | 'warehouse_manager'
@@ -48,7 +48,7 @@ export type UserRole =
   | 'inventory_clerk'
   | 'viewer';
 
-export type Permission = 
+export type Permission =
   | 'users:read'
   | 'users:write'
   | 'work_orders:read'
@@ -170,7 +170,7 @@ export interface SubscriptionLimits {
 
 export type Priority = 'low' | 'medium' | 'high' | 'critical';
 
-export type Status = 
+export type Status =
   | 'active'
   | 'inactive'
   | 'pending'
@@ -294,7 +294,7 @@ export type ColorScheme = 'light' | 'dark' | 'system';
 
 export type ComponentSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
-export type ComponentVariant = 
+export type ComponentVariant =
   | 'primary'
   | 'secondary'
   | 'success'
@@ -423,7 +423,14 @@ export interface PMSchedule {
   equipment_id: string;
   name: string;
   description?: string;
-  frequency_type: 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'yearly' | 'hours' | 'cycles';
+  frequency_type:
+    | 'daily'
+    | 'weekly'
+    | 'monthly'
+    | 'quarterly'
+    | 'yearly'
+    | 'hours'
+    | 'cycles';
   frequency_value: number;
   estimated_hours?: number;
   assigned_to?: string;

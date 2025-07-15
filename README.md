@@ -1,83 +1,270 @@
-# MaintAInPro CMMS
+# MaintAInPro CMMS - Enterprise Maintenance Management System
 
-A comprehensive Computerized Maintenance Management System (CMMS) built with modern web technologies.
+## 🎯 Overview
 
-## 🚀 **Quick Start**
+**MaintAInPro** is a comprehensive, enterprise-grade Computerized Maintenance Management System
+(CMMS) built with modern web technologies. It provides organizations with powerful tools to manage
+work orders, equipment, inventory, preventive maintenance, and vendor relationships.
 
-1. **Setup**: Follow the [Setup Guide](Documentation/SETUP.md) for complete installation instructions
-2. **Credentials**: Check [CREDENTIALS.md](CREDENTIALS.md) for test account credentials
-3. **Documentation**: Browse the [Documentation](Documentation/) folder for detailed guides
+### 🚀 Current Status: Phase 1 Complete ✅
 
-## 📋 **Features**
+**Phase 1 - Foundation & Core Infrastructure** has been successfully implemented with:
 
-- **Work Order Management** - Create, assign, and track maintenance work orders
-- **Equipment Asset Management** - Comprehensive equipment tracking and maintenance history
-- **Parts & Inventory** - Inventory management with automated reordering
-- **Preventive Maintenance** - Scheduled maintenance with automated reminders
-- **Vendor Management** - Contractor and vendor relationship management
-- **Reporting & Analytics** - Real-time dashboards and comprehensive reporting
-- **User Role Management** - Granular permissions and multi-tenant support
+- ✅ Complete testing framework (Vitest + Playwright)
+- ✅ Comprehensive UI component library
+- ✅ Robust authentication system
+- ✅ Database integration with type safety
+- ✅ Cross-browser E2E testing
+- ✅ Development environment setup
 
-## 🛠️ **Technology Stack**
+## 🏗️ Technology Stack
 
-- **Frontend**: React 18, TypeScript, Tailwind CSS, Vite
-- **Backend**: Supabase (PostgreSQL, Authentication, Real-time)
-- **State Management**: TanStack Query (React Query)
-- **Routing**: React Router
-- **Testing**: Vitest, Playwright
-- **Deployment**: Netlify
+### Frontend
 
-## 📚 **Documentation**
+- **React 18** with TypeScript
+- **Vite** for fast development and building
+- **Tailwind CSS** for styling
+- **React Router** for navigation
+- **React Query** for server state management
 
-Complete documentation is available in the [Documentation](Documentation/) folder:
+### Backend
 
-- [Setup Guide](Documentation/SETUP.md) - Complete setup instructions
-- [Technical Stack](Documentation/TechnicalStack.md) - Detailed technical overview
-- [API Specification](Documentation/APISpecification.md) - API endpoints and usage
-- [User Roles & Permissions](Documentation/UserRolesPermissions.md) - User management system
-- [Module Documentation](Documentation/) - Detailed module guides
+- **Supabase** (PostgreSQL) for database
+- **Row Level Security** for data protection
+- **Real-time subscriptions** for live updates
+- **JWT authentication** with session management
 
-## 🔐 **Test Credentials**
+### Testing
 
-See [CREDENTIALS.md](CREDENTIALS.md) for complete list of test accounts with different roles and permissions.
+- **Vitest** for unit testing
+- **React Testing Library** for component testing
+- **Playwright** for end-to-end testing
+- **MSW** for API mocking
 
-## 🏗️ **Project Structure**
+## 🚀 Quick Start
 
-```
-src/
-├── components/          # Reusable UI components
-├── modules/            # Feature-specific modules
-│   ├── auth/          # Authentication
-│   ├── equipment/     # Equipment management
-│   ├── inventory/     # Parts & inventory
-│   ├── work-orders/   # Work order management
-│   └── ...
-├── pages/             # Main application pages
-├── services/          # API services
-├── types/             # TypeScript type definitions
-└── utils/             # Utility functions
-```
+### Prerequisites
 
-## 🚀 **Development**
+- Node.js 18+
+- npm or yarn
+
+### Setup
 
 ```bash
+# Clone repository
+git clone https://github.com/Coding-Krakken/MaintAInPro.git
+cd MaintAInPro
+
 # Install dependencies
 npm install
 
 # Start development server
 npm run dev
-
-# Run tests
-npm run test
-
-# Build for production
-npm run build
 ```
 
-## 📝 **License**
+### Test Credentials
 
-This project is for demonstration purposes.
+- **Email**: admin@demo.com
+- **Password**: admin123
+
+Visit [http://localhost:3000](http://localhost:3000) to see the application.
+
+## 📋 Available Scripts
+
+```bash
+# Development
+npm run dev              # Start development server
+npm run build           # Build for production
+npm run preview         # Preview production build
+
+# Testing
+npm run test            # Run unit tests
+npm run test:coverage   # Run tests with coverage
+npm run test:e2e        # Run E2E tests
+
+# Code Quality
+npm run lint            # Run ESLint
+npm run format          # Format with Prettier
+npm run type-check      # TypeScript checking
+```
+
+## 🎨 Features
+
+### ✅ Implemented (Phase 1)
+
+- **Authentication & Authorization**: Secure login with session management
+- **UI Component Library**: Reusable components with TypeScript
+- **Database Integration**: Type-safe database operations
+- **Testing Framework**: Unit and E2E testing with high coverage
+- **Responsive Design**: Mobile-first approach with Tailwind CSS
+
+### � In Development (Phase 2)
+
+- **Work Order Management**: Create, assign, and track maintenance tasks
+- **Equipment & Asset Management**: QR code scanning and asset tracking
+- **Parts & Inventory**: Real-time inventory management
+- **Mobile Interface**: Touch-friendly mobile experience
+
+### 📅 Planned (Phase 3-4)
+
+- **Preventive Maintenance**: Automated scheduling and compliance
+- **Vendor Management**: Contractor workflows and performance tracking
+- **Analytics & Reporting**: Advanced dashboards and insights
+- **Multi-tenant Architecture**: Enterprise-grade scaling
+
+## 🏗️ Project Structure
+
+```
+MaintAInPro/
+├── src/
+│   ├── components/          # Reusable UI components
+│   │   ├── ui/             # Base components (Button, Input, Modal)
+│   │   └── layout/         # Layout components
+│   ├── modules/            # Feature modules
+│   │   └── auth/           # Authentication module
+│   ├── pages/              # Page components
+│   ├── hooks/              # Custom React hooks
+│   ├── lib/                # External library configurations
+│   ├── services/           # API services
+│   ├── test/               # Test utilities
+│   ├── types/              # TypeScript definitions
+│   └── utils/              # Utility functions
+├── tests/e2e/              # End-to-end tests
+├── Documentation/          # Project documentation
+├── supabase/              # Database migrations
+└── public/                # Static assets
+```
+
+## 🧪 Testing
+
+### Unit Tests
+
+- **Framework**: Vitest with React Testing Library
+- **Coverage**: 85% minimum threshold
+- **Components**: All UI components tested
+
+### E2E Tests
+
+- **Framework**: Playwright
+- **Cross-browser**: Chrome, Firefox, Safari, Mobile
+- **Scenarios**: Authentication, navigation, core flows
+
+### Running Tests
+
+```bash
+npm run test                # Unit tests
+npm run test:coverage       # With coverage report
+npm run test:e2e            # E2E tests
+npm run test:e2e:chrome     # Chrome only
+```
+
+## 📊 Quality Metrics
+
+- **TypeScript**: 100% coverage with strict mode
+- **Test Coverage**: 85% minimum threshold
+- **Code Quality**: ESLint + Prettier enforced
+- **Cross-browser**: Tested on major browsers + mobile
+- **Performance**: Optimized builds with Vite
+
+## � Security
+
+- **Authentication**: JWT-based with Supabase Auth
+- **Authorization**: Role-based access control
+- **Database**: Row Level Security (RLS) policies
+- **Input Validation**: Zod schema validation
+- **Session Management**: Automatic token refresh
+
+## 📚 Documentation
+
+- **[Development Guide](Documentation/DEVELOPMENT.md)** - Setup and development workflow
+- **[Phase 1 Summary](Documentation/Phase1-Implementation-Summary.md)** - Completed features
+- **[Roadmap](ROADMAP.md)** - Complete development roadmap
+- **[API Specification](Documentation/Development/APISpecification.md)** - API documentation
+
+## 🤝 Contributing
+
+### Development Workflow
+
+1. Fork the repository
+2. Create a feature branch
+3. Implement changes with tests
+4. Run quality checks
+5. Submit a pull request
+
+### Code Standards
+
+- **TypeScript**: Strict mode enabled
+- **Testing**: Tests required for new features
+- **Formatting**: Prettier + ESLint configured
+- **Commits**: Conventional commit format
+
+## 🛠️ Environment Variables
+
+### Required
+
+```env
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_ANON_KEY=your_anon_key
+```
+
+### Optional
+
+```env
+VITE_APP_NAME=MaintAInPro
+VITE_APP_VERSION=1.0.0
+VITE_ENABLE_PWA=true
+VITE_ENABLE_REALTIME=true
+```
+
+## 📈 Roadmap
+
+### Phase 1 ✅ (Completed)
+
+- Foundation & Core Infrastructure
+- Testing Framework
+- UI Component Library
+- Authentication System
+
+### Phase 2 🔄 (In Progress)
+
+- Work Order Management
+- Equipment & Asset Management
+- Parts & Inventory Management
+
+### Phase 3 📅 (Planned)
+
+- Preventive Maintenance
+- Vendor Management
+- Advanced Analytics
+
+### Phase 4 📅 (Planned)
+
+- Multi-tenant Architecture
+- Performance Optimization
+- Production Deployment
+
+## 🆘 Support
+
+- **Documentation**: Check project docs first
+- **Issues**: Create GitHub issue with details
+- **Discussions**: Use GitHub discussions
+- **Code Review**: Request review for complex changes
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🎉 Acknowledgments
+
+Built with modern web technologies and best practices:
+
+- React team for the excellent framework
+- Supabase for backend-as-a-service
+- Tailwind CSS for utility-first styling
+- Vitest and Playwright for testing
+- TypeScript for type safety
 
 ---
 
-**Last Updated:** July 15, 2025
+**Status**: Phase 1 Complete ✅ | **Next**: Phase 2 Work Order Management  
+**Last Updated**: July 15, 2025
