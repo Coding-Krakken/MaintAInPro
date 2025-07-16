@@ -3,8 +3,37 @@ import { cleanup } from '@testing-library/react';
 import { afterEach, beforeAll, afterAll, vi } from 'vitest';
 import { server } from './mocks/server';
 
+// Store original console methods
+const originalConsoleError = console.error;
+const originalConsoleWarn = console.warn;
+
 // Setup MSW
 beforeAll(() => {
+  // Suppress specific React warnings during tests
+  console.error = (...args: unknown[]) => {
+    const errorMessage = String(args[0]);
+    if (
+      errorMessage.includes('ReactDOMTestUtils.act') ||
+      errorMessage.includes('not wrapped in act') ||
+      errorMessage.includes('React Router Future Flag Warning')
+    ) {
+      return;
+    }
+    originalConsoleError.call(console, ...args);
+  };
+
+  console.warn = (...args: unknown[]) => {
+    const warnMessage = String(args[0]);
+    if (
+      warnMessage.includes('ReactDOMTestUtils.act') ||
+      warnMessage.includes('not wrapped in act') ||
+      warnMessage.includes('React Router Future Flag Warning')
+    ) {
+      return;
+    }
+    originalConsoleWarn.call(console, ...args);
+  };
+
   server.listen();
 });
 
@@ -14,6 +43,9 @@ afterEach(() => {
 });
 
 afterAll(() => {
+  // Restore original console methods
+  console.error = originalConsoleError;
+  console.warn = originalConsoleWarn;
   server.close();
 });
 
