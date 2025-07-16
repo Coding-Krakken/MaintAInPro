@@ -22,7 +22,7 @@ function Form<T extends FieldValues>({
 }: FormProps<T>) {
   const form = useForm<T>({
     resolver: zodResolver(schema),
-    defaultValues: defaultValues as any,
+    defaultValues: defaultValues as never,
   });
 
   return (
@@ -32,7 +32,10 @@ function Form<T extends FieldValues>({
     >
       {React.Children.map(children, child => {
         if (React.isValidElement(child)) {
-          return React.cloneElement(child, { ...form } as any);
+          return React.cloneElement(child, { ...form } as Record<
+            string,
+            unknown
+          >);
         }
         return child;
       })}

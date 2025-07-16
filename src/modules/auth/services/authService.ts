@@ -2,12 +2,18 @@ import { supabase } from '../../../lib/supabase';
 import { userService } from '../../../lib/database';
 import type { User, AuthState } from '../types/auth';
 import type { Permission } from '../../../types';
+import { mfaService } from './mfaService';
 
 export class AuthService {
   async signIn(
     email: string,
     password: string
-  ): Promise<{ user: User | null; error: string | null }> {
+  ): Promise<{
+    user: User | null;
+    error: string | null;
+    requiresMFA?: boolean;
+    tempToken?: string;
+  }> {
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
@@ -20,6 +26,74 @@ export class AuthService {
 
       // Get user profile from our users table
       const userProfile = await userService.getProfile(data.user.id);
+
+      if (!userProfile) {
+        return { user: null, error: 'User profile not found' };
+      }
+
+      // Check if user has MFA enabled
+      const mfaStatus = await mfaService.getMFAStatus(data.user.id);
+
+      if (mfaStatus.enabled) {
+        // MFA is required - don't complete login yet
+        // Sign out the user temporarily and return MFA requirement
+        await supabase.auth.signOut();
+
+        return {
+          user: null,
+          error: null,
+          requiresMFA: true,
+          tempToken: data.session.access_token,
+        };
+      }
+
+      // No MFA required - complete login
+      await userService.updateProfile(data.user.id, {
+        lastLoginAt: new Date(),
+      });
+
+      return { user: userProfile, error: null };
+    } catch (error: unknown) {
+      return {
+        user: null,
+        error:
+          error instanceof Error ? error.message : 'An unknown error occurred',
+      };
+    }
+  }
+
+  async verifyMFAAndCompleteLogin(
+    email: string,
+    password: string,
+    mfaCode: string
+  ): Promise<{ user: User | null; error: string | null }> {
+    try {
+      // First authenticate with password
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        return { user: null, error: error.message };
+      }
+
+      // Verify MFA code
+      const mfaResult = await mfaService.verifyMFA(data.user.id, mfaCode);
+
+      if (!mfaResult.success) {
+        // Sign out if MFA verification fails
+        await supabase.auth.signOut();
+        return { user: null, error: mfaResult.error || 'Invalid MFA code' };
+      }
+
+      // Get user profile and complete login
+      const userProfile = await userService.getProfile(data.user.id);
+
+      if (!userProfile) {
+        await supabase.auth.signOut();
+        return { user: null, error: 'User profile not found' };
+      }
 
       // Update last login
       await userService.updateProfile(data.user.id, {

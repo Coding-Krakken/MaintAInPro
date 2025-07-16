@@ -45,6 +45,7 @@ export { Popover } from './Popover';
 export { Badge } from './Badge';
 export { Toast, ToastProvider, useToast } from './Toast';
 export { LoadingSpinner } from './LoadingSpinner';
+export { Alert, AlertDescription, AlertTitle } from './Alert';
 export {
   Skeleton,
   SkeletonText,

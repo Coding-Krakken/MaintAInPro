@@ -170,15 +170,15 @@
               "projectName": "setup",
               "results": [
                 {
-                  "workerIndex": 0,
+                  "workerIndex": 3,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 3655,
+                  "duration": 1027,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2025-07-16T00:53:56.982Z",
+                  "startTime": "2025-07-16T15:32:21.513Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -196,8 +196,8 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2025-07-16T00:53:53.681Z",
-    "duration": 25641.826,
+    "startTime": "2025-07-16T15:32:20.060Z",
+    "duration": 2730.525000002235,
     "expected": 1,
     "skipped": 0,
     "unexpected": 0,

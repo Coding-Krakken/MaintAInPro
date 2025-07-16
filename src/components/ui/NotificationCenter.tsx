@@ -94,8 +94,8 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
             <div className='max-h-80 overflow-y-auto'>
               {notifications.map(notification => (
                 <NotificationItem
-                  key={notification.id}
-                  notification={notification}
+                  key={notification['id'] as string}
+                  notification={notification as unknown as Notification}
                   onMarkAsRead={handleMarkAsRead}
                 />
               ))}
@@ -297,17 +297,23 @@ export const ToastNotificationProvider: React.FC<
 
     // Get the latest notification
     const latestNotification = notifications[0];
+    if (!latestNotification) return;
 
     // Check if it's a new notification (less than 5 seconds old)
     const isNew =
-      new Date(latestNotification.created_at).getTime() > Date.now() - 5000;
+      new Date(latestNotification['created_at'] as string).getTime() >
+      Date.now() - 5000;
 
-    if (isNew && !latestNotification.read) {
+    if (isNew && !latestNotification['read']) {
       const toastNotification: ToastNotification = {
-        id: `toast-${latestNotification.id}`,
-        title: latestNotification.title,
-        message: latestNotification.message,
-        type: latestNotification.type,
+        id: `toast-${latestNotification['id']}`,
+        title: latestNotification['title'] as string,
+        message: latestNotification['message'] as string,
+        type: latestNotification['type'] as
+          | 'info'
+          | 'success'
+          | 'warning'
+          | 'error',
         duration: 5000,
       };
 

@@ -8,13 +8,13 @@ export const supabase = createClient<Database>(supabaseUrl, supabaseKey);
 
 // Real-time subscription types
 export type SubscriptionEvent = 'INSERT' | 'UPDATE' | 'DELETE';
-export type SubscriptionCallback<T = any> = (
+export type SubscriptionCallback<T = Record<string, unknown>> = (
   event: SubscriptionEvent,
   data: T
 ) => void;
 
 class RealtimeService {
-  private subscriptions: Map<string, any> = new Map();
+  private subscriptions: Map<string, { unsubscribe: () => void }> = new Map();
 
   // Subscribe to work order changes
   subscribeToWorkOrders(callback: SubscriptionCallback) {
@@ -102,7 +102,10 @@ class RealtimeService {
   }
 
   // Subscribe to user presence (who's online)
-  subscribeToPresence(userId: string, callback: (presence: any) => void) {
+  subscribeToPresence(
+    userId: string,
+    callback: (presence: Record<string, unknown>) => void
+  ) {
     const subscription = supabase
       .channel('presence')
       .on('presence', { event: 'sync' }, () => {
@@ -268,10 +271,10 @@ class RealtimeService {
 export const realtimeService = new RealtimeService();
 
 // React hook for real-time subscriptions
-export function useRealtimeSubscription<T = any>(
+export function useRealtimeSubscription<T = Record<string, unknown>>(
   _subscriptionKey: string,
   subscribeFn: (callback: SubscriptionCallback<T>) => () => void,
-  deps: any[] = []
+  deps: React.DependencyList = []
 ) {
   const [data, setData] = React.useState<T | null>(null);
   const [loading, setLoading] = React.useState(false);
@@ -290,14 +293,16 @@ export function useRealtimeSubscription<T = any>(
       unsubscribe();
       setLoading(false);
     };
-  }, deps);
+  }, [subscribeFn, deps]);
 
   return { data, loading, error };
 }
 
 // React hook for notifications
 export function useNotifications(userId: string) {
-  const [notifications, setNotifications] = React.useState<any[]>([]);
+  const [notifications, setNotifications] = React.useState<
+    Record<string, unknown>[]
+  >([]);
   const [unreadCount, setUnreadCount] = React.useState(0);
 
   React.useEffect(() => {
@@ -329,9 +334,9 @@ export function useNotifications(userId: string) {
           setUnreadCount(prev => prev + 1);
         } else if (event === 'UPDATE') {
           setNotifications(prev =>
-            prev.map(n => (n.id === data.id ? data : n))
+            prev.map(n => (n['id'] === data['id'] ? data : n))
           );
-          if (data.read_at) {
+          if (data['read_at']) {
             setUnreadCount(prev => Math.max(0, prev - 1));
           }
         }
@@ -365,7 +370,9 @@ export function useNotifications(userId: string) {
 
 // React hook for presence
 export function usePresence(userId: string) {
-  const [onlineUsers, setOnlineUsers] = React.useState<any[]>([]);
+  const [onlineUsers, setOnlineUsers] = React.useState<
+    Record<string, unknown>[]
+  >([]);
 
   React.useEffect(() => {
     if (!userId) return;
@@ -373,8 +380,11 @@ export function usePresence(userId: string) {
     const unsubscribe = realtimeService.subscribeToPresence(
       userId,
       presence => {
-        if (presence.event === 'sync') {
-          const users = Object.values(presence).flat();
+        if (presence['event'] === 'sync') {
+          const users = Object.values(presence).flat() as Record<
+            string,
+            unknown
+          >[];
           setOnlineUsers(users);
         }
       }

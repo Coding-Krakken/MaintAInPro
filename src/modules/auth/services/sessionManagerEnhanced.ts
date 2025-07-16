@@ -41,6 +41,12 @@ interface SessionValidationResult {
   error?: string;
 }
 
+interface LockoutStatus {
+  isLocked: boolean;
+  message?: string;
+  remainingTime?: number;
+}
+
 export class SessionManager {
   private static readonly SESSION_KEY = 'maintainpro_session';
   private static readonly ATTEMPT_KEY_PREFIX = 'login_attempts_';
@@ -48,6 +54,8 @@ export class SessionManager {
   private static readonly SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes
   private static readonly MFA_GRACE_PERIOD = 5 * 60 * 1000; // 5 minutes
 
+  private maxAttempts = 5;
+  private lockoutDuration = 15 * 60 * 1000; // 15 minutes
   private sessionTimer: NodeJS.Timeout | null = null;
 
   /**
@@ -128,7 +136,7 @@ export class SessionManager {
             false,
             ipAddress,
             userAgent,
-            `MFA verification failed: ${mfaResult.error}`,
+            `MFA verification failed: ${mfaResult.error || 'Unknown error'}`,
             true,
             false
           );
@@ -303,7 +311,9 @@ export class SessionManager {
 
     // Keep only recent attempts (last 24 hours)
     const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
-    const recentAttempts = attempts.filter(a => a.timestamp > oneDayAgo);
+    const recentAttempts = attempts.filter(
+      (a: LoginAttempt) => a.timestamp > oneDayAgo
+    );
 
     localStorage.setItem(
       `${SessionManager.ATTEMPT_KEY_PREFIX}${email}`,
@@ -317,6 +327,100 @@ export class SessionManager {
       // Clear lockout on successful login
       await this.clearAccountLockout(email);
     }
+  }
+
+  /**
+   * Get login attempts for an email
+   */
+  getLoginAttempts(email: string): LoginAttempt[] {
+    try {
+      const stored = localStorage.getItem(
+        `${SessionManager.ATTEMPT_KEY_PREFIX}${email}`
+      );
+      if (!stored) return [];
+
+      const attempts = JSON.parse(stored);
+      return attempts.map((attempt: Partial<LoginAttempt>) => ({
+        ...attempt,
+        timestamp: new Date(attempt.timestamp || Date.now()),
+      })) as LoginAttempt[];
+    } catch (error) {
+      console.error('Failed to retrieve login attempts:', error);
+      return [];
+    }
+  }
+
+  /**
+   * Check and lock account if too many failed attempts
+   */
+  private async checkAndLockAccount(email: string): Promise<void> {
+    const attempts = this.getLoginAttempts(email);
+    const failedAttempts = attempts.filter(a => !a.success);
+
+    // Count failed attempts in the last hour
+    const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
+    const recentFailedAttempts = failedAttempts.filter(
+      a => a.timestamp > oneHourAgo
+    );
+
+    if (recentFailedAttempts.length >= this.maxAttempts) {
+      const lockout: AccountLockout = {
+        email,
+        lockedUntil: new Date(Date.now() + this.lockoutDuration),
+        attemptCount: recentFailedAttempts.length,
+        lockoutReason: 'Too many failed login attempts',
+      };
+
+      localStorage.setItem(
+        `${SessionManager.LOCKOUT_KEY_PREFIX}${email}`,
+        JSON.stringify({
+          ...lockout,
+          lockedUntil: lockout.lockedUntil.toISOString(),
+        })
+      );
+    }
+  }
+
+  /**
+   * Check if account is locked out
+   */
+  async checkAccountLockout(email: string): Promise<LockoutStatus> {
+    try {
+      const stored = localStorage.getItem(
+        `${SessionManager.LOCKOUT_KEY_PREFIX}${email}`
+      );
+      if (!stored) {
+        return { isLocked: false };
+      }
+
+      const lockout = JSON.parse(stored);
+      const lockedUntil = new Date(lockout.lockedUntil);
+      const now = new Date();
+
+      if (now < lockedUntil) {
+        const remainingTime = lockedUntil.getTime() - now.getTime();
+        const minutes = Math.ceil(remainingTime / (1000 * 60));
+        return {
+          isLocked: true,
+          message: `Account locked. Try again in ${minutes} minute${minutes !== 1 ? 's' : ''}.`,
+          remainingTime,
+        };
+      } else {
+        // Lockout expired, clear it
+        localStorage.removeItem(`${SessionManager.LOCKOUT_KEY_PREFIX}${email}`);
+        return { isLocked: false };
+      }
+    } catch (error) {
+      console.error('Failed to check account lockout:', error);
+      return { isLocked: false };
+    }
+  }
+
+  /**
+   * Clear account lockout
+   */
+  async clearAccountLockout(email: string): Promise<void> {
+    localStorage.removeItem(`${SessionManager.LOCKOUT_KEY_PREFIX}${email}`);
   }
 
   /**
@@ -381,87 +485,37 @@ export class SessionManager {
   }
 
   /**
-   * Check if account is locked
+   * Logout and clear session
    */
-  private async checkAccountLockout(
-    email: string
-  ): Promise<{ isLocked: boolean; message?: string }> {
+  async logout(): Promise<void> {
     try {
-      const lockoutData = localStorage.getItem(
-        `${SessionManager.LOCKOUT_KEY_PREFIX}${email}`
-      );
-      if (!lockoutData) return { isLocked: false };
-
-      const lockout: AccountLockout = JSON.parse(lockoutData);
-
-      if (new Date() < new Date(lockout.lockedUntil)) {
-        return {
-          isLocked: true,
-          message: `Account locked until ${new Date(lockout.lockedUntil).toLocaleString()}. Reason: ${lockout.lockoutReason}`,
-        };
-      }
-
-      // Lockout expired, clear it
-      await this.clearAccountLockout(email);
-      return { isLocked: false };
+      await supabase.auth.signOut();
+      this.clearSession();
     } catch (error) {
-      console.error('Error checking account lockout:', error);
-      return { isLocked: false };
+      console.error('Logout error:', error);
+      this.clearSession();
     }
   }
 
   /**
-   * Get login attempts for an email
+   * Get current session
    */
-  private getLoginAttempts(email: string): LoginAttempt[] {
-    try {
-      const stored = localStorage.getItem(
-        `${SessionManager.ATTEMPT_KEY_PREFIX}${email}`
-      );
-      return stored ? JSON.parse(stored) : [];
-    } catch (error) {
-      console.error('Error getting login attempts:', error);
-      return [];
-    }
+  getCurrentSession(): SessionData | null {
+    return this.getStoredSession();
   }
 
   /**
-   * Check if account should be locked after failed attempts
+   * Extend session expiration
    */
-  private async checkAndLockAccount(email: string): Promise<void> {
-    try {
-      const attempts = this.getLoginAttempts(email);
-      const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
-      const recentFailures = attempts.filter(
-        (a: LoginAttempt) => !a.success && a.timestamp > oneDayAgo
+  extendSession(): void {
+    const sessionData = this.getStoredSession();
+    if (sessionData) {
+      sessionData.expiresAt = new Date(
+        Date.now() + SessionManager.SESSION_TIMEOUT
       );
-
-      if (recentFailures.length >= 5) {
-        const lockout: AccountLockout = {
-          email,
-          lockedUntil: new Date(Date.now() + 30 * 60 * 1000), // 30 minutes
-          attemptCount: recentFailures.length,
-          lockoutReason: 'Too many failed login attempts',
-        };
-
-        localStorage.setItem(
-          `${SessionManager.LOCKOUT_KEY_PREFIX}${email}`,
-          JSON.stringify(lockout)
-        );
-      }
-    } catch (error) {
-      console.error('Error checking account lockout:', error);
-    }
-  }
-
-  /**
-   * Clear account lockout
-   */
-  private async clearAccountLockout(email: string): Promise<void> {
-    try {
-      localStorage.removeItem(`${SessionManager.LOCKOUT_KEY_PREFIX}${email}`);
-    } catch (error) {
-      console.error('Error clearing account lockout:', error);
+      this.storeSession(sessionData);
     }
   }
 }
+
+export const sessionManager = new SessionManager();

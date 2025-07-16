@@ -5,7 +5,15 @@ import { AuthState } from '../types/auth';
 
 const AuthContext = createContext<
   | (AuthState & {
-      signIn: (email: string, password: string) => Promise<void>;
+      signIn: (
+        email: string,
+        password: string
+      ) => Promise<{ requiresMFA?: boolean; tempToken?: string | undefined }>;
+      verifyMFAAndCompleteLogin: (
+        email: string,
+        password: string,
+        mfaCode: string
+      ) => Promise<void>;
       signOut: () => Promise<void>;
       refetchUser: () => Promise<void>;
     })
@@ -115,6 +123,36 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       if (result.error) {
         throw new Error(result.error);
       }
+
+      // Return MFA requirement info if needed
+      if (result.requiresMFA) {
+        setIsLoading(false);
+        return { requiresMFA: true, tempToken: result.tempToken };
+      }
+
+      // The auth state change listener will handle updating the session
+      return { requiresMFA: false };
+    } catch (error) {
+      setIsLoading(false);
+      throw error;
+    }
+  };
+
+  const verifyMFAAndCompleteLogin = async (
+    email: string,
+    password: string,
+    mfaCode: string
+  ) => {
+    setIsLoading(true);
+    try {
+      const result = await authService.verifyMFAAndCompleteLogin(
+        email,
+        password,
+        mfaCode
+      );
+      if (result.error) {
+        throw new Error(result.error);
+      }
       // The auth state change listener will handle updating the session
     } catch (error) {
       setIsLoading(false);
@@ -143,6 +181,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     isAuthenticated: !!session && !!user,
     error: error?.message || null,
     signIn,
+    verifyMFAAndCompleteLogin,
     signOut,
     refetchUser: async () => {
       await refetchUser();

@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="25.641826000000002">
-<testsuite name="auth.setup.ts" timestamp="2025-07-16T00:53:56.236Z" hostname="setup" tests="1" failures="0" skipped="0" time="3.655" errors="0">
-<testcase name="authenticate" classname="auth.setup.ts" time="3.655">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="2.730525000002235">
+<testsuite name="auth.setup.ts" timestamp="2025-07-16T15:32:20.895Z" hostname="setup" tests="1" failures="0" skipped="0" time="1.027" errors="0">
+<testcase name="authenticate" classname="auth.setup.ts" time="1.027">
 </testcase>
 </testsuite>
 </testsuites>
