@@ -1,6 +1,166 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="2.730525000002235">
-<testsuite name="auth.setup.ts" timestamp="2025-07-16T15:32:20.895Z" hostname="setup" tests="1" failures="0" skipped="0" time="1.027" errors="0">
-<testcase name="authenticate" classname="auth.setup.ts" time="1.027">
+<testsuites id="" name="" tests="41" failures="0" skipped="5" errors="0" time="61.92102499999999">
+<testsuite name="auth.setup.ts" timestamp="2025-07-16T17:35:00.106Z" hostname="setup" tests="1" failures="0" skipped="0" time="0.992" errors="0">
+<testcase name="authenticate" classname="auth.setup.ts" time="0.992">
+</testcase>
+</testsuite>
+<testsuite name="auth.spec.ts" timestamp="2025-07-16T17:35:00.106Z" hostname="chromium" tests="3" failures="0" skipped="1" time="1.957" errors="0">
+<testcase name="Authentication › should display login page for unauthenticated users" classname="auth.spec.ts" time="1.062">
+</testcase>
+<testcase name="Authentication › should show validation errors for invalid login" classname="auth.spec.ts" time="0">
+<properties>
+<property name="skip" value="">
+</property>
+</properties>
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication › should access protected routes when authenticated" classname="auth.spec.ts" time="0.895">
+</testcase>
+</testsuite>
+<testsuite name="dashboard.spec.ts" timestamp="2025-07-16T17:35:00.106Z" hostname="chromium" tests="4" failures="0" skipped="0" time="3.513" errors="0">
+<testcase name="Dashboard › should display dashboard components" classname="dashboard.spec.ts" time="0.875">
+</testcase>
+<testcase name="Dashboard › should navigate to work orders" classname="dashboard.spec.ts" time="0.821">
+</testcase>
+<testcase name="Dashboard › should navigate to equipment" classname="dashboard.spec.ts" time="0.937">
+</testcase>
+<testcase name="Dashboard › should navigate to inventory" classname="dashboard.spec.ts" time="0.88">
+</testcase>
+</testsuite>
+<testsuite name="simple.spec.ts" timestamp="2025-07-16T17:35:00.106Z" hostname="chromium" tests="1" failures="0" skipped="0" time="0.805" errors="0">
+<testcase name="Simple Test › should load the application" classname="simple.spec.ts" time="0.805">
+<system-out>
+<![CDATA[Page title: MaintainPro CMMS
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="auth.spec.ts" timestamp="2025-07-16T17:35:00.106Z" hostname="firefox" tests="3" failures="0" skipped="1" time="4.802" errors="0">
+<testcase name="Authentication › should display login page for unauthenticated users" classname="auth.spec.ts" time="2.989">
+</testcase>
+<testcase name="Authentication › should show validation errors for invalid login" classname="auth.spec.ts" time="0">
+<properties>
+<property name="skip" value="">
+</property>
+</properties>
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication › should access protected routes when authenticated" classname="auth.spec.ts" time="1.813">
+</testcase>
+</testsuite>
+<testsuite name="dashboard.spec.ts" timestamp="2025-07-16T17:35:00.106Z" hostname="firefox" tests="4" failures="0" skipped="0" time="7.341" errors="0">
+<testcase name="Dashboard › should display dashboard components" classname="dashboard.spec.ts" time="1.646">
+</testcase>
+<testcase name="Dashboard › should navigate to work orders" classname="dashboard.spec.ts" time="1.789">
+</testcase>
+<testcase name="Dashboard › should navigate to equipment" classname="dashboard.spec.ts" time="1.901">
+</testcase>
+<testcase name="Dashboard › should navigate to inventory" classname="dashboard.spec.ts" time="2.005">
+</testcase>
+</testsuite>
+<testsuite name="simple.spec.ts" timestamp="2025-07-16T17:35:00.106Z" hostname="firefox" tests="1" failures="0" skipped="0" time="1.909" errors="0">
+<testcase name="Simple Test › should load the application" classname="simple.spec.ts" time="1.909">
+<system-out>
+<![CDATA[Page title: MaintainPro CMMS
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="auth.spec.ts" timestamp="2025-07-16T17:35:00.106Z" hostname="webkit" tests="3" failures="0" skipped="1" time="4.553" errors="0">
+<testcase name="Authentication › should display login page for unauthenticated users" classname="auth.spec.ts" time="2.48">
+</testcase>
+<testcase name="Authentication › should show validation errors for invalid login" classname="auth.spec.ts" time="0">
+<properties>
+<property name="skip" value="">
+</property>
+</properties>
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication › should access protected routes when authenticated" classname="auth.spec.ts" time="2.073">
+</testcase>
+</testsuite>
+<testsuite name="dashboard.spec.ts" timestamp="2025-07-16T17:35:00.106Z" hostname="webkit" tests="4" failures="0" skipped="0" time="7.666" errors="0">
+<testcase name="Dashboard › should display dashboard components" classname="dashboard.spec.ts" time="2.029">
+</testcase>
+<testcase name="Dashboard › should navigate to work orders" classname="dashboard.spec.ts" time="1.369">
+</testcase>
+<testcase name="Dashboard › should navigate to equipment" classname="dashboard.spec.ts" time="2.121">
+</testcase>
+<testcase name="Dashboard › should navigate to inventory" classname="dashboard.spec.ts" time="2.147">
+</testcase>
+</testsuite>
+<testsuite name="simple.spec.ts" timestamp="2025-07-16T17:35:00.106Z" hostname="webkit" tests="1" failures="0" skipped="0" time="1.854" errors="0">
+<testcase name="Simple Test › should load the application" classname="simple.spec.ts" time="1.854">
+<system-out>
+<![CDATA[Page title: MaintainPro CMMS
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="auth.spec.ts" timestamp="2025-07-16T17:35:00.106Z" hostname="Mobile Chrome" tests="3" failures="0" skipped="1" time="1.956" errors="0">
+<testcase name="Authentication › should display login page for unauthenticated users" classname="auth.spec.ts" time="0.985">
+</testcase>
+<testcase name="Authentication › should show validation errors for invalid login" classname="auth.spec.ts" time="0">
+<properties>
+<property name="skip" value="">
+</property>
+</properties>
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication › should access protected routes when authenticated" classname="auth.spec.ts" time="0.971">
+</testcase>
+</testsuite>
+<testsuite name="dashboard.spec.ts" timestamp="2025-07-16T17:35:00.106Z" hostname="Mobile Chrome" tests="4" failures="0" skipped="0" time="3.31" errors="0">
+<testcase name="Dashboard › should display dashboard components" classname="dashboard.spec.ts" time="0.867">
+</testcase>
+<testcase name="Dashboard › should navigate to work orders" classname="dashboard.spec.ts" time="0.788">
+</testcase>
+<testcase name="Dashboard › should navigate to equipment" classname="dashboard.spec.ts" time="0.848">
+</testcase>
+<testcase name="Dashboard › should navigate to inventory" classname="dashboard.spec.ts" time="0.807">
+</testcase>
+</testsuite>
+<testsuite name="simple.spec.ts" timestamp="2025-07-16T17:35:00.106Z" hostname="Mobile Chrome" tests="1" failures="0" skipped="0" time="0.784" errors="0">
+<testcase name="Simple Test › should load the application" classname="simple.spec.ts" time="0.784">
+<system-out>
+<![CDATA[Page title: MaintainPro CMMS
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="auth.spec.ts" timestamp="2025-07-16T17:35:00.106Z" hostname="Mobile Safari" tests="3" failures="0" skipped="1" time="4.249" errors="0">
+<testcase name="Authentication › should display login page for unauthenticated users" classname="auth.spec.ts" time="2.427">
+</testcase>
+<testcase name="Authentication › should show validation errors for invalid login" classname="auth.spec.ts" time="0">
+<properties>
+<property name="skip" value="">
+</property>
+</properties>
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication › should access protected routes when authenticated" classname="auth.spec.ts" time="1.822">
+</testcase>
+</testsuite>
+<testsuite name="dashboard.spec.ts" timestamp="2025-07-16T17:35:00.106Z" hostname="Mobile Safari" tests="4" failures="0" skipped="0" time="7.469" errors="0">
+<testcase name="Dashboard › should display dashboard components" classname="dashboard.spec.ts" time="1.98">
+</testcase>
+<testcase name="Dashboard › should navigate to work orders" classname="dashboard.spec.ts" time="2.147">
+</testcase>
+<testcase name="Dashboard › should navigate to equipment" classname="dashboard.spec.ts" time="1.604">
+</testcase>
+<testcase name="Dashboard › should navigate to inventory" classname="dashboard.spec.ts" time="1.738">
+</testcase>
+</testsuite>
+<testsuite name="simple.spec.ts" timestamp="2025-07-16T17:35:00.106Z" hostname="Mobile Safari" tests="1" failures="0" skipped="0" time="1.774" errors="0">
+<testcase name="Simple Test › should load the application" classname="simple.spec.ts" time="1.774">
+<system-out>
+<![CDATA[Page title: MaintainPro CMMS
+]]>
+</system-out>
 </testcase>
 </testsuite>
 </testsuites>

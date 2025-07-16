@@ -12,7 +12,7 @@ import DebugInfo from '@/components/DebugInfo';
 
 // Lazy load pages for better performance
 const Dashboard = React.lazy(() => import('@/pages/Dashboard'));
-const Login = React.lazy(() => import('@/pages/Login'));
+const Login = React.lazy(() => import('@/pages/LoginMFA'));
 const WorkOrders = React.lazy(
   () => import('@/modules/work-orders/pages/WorkOrdersPage')
 );

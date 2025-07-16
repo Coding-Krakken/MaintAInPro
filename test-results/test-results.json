@@ -137,7 +137,7 @@
     ],
     "shard": null,
     "updateSnapshots": "missing",
-    "updateSourceMethod": "3way",
+    "updateSourceMethod": "patch",
     "version": "1.54.1",
     "workers": 1,
     "webServer": {
@@ -170,15 +170,15 @@
               "projectName": "setup",
               "results": [
                 {
-                  "workerIndex": 3,
+                  "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 1027,
+                  "duration": 992,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2025-07-16T15:32:21.513Z",
+                  "startTime": "2025-07-16T17:35:00.721Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -192,14 +192,1490 @@
           "column": 1
         }
       ]
+    },
+    {
+      "title": "auth.spec.ts",
+      "file": "auth.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Authentication",
+          "file": "auth.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should display login page for unauthenticated users",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1062,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-16T17:35:02.548Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d748ac400d08b85935ef-cb5ed821a745efbd8063",
+              "file": "auth.spec.ts",
+              "line": 4,
+              "column": 3
+            },
+            {
+              "title": "should show validation errors for invalid login",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "location": {
+                        "file": "/workspaces/MaintAInPro/tests/e2e/auth.spec.ts",
+                        "line": 27,
+                        "column": 8
+                      }
+                    }
+                  ],
+                  "expectedStatus": "skipped",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": -1,
+                      "parallelIndex": -1,
+                      "status": "skipped",
+                      "duration": 0,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-16T17:35:03.746Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "d748ac400d08b85935ef-ac32e183dfdbf963e374",
+              "file": "auth.spec.ts",
+              "line": 27,
+              "column": 8
+            },
+            {
+              "title": "should access protected routes when authenticated",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 895,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-16T17:35:03.753Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d748ac400d08b85935ef-f07e553b49d73e5fa828",
+              "file": "auth.spec.ts",
+              "line": 58,
+              "column": 3
+            },
+            {
+              "title": "should display login page for unauthenticated users",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2989,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-16T17:35:09.915Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d748ac400d08b85935ef-7cd8c801ce6c4c4d470e",
+              "file": "auth.spec.ts",
+              "line": 4,
+              "column": 3
+            },
+            {
+              "title": "should show validation errors for invalid login",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "location": {
+                        "file": "/workspaces/MaintAInPro/tests/e2e/auth.spec.ts",
+                        "line": 27,
+                        "column": 8
+                      }
+                    }
+                  ],
+                  "expectedStatus": "skipped",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": -1,
+                      "parallelIndex": -1,
+                      "status": "skipped",
+                      "duration": 0,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-16T17:35:13.343Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "d748ac400d08b85935ef-d0b7568179feeeec4e08",
+              "file": "auth.spec.ts",
+              "line": 27,
+              "column": 8
+            },
+            {
+              "title": "should access protected routes when authenticated",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1813,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-16T17:35:13.349Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d748ac400d08b85935ef-780f771747a926b1ff2d",
+              "file": "auth.spec.ts",
+              "line": 58,
+              "column": 3
+            },
+            {
+              "title": "should display login page for unauthenticated users",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2480,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-16T17:35:25.793Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d748ac400d08b85935ef-f1efb9ccccf46f71972e",
+              "file": "auth.spec.ts",
+              "line": 4,
+              "column": 3
+            },
+            {
+              "title": "should show validation errors for invalid login",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "location": {
+                        "file": "/workspaces/MaintAInPro/tests/e2e/auth.spec.ts",
+                        "line": 27,
+                        "column": 8
+                      }
+                    }
+                  ],
+                  "expectedStatus": "skipped",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": -1,
+                      "parallelIndex": -1,
+                      "status": "skipped",
+                      "duration": 0,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-16T17:35:28.401Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "d748ac400d08b85935ef-4e4457ed4d408815d795",
+              "file": "auth.spec.ts",
+              "line": 27,
+              "column": 8
+            },
+            {
+              "title": "should access protected routes when authenticated",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2073,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-16T17:35:28.406Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d748ac400d08b85935ef-893ad05cb3fc969bd575",
+              "file": "auth.spec.ts",
+              "line": 58,
+              "column": 3
+            },
+            {
+              "title": "should display login page for unauthenticated users",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 985,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-16T17:35:40.930Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d748ac400d08b85935ef-5762b199bfbd6b5f3669",
+              "file": "auth.spec.ts",
+              "line": 4,
+              "column": 3
+            },
+            {
+              "title": "should show validation errors for invalid login",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "location": {
+                        "file": "/workspaces/MaintAInPro/tests/e2e/auth.spec.ts",
+                        "line": 27,
+                        "column": 8
+                      }
+                    }
+                  ],
+                  "expectedStatus": "skipped",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [
+                    {
+                      "workerIndex": -1,
+                      "parallelIndex": -1,
+                      "status": "skipped",
+                      "duration": 0,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-16T17:35:42.060Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "d748ac400d08b85935ef-6e52e388ad37075448d1",
+              "file": "auth.spec.ts",
+              "line": 27,
+              "column": 8
+            },
+            {
+              "title": "should access protected routes when authenticated",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 971,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-16T17:35:42.062Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d748ac400d08b85935ef-6f024cfc4de2656dc595",
+              "file": "auth.spec.ts",
+              "line": 58,
+              "column": 3
+            },
+            {
+              "title": "should display login page for unauthenticated users",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2427,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-16T17:35:47.924Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d748ac400d08b85935ef-fee3c0e01759e19c8fff",
+              "file": "auth.spec.ts",
+              "line": 4,
+              "column": 3
+            },
+            {
+              "title": "should show validation errors for invalid login",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "location": {
+                        "file": "/workspaces/MaintAInPro/tests/e2e/auth.spec.ts",
+                        "line": 27,
+                        "column": 8
+                      }
+                    }
+                  ],
+                  "expectedStatus": "skipped",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [
+                    {
+                      "workerIndex": -1,
+                      "parallelIndex": -1,
+                      "status": "skipped",
+                      "duration": 0,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-16T17:35:50.481Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "d748ac400d08b85935ef-b7b709226d20025d4f7a",
+              "file": "auth.spec.ts",
+              "line": 27,
+              "column": 8
+            },
+            {
+              "title": "should access protected routes when authenticated",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1822,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-16T17:35:50.490Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d748ac400d08b85935ef-341319de81bea6a33d41",
+              "file": "auth.spec.ts",
+              "line": 58,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "dashboard.spec.ts",
+      "file": "dashboard.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Dashboard",
+          "file": "dashboard.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should display dashboard components",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 875,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-16T17:35:04.664Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "90cda532ab82d274b30b-05f31d1d0afe9e74492d",
+              "file": "dashboard.spec.ts",
+              "line": 10,
+              "column": 3
+            },
+            {
+              "title": "should navigate to work orders",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 821,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-16T17:35:05.546Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "90cda532ab82d274b30b-6352f50a7b9013b833bd",
+              "file": "dashboard.spec.ts",
+              "line": 15,
+              "column": 3
+            },
+            {
+              "title": "should navigate to equipment",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 937,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-16T17:35:06.376Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "90cda532ab82d274b30b-e60b8862e64a0f9f6834",
+              "file": "dashboard.spec.ts",
+              "line": 23,
+              "column": 3
+            },
+            {
+              "title": "should navigate to inventory",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 880,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-16T17:35:07.319Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "90cda532ab82d274b30b-484b08b3b8abd2c87839",
+              "file": "dashboard.spec.ts",
+              "line": 31,
+              "column": 3
+            },
+            {
+              "title": "should display dashboard components",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1646,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-16T17:35:15.187Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "90cda532ab82d274b30b-40ff5f738a1776eb15d8",
+              "file": "dashboard.spec.ts",
+              "line": 10,
+              "column": 3
+            },
+            {
+              "title": "should navigate to work orders",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1789,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-16T17:35:16.845Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "90cda532ab82d274b30b-b92715dbdb42aab045f6",
+              "file": "dashboard.spec.ts",
+              "line": 15,
+              "column": 3
+            },
+            {
+              "title": "should navigate to equipment",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1901,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-16T17:35:18.645Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "90cda532ab82d274b30b-33c343cab2a8a231cd58",
+              "file": "dashboard.spec.ts",
+              "line": 23,
+              "column": 3
+            },
+            {
+              "title": "should navigate to inventory",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2005,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-16T17:35:20.561Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "90cda532ab82d274b30b-7f5dfe8a7c61d64e9571",
+              "file": "dashboard.spec.ts",
+              "line": 31,
+              "column": 3
+            },
+            {
+              "title": "should display dashboard components",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2029,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-16T17:35:30.499Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "90cda532ab82d274b30b-eaddffda458c1ff63296",
+              "file": "dashboard.spec.ts",
+              "line": 10,
+              "column": 3
+            },
+            {
+              "title": "should navigate to work orders",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1369,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-16T17:35:32.538Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "90cda532ab82d274b30b-4e4d1057f6f54d649edf",
+              "file": "dashboard.spec.ts",
+              "line": 15,
+              "column": 3
+            },
+            {
+              "title": "should navigate to equipment",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2121,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-16T17:35:33.916Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "90cda532ab82d274b30b-9fc4ff5b51658f903ef6",
+              "file": "dashboard.spec.ts",
+              "line": 23,
+              "column": 3
+            },
+            {
+              "title": "should navigate to inventory",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2147,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-16T17:35:36.046Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "90cda532ab82d274b30b-b0271c48604c2583e5d4",
+              "file": "dashboard.spec.ts",
+              "line": 31,
+              "column": 3
+            },
+            {
+              "title": "should display dashboard components",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 867,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-16T17:35:43.057Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "90cda532ab82d274b30b-fa70091839e033c59f0c",
+              "file": "dashboard.spec.ts",
+              "line": 10,
+              "column": 3
+            },
+            {
+              "title": "should navigate to work orders",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 788,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-16T17:35:43.939Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "90cda532ab82d274b30b-8246e1fa950d8a2907af",
+              "file": "dashboard.spec.ts",
+              "line": 15,
+              "column": 3
+            },
+            {
+              "title": "should navigate to equipment",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 848,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-16T17:35:44.733Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "90cda532ab82d274b30b-842cdb54a04d63511dd6",
+              "file": "dashboard.spec.ts",
+              "line": 23,
+              "column": 3
+            },
+            {
+              "title": "should navigate to inventory",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 807,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-16T17:35:45.590Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "90cda532ab82d274b30b-1adfcc272c8b6d818116",
+              "file": "dashboard.spec.ts",
+              "line": 31,
+              "column": 3
+            },
+            {
+              "title": "should display dashboard components",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1980,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-16T17:35:52.345Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "90cda532ab82d274b30b-6e6038d39aca8f59f0e6",
+              "file": "dashboard.spec.ts",
+              "line": 10,
+              "column": 3
+            },
+            {
+              "title": "should navigate to work orders",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2147,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-16T17:35:54.341Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "90cda532ab82d274b30b-f3311a03fc0ac09f3d9c",
+              "file": "dashboard.spec.ts",
+              "line": 15,
+              "column": 3
+            },
+            {
+              "title": "should navigate to equipment",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1604,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-16T17:35:56.498Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "90cda532ab82d274b30b-b228f90bccbabfbbe55f",
+              "file": "dashboard.spec.ts",
+              "line": 23,
+              "column": 3
+            },
+            {
+              "title": "should navigate to inventory",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1738,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-16T17:35:58.116Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "90cda532ab82d274b30b-3dc06309cad188b21d8c",
+              "file": "dashboard.spec.ts",
+              "line": 31,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "simple.spec.ts",
+      "file": "simple.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Simple Test",
+          "file": "simple.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should load the application",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 805,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Page title: MaintainPro CMMS\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-16T17:35:08.209Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "b095e72a376a9d09f724-ca498d08c94e58e3074e",
+              "file": "simple.spec.ts",
+              "line": 4,
+              "column": 3
+            },
+            {
+              "title": "should load the application",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1909,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Page title: MaintainPro CMMS\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-16T17:35:22.581Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "b095e72a376a9d09f724-2801bbaf2cea6b54463d",
+              "file": "simple.spec.ts",
+              "line": 4,
+              "column": 3
+            },
+            {
+              "title": "should load the application",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1854,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Page title: MaintainPro CMMS\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-16T17:35:38.210Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "b095e72a376a9d09f724-7e3524bcbdce92146ab1",
+              "file": "simple.spec.ts",
+              "line": 4,
+              "column": 3
+            },
+            {
+              "title": "should load the application",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 784,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Page title: MaintainPro CMMS\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-16T17:35:46.407Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "b095e72a376a9d09f724-10a3b7c4e71a6ff045ad",
+              "file": "simple.spec.ts",
+              "line": 4,
+              "column": 3
+            },
+            {
+              "title": "should load the application",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1774,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Page title: MaintainPro CMMS\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-16T17:35:59.883Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "b095e72a376a9d09f724-511b5bd344c38f78469f",
+              "file": "simple.spec.ts",
+              "line": 4,
+              "column": 3
+            }
+          ]
+        }
+      ]
     }
   ],
   "errors": [],
   "stats": {
-    "startTime": "2025-07-16T15:32:20.060Z",
-    "duration": 2730.525000002235,
-    "expected": 1,
-    "skipped": 0,
+    "startTime": "2025-07-16T17:34:59.837Z",
+    "duration": 61921.024999999994,
+    "expected": 36,
+    "skipped": 5,
     "unexpected": 0,
     "flaky": 0
   }

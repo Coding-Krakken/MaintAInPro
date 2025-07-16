@@ -61,12 +61,10 @@ const Dashboard: React.FC = () => {
       {/* Welcome header */}
       <div className='flex items-center justify-between'>
         <div>
-          <h1 className='text-2xl font-bold text-secondary-900'>
-            Welcome back, {user?.firstName}!
-          </h1>
+          <h1 className='text-2xl font-bold text-secondary-900'>Dashboard</h1>
           <p className='text-secondary-600'>
-            Here&apos;s what&apos;s happening with your maintenance operations
-            today.
+            Welcome back, {user?.firstName}! Here&apos;s what&apos;s happening
+            with your maintenance operations today.
           </p>
         </div>
         <div className='text-sm text-secondary-500'>

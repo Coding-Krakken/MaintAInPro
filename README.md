@@ -12,10 +12,12 @@ work orders, equipment, inventory, preventive maintenance, and vendor relationsh
 
 - ✅ Complete testing framework (Vitest + Playwright)
 - ✅ Comprehensive UI component library
-- ✅ Robust authentication system
+- ✅ Robust authentication system with MFA support
 - ✅ Database integration with type safety
-- ✅ Cross-browser E2E testing
+- ✅ Cross-browser E2E testing (36/41 tests passing)
 - ✅ Development environment setup
+- ✅ Docker containerization with environment variables
+- ✅ Code cleanup and optimization
 
 ## 🏗️ Technology Stack
 
@@ -87,6 +89,32 @@ npm run lint            # Run ESLint
 npm run format          # Format with Prettier
 npm run type-check      # TypeScript checking
 ```
+
+## 🐳 Docker Deployment
+
+### Building and Running with Docker
+
+```bash
+# Build the Docker image
+docker build -t maintainpro-cmms .
+
+# Run the container
+docker run -p 3000:3000 maintainpro-cmms
+
+# Access the application
+# Open http://localhost:3000 in your browser
+```
+
+### Environment Variables
+
+The application requires these environment variables (already configured in `.env.local`):
+
+```env
+VITE_SUPABASE_URL=your_supabase_project_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+**Note**: The Docker build process includes environment variables for production deployment.
 
 ## 🎨 Features
 
