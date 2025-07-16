@@ -1,10 +1,63 @@
-<testsuites id="" name="" tests="41" failures="0" skipped="5" errors="0" time="61.92102499999999">
-<testsuite name="auth.setup.ts" timestamp="2025-07-16T17:35:00.106Z" hostname="setup" tests="1" failures="0" skipped="0" time="0.992" errors="0">
-<testcase name="authenticate" classname="auth.setup.ts" time="0.992">
+<testsuites id="" name="" tests="41" failures="1" skipped="40" errors="0" time="3.417035">
+<testsuite name="auth.setup.ts" timestamp="2025-07-16T19:20:08.168Z" hostname="setup" tests="1" failures="1" skipped="0" time="0.012" errors="0">
+<testcase name="authenticate" classname="auth.setup.ts" time="0.012">
+<failure message="auth.setup.ts:5:1 authenticate" type="FAILURE">
+<![CDATA[  [setup] › auth.setup.ts:5:1 › authenticate ───────────────────────────────────────────────────────
+
+    Error: browserType.launch: Executable doesn't exist at /home/runner/.cache/ms-playwright/chromium_headless_shell-1181/chrome-linux/headless_shell
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: browserType.launch: Executable doesn't exist at /home/runner/.cache/ms-playwright/chromium_headless_shell-1181/chrome-linux/headless_shell
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+
+    attachment #1: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../test-results/auth.setup.ts-authenticate-setup-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../test-results/auth.setup.ts-authenticate-setup-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Retry #2 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: browserType.launch: Executable doesn't exist at /home/runner/.cache/ms-playwright/chromium_headless_shell-1181/chrome-linux/headless_shell
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|auth.setup.ts-authenticate-setup-retry1/trace.zip]]
+]]>
+</system-out>
 </testcase>
 </testsuite>
-<testsuite name="auth.spec.ts" timestamp="2025-07-16T17:35:00.106Z" hostname="chromium" tests="3" failures="0" skipped="1" time="1.957" errors="0">
-<testcase name="Authentication › should display login page for unauthenticated users" classname="auth.spec.ts" time="1.062">
+<testsuite name="auth.spec.ts" timestamp="2025-07-16T19:20:08.168Z" hostname="chromium" tests="3" failures="0" skipped="3" time="0" errors="0">
+<testcase name="Authentication › should display login page for unauthenticated users" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
 </testcase>
 <testcase name="Authentication › should show validation errors for invalid login" classname="auth.spec.ts" time="0">
 <properties>
@@ -14,29 +67,39 @@
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Authentication › should access protected routes when authenticated" classname="auth.spec.ts" time="0.895">
+<testcase name="Authentication › should access protected routes when authenticated" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
 </testcase>
 </testsuite>
-<testsuite name="dashboard.spec.ts" timestamp="2025-07-16T17:35:00.106Z" hostname="chromium" tests="4" failures="0" skipped="0" time="3.513" errors="0">
-<testcase name="Dashboard › should display dashboard components" classname="dashboard.spec.ts" time="0.875">
+<testsuite name="dashboard.spec.ts" timestamp="2025-07-16T19:20:08.168Z" hostname="chromium" tests="4" failures="0" skipped="4" time="0" errors="0">
+<testcase name="Dashboard › should display dashboard components" classname="dashboard.spec.ts" time="0">
+<skipped>
+</skipped>
 </testcase>
-<testcase name="Dashboard › should navigate to work orders" classname="dashboard.spec.ts" time="0.821">
+<testcase name="Dashboard › should navigate to work orders" classname="dashboard.spec.ts" time="0">
+<skipped>
+</skipped>
 </testcase>
-<testcase name="Dashboard › should navigate to equipment" classname="dashboard.spec.ts" time="0.937">
+<testcase name="Dashboard › should navigate to equipment" classname="dashboard.spec.ts" time="0">
+<skipped>
+</skipped>
 </testcase>
-<testcase name="Dashboard › should navigate to inventory" classname="dashboard.spec.ts" time="0.88">
+<testcase name="Dashboard › should navigate to inventory" classname="dashboard.spec.ts" time="0">
+<skipped>
+</skipped>
 </testcase>
 </testsuite>
-<testsuite name="simple.spec.ts" timestamp="2025-07-16T17:35:00.106Z" hostname="chromium" tests="1" failures="0" skipped="0" time="0.805" errors="0">
-<testcase name="Simple Test › should load the application" classname="simple.spec.ts" time="0.805">
-<system-out>
-<![CDATA[Page title: MaintainPro CMMS
-]]>
-</system-out>
+<testsuite name="simple.spec.ts" timestamp="2025-07-16T19:20:08.168Z" hostname="chromium" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="Simple Test › should load the application" classname="simple.spec.ts" time="0">
+<skipped>
+</skipped>
 </testcase>
 </testsuite>
-<testsuite name="auth.spec.ts" timestamp="2025-07-16T17:35:00.106Z" hostname="firefox" tests="3" failures="0" skipped="1" time="4.802" errors="0">
-<testcase name="Authentication › should display login page for unauthenticated users" classname="auth.spec.ts" time="2.989">
+<testsuite name="auth.spec.ts" timestamp="2025-07-16T19:20:08.168Z" hostname="firefox" tests="3" failures="0" skipped="3" time="0" errors="0">
+<testcase name="Authentication › should display login page for unauthenticated users" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
 </testcase>
 <testcase name="Authentication › should show validation errors for invalid login" classname="auth.spec.ts" time="0">
 <properties>
@@ -46,29 +109,39 @@
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Authentication › should access protected routes when authenticated" classname="auth.spec.ts" time="1.813">
+<testcase name="Authentication › should access protected routes when authenticated" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
 </testcase>
 </testsuite>
-<testsuite name="dashboard.spec.ts" timestamp="2025-07-16T17:35:00.106Z" hostname="firefox" tests="4" failures="0" skipped="0" time="7.341" errors="0">
-<testcase name="Dashboard › should display dashboard components" classname="dashboard.spec.ts" time="1.646">
+<testsuite name="dashboard.spec.ts" timestamp="2025-07-16T19:20:08.168Z" hostname="firefox" tests="4" failures="0" skipped="4" time="0" errors="0">
+<testcase name="Dashboard › should display dashboard components" classname="dashboard.spec.ts" time="0">
+<skipped>
+</skipped>
 </testcase>
-<testcase name="Dashboard › should navigate to work orders" classname="dashboard.spec.ts" time="1.789">
+<testcase name="Dashboard › should navigate to work orders" classname="dashboard.spec.ts" time="0">
+<skipped>
+</skipped>
 </testcase>
-<testcase name="Dashboard › should navigate to equipment" classname="dashboard.spec.ts" time="1.901">
+<testcase name="Dashboard › should navigate to equipment" classname="dashboard.spec.ts" time="0">
+<skipped>
+</skipped>
 </testcase>
-<testcase name="Dashboard › should navigate to inventory" classname="dashboard.spec.ts" time="2.005">
+<testcase name="Dashboard › should navigate to inventory" classname="dashboard.spec.ts" time="0">
+<skipped>
+</skipped>
 </testcase>
 </testsuite>
-<testsuite name="simple.spec.ts" timestamp="2025-07-16T17:35:00.106Z" hostname="firefox" tests="1" failures="0" skipped="0" time="1.909" errors="0">
-<testcase name="Simple Test › should load the application" classname="simple.spec.ts" time="1.909">
-<system-out>
-<![CDATA[Page title: MaintainPro CMMS
-]]>
-</system-out>
+<testsuite name="simple.spec.ts" timestamp="2025-07-16T19:20:08.168Z" hostname="firefox" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="Simple Test › should load the application" classname="simple.spec.ts" time="0">
+<skipped>
+</skipped>
 </testcase>
 </testsuite>
-<testsuite name="auth.spec.ts" timestamp="2025-07-16T17:35:00.106Z" hostname="webkit" tests="3" failures="0" skipped="1" time="4.553" errors="0">
-<testcase name="Authentication › should display login page for unauthenticated users" classname="auth.spec.ts" time="2.48">
+<testsuite name="auth.spec.ts" timestamp="2025-07-16T19:20:08.168Z" hostname="webkit" tests="3" failures="0" skipped="3" time="0" errors="0">
+<testcase name="Authentication › should display login page for unauthenticated users" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
 </testcase>
 <testcase name="Authentication › should show validation errors for invalid login" classname="auth.spec.ts" time="0">
 <properties>
@@ -78,29 +151,39 @@
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Authentication › should access protected routes when authenticated" classname="auth.spec.ts" time="2.073">
+<testcase name="Authentication › should access protected routes when authenticated" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
 </testcase>
 </testsuite>
-<testsuite name="dashboard.spec.ts" timestamp="2025-07-16T17:35:00.106Z" hostname="webkit" tests="4" failures="0" skipped="0" time="7.666" errors="0">
-<testcase name="Dashboard › should display dashboard components" classname="dashboard.spec.ts" time="2.029">
+<testsuite name="dashboard.spec.ts" timestamp="2025-07-16T19:20:08.168Z" hostname="webkit" tests="4" failures="0" skipped="4" time="0" errors="0">
+<testcase name="Dashboard › should display dashboard components" classname="dashboard.spec.ts" time="0">
+<skipped>
+</skipped>
 </testcase>
-<testcase name="Dashboard › should navigate to work orders" classname="dashboard.spec.ts" time="1.369">
+<testcase name="Dashboard › should navigate to work orders" classname="dashboard.spec.ts" time="0">
+<skipped>
+</skipped>
 </testcase>
-<testcase name="Dashboard › should navigate to equipment" classname="dashboard.spec.ts" time="2.121">
+<testcase name="Dashboard › should navigate to equipment" classname="dashboard.spec.ts" time="0">
+<skipped>
+</skipped>
 </testcase>
-<testcase name="Dashboard › should navigate to inventory" classname="dashboard.spec.ts" time="2.147">
+<testcase name="Dashboard › should navigate to inventory" classname="dashboard.spec.ts" time="0">
+<skipped>
+</skipped>
 </testcase>
 </testsuite>
-<testsuite name="simple.spec.ts" timestamp="2025-07-16T17:35:00.106Z" hostname="webkit" tests="1" failures="0" skipped="0" time="1.854" errors="0">
-<testcase name="Simple Test › should load the application" classname="simple.spec.ts" time="1.854">
-<system-out>
-<![CDATA[Page title: MaintainPro CMMS
-]]>
-</system-out>
+<testsuite name="simple.spec.ts" timestamp="2025-07-16T19:20:08.168Z" hostname="webkit" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="Simple Test › should load the application" classname="simple.spec.ts" time="0">
+<skipped>
+</skipped>
 </testcase>
 </testsuite>
-<testsuite name="auth.spec.ts" timestamp="2025-07-16T17:35:00.106Z" hostname="Mobile Chrome" tests="3" failures="0" skipped="1" time="1.956" errors="0">
-<testcase name="Authentication › should display login page for unauthenticated users" classname="auth.spec.ts" time="0.985">
+<testsuite name="auth.spec.ts" timestamp="2025-07-16T19:20:08.168Z" hostname="Mobile Chrome" tests="3" failures="0" skipped="3" time="0" errors="0">
+<testcase name="Authentication › should display login page for unauthenticated users" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
 </testcase>
 <testcase name="Authentication › should show validation errors for invalid login" classname="auth.spec.ts" time="0">
 <properties>
@@ -110,29 +193,39 @@
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Authentication › should access protected routes when authenticated" classname="auth.spec.ts" time="0.971">
+<testcase name="Authentication › should access protected routes when authenticated" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
 </testcase>
 </testsuite>
-<testsuite name="dashboard.spec.ts" timestamp="2025-07-16T17:35:00.106Z" hostname="Mobile Chrome" tests="4" failures="0" skipped="0" time="3.31" errors="0">
-<testcase name="Dashboard › should display dashboard components" classname="dashboard.spec.ts" time="0.867">
+<testsuite name="dashboard.spec.ts" timestamp="2025-07-16T19:20:08.168Z" hostname="Mobile Chrome" tests="4" failures="0" skipped="4" time="0" errors="0">
+<testcase name="Dashboard › should display dashboard components" classname="dashboard.spec.ts" time="0">
+<skipped>
+</skipped>
 </testcase>
-<testcase name="Dashboard › should navigate to work orders" classname="dashboard.spec.ts" time="0.788">
+<testcase name="Dashboard › should navigate to work orders" classname="dashboard.spec.ts" time="0">
+<skipped>
+</skipped>
 </testcase>
-<testcase name="Dashboard › should navigate to equipment" classname="dashboard.spec.ts" time="0.848">
+<testcase name="Dashboard › should navigate to equipment" classname="dashboard.spec.ts" time="0">
+<skipped>
+</skipped>
 </testcase>
-<testcase name="Dashboard › should navigate to inventory" classname="dashboard.spec.ts" time="0.807">
+<testcase name="Dashboard › should navigate to inventory" classname="dashboard.spec.ts" time="0">
+<skipped>
+</skipped>
 </testcase>
 </testsuite>
-<testsuite name="simple.spec.ts" timestamp="2025-07-16T17:35:00.106Z" hostname="Mobile Chrome" tests="1" failures="0" skipped="0" time="0.784" errors="0">
-<testcase name="Simple Test › should load the application" classname="simple.spec.ts" time="0.784">
-<system-out>
-<![CDATA[Page title: MaintainPro CMMS
-]]>
-</system-out>
+<testsuite name="simple.spec.ts" timestamp="2025-07-16T19:20:08.168Z" hostname="Mobile Chrome" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="Simple Test › should load the application" classname="simple.spec.ts" time="0">
+<skipped>
+</skipped>
 </testcase>
 </testsuite>
-<testsuite name="auth.spec.ts" timestamp="2025-07-16T17:35:00.106Z" hostname="Mobile Safari" tests="3" failures="0" skipped="1" time="4.249" errors="0">
-<testcase name="Authentication › should display login page for unauthenticated users" classname="auth.spec.ts" time="2.427">
+<testsuite name="auth.spec.ts" timestamp="2025-07-16T19:20:08.168Z" hostname="Mobile Safari" tests="3" failures="0" skipped="3" time="0" errors="0">
+<testcase name="Authentication › should display login page for unauthenticated users" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
 </testcase>
 <testcase name="Authentication › should show validation errors for invalid login" classname="auth.spec.ts" time="0">
 <properties>
@@ -142,25 +235,33 @@
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Authentication › should access protected routes when authenticated" classname="auth.spec.ts" time="1.822">
+<testcase name="Authentication › should access protected routes when authenticated" classname="auth.spec.ts" time="0">
+<skipped>
+</skipped>
 </testcase>
 </testsuite>
-<testsuite name="dashboard.spec.ts" timestamp="2025-07-16T17:35:00.106Z" hostname="Mobile Safari" tests="4" failures="0" skipped="0" time="7.469" errors="0">
-<testcase name="Dashboard › should display dashboard components" classname="dashboard.spec.ts" time="1.98">
+<testsuite name="dashboard.spec.ts" timestamp="2025-07-16T19:20:08.168Z" hostname="Mobile Safari" tests="4" failures="0" skipped="4" time="0" errors="0">
+<testcase name="Dashboard › should display dashboard components" classname="dashboard.spec.ts" time="0">
+<skipped>
+</skipped>
 </testcase>
-<testcase name="Dashboard › should navigate to work orders" classname="dashboard.spec.ts" time="2.147">
+<testcase name="Dashboard › should navigate to work orders" classname="dashboard.spec.ts" time="0">
+<skipped>
+</skipped>
 </testcase>
-<testcase name="Dashboard › should navigate to equipment" classname="dashboard.spec.ts" time="1.604">
+<testcase name="Dashboard › should navigate to equipment" classname="dashboard.spec.ts" time="0">
+<skipped>
+</skipped>
 </testcase>
-<testcase name="Dashboard › should navigate to inventory" classname="dashboard.spec.ts" time="1.738">
+<testcase name="Dashboard › should navigate to inventory" classname="dashboard.spec.ts" time="0">
+<skipped>
+</skipped>
 </testcase>
 </testsuite>
-<testsuite name="simple.spec.ts" timestamp="2025-07-16T17:35:00.106Z" hostname="Mobile Safari" tests="1" failures="0" skipped="0" time="1.774" errors="0">
-<testcase name="Simple Test › should load the application" classname="simple.spec.ts" time="1.774">
-<system-out>
-<![CDATA[Page title: MaintainPro CMMS
-]]>
-</system-out>
+<testsuite name="simple.spec.ts" timestamp="2025-07-16T19:20:08.168Z" hostname="Mobile Safari" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="Simple Test › should load the application" classname="simple.spec.ts" time="0">
+<skipped>
+</skipped>
 </testcase>
 </testsuite>
 </testsuites>
