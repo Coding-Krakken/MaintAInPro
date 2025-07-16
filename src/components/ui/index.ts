@@ -5,6 +5,7 @@ export { Select } from './Select';
 export { Textarea } from './Textarea';
 export { Checkbox } from './Checkbox';
 export { RadioGroup } from './RadioGroup';
+export { DatePicker } from './DatePicker';
 
 // Layout components
 export {
@@ -27,10 +28,18 @@ export {
   TableCell,
   TableCaption,
 } from './Table';
+export {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from './Accordion';
 
 // Navigation components
 export { Pagination } from './Pagination';
 export { Dropdown } from './Dropdown';
+export { Tooltip } from './Tooltip';
+export { Popover } from './Popover';
 
 // Feedback components
 export { Badge } from './Badge';
