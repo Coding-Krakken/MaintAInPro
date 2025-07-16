@@ -1,23 +1,11 @@
 [build]
-builder = "dockerfile"
-
-[deploy]
-healthcheckPath = "/"
-healthcheckTimeout = 300
-restartPolicyType = "ON_FAILURE"
-restartPolicyMaxRetries = 3ixpacks"
+builder = "nixpacks"
 
 [build.nixpacks]
 providers = ["node"]
 
 [build.nixpacks.variables]
 NODE_VERSION = "18"
-
-[build.nixpacks.build]
-buildCommand = "npm ci && npm run build"
-
-[build.nixpacks.start]
-startCommand = "npm start"
 
 [deploy]
 healthcheckPath = "/"
