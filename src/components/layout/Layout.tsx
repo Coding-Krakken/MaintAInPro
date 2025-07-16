@@ -10,7 +10,7 @@ export const Layout: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
 
   return (
-    <div className='flex h-screen bg-secondary-50'>
+    <div className='flex h-screen bg-secondary-50 dark:bg-secondary-900'>
       {/* Sidebar */}
       <Sidebar
         isOpen={sidebarOpen}
@@ -38,9 +38,11 @@ export const Layout: React.FC = () => {
 
       {/* Mobile sidebar backdrop */}
       {sidebarOpen && (
-        <div
+        <button
+          type='button'
           className='fixed inset-0 z-40 bg-black bg-opacity-50 lg:hidden'
           onClick={() => setSidebarOpen(false)}
+          aria-label='Close sidebar'
         />
       )}
     </div>

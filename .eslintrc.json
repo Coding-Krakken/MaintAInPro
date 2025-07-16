@@ -33,10 +33,24 @@
     "jsx-a11y/no-static-element-interactions": "warn",
     "jsx-a11y/label-has-associated-control": "warn"
   },
+  "overrides": [
+    {
+      "files": [
+        "src/lib/database.ts",
+        "src/services/supabase.ts",
+        "src/types/index.ts",
+        "src/main.tsx",
+        "src/modules/auth/hooks/useAuth.tsx"
+      ],
+      "rules": {
+        "@typescript-eslint/no-explicit-any": "off"
+      }
+    }
+  ],
   "settings": {
     "react": {
       "version": "detect"
     }
   },
-  "ignorePatterns": ["dist/", "node_modules/", "*.config.js", "*.config.ts"]
+  "ignorePatterns": ["dist/", "node_modules/", "*.config.js", "*.config.ts", "supabase/functions/"]
 }

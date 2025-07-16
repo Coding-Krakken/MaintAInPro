@@ -2,13 +2,14 @@ import React from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import {
   Bars3Icon,
-  BellIcon,
   UserCircleIcon,
   Cog6ToothIcon,
   ArrowRightOnRectangleIcon,
 } from '@heroicons/react/24/outline';
 import { useAuth } from '@/modules/auth/hooks/useAuth';
 import { cn } from '@/utils/cn';
+import { DarkModeToggle } from '@/components/ui/DarkModeToggle';
+import { NotificationCenter } from '@/components/ui/NotificationCenter';
 import type { User } from '@/types';
 
 interface HeaderProps {
@@ -28,14 +29,14 @@ export const Header: React.FC<HeaderProps> = ({ onMenuClick, user }) => {
   };
 
   return (
-    <header className='bg-white border-b border-secondary-200 px-4 lg:px-6 py-4'>
+    <header className='bg-white dark:bg-secondary-800 border-b border-secondary-200 dark:border-secondary-700 px-4 lg:px-6 py-4'>
       <div className='flex items-center justify-between'>
         {/* Mobile menu button */}
         <button
           onClick={onMenuClick}
-          className='p-2 rounded-lg hover:bg-secondary-100 transition-colors lg:hidden'
+          className='p-2 rounded-lg hover:bg-secondary-100 dark:hover:bg-secondary-700 transition-colors lg:hidden'
         >
-          <Bars3Icon className='w-6 h-6 text-secondary-600' />
+          <Bars3Icon className='w-6 h-6 text-secondary-600 dark:text-secondary-400' />
           <span className='sr-only'>Open sidebar</span>
         </button>
 
@@ -46,13 +47,11 @@ export const Header: React.FC<HeaderProps> = ({ onMenuClick, user }) => {
 
         {/* Right side actions */}
         <div className='flex items-center space-x-4'>
+          {/* Dark mode toggle */}
+          <DarkModeToggle />
+
           {/* Notifications */}
-          <button className='p-2 rounded-lg hover:bg-secondary-100 transition-colors relative'>
-            <BellIcon className='w-6 h-6 text-secondary-600' />
-            {/* Notification badge */}
-            <span className='absolute -top-1 -right-1 w-3 h-3 bg-error-500 rounded-full'></span>
-            <span className='sr-only'>View notifications</span>
-          </button>
+          <NotificationCenter />
 
           {/* User menu */}
           <Menu as='div' className='relative'>

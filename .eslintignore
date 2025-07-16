@@ -1,0 +1,10 @@
+dist/
+node_modules/
+*.config.js
+*.config.ts
+supabase/functions/**
+coverage/
+.vscode/
+.next/
+.nuxt/
+.output/

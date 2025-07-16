@@ -137,7 +137,7 @@
     ],
     "shard": null,
     "updateSnapshots": "missing",
-    "updateSourceMethod": "patch",
+    "updateSourceMethod": "3way",
     "version": "1.54.1",
     "workers": 1,
     "webServer": {
@@ -173,12 +173,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 917,
+                  "duration": 3655,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2025-07-15T18:06:12.036Z",
+                  "startTime": "2025-07-16T00:53:56.982Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -192,68 +192,13 @@
           "column": 1
         }
       ]
-    },
-    {
-      "title": "simple.spec.ts",
-      "file": "simple.spec.ts",
-      "column": 0,
-      "line": 0,
-      "specs": [],
-      "suites": [
-        {
-          "title": "Simple Test",
-          "file": "simple.spec.ts",
-          "line": 3,
-          "column": 6,
-          "specs": [
-            {
-              "title": "should load the application",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 1,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 926,
-                      "errors": [],
-                      "stdout": [
-                        {
-                          "text": "Page title: MaintainPro CMMS\n"
-                        }
-                      ],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-07-15T18:06:13.909Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "b095e72a376a9d09f724-ca498d08c94e58e3074e",
-              "file": "simple.spec.ts",
-              "line": 4,
-              "column": 3
-            }
-          ]
-        }
-      ]
     }
   ],
   "errors": [],
   "stats": {
-    "startTime": "2025-07-15T18:06:11.171Z",
-    "duration": 4098.075,
-    "expected": 2,
+    "startTime": "2025-07-16T00:53:53.681Z",
+    "duration": 25641.826,
+    "expected": 1,
     "skipped": 0,
     "unexpected": 0,
     "flaky": 0

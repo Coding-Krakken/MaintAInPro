@@ -130,12 +130,12 @@ maintenance automation, asset tracking, inventory management, and advanced repor
   - Account lockout after failed attempts
   - Secure password reset flow
 
-- [ ] **Security hardening**
-  - Content Security Policy (CSP) implementation
-  - XSS and CSRF protection
-  - Input sanitization and validation
-  - API rate limiting
-  - Audit logging framework
+- [ ] **Basic security measures**
+  - Input validation and sanitization
+  - Basic rate limiting
+  - Secure password policies
+  - Authentication token security
+  - Basic audit logging
 
 ### Week 2: Database Enhancement & Core Services
 
@@ -424,6 +424,15 @@ maintenance automation, asset tracking, inventory management, and advanced repor
   - Data encryption at rest and in transit
   - Regular security assessments
   - Compliance reporting
+
+- [ ] **Security hardening**
+  - Content Security Policy (CSP) implementation
+  - XSS and CSRF protection
+  - Advanced input sanitization and validation
+  - API rate limiting and throttling
+  - Comprehensive audit logging framework
+  - Vulnerability scanning and penetration testing
+  - Security incident response procedures
 
 ### Week 11: Performance Optimization & Scaling
 

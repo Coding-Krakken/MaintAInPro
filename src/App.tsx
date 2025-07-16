@@ -5,6 +5,9 @@ import { Layout } from '@/components/layout/Layout';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { ProtectedRoute } from '@/modules/auth/components/ProtectedRoute';
 import { useAuth } from '@/modules/auth/hooks/useAuth';
+import { ThemeProvider } from '@/components/ui/DarkModeToggle';
+import { ToastNotificationProvider } from '@/components/ui/NotificationCenter';
+import ErrorBoundary from '@/components/ui/ErrorBoundary';
 import DebugInfo from '@/components/DebugInfo';
 
 // Lazy load pages for better performance
@@ -115,60 +118,69 @@ const App: React.FC = () => {
   }
 
   return (
-    <Suspense
-      fallback={
-        <div className='flex items-center justify-center min-h-screen'>
-          <LoadingSpinner size='lg' />
-        </div>
-      }
-    >
-      <Routes>
-        {/* Public routes */}
-        <Route path='/login' element={<Login />} />
+    <ErrorBoundary>
+      <ThemeProvider>
+        <ToastNotificationProvider>
+          <Suspense
+            fallback={
+              <div className='flex items-center justify-center min-h-screen'>
+                <LoadingSpinner size='lg' />
+              </div>
+            }
+          >
+            <Routes>
+              {/* Public routes */}
+              <Route path='/login' element={<Login />} />
 
-        {/* Protected routes */}
-        <Route element={<ProtectedRoute />}>
-          <Route element={<Layout />}>
-            <Route path='/' element={<Dashboard />} />
-            <Route path='/dashboard' element={<Dashboard />} />
+              {/* Protected routes */}
+              <Route element={<ProtectedRoute />}>
+                <Route element={<Layout />}>
+                  <Route path='/' element={<Dashboard />} />
+                  <Route path='/dashboard' element={<Dashboard />} />
 
-            {/* Work Orders */}
-            <Route path='/work-orders' element={<WorkOrders />} />
-            <Route path='/work-orders/:id' element={<WorkOrderDetail />} />
+                  {/* Work Orders */}
+                  <Route path='/work-orders' element={<WorkOrders />} />
+                  <Route
+                    path='/work-orders/:id'
+                    element={<WorkOrderDetail />}
+                  />
 
-            {/* Equipment & Assets */}
-            <Route path='/equipment' element={<Equipment />} />
-            <Route path='/equipment/:id' element={<EquipmentDetail />} />
+                  {/* Equipment & Assets */}
+                  <Route path='/equipment' element={<Equipment />} />
+                  <Route path='/equipment/:id' element={<EquipmentDetail />} />
 
-            {/* Parts & Inventory */}
-            <Route path='/inventory' element={<Inventory />} />
-            <Route path='/inventory/parts/:id' element={<PartDetail />} />
+                  {/* Parts & Inventory */}
+                  <Route path='/inventory' element={<Inventory />} />
+                  <Route path='/inventory/parts/:id' element={<PartDetail />} />
 
-            {/* Preventive Maintenance */}
-            <Route
-              path='/preventive-maintenance'
-              element={<PreventiveMaintenance />}
-            />
+                  {/* Preventive Maintenance */}
+                  <Route
+                    path='/preventive-maintenance'
+                    element={<PreventiveMaintenance />}
+                  />
 
-            {/* Vendors & Contractors */}
-            <Route path='/vendors' element={<Vendors />} />
+                  {/* Vendors & Contractors */}
+                  <Route path='/vendors' element={<Vendors />} />
 
-            {/* Reports & Analytics */}
-            <Route path='/reports' element={<Reports />} />
+                  {/* Reports & Analytics */}
+                  <Route path='/reports' element={<Reports />} />
 
-            {/* Settings */}
-            <Route path='/settings' element={<Settings />} />
+                  {/* Settings */}
+                  <Route path='/settings' element={<Settings />} />
 
-            {/* Profile */}
-            <Route path='/profile' element={<Profile />} />
-          </Route>
-        </Route>
+                  {/* Profile */}
+                  <Route path='/profile' element={<Profile />} />
+                </Route>
+              </Route>
 
-        {/* 404 page */}
-        <Route path='*' element={<NotFound />} />
-      </Routes>
-      <DebugInfo />
-    </Suspense>
+              {/* 404 page */}
+              <Route path='*' element={<NotFound />} />
+            </Routes>
+            <DebugInfo />
+          </Suspense>
+        </ToastNotificationProvider>
+      </ThemeProvider>
+    </ErrorBoundary>
   );
 };
 

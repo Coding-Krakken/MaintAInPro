@@ -16,5 +16,34 @@
   "editor.inlineSuggest.enabled": true,
   "editor.quickSuggestions": {
     "strings": true
+  },
+  "typescript.preferences.includePackageJsonAutoImports": "on",
+  "typescript.suggest.autoImports": true,
+  "typescript.validate.enable": true,
+  "typescript.exclude": [
+    "**/supabase/functions/**/*"
+  ],
+  "files.exclude": {
+    "**/supabase/functions/**/*.ts": false
+  },
+  "typescript.preferences.exclude": [
+    "**/supabase/functions/**"
+  ],
+  "eslint.workingDirectories": [
+    {
+      "directory": ".",
+      "changeProcessCWD": true
+    }
+  ],
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+  "deno.enable": false,
+  "deno.enablePaths": ["./supabase/functions"],
+  "[typescript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
   }
 }

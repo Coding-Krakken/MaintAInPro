@@ -165,7 +165,7 @@ const Login: React.FC = () => {
 
           <div className='text-center'>
             <p className='text-sm text-secondary-600'>
-              Don't have an account?{' '}
+              Don&apos;t have an account?{' '}
               <a
                 href='#'
                 className='font-medium text-primary-600 hover:text-primary-500'

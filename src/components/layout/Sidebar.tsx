@@ -12,7 +12,7 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/outline';
 import { cn } from '@/utils/cn';
-import type { User } from '@/types';
+import type { User, Permission } from '@/types';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -24,7 +24,7 @@ interface NavigationItem {
   name: string;
   href: string;
   icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
-  permissions?: string[];
+  permissions?: Permission[];
 }
 
 const navigation: NavigationItem[] = [
@@ -54,7 +54,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, user }) => {
     if (!item.permissions) return true;
     if (!user) return false;
     return item.permissions.some(permission =>
-      user.permissions.includes(permission as any)
+      user.permissions.includes(permission)
     );
   });
 

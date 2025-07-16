@@ -65,7 +65,8 @@ const Dashboard: React.FC = () => {
             Welcome back, {user?.firstName}!
           </h1>
           <p className='text-secondary-600'>
-            Here's what's happening with your maintenance operations today.
+            Here&apos;s what&apos;s happening with your maintenance operations
+            today.
           </p>
         </div>
         <div className='text-sm text-secondary-500'>
