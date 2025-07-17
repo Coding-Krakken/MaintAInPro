@@ -51,5 +51,5 @@ EXPOSE ${PORT:-3000}
 # to avoid conflicts with Railway's own health check system
 HEALTHCHECK NONE
 
-# Start the application
-CMD ["sh", "-c", "serve -s dist -l ${PORT:-3000} --no-clipboard"]
+# Start the application - bind to all interfaces for Railway
+CMD ["sh", "-c", "serve -s dist -l ${PORT:-3000} --no-clipboard -H 0.0.0.0"]
