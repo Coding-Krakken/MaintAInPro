@@ -1,0 +1,36 @@
+# Alternative nixpacks.toml configurations for Railway deployment
+
+## Option 1: Minimal Configuration (Current)
+# Let Railway auto-detect Node.js version from package.json
+[phases.build]
+cmds = ["npm ci", "npm run build"]
+
+[phases.start]
+cmd = "npm start"
+
+[variables]
+NODE_ENV = "production"
+
+## Option 2: Explicit Node.js 18 (if auto-detect fails)
+# [phases.setup]
+# nixPkgs = ["nodejs-18_x"]
+
+# [phases.build]
+# cmds = ["npm ci", "npm run build"]
+
+# [phases.start]
+# cmd = "npm start"
+
+# [variables]
+# NODE_VERSION = "18"
+# NODE_ENV = "production"
+
+## Option 3: Alternative Node.js versions to try
+# Available versions (use one at a time):
+# - nodejs-16_x
+# - nodejs-18_x
+# - nodejs-19_x
+# - nodejs (latest stable)
+
+## Option 4: Docker-based approach (create Dockerfile)
+# If nixpacks continues to fail, we can switch to Docker deployment
