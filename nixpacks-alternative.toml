@@ -1,0 +1,16 @@
+# Alternative nixpacks.toml configuration
+# This uses a more recent Node.js version and lets Railway handle npm
+
+[phases.setup]
+nixPkgs = ["nodejs-20_x"]
+
+[phases.build]
+cmds = ["npm ci --production=false", "npm run build"]
+
+[phases.start]
+cmd = "npm start"
+
+[variables]
+NODE_VERSION = "20"
+NODE_ENV = "production"
+NPM_CONFIG_PRODUCTION = "false"
