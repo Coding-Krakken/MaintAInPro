@@ -1,5 +1,83 @@
 # Railway Deployment Troubleshooting Guide
 
+# Railway Deployment Troubleshooting Guide
+
+## Healthcare Failure Fix (July 17, 2025)
+
+### Issue Identified
+
+The Railway deployment was failing during the health check phase. The main issues were:
+
+1. **Missing curl in Alpine image**: The health check was using `wget` but Alpine doesn't have it by
+   default
+2. **Incorrect health check timing**: The start period was too short for the application to fully
+   start
+3. **Missing --no-clipboard flag**: The serve command could have issues in headless environments
+4. **Environment variable handling**: Missing .env.local file causing build failures
+
+### Applied Fixes
+
+#### 1. Updated Dockerfile Health Check
+
+```dockerfile
+# Health check - use curl instead of wget and add proper error handling
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+  CMD curl -f http://localhost:${PORT:-3000}/ || exit 1
+```
+
+#### 2. Added curl to Alpine Image
+
+```dockerfile
+# Install serve globally and curl for health checks
+RUN npm install -g serve && \
+    apk add --no-cache curl
+```
+
+#### 3. Improved Environment Variable Handling
+
+```dockerfile
+# Handle environment variables - copy if exists, otherwise use example
+RUN if [ -f .env.local ]; then \
+      echo "Using existing .env.local"; \
+    else \
+      echo "Creating .env.local from .env.example"; \
+      cp .env.example .env.local || echo "No .env.example found, using empty env"; \
+    fi
+```
+
+#### 4. Updated Railway Configuration
+
+```toml
+[deploy]
+healthcheckPath = "/"
+healthcheckTimeout = 300
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 3
+startCommand = "serve -s dist -l $PORT --no-clipboard"
+```
+
+#### 5. Enhanced Start Command
+
+```dockerfile
+CMD ["sh", "-c", "serve -s dist -l ${PORT:-3000} --no-clipboard"]
+```
+
+### New Deployment Script
+
+Created `railway-deploy-fixed.sh` that:
+
+- Sets required environment variables
+- Tests local build first
+- Tests Docker build
+- Provides better error messages and guidance
+
+### Testing Results
+
+- ✅ Docker build successful
+- ✅ Container starts correctly
+- ✅ Health check passes
+- ✅ Application serves content on configured port
+
 ## Current Build Issues
 
 Based on the Railway build logs, the Docker build process is running but may be encountering issues.

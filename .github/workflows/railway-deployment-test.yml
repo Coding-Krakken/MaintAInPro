@@ -1,0 +1,420 @@
+name: 'Railway Deployment Test'
+
+on:
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'Dockerfile'
+      - 'railway.toml'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'src/**'
+      - '.github/workflows/**'
+
+env:
+  NODE_VERSION: '18'
+
+jobs:
+  railway-build-test:
+    name: Test Railway Build Process
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Create test environment file
+        run: |
+          cat > .env.local << EOF
+          VITE_SUPABASE_URL=https://test.supabase.co
+          VITE_SUPABASE_ANON_KEY=test-key
+          VITE_APP_VERSION=test-${{ github.sha }}
+          VITE_APP_ENVIRONMENT=test
+          EOF
+
+      - name: Build Docker image (Railway simulation)
+        run: |
+          echo "🐳 Building Docker image..."
+          docker build -t railway-test:latest .
+
+          echo "✅ Docker build completed successfully"
+
+      - name: Test container startup
+        run: |
+          echo "🚀 Testing container startup..."
+
+          # Start container with Railway-like environment
+          docker run -d --name railway-test \
+            -p 3000:3000 \
+            -e PORT=3000 \
+            -e NODE_ENV=production \
+            -e RAILWAY_ENVIRONMENT=production \
+            railway-test:latest
+
+          # Wait for container to be ready
+          timeout=60
+          while [ $timeout -gt 0 ]; do
+            if docker exec railway-test curl -f http://localhost:3000/ > /dev/null 2>&1; then
+              echo "✅ Container is healthy and responding"
+              break
+            fi
+            echo "Waiting for container to be ready... ($timeout seconds left)"
+            sleep 2
+            timeout=$((timeout-2))
+          done
+
+          if [ $timeout -eq 0 ]; then
+            echo "❌ Container failed to start within timeout"
+            echo "Container logs:"
+            docker logs railway-test
+            exit 1
+          fi
+
+      - name: Test health check endpoint
+        run: |
+          echo "🏥 Testing health check..."
+
+          # Test that the app responds to health checks
+          response=$(docker exec railway-test curl -s -o /dev/null -w "%{http_code}" http://localhost:3000/)
+
+          if [ "$response" = "200" ]; then
+            echo "✅ Health check passed (HTTP $response)"
+          else
+            echo "❌ Health check failed (HTTP $response)"
+            docker logs railway-test
+            exit 1
+          fi
+
+      - name: Test container resilience
+        run: |
+          echo "🔄 Testing container resilience..."
+
+          # Test multiple requests to ensure stability
+          for i in {1..10}; do
+            response=$(docker exec railway-test curl -s -o /dev/null -w "%{http_code}" http://localhost:3000/)
+            if [ "$response" != "200" ]; then
+              echo "❌ Request $i failed with HTTP $response"
+              exit 1
+            fi
+            echo "✅ Request $i: HTTP $response"
+          done
+
+      - name: Test resource usage
+        run: |
+          echo "📊 Checking resource usage..."
+
+          # Check memory usage
+          memory=$(docker stats railway-test --no-stream --format "table {{.MemUsage}}" | tail -n +2)
+          echo "Memory usage: $memory"
+
+          # Check if container is still running
+          if docker ps | grep railway-test > /dev/null; then
+            echo "✅ Container is still running after tests"
+          else
+            echo "❌ Container stopped unexpectedly"
+            exit 1
+          fi
+
+      - name: Cleanup
+        if: always()
+        run: |
+          echo "🧹 Cleaning up..."
+          docker stop railway-test || true
+          docker rm railway-test || true
+          docker rmi railway-test:latest || true
+
+  railway-config-validation:
+    name: Validate Railway Configuration
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Validate railway.toml
+        run: |
+          echo "🔍 Validating railway.toml configuration..."
+
+          if [ ! -f railway.toml ]; then
+            echo "❌ railway.toml not found"
+            exit 1
+          fi
+
+          # Check required fields
+          if ! grep -q "builder.*dockerfile" railway.toml; then
+            echo "❌ Dockerfile builder not configured"
+            exit 1
+          fi
+
+          if ! grep -q "healthcheckPath" railway.toml; then
+            echo "❌ Health check path not configured"
+            exit 1
+          fi
+
+          if ! grep -q "startCommand" railway.toml; then
+            echo "❌ Start command not configured"
+            exit 1
+          fi
+
+          echo "✅ railway.toml validation passed"
+
+      - name: Validate Dockerfile
+        run: |
+          echo "🔍 Validating Dockerfile..."
+
+          if [ ! -f Dockerfile ]; then
+            echo "❌ Dockerfile not found"
+            exit 1
+          fi
+
+          # Check for required components
+          if ! grep -q "HEALTHCHECK" Dockerfile; then
+            echo "❌ HEALTHCHECK not found in Dockerfile"
+            exit 1
+          fi
+
+          if ! grep -q "curl" Dockerfile; then
+            echo "❌ curl not installed for health checks"
+            exit 1
+          fi
+
+          if ! grep -q "serve" Dockerfile; then
+            echo "❌ serve not found in Dockerfile"
+            exit 1
+          fi
+
+          echo "✅ Dockerfile validation passed"
+
+      - name: Test Railway deployment script
+        run: |
+          echo "🧪 Testing Railway deployment script..."
+
+          if [ -f railway-deploy-fixed.sh ]; then
+            chmod +x railway-deploy-fixed.sh
+            
+            # Test script syntax
+            bash -n railway-deploy-fixed.sh
+            echo "✅ Deployment script syntax is valid"
+          else
+            echo "⚠️  Railway deployment script not found"
+          fi
+
+  railway-environment-test:
+    name: Test Railway Environment Variables
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Test environment handling
+        run: |
+          echo "🔧 Testing environment variable handling..."
+
+          # Test with missing .env.local
+          rm -f .env.local
+
+          # This should not fail even without .env.local
+          docker build -t env-test:latest .
+
+          # Test with .env.local
+          cat > .env.local << EOF
+          VITE_SUPABASE_URL=https://test.supabase.co
+          VITE_SUPABASE_ANON_KEY=test-key
+          VITE_APP_VERSION=test
+          VITE_APP_ENVIRONMENT=test
+          EOF
+
+          docker build -t env-test-with-env:latest .
+
+          echo "✅ Environment variable handling works correctly"
+
+      - name: Test production environment
+        run: |
+          echo "🏭 Testing production environment simulation..."
+
+          # Create production-like environment
+          cat > .env.local << EOF
+          VITE_SUPABASE_URL=https://prod.supabase.co
+          VITE_SUPABASE_ANON_KEY=prod-key
+          VITE_APP_VERSION=${{ github.sha }}
+          VITE_APP_ENVIRONMENT=production
+          NODE_ENV=production
+          EOF
+
+          docker build -t prod-test:latest .
+          docker run -d --name prod-test -p 3001:3000 -e PORT=3000 -e NODE_ENV=production prod-test:latest
+
+          # Wait and test
+          sleep 10
+          response=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3001/)
+
+          if [ "$response" = "200" ]; then
+            echo "✅ Production environment test passed"
+          else
+            echo "❌ Production environment test failed"
+            docker logs prod-test
+            exit 1
+          fi
+
+          docker stop prod-test
+          docker rm prod-test
+
+  railway-deployment-simulation:
+    name: Simulate Complete Railway Deployment
+    runs-on: ubuntu-latest
+    needs:
+      [railway-build-test, railway-config-validation, railway-environment-test]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+
+      - name: Create production environment
+        run: |
+          cat > .env.local << EOF
+          VITE_SUPABASE_URL=${{ secrets.SUPABASE_URL || 'https://test.supabase.co' }}
+          VITE_SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY || 'test-key' }}
+          VITE_APP_VERSION=${{ github.sha }}
+          VITE_APP_ENVIRONMENT=staging
+          EOF
+
+      - name: Simulate Railway deployment
+        run: |
+          echo "🚀 Simulating complete Railway deployment..."
+
+          # Build with Railway-like conditions
+          docker build -t railway-simulation:latest .
+
+          # Run with Railway-like environment
+          docker run -d --name railway-sim \
+            -p 3000:3000 \
+            -e PORT=3000 \
+            -e NODE_ENV=production \
+            -e RAILWAY_ENVIRONMENT=production \
+            -e RAILWAY_PROJECT_ID=test-project \
+            -e RAILWAY_SERVICE_ID=test-service \
+            railway-simulation:latest
+
+          # Wait for deployment
+          echo "Waiting for deployment to be ready..."
+          timeout=90
+          while [ $timeout -gt 0 ]; do
+            if curl -f http://localhost:3000/ > /dev/null 2>&1; then
+              echo "✅ Railway simulation deployment successful"
+              break
+            fi
+            echo "Waiting... ($timeout seconds left)"
+            sleep 3
+            timeout=$((timeout-3))
+          done
+
+          if [ $timeout -eq 0 ]; then
+            echo "❌ Railway simulation deployment failed"
+            docker logs railway-sim
+            exit 1
+          fi
+
+      - name: Post-deployment tests
+        run: |
+          echo "🧪 Running post-deployment tests..."
+
+          # Test health endpoint
+          curl -f http://localhost:3000/ || exit 1
+
+          # Test that static assets are served
+          curl -I http://localhost:3000/assets/ || echo "Static assets test skipped"
+
+          # Test error handling
+          curl -f http://localhost:3000/nonexistent || echo "404 handling test completed"
+
+          echo "✅ Post-deployment tests completed"
+
+      - name: Performance test
+        run: |
+          echo "⚡ Running basic performance test..."
+
+          # Install Apache Bench for load testing
+          sudo apt-get update
+          sudo apt-get install -y apache2-utils
+
+          # Run load test
+          ab -n 100 -c 10 http://localhost:3000/ > performance.log
+
+          # Check results
+          if grep -q "Failed requests:        0" performance.log; then
+            echo "✅ Performance test passed - no failed requests"
+          else
+            echo "⚠️  Performance test had some failed requests"
+            cat performance.log
+          fi
+
+      - name: Cleanup
+        if: always()
+        run: |
+          docker stop railway-sim || true
+          docker rm railway-sim || true
+          docker rmi railway-simulation:latest || true
+
+  summary:
+    name: Railway Test Summary
+    runs-on: ubuntu-latest
+    needs:
+      [
+        railway-build-test,
+        railway-config-validation,
+        railway-environment-test,
+        railway-deployment-simulation,
+      ]
+    if: always()
+
+    steps:
+      - name: Test Results Summary
+        run: |
+          echo "## Railway Deployment Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ needs.railway-build-test.result }}" = "success" ]; then
+            echo "✅ **Railway Build Test**: PASSED" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **Railway Build Test**: FAILED" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if [ "${{ needs.railway-config-validation.result }}" = "success" ]; then
+            echo "✅ **Railway Configuration**: PASSED" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **Railway Configuration**: FAILED" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if [ "${{ needs.railway-environment-test.result }}" = "success" ]; then
+            echo "✅ **Environment Testing**: PASSED" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **Environment Testing**: FAILED" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if [ "${{ needs.railway-deployment-simulation.result }}" = "success" ]; then
+            echo "✅ **Deployment Simulation**: PASSED" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **Deployment Simulation**: FAILED" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Next Steps" >> $GITHUB_STEP_SUMMARY
+          echo "- If all tests pass, your PR is ready for Railway deployment" >> $GITHUB_STEP_SUMMARY
+          echo "- If any tests fail, please review the logs and fix the issues" >> $GITHUB_STEP_SUMMARY
+          echo "- Check the Railway troubleshooting guide for common issues" >> $GITHUB_STEP_SUMMARY

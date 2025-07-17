@@ -57,12 +57,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const initAuth = async () => {
       try {
-        console.log('🔍 Initializing auth...');
-
         // Get initial session
         const session = await authService.getSession();
         if (mounted) {
-          console.log('📊 Initial session:', session ? 'found' : 'not found');
           setSession(session);
           setIsLoading(false);
         }
@@ -78,7 +75,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     // Set a timeout to prevent infinite loading
     const timeoutId = setTimeout(() => {
       if (mounted && isLoading) {
-        console.warn('⚠️ Auth initialization timed out, stopping loading');
         setSession(null);
         setIsLoading(false);
       }
@@ -91,11 +87,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       data: { subscription },
     } = authService.onAuthStateChange(async authState => {
       if (!mounted) return;
-
-      console.log(
-        '🔄 Auth state changed:',
-        authState.user ? 'signed in' : 'signed out'
-      );
 
       setSession(authState.session); // Use the actual session object
       setIsLoading(false);

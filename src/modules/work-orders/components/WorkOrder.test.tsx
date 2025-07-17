@@ -1,5 +1,9 @@
 import { describe, it, expect, vi } from 'vitest';
-import { WorkOrderPriority, WorkOrderType, WorkOrderStatus } from '../types/workOrder';
+import {
+  WorkOrderPriority,
+  WorkOrderType,
+  WorkOrderStatus,
+} from '../types/workOrder';
 
 // Mock the work order service
 vi.mock('../services/workOrderService', () => ({
@@ -44,15 +48,15 @@ vi.mock('date-fns', () => ({
 
 // Mock Lucide icons
 vi.mock('lucide-react', () => ({
-  PlusIcon: () => <span data-testid="plus-icon">+</span>,
-  SearchIcon: () => <span data-testid="search-icon">🔍</span>,
-  FilterIcon: () => <span data-testid="filter-icon">⚙️</span>,
-  CalendarIcon: () => <span data-testid="calendar-icon">📅</span>,
-  ClockIcon: () => <span data-testid="clock-icon">⏰</span>,
-  UserIcon: () => <span data-testid="user-icon">👤</span>,
-  WrenchIcon: () => <span data-testid="wrench-icon">🔧</span>,
-  AlertTriangleIcon: () => <span data-testid="alert-icon">⚠️</span>,
-  MinusIcon: () => <span data-testid="minus-icon">−</span>,
+  PlusIcon: () => <span data-testid='plus-icon'>+</span>,
+  SearchIcon: () => <span data-testid='search-icon'>🔍</span>,
+  FilterIcon: () => <span data-testid='filter-icon'>⚙️</span>,
+  CalendarIcon: () => <span data-testid='calendar-icon'>📅</span>,
+  ClockIcon: () => <span data-testid='clock-icon'>⏰</span>,
+  UserIcon: () => <span data-testid='user-icon'>👤</span>,
+  WrenchIcon: () => <span data-testid='wrench-icon'>🔧</span>,
+  AlertTriangleIcon: () => <span data-testid='alert-icon'>⚠️</span>,
+  MinusIcon: () => <span data-testid='minus-icon'>−</span>,
 }));
 
 describe('Work Order Types and Enums', () => {

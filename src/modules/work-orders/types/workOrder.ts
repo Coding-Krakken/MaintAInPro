@@ -24,7 +24,7 @@ export interface WorkOrder {
   completion_notes?: string;
   verified_by?: string;
   verified_at?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   created_at: string;
   updated_at: string;
 }
@@ -34,7 +34,7 @@ export enum WorkOrderPriority {
   MEDIUM = 'medium',
   HIGH = 'high',
   CRITICAL = 'critical',
-  EMERGENCY = 'emergency'
+  EMERGENCY = 'emergency',
 }
 
 export enum WorkOrderStatus {
@@ -45,7 +45,7 @@ export enum WorkOrderStatus {
   COMPLETED = 'completed',
   VERIFIED = 'verified',
   CLOSED = 'closed',
-  CANCELLED = 'cancelled'
+  CANCELLED = 'cancelled',
 }
 
 export enum WorkOrderType {
@@ -54,7 +54,7 @@ export enum WorkOrderType {
   EMERGENCY = 'emergency',
   INSPECTION = 'inspection',
   SAFETY = 'safety',
-  IMPROVEMENT = 'improvement'
+  IMPROVEMENT = 'improvement',
 }
 
 export interface WorkOrderChecklistItem {

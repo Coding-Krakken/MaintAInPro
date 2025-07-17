@@ -7,6 +7,8 @@ import {
   WorkOrderStats,
   WorkOrderListItem,
   WorkOrderStatus,
+  WorkOrderPriority,
+  WorkOrderType,
   WorkOrderChecklistItem,
   WorkOrderTimeLog,
 } from '../types/workOrder';
@@ -83,21 +85,34 @@ class WorkOrderService {
     }
 
     // Transform data to WorkOrderListItem format
-    const workOrders: WorkOrderListItem[] = (data || []).map((wo: any) => ({
-      id: wo.id,
-      wo_number: wo.wo_number,
-      title: wo.title,
-      priority: wo.priority,
-      status: wo.status,
-      type: wo.type,
-      assigned_to_name: wo.assigned_to_profile
-        ? `${wo.assigned_to_profile.first_name} ${wo.assigned_to_profile.last_name}`
-        : undefined,
-      equipment_name: wo.equipment?.name || undefined,
-      created_at: wo.created_at,
-      scheduled_start: wo.scheduled_start || undefined,
-      is_overdue: this.isOverdue(wo.scheduled_start, wo.status),
-    }));
+    const workOrders: WorkOrderListItem[] = (data || []).map(
+      (wo: {
+        id: string;
+        wo_number: string;
+        title: string;
+        priority: WorkOrderPriority;
+        status: WorkOrderStatus;
+        type: WorkOrderType;
+        created_at: string;
+        scheduled_start: string | null;
+        assigned_to_profile: { first_name: string; last_name: string }[] | null;
+        equipment: { name: string }[] | null;
+      }) => ({
+        id: wo.id,
+        wo_number: wo.wo_number,
+        title: wo.title,
+        priority: wo.priority,
+        status: wo.status,
+        type: wo.type,
+        assigned_to_name: wo.assigned_to_profile?.[0]
+          ? `${wo.assigned_to_profile[0].first_name} ${wo.assigned_to_profile[0].last_name}`
+          : undefined,
+        equipment_name: wo.equipment?.[0]?.name || undefined,
+        created_at: wo.created_at,
+        scheduled_start: wo.scheduled_start || undefined,
+        is_overdue: this.isOverdue(wo.scheduled_start, wo.status),
+      })
+    );
 
     return {
       data: workOrders,
@@ -223,7 +238,7 @@ class WorkOrderService {
 
     const userId = user.id;
 
-    const updates: any = {
+    const updates: Partial<WorkOrder> = {
       status,
       updated_at: new Date().toISOString(),
     };
@@ -261,10 +276,7 @@ class WorkOrderService {
    * Delete a work order
    */
   async deleteWorkOrder(id: string): Promise<void> {
-    const { error } = await supabase
-      .from('work_orders')
-      .delete()
-      .eq('id', id);
+    const { error } = await supabase.from('work_orders').delete().eq('id', id);
 
     if (error) {
       throw new Error(`Failed to delete work order: ${error.message}`);
@@ -280,7 +292,9 @@ class WorkOrderService {
       .select('status, created_at, actual_end, scheduled_end');
 
     if (error) {
-      throw new Error(`Failed to fetch work order statistics: ${error.message}`);
+      throw new Error(
+        `Failed to fetch work order statistics: ${error.message}`
+      );
     }
 
     const stats: WorkOrderStats = {
@@ -302,7 +316,7 @@ class WorkOrderService {
     let totalCompletionTime = 0;
     let completedCount = 0;
 
-    data.forEach((wo) => {
+    data.forEach(wo => {
       switch (wo.status) {
         case WorkOrderStatus.OPEN:
           stats.open++;
@@ -341,8 +355,10 @@ class WorkOrderService {
       }
     });
 
-    stats.avg_completion_time = completedCount > 0 ? totalCompletionTime / completedCount : 0;
-    stats.completion_rate = stats.total > 0 ? (stats.completed / stats.total) * 100 : 0;
+    stats.avg_completion_time =
+      completedCount > 0 ? totalCompletionTime / completedCount : 0;
+    stats.completion_rate =
+      stats.total > 0 ? (stats.completed / stats.total) * 100 : 0;
 
     return stats;
   }
@@ -350,7 +366,9 @@ class WorkOrderService {
   /**
    * Get work order checklist items
    */
-  async getChecklistItems(workOrderId: string): Promise<WorkOrderChecklistItem[]> {
+  async getChecklistItems(
+    workOrderId: string
+  ): Promise<WorkOrderChecklistItem[]> {
     const { data, error } = await supabase
       .from('wo_checklist_items')
       .select('*')
@@ -382,7 +400,7 @@ class WorkOrderService {
 
     const userId = user.id;
 
-    const updates: any = {
+    const updates: Partial<WorkOrderChecklistItem> = {
       is_completed: isCompleted,
       updated_at: new Date().toISOString(),
     };
@@ -390,9 +408,6 @@ class WorkOrderService {
     if (isCompleted) {
       updates.completed_by = userId;
       updates.completed_at = new Date().toISOString();
-    } else {
-      updates.completed_by = null;
-      updates.completed_at = null;
     }
 
     if (notes !== undefined) {
@@ -472,9 +487,12 @@ class WorkOrderService {
   /**
    * Stop time tracking for a work order
    */
-  async stopTimeTracking(timeLogId: string, notes?: string): Promise<WorkOrderTimeLog> {
+  async stopTimeTracking(
+    timeLogId: string,
+    notes?: string
+  ): Promise<WorkOrderTimeLog> {
     const endTime = new Date().toISOString();
-    
+
     // First get the existing time log to calculate duration
     const { data: existingLog, error: fetchError } = await supabase
       .from('wo_time_logs')
@@ -487,7 +505,9 @@ class WorkOrderService {
     }
 
     const startTime = new Date(existingLog.start_time);
-    const duration = Math.round((new Date(endTime).getTime() - startTime.getTime()) / 60000); // Duration in minutes
+    const duration = Math.round(
+      (new Date(endTime).getTime() - startTime.getTime()) / 60000
+    ); // Duration in minutes
 
     const { data, error } = await supabase
       .from('wo_time_logs')
@@ -542,7 +562,7 @@ class WorkOrderService {
       order_index: number;
     }>
   ): Promise<void> {
-    const checklistItems = items.map((item) => ({
+    const checklistItems = items.map(item => ({
       work_order_id: workOrderId,
       ...item,
       is_completed: false,
@@ -559,17 +579,20 @@ class WorkOrderService {
     }
   }
 
-  private isOverdue(scheduledEnd: string | null, status: WorkOrderStatus): boolean {
+  private isOverdue(
+    scheduledEnd: string | null,
+    status: WorkOrderStatus
+  ): boolean {
     if (!scheduledEnd) return false;
-    
+
     const completedStatuses = [
       WorkOrderStatus.COMPLETED,
       WorkOrderStatus.VERIFIED,
       WorkOrderStatus.CLOSED,
     ];
-    
+
     if (completedStatuses.includes(status)) return false;
-    
+
     return new Date(scheduledEnd) < new Date();
   }
 }

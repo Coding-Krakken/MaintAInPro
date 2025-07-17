@@ -8,7 +8,6 @@ import { useAuth } from '@/modules/auth/hooks/useAuth';
 import { ThemeProvider } from '@/components/ui/DarkModeToggle';
 import { ToastNotificationProvider } from '@/components/ui/NotificationCenter';
 import ErrorBoundary from '@/components/ui/ErrorBoundary';
-import DebugInfo from '@/components/DebugInfo';
 
 // Lazy load pages for better performance
 const Dashboard = React.lazy(() => import('@/pages/Dashboard'));
@@ -44,7 +43,7 @@ const Profile = React.lazy(() => import('@/pages/Profile'));
 const NotFound = React.lazy(() => import('@/pages/NotFound'));
 
 const App: React.FC = () => {
-  const { isLoading, isAuthenticated, user } = useAuth();
+  const { isLoading } = useAuth();
 
   // Add a timeout fallback for loading state
   const [showLoadingFallback, setShowLoadingFallback] = React.useState(false);
@@ -52,16 +51,12 @@ const App: React.FC = () => {
   React.useEffect(() => {
     const timer = setTimeout(() => {
       if (isLoading) {
-        console.warn('⚠️ Loading state persisted too long, showing fallback');
         setShowLoadingFallback(true);
       }
     }, 8000); // 8 seconds
 
     return () => clearTimeout(timer);
   }, [isLoading]);
-
-  // Debug output
-  console.log('App render:', { isLoading, isAuthenticated, user });
 
   // Show debug info if there are issues
   if (
@@ -76,7 +71,9 @@ const App: React.FC = () => {
         <p className='mb-4'>
           Supabase environment variables are not configured.
         </p>
-        <DebugInfo />
+        <p className='text-sm text-gray-600'>
+          Please check your environment configuration and try again.
+        </p>
       </div>
     );
   }
@@ -109,9 +106,6 @@ const App: React.FC = () => {
           >
             Reload Page
           </button>
-          <div className='mt-4'>
-            <DebugInfo />
-          </div>
         </div>
       </div>
     );
@@ -176,7 +170,6 @@ const App: React.FC = () => {
               {/* 404 page */}
               <Route path='*' element={<NotFound />} />
             </Routes>
-            <DebugInfo />
           </Suspense>
         </ToastNotificationProvider>
       </ThemeProvider>

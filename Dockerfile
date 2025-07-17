@@ -13,8 +13,13 @@ RUN npm ci
 # Copy source code
 COPY . .
 
-# Copy environment variables
-COPY .env.local .env.local
+# Handle environment variables - copy if exists, otherwise use example
+RUN if [ -f .env.local ]; then \
+      echo "Using existing .env.local"; \
+    else \
+      echo "Creating .env.local from .env.example"; \
+      cp .env.example .env.local || echo "No .env.example found, using empty env"; \
+    fi
 
 # Build the application
 RUN npm run build
@@ -22,8 +27,9 @@ RUN npm run build
 # Production stage
 FROM node:18-alpine AS production
 
-# Install serve globally
-RUN npm install -g serve
+# Install serve globally and curl for health checks
+RUN npm install -g serve && \
+    apk add --no-cache curl
 
 # Set working directory
 WORKDIR /app
@@ -42,9 +48,9 @@ USER nextjs
 # Expose port (Railway will set the PORT environment variable)
 EXPOSE ${PORT:-3000}
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://localhost:${PORT:-3000}/ || exit 1
+# Health check - use curl instead of wget and add proper error handling
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+  CMD curl -f http://localhost:${PORT:-3000}/ || exit 1
 
 # Start the application
-CMD ["sh", "-c", "serve -s dist -l ${PORT:-3000}"]
+CMD ["sh", "-c", "serve -s dist -l ${PORT:-3000} --no-clipboard"]
