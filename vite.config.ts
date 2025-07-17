@@ -95,6 +95,6 @@ export default defineConfig({
   preview: {
     port: 3000,
     host: true,
-    allowedHosts: ['healthcheck.railway.app'],
+    allowedHosts: ['healthcheck.railway.app', 'uasmaintenance.com'],
   },
 });
