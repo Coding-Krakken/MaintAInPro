@@ -1,8 +1,5 @@
-# Multi-stage Dockerfile for Railway deployment
-# Use this if nixpacks continues to fail
-
-# Build stage
-FROM node:18-alpine AS builder
+# Simple Dockerfile for Railway deployment
+FROM node:18-alpine
 
 # Set working directory
 WORKDIR /app
@@ -10,7 +7,7 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-# Install dependencies (skip husky in Docker)
+# Install dependencies including dev dependencies for build
 RUN npm ci --ignore-scripts
 
 # Copy source code
@@ -19,26 +16,12 @@ COPY . .
 # Build the application
 RUN npm run build
 
-# Production stage
-FROM node:18-alpine AS production
-
-# Set working directory
-WORKDIR /app
-
-# Copy package files
-COPY package*.json ./
-
-# Install only production dependencies (skip husky) and curl for healthcheck
-RUN npm ci --omit=dev --ignore-scripts && npm cache clean --force && \
-    apk add --no-cache curl
-
-# Copy built application from builder stage
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/public ./public
+# Install curl for healthcheck
+RUN apk add --no-cache curl
 
 # Create non-root user
-RUN addgroup -g 1001 -S nodejs
-RUN adduser -S viteuser -u 1001
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S viteuser -u 1001
 
 # Change ownership of the app directory
 RUN chown -R viteuser:nodejs /app
