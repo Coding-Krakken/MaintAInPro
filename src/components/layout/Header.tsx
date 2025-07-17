@@ -32,19 +32,23 @@ export const Header: React.FC<HeaderProps> = ({ onMenuClick, user }) => {
     <header className='bg-white dark:bg-secondary-800 border-b border-secondary-200 dark:border-secondary-700 px-4 lg:px-6 py-4'>
       <div className='flex items-center justify-between'>
         {/* Mobile menu button */}
+        {/* Mobile menu button */}
         <button
+          type='button'
+          className='lg:hidden p-2 rounded-md text-secondary-600 hover:text-secondary-900 hover:bg-secondary-100 dark:text-secondary-400 dark:hover:text-secondary-200 dark:hover:bg-secondary-700'
           onClick={onMenuClick}
-          className='p-2 rounded-lg hover:bg-secondary-100 dark:hover:bg-secondary-700 transition-colors lg:hidden'
+          aria-label='Open menu'
         >
-          <Bars3Icon className='w-6 h-6 text-secondary-600 dark:text-secondary-400' />
-          <span className='sr-only'>Open sidebar</span>
+          <Bars3Icon className='h-6 w-6' />
         </button>
-
+        {/* Navigation landmark for accessibility */}
+        <nav role='navigation' className='sr-only'>
+          <span>Main Navigation</span>
+        </nav>{' '}
         {/* Page title will be added by individual pages */}
         <div className='flex-1 lg:flex lg:items-center lg:justify-start'>
           {/* This space can be used for breadcrumbs or page titles */}
         </div>
-
         {/* Right side actions */}
         <div className='flex items-center space-x-4'>
           {/* Dark mode toggle */}

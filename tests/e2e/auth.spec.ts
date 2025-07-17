@@ -65,10 +65,29 @@ test.describe('Authentication', () => {
   test('should access protected routes when authenticated', async ({
     page,
   }) => {
-    // This test uses the mocked auth state from auth.setup.ts
-    await page.goto('/dashboard');
+    // Use actual login flow instead of mocked auth
+    await page.goto('/');
 
-    // Should be able to access dashboard
-    await expect(page.getByText(/dashboard/i)).toBeVisible();
+    // Check if we're on the login page and perform login
+    const loginButton = page.getByRole('button', { name: /sign in/i });
+
+    if (await loginButton.isVisible()) {
+      // Fill in demo credentials
+      await page
+        .getByRole('textbox', { name: /email/i })
+        .fill('admin@maintainpro.com');
+      await page
+        .getByRole('textbox', { name: /password/i })
+        .fill('password123');
+      await loginButton.click();
+
+      // Wait for navigation to dashboard
+      await page.waitForURL('/dashboard');
+    }
+
+    // Should be able to access dashboard - look for the page title in header
+    await expect(
+      page.getByRole('heading', { name: /dashboard/i })
+    ).toBeVisible();
   });
 });
