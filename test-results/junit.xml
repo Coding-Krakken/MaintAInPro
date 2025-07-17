@@ -1,6 +1,0 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="2.5513149999999443">
-<testsuite name="auth.setup.ts" timestamp="2025-07-17T02:33:21.616Z" hostname="setup" tests="1" failures="0" skipped="0" time="0.962" errors="0">
-<testcase name="authenticate" classname="auth.setup.ts" time="0.962">
-</testcase>
-</testsuite>
-</testsuites>
