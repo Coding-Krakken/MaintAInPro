@@ -1,3 +1,6 @@
+# Railway configuration for Docker deployment
+# Use this if nixpacks fails
+
 [build]
 builder = "dockerfile"
 dockerfilePath = "Dockerfile"

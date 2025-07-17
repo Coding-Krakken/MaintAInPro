@@ -10,8 +10,8 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-# Install dependencies
-RUN npm ci --only=production=false
+# Install dependencies (skip husky in Docker)
+RUN npm ci --ignore-scripts
 
 # Copy source code
 COPY . .
@@ -28,8 +28,9 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-# Install only production dependencies
-RUN npm ci --only=production && npm cache clean --force
+# Install only production dependencies (skip husky) and curl for healthcheck
+RUN npm ci --omit=dev --ignore-scripts && npm cache clean --force && \
+    apk add --no-cache curl
 
 # Copy built application from builder stage
 COPY --from=builder /app/dist ./dist
@@ -37,11 +38,11 @@ COPY --from=builder /app/public ./public
 
 # Create non-root user
 RUN addgroup -g 1001 -S nodejs
-RUN adduser -S nextjs -u 1001
+RUN adduser -S viteuser -u 1001
 
 # Change ownership of the app directory
-RUN chown -R nextjs:nodejs /app
-USER nextjs
+RUN chown -R viteuser:nodejs /app
+USER viteuser
 
 # Expose port
 EXPOSE 3000
