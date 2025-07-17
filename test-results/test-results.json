@@ -1,8 +1,8 @@
 {
   "config": {
-    "configFile": "/home/runner/work/MaintAInPro/MaintAInPro/playwright.config.ts",
-    "rootDir": "/home/runner/work/MaintAInPro/MaintAInPro/tests/e2e",
-    "forbidOnly": true,
+    "configFile": "/workspaces/MaintAInPro/playwright.config.ts",
+    "rootDir": "/workspaces/MaintAInPro/tests/e2e",
+    "forbidOnly": false,
     "fullyParallel": true,
     "globalSetup": null,
     "globalTeardown": null,
@@ -11,28 +11,6 @@
     "grepInvert": null,
     "maxFailures": 0,
     "metadata": {
-      "ci": {
-        "commitHref": "https://github.com/Coding-Krakken/MaintAInPro/commit/9d5ce9561a7abff9b4f564bb6d59ef7d3bb861ab",
-        "commitHash": "9d5ce9561a7abff9b4f564bb6d59ef7d3bb861ab",
-        "buildHref": "https://github.com/Coding-Krakken/MaintAInPro/actions/runs/16328249440"
-      },
-      "gitCommit": {
-        "shortHash": "9d5ce95",
-        "hash": "9d5ce9561a7abff9b4f564bb6d59ef7d3bb861ab",
-        "subject": "Initial plan",
-        "body": "Initial plan",
-        "author": {
-          "name": "copilot-swe-agent[bot]",
-          "email": "198982749+Copilot@users.noreply.github.com",
-          "time": 1752693281000
-        },
-        "committer": {
-          "name": "copilot-swe-agent[bot]",
-          "email": "198982749+Copilot@users.noreply.github.com",
-          "time": 1752693281000
-        },
-        "branch": "copilot/fix-0185046d-70fe-4e89-b365-13fee3896c32"
-      },
       "actualWorkers": 1
     },
     "preserveOutput": "always",
@@ -61,37 +39,15 @@
     "quiet": false,
     "projects": [
       {
-        "outputDir": "/home/runner/work/MaintAInPro/MaintAInPro/test-results",
+        "outputDir": "/workspaces/MaintAInPro/test-results",
         "repeatEach": 1,
-        "retries": 2,
+        "retries": 0,
         "metadata": {
-          "ci": {
-            "commitHref": "https://github.com/Coding-Krakken/MaintAInPro/commit/9d5ce9561a7abff9b4f564bb6d59ef7d3bb861ab",
-            "commitHash": "9d5ce9561a7abff9b4f564bb6d59ef7d3bb861ab",
-            "buildHref": "https://github.com/Coding-Krakken/MaintAInPro/actions/runs/16328249440"
-          },
-          "gitCommit": {
-            "shortHash": "9d5ce95",
-            "hash": "9d5ce9561a7abff9b4f564bb6d59ef7d3bb861ab",
-            "subject": "Initial plan",
-            "body": "Initial plan",
-            "author": {
-              "name": "copilot-swe-agent[bot]",
-              "email": "198982749+Copilot@users.noreply.github.com",
-              "time": 1752693281000
-            },
-            "committer": {
-              "name": "copilot-swe-agent[bot]",
-              "email": "198982749+Copilot@users.noreply.github.com",
-              "time": 1752693281000
-            },
-            "branch": "copilot/fix-0185046d-70fe-4e89-b365-13fee3896c32"
-          },
           "actualWorkers": 1
         },
         "id": "setup",
         "name": "setup",
-        "testDir": "/home/runner/work/MaintAInPro/MaintAInPro/tests/e2e",
+        "testDir": "/workspaces/MaintAInPro/tests/e2e",
         "testIgnore": [],
         "testMatch": [
           "/.*\\.setup\\.ts/"
@@ -99,37 +55,15 @@
         "timeout": 30000
       },
       {
-        "outputDir": "/home/runner/work/MaintAInPro/MaintAInPro/test-results",
+        "outputDir": "/workspaces/MaintAInPro/test-results",
         "repeatEach": 1,
-        "retries": 2,
+        "retries": 0,
         "metadata": {
-          "ci": {
-            "commitHref": "https://github.com/Coding-Krakken/MaintAInPro/commit/9d5ce9561a7abff9b4f564bb6d59ef7d3bb861ab",
-            "commitHash": "9d5ce9561a7abff9b4f564bb6d59ef7d3bb861ab",
-            "buildHref": "https://github.com/Coding-Krakken/MaintAInPro/actions/runs/16328249440"
-          },
-          "gitCommit": {
-            "shortHash": "9d5ce95",
-            "hash": "9d5ce9561a7abff9b4f564bb6d59ef7d3bb861ab",
-            "subject": "Initial plan",
-            "body": "Initial plan",
-            "author": {
-              "name": "copilot-swe-agent[bot]",
-              "email": "198982749+Copilot@users.noreply.github.com",
-              "time": 1752693281000
-            },
-            "committer": {
-              "name": "copilot-swe-agent[bot]",
-              "email": "198982749+Copilot@users.noreply.github.com",
-              "time": 1752693281000
-            },
-            "branch": "copilot/fix-0185046d-70fe-4e89-b365-13fee3896c32"
-          },
           "actualWorkers": 1
         },
         "id": "chromium",
         "name": "chromium",
-        "testDir": "/home/runner/work/MaintAInPro/MaintAInPro/tests/e2e",
+        "testDir": "/workspaces/MaintAInPro/tests/e2e",
         "testIgnore": [],
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
@@ -137,37 +71,15 @@
         "timeout": 30000
       },
       {
-        "outputDir": "/home/runner/work/MaintAInPro/MaintAInPro/test-results",
+        "outputDir": "/workspaces/MaintAInPro/test-results",
         "repeatEach": 1,
-        "retries": 2,
+        "retries": 0,
         "metadata": {
-          "ci": {
-            "commitHref": "https://github.com/Coding-Krakken/MaintAInPro/commit/9d5ce9561a7abff9b4f564bb6d59ef7d3bb861ab",
-            "commitHash": "9d5ce9561a7abff9b4f564bb6d59ef7d3bb861ab",
-            "buildHref": "https://github.com/Coding-Krakken/MaintAInPro/actions/runs/16328249440"
-          },
-          "gitCommit": {
-            "shortHash": "9d5ce95",
-            "hash": "9d5ce9561a7abff9b4f564bb6d59ef7d3bb861ab",
-            "subject": "Initial plan",
-            "body": "Initial plan",
-            "author": {
-              "name": "copilot-swe-agent[bot]",
-              "email": "198982749+Copilot@users.noreply.github.com",
-              "time": 1752693281000
-            },
-            "committer": {
-              "name": "copilot-swe-agent[bot]",
-              "email": "198982749+Copilot@users.noreply.github.com",
-              "time": 1752693281000
-            },
-            "branch": "copilot/fix-0185046d-70fe-4e89-b365-13fee3896c32"
-          },
           "actualWorkers": 1
         },
         "id": "firefox",
         "name": "firefox",
-        "testDir": "/home/runner/work/MaintAInPro/MaintAInPro/tests/e2e",
+        "testDir": "/workspaces/MaintAInPro/tests/e2e",
         "testIgnore": [],
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
@@ -175,37 +87,15 @@
         "timeout": 30000
       },
       {
-        "outputDir": "/home/runner/work/MaintAInPro/MaintAInPro/test-results",
+        "outputDir": "/workspaces/MaintAInPro/test-results",
         "repeatEach": 1,
-        "retries": 2,
+        "retries": 0,
         "metadata": {
-          "ci": {
-            "commitHref": "https://github.com/Coding-Krakken/MaintAInPro/commit/9d5ce9561a7abff9b4f564bb6d59ef7d3bb861ab",
-            "commitHash": "9d5ce9561a7abff9b4f564bb6d59ef7d3bb861ab",
-            "buildHref": "https://github.com/Coding-Krakken/MaintAInPro/actions/runs/16328249440"
-          },
-          "gitCommit": {
-            "shortHash": "9d5ce95",
-            "hash": "9d5ce9561a7abff9b4f564bb6d59ef7d3bb861ab",
-            "subject": "Initial plan",
-            "body": "Initial plan",
-            "author": {
-              "name": "copilot-swe-agent[bot]",
-              "email": "198982749+Copilot@users.noreply.github.com",
-              "time": 1752693281000
-            },
-            "committer": {
-              "name": "copilot-swe-agent[bot]",
-              "email": "198982749+Copilot@users.noreply.github.com",
-              "time": 1752693281000
-            },
-            "branch": "copilot/fix-0185046d-70fe-4e89-b365-13fee3896c32"
-          },
           "actualWorkers": 1
         },
         "id": "webkit",
         "name": "webkit",
-        "testDir": "/home/runner/work/MaintAInPro/MaintAInPro/tests/e2e",
+        "testDir": "/workspaces/MaintAInPro/tests/e2e",
         "testIgnore": [],
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
@@ -213,37 +103,15 @@
         "timeout": 30000
       },
       {
-        "outputDir": "/home/runner/work/MaintAInPro/MaintAInPro/test-results",
+        "outputDir": "/workspaces/MaintAInPro/test-results",
         "repeatEach": 1,
-        "retries": 2,
+        "retries": 0,
         "metadata": {
-          "ci": {
-            "commitHref": "https://github.com/Coding-Krakken/MaintAInPro/commit/9d5ce9561a7abff9b4f564bb6d59ef7d3bb861ab",
-            "commitHash": "9d5ce9561a7abff9b4f564bb6d59ef7d3bb861ab",
-            "buildHref": "https://github.com/Coding-Krakken/MaintAInPro/actions/runs/16328249440"
-          },
-          "gitCommit": {
-            "shortHash": "9d5ce95",
-            "hash": "9d5ce9561a7abff9b4f564bb6d59ef7d3bb861ab",
-            "subject": "Initial plan",
-            "body": "Initial plan",
-            "author": {
-              "name": "copilot-swe-agent[bot]",
-              "email": "198982749+Copilot@users.noreply.github.com",
-              "time": 1752693281000
-            },
-            "committer": {
-              "name": "copilot-swe-agent[bot]",
-              "email": "198982749+Copilot@users.noreply.github.com",
-              "time": 1752693281000
-            },
-            "branch": "copilot/fix-0185046d-70fe-4e89-b365-13fee3896c32"
-          },
           "actualWorkers": 1
         },
         "id": "Mobile Chrome",
         "name": "Mobile Chrome",
-        "testDir": "/home/runner/work/MaintAInPro/MaintAInPro/tests/e2e",
+        "testDir": "/workspaces/MaintAInPro/tests/e2e",
         "testIgnore": [],
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
@@ -251,37 +119,15 @@
         "timeout": 30000
       },
       {
-        "outputDir": "/home/runner/work/MaintAInPro/MaintAInPro/test-results",
+        "outputDir": "/workspaces/MaintAInPro/test-results",
         "repeatEach": 1,
-        "retries": 2,
+        "retries": 0,
         "metadata": {
-          "ci": {
-            "commitHref": "https://github.com/Coding-Krakken/MaintAInPro/commit/9d5ce9561a7abff9b4f564bb6d59ef7d3bb861ab",
-            "commitHash": "9d5ce9561a7abff9b4f564bb6d59ef7d3bb861ab",
-            "buildHref": "https://github.com/Coding-Krakken/MaintAInPro/actions/runs/16328249440"
-          },
-          "gitCommit": {
-            "shortHash": "9d5ce95",
-            "hash": "9d5ce9561a7abff9b4f564bb6d59ef7d3bb861ab",
-            "subject": "Initial plan",
-            "body": "Initial plan",
-            "author": {
-              "name": "copilot-swe-agent[bot]",
-              "email": "198982749+Copilot@users.noreply.github.com",
-              "time": 1752693281000
-            },
-            "committer": {
-              "name": "copilot-swe-agent[bot]",
-              "email": "198982749+Copilot@users.noreply.github.com",
-              "time": 1752693281000
-            },
-            "branch": "copilot/fix-0185046d-70fe-4e89-b365-13fee3896c32"
-          },
           "actualWorkers": 1
         },
         "id": "Mobile Safari",
         "name": "Mobile Safari",
-        "testDir": "/home/runner/work/MaintAInPro/MaintAInPro/tests/e2e",
+        "testDir": "/workspaces/MaintAInPro/tests/e2e",
         "testIgnore": [],
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
@@ -291,13 +137,13 @@
     ],
     "shard": null,
     "updateSnapshots": "missing",
-    "updateSourceMethod": "patch",
+    "updateSourceMethod": "3way",
     "version": "1.54.1",
     "workers": 1,
     "webServer": {
       "command": "npm run dev",
       "url": "http://localhost:3000",
-      "reuseExistingServer": false,
+      "reuseExistingServer": true,
       "timeout": 120000,
       "env": {
         "VITE_APP_URL": "http://localhost:3000"
@@ -313,7 +159,7 @@
       "specs": [
         {
           "title": "authenticate",
-          "ok": false,
+          "ok": true,
           "tags": [],
           "tests": [
             {
@@ -324,76 +170,20 @@
               "projectName": "setup",
               "results": [
                 {
-                  "workerIndex": 0,
+                  "workerIndex": 1,
                   "parallelIndex": 0,
-                  "status": "failed",
-                  "duration": 3,
-                  "error": {
-                    "message": "Error: browserType.launch: Executable doesn't exist at /home/runner/.cache/ms-playwright/chromium_headless_shell-1181/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝",
-                    "stack": "Error: browserType.launch: Executable doesn't exist at /home/runner/.cache/ms-playwright/chromium_headless_shell-1181/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
-                  },
-                  "errors": [
-                    {
-                      "message": "Error: browserType.launch: Executable doesn't exist at /home/runner/.cache/ms-playwright/chromium_headless_shell-1181/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
-                    }
-                  ],
+                  "status": "passed",
+                  "duration": 890,
+                  "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2025-07-16T19:20:08.841Z",
-                  "annotations": [],
-                  "attachments": []
-                },
-                {
-                  "workerIndex": 1,
-                  "parallelIndex": 0,
-                  "status": "failed",
-                  "duration": 6,
-                  "error": {
-                    "message": "Error: browserType.launch: Executable doesn't exist at /home/runner/.cache/ms-playwright/chromium_headless_shell-1181/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝",
-                    "stack": "Error: browserType.launch: Executable doesn't exist at /home/runner/.cache/ms-playwright/chromium_headless_shell-1181/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
-                  },
-                  "errors": [
-                    {
-                      "message": "Error: browserType.launch: Executable doesn't exist at /home/runner/.cache/ms-playwright/chromium_headless_shell-1181/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
-                    }
-                  ],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 1,
-                  "startTime": "2025-07-16T19:20:09.710Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "trace",
-                      "contentType": "application/zip",
-                      "path": "/home/runner/work/MaintAInPro/MaintAInPro/test-results/auth.setup.ts-authenticate-setup-retry1/trace.zip"
-                    }
-                  ]
-                },
-                {
-                  "workerIndex": 2,
-                  "parallelIndex": 0,
-                  "status": "failed",
-                  "duration": 3,
-                  "error": {
-                    "message": "Error: browserType.launch: Executable doesn't exist at /home/runner/.cache/ms-playwright/chromium_headless_shell-1181/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝",
-                    "stack": "Error: browserType.launch: Executable doesn't exist at /home/runner/.cache/ms-playwright/chromium_headless_shell-1181/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
-                  },
-                  "errors": [
-                    {
-                      "message": "Error: browserType.launch: Executable doesn't exist at /home/runner/.cache/ms-playwright/chromium_headless_shell-1181/chrome-linux/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
-                    }
-                  ],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 2,
-                  "startTime": "2025-07-16T19:20:10.418Z",
+                  "startTime": "2025-07-17T01:08:08.710Z",
                   "annotations": [],
                   "attachments": []
                 }
               ],
-              "status": "unexpected"
+              "status": "expected"
             }
           ],
           "id": "17e3fe6f4d9d8bd79c6b-60f085b113a677673906",
@@ -402,911 +192,15 @@
           "column": 1
         }
       ]
-    },
-    {
-      "title": "auth.spec.ts",
-      "file": "auth.spec.ts",
-      "column": 0,
-      "line": 0,
-      "specs": [],
-      "suites": [
-        {
-          "title": "Authentication",
-          "file": "auth.spec.ts",
-          "line": 3,
-          "column": 6,
-          "specs": [
-            {
-              "title": "should display login page for unauthenticated users",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "d748ac400d08b85935ef-cb5ed821a745efbd8063",
-              "file": "auth.spec.ts",
-              "line": 4,
-              "column": 3
-            },
-            {
-              "title": "should show validation errors for invalid login",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip",
-                      "location": {
-                        "file": "/home/runner/work/MaintAInPro/MaintAInPro/tests/e2e/auth.spec.ts",
-                        "line": 27,
-                        "column": 8
-                      }
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "d748ac400d08b85935ef-ac32e183dfdbf963e374",
-              "file": "auth.spec.ts",
-              "line": 27,
-              "column": 8
-            },
-            {
-              "title": "should access protected routes when authenticated",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "d748ac400d08b85935ef-f07e553b49d73e5fa828",
-              "file": "auth.spec.ts",
-              "line": 65,
-              "column": 3
-            },
-            {
-              "title": "should display login page for unauthenticated users",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "firefox",
-                  "projectName": "firefox",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "d748ac400d08b85935ef-7cd8c801ce6c4c4d470e",
-              "file": "auth.spec.ts",
-              "line": 4,
-              "column": 3
-            },
-            {
-              "title": "should show validation errors for invalid login",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip",
-                      "location": {
-                        "file": "/home/runner/work/MaintAInPro/MaintAInPro/tests/e2e/auth.spec.ts",
-                        "line": 27,
-                        "column": 8
-                      }
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "firefox",
-                  "projectName": "firefox",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "d748ac400d08b85935ef-d0b7568179feeeec4e08",
-              "file": "auth.spec.ts",
-              "line": 27,
-              "column": 8
-            },
-            {
-              "title": "should access protected routes when authenticated",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "firefox",
-                  "projectName": "firefox",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "d748ac400d08b85935ef-780f771747a926b1ff2d",
-              "file": "auth.spec.ts",
-              "line": 65,
-              "column": 3
-            },
-            {
-              "title": "should display login page for unauthenticated users",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "webkit",
-                  "projectName": "webkit",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "d748ac400d08b85935ef-f1efb9ccccf46f71972e",
-              "file": "auth.spec.ts",
-              "line": 4,
-              "column": 3
-            },
-            {
-              "title": "should show validation errors for invalid login",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip",
-                      "location": {
-                        "file": "/home/runner/work/MaintAInPro/MaintAInPro/tests/e2e/auth.spec.ts",
-                        "line": 27,
-                        "column": 8
-                      }
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "webkit",
-                  "projectName": "webkit",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "d748ac400d08b85935ef-4e4457ed4d408815d795",
-              "file": "auth.spec.ts",
-              "line": 27,
-              "column": 8
-            },
-            {
-              "title": "should access protected routes when authenticated",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "webkit",
-                  "projectName": "webkit",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "d748ac400d08b85935ef-893ad05cb3fc969bd575",
-              "file": "auth.spec.ts",
-              "line": 65,
-              "column": 3
-            },
-            {
-              "title": "should display login page for unauthenticated users",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "d748ac400d08b85935ef-5762b199bfbd6b5f3669",
-              "file": "auth.spec.ts",
-              "line": 4,
-              "column": 3
-            },
-            {
-              "title": "should show validation errors for invalid login",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip",
-                      "location": {
-                        "file": "/home/runner/work/MaintAInPro/MaintAInPro/tests/e2e/auth.spec.ts",
-                        "line": 27,
-                        "column": 8
-                      }
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "d748ac400d08b85935ef-6e52e388ad37075448d1",
-              "file": "auth.spec.ts",
-              "line": 27,
-              "column": 8
-            },
-            {
-              "title": "should access protected routes when authenticated",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "d748ac400d08b85935ef-6f024cfc4de2656dc595",
-              "file": "auth.spec.ts",
-              "line": 65,
-              "column": 3
-            },
-            {
-              "title": "should display login page for unauthenticated users",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Safari",
-                  "projectName": "Mobile Safari",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "d748ac400d08b85935ef-fee3c0e01759e19c8fff",
-              "file": "auth.spec.ts",
-              "line": 4,
-              "column": 3
-            },
-            {
-              "title": "should show validation errors for invalid login",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip",
-                      "location": {
-                        "file": "/home/runner/work/MaintAInPro/MaintAInPro/tests/e2e/auth.spec.ts",
-                        "line": 27,
-                        "column": 8
-                      }
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "Mobile Safari",
-                  "projectName": "Mobile Safari",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "d748ac400d08b85935ef-b7b709226d20025d4f7a",
-              "file": "auth.spec.ts",
-              "line": 27,
-              "column": 8
-            },
-            {
-              "title": "should access protected routes when authenticated",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Safari",
-                  "projectName": "Mobile Safari",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "d748ac400d08b85935ef-341319de81bea6a33d41",
-              "file": "auth.spec.ts",
-              "line": 65,
-              "column": 3
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "title": "dashboard.spec.ts",
-      "file": "dashboard.spec.ts",
-      "column": 0,
-      "line": 0,
-      "specs": [],
-      "suites": [
-        {
-          "title": "Dashboard",
-          "file": "dashboard.spec.ts",
-          "line": 3,
-          "column": 6,
-          "specs": [
-            {
-              "title": "should display dashboard components",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "90cda532ab82d274b30b-05f31d1d0afe9e74492d",
-              "file": "dashboard.spec.ts",
-              "line": 10,
-              "column": 3
-            },
-            {
-              "title": "should navigate to work orders",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "90cda532ab82d274b30b-6352f50a7b9013b833bd",
-              "file": "dashboard.spec.ts",
-              "line": 15,
-              "column": 3
-            },
-            {
-              "title": "should navigate to equipment",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "90cda532ab82d274b30b-e60b8862e64a0f9f6834",
-              "file": "dashboard.spec.ts",
-              "line": 23,
-              "column": 3
-            },
-            {
-              "title": "should navigate to inventory",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "90cda532ab82d274b30b-484b08b3b8abd2c87839",
-              "file": "dashboard.spec.ts",
-              "line": 31,
-              "column": 3
-            },
-            {
-              "title": "should display dashboard components",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "firefox",
-                  "projectName": "firefox",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "90cda532ab82d274b30b-40ff5f738a1776eb15d8",
-              "file": "dashboard.spec.ts",
-              "line": 10,
-              "column": 3
-            },
-            {
-              "title": "should navigate to work orders",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "firefox",
-                  "projectName": "firefox",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "90cda532ab82d274b30b-b92715dbdb42aab045f6",
-              "file": "dashboard.spec.ts",
-              "line": 15,
-              "column": 3
-            },
-            {
-              "title": "should navigate to equipment",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "firefox",
-                  "projectName": "firefox",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "90cda532ab82d274b30b-33c343cab2a8a231cd58",
-              "file": "dashboard.spec.ts",
-              "line": 23,
-              "column": 3
-            },
-            {
-              "title": "should navigate to inventory",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "firefox",
-                  "projectName": "firefox",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "90cda532ab82d274b30b-7f5dfe8a7c61d64e9571",
-              "file": "dashboard.spec.ts",
-              "line": 31,
-              "column": 3
-            },
-            {
-              "title": "should display dashboard components",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "webkit",
-                  "projectName": "webkit",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "90cda532ab82d274b30b-eaddffda458c1ff63296",
-              "file": "dashboard.spec.ts",
-              "line": 10,
-              "column": 3
-            },
-            {
-              "title": "should navigate to work orders",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "webkit",
-                  "projectName": "webkit",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "90cda532ab82d274b30b-4e4d1057f6f54d649edf",
-              "file": "dashboard.spec.ts",
-              "line": 15,
-              "column": 3
-            },
-            {
-              "title": "should navigate to equipment",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "webkit",
-                  "projectName": "webkit",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "90cda532ab82d274b30b-9fc4ff5b51658f903ef6",
-              "file": "dashboard.spec.ts",
-              "line": 23,
-              "column": 3
-            },
-            {
-              "title": "should navigate to inventory",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "webkit",
-                  "projectName": "webkit",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "90cda532ab82d274b30b-b0271c48604c2583e5d4",
-              "file": "dashboard.spec.ts",
-              "line": 31,
-              "column": 3
-            },
-            {
-              "title": "should display dashboard components",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "90cda532ab82d274b30b-fa70091839e033c59f0c",
-              "file": "dashboard.spec.ts",
-              "line": 10,
-              "column": 3
-            },
-            {
-              "title": "should navigate to work orders",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "90cda532ab82d274b30b-8246e1fa950d8a2907af",
-              "file": "dashboard.spec.ts",
-              "line": 15,
-              "column": 3
-            },
-            {
-              "title": "should navigate to equipment",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "90cda532ab82d274b30b-842cdb54a04d63511dd6",
-              "file": "dashboard.spec.ts",
-              "line": 23,
-              "column": 3
-            },
-            {
-              "title": "should navigate to inventory",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "90cda532ab82d274b30b-1adfcc272c8b6d818116",
-              "file": "dashboard.spec.ts",
-              "line": 31,
-              "column": 3
-            },
-            {
-              "title": "should display dashboard components",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Safari",
-                  "projectName": "Mobile Safari",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "90cda532ab82d274b30b-6e6038d39aca8f59f0e6",
-              "file": "dashboard.spec.ts",
-              "line": 10,
-              "column": 3
-            },
-            {
-              "title": "should navigate to work orders",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Safari",
-                  "projectName": "Mobile Safari",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "90cda532ab82d274b30b-f3311a03fc0ac09f3d9c",
-              "file": "dashboard.spec.ts",
-              "line": 15,
-              "column": 3
-            },
-            {
-              "title": "should navigate to equipment",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Safari",
-                  "projectName": "Mobile Safari",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "90cda532ab82d274b30b-b228f90bccbabfbbe55f",
-              "file": "dashboard.spec.ts",
-              "line": 23,
-              "column": 3
-            },
-            {
-              "title": "should navigate to inventory",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Safari",
-                  "projectName": "Mobile Safari",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "90cda532ab82d274b30b-3dc06309cad188b21d8c",
-              "file": "dashboard.spec.ts",
-              "line": 31,
-              "column": 3
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "title": "simple.spec.ts",
-      "file": "simple.spec.ts",
-      "column": 0,
-      "line": 0,
-      "specs": [],
-      "suites": [
-        {
-          "title": "Simple Test",
-          "file": "simple.spec.ts",
-          "line": 3,
-          "column": 6,
-          "specs": [
-            {
-              "title": "should load the application",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "b095e72a376a9d09f724-ca498d08c94e58e3074e",
-              "file": "simple.spec.ts",
-              "line": 4,
-              "column": 3
-            },
-            {
-              "title": "should load the application",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "firefox",
-                  "projectName": "firefox",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "b095e72a376a9d09f724-2801bbaf2cea6b54463d",
-              "file": "simple.spec.ts",
-              "line": 4,
-              "column": 3
-            },
-            {
-              "title": "should load the application",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "webkit",
-                  "projectName": "webkit",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "b095e72a376a9d09f724-7e3524bcbdce92146ab1",
-              "file": "simple.spec.ts",
-              "line": 4,
-              "column": 3
-            },
-            {
-              "title": "should load the application",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "b095e72a376a9d09f724-10a3b7c4e71a6ff045ad",
-              "file": "simple.spec.ts",
-              "line": 4,
-              "column": 3
-            },
-            {
-              "title": "should load the application",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Safari",
-                  "projectName": "Mobile Safari",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "b095e72a376a9d09f724-511b5bd344c38f78469f",
-              "file": "simple.spec.ts",
-              "line": 4,
-              "column": 3
-            }
-          ]
-        }
-      ]
     }
   ],
   "errors": [],
   "stats": {
-    "startTime": "2025-07-16T19:20:07.049Z",
-    "duration": 3417.035,
-    "expected": 0,
-    "skipped": 40,
-    "unexpected": 1,
+    "startTime": "2025-07-17T01:08:07.410Z",
+    "duration": 2367.3919999999925,
+    "expected": 1,
+    "skipped": 0,
+    "unexpected": 0,
     "flaky": 0
   }
 }
