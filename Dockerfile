@@ -27,9 +27,8 @@ RUN npm run build
 # Production stage
 FROM node:18-alpine AS production
 
-# Install serve globally and curl for health checks
-RUN npm install -g serve && \
-    apk add --no-cache curl
+# Install serve globally
+RUN npm install -g serve
 
 # Set working directory
 WORKDIR /app
@@ -48,9 +47,9 @@ USER nextjs
 # Expose port (Railway will set the PORT environment variable)
 EXPOSE ${PORT:-3000}
 
-# Health check - use curl instead of wget and add proper error handling
-HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
-  CMD curl -f http://localhost:${PORT:-3000}/ || exit 1
+# Health check - Railway handles health checks automatically, so we'll disable Docker's built-in health check
+# to avoid conflicts with Railway's own health check system
+HEALTHCHECK NONE
 
 # Start the application
 CMD ["sh", "-c", "serve -s dist -l ${PORT:-3000} --no-clipboard"]
