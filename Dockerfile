@@ -27,8 +27,8 @@ RUN npm run build
 # Production stage
 FROM node:18-alpine AS production
 
-# Install serve globally
-RUN npm install -g serve
+# Install serve globally and express for health check
+RUN npm install -g serve express
 
 # Set working directory
 WORKDIR /app
@@ -36,13 +36,16 @@ WORKDIR /app
 # Copy built assets from builder stage
 COPY --from=builder /app/dist ./dist
 
-# Create non-root user
+# Copy server file
+COPY server.js ./
+
+# Create non-root user (but don't switch to it yet for Railway compatibility)
 RUN addgroup -g 1001 -S nodejs
 RUN adduser -S nextjs -u 1001
 
 # Change ownership of the app directory
 RUN chown -R nextjs:nodejs /app
-USER nextjs
+# USER nextjs
 
 # Expose port (Railway will set the PORT environment variable)
 EXPOSE ${PORT:-3000}
@@ -51,5 +54,5 @@ EXPOSE ${PORT:-3000}
 # to avoid conflicts with Railway's own health check system
 HEALTHCHECK NONE
 
-# Start the application - bind to all interfaces for Railway
-CMD ["sh", "-c", "serve -s dist -l ${PORT:-3000} --no-clipboard -H 0.0.0.0"]
+# Start the application with custom server
+CMD ["node", "server.js"]
