@@ -50,6 +50,50 @@
     @apply btn bg-success-600 text-white hover:bg-success-700 focus:ring-success-500;
   }
 
+  /* Mobile-first touch targets */
+  .touch-target-large {
+    @apply min-h-[44px] min-w-[44px];
+  }
+
+  .touch-target-extra-large {
+    @apply min-h-[56px] min-w-[56px];
+  }
+
+  /* Mobile-optimized components */
+  .mobile-card {
+    @apply bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-4;
+  }
+
+  .mobile-button {
+    @apply w-full h-12 flex items-center justify-center space-x-2 font-medium rounded-lg transition-all duration-200 active:scale-95;
+  }
+
+  .mobile-input {
+    @apply w-full h-12 px-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base;
+  }
+
+  /* Mobile navigation */
+  .mobile-nav {
+    @apply fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2 z-50;
+  }
+
+  .mobile-nav-item {
+    @apply flex-1 flex flex-col items-center justify-center py-2 text-xs font-medium;
+  }
+
+  /* Swipe actions */
+  .swipe-action {
+    @apply transform transition-transform duration-200 ease-out;
+  }
+
+  .swipe-action.swipe-left {
+    @apply -translate-x-full;
+  }
+
+  .swipe-action.swipe-right {
+    @apply translate-x-full;
+  }
+
   .btn-warning {
     @apply btn bg-warning-600 text-white hover:bg-warning-700 focus:ring-warning-500;
   }

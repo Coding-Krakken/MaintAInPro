@@ -177,18 +177,13 @@ export class AuthService {
 
   async getCurrentUser(): Promise<User | null> {
     try {
-      console.log('🔍 Getting current user...');
-
       const {
         data: { user },
       } = await supabase.auth.getUser();
 
       if (!user) {
-        console.log('❌ No authenticated user found');
         return null;
       }
-
-      console.log('✅ Auth user found, getting profile...');
 
       // Try to get the user profile from our users table
       const userProfile = await userService.getProfile(user.id);
@@ -196,14 +191,12 @@ export class AuthService {
       // If user exists in auth but not in our users table, return null for now
       // This will cause the auth hook to not be in a loading state
       if (!userProfile) {
-        console.warn('⚠️ User exists in auth but not in users table:', user.id);
         return null;
       }
 
-      console.log('✅ User profile retrieved successfully');
       return userProfile as User;
     } catch (error) {
-      console.error('❌ Error getting current user:', error);
+      console.error('Error getting current user:', error);
       return null;
     }
   }
