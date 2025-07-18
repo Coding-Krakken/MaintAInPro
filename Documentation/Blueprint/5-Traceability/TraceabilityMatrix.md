@@ -40,7 +40,7 @@ requirements are properly implemented and tested.
 | EQ-004 | Equipment Status Tracking    | P0       | ⏳     | `/src/modules/equipment/hooks/useEquipmentStatus.ts`       | `status-tracking.test.ts`        |
 | EQ-005 | Maintenance History          | P1       | ⏸️     | `/src/modules/equipment/components/MaintenanceHistory.tsx` | `maintenance-history.test.ts`    |
 | EQ-006 | Asset Criticality Management | P1       | ⏸️     | `/src/modules/equipment/services/criticality.ts`           | `criticality.test.ts`            |
-| EQ-007 | Mobile Equipment Access      | P0       | ✅     | `/src/modules/equipment/components/QRScannerMobile.tsx`    | `mobile-equipment.test.ts`       |
+| EQ-007 | Mobile Equipment Access      | P0       | ⏳     | `/src/modules/equipment/hooks/useQRCode.ts` (enhanced)     | `mobile-equipment.test.ts`       |
 | EQ-008 | Asset Performance Analytics  | P1       | ⏸️     | `/src/modules/equipment/services/performance.ts`           | `performance.test.ts`            |
 | EQ-009 | Equipment Documentation      | P2       | ❌     | `/src/modules/equipment/components/Documentation.tsx`      | `documentation.test.ts`          |
 | EQ-010 | Warranty Management          | P2       | ❌     | `/src/modules/equipment/services/warranty.ts`              | `warranty.test.ts`               |

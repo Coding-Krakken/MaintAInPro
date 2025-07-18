@@ -153,7 +153,7 @@ export function useDeactivateQRCode() {
 }
 
 /**
- * Custom hook for QR code camera scanning
+ * Custom hook for QR code camera scanning with real implementation
  */
 export function useQRCodeCamera() {
   const scanQRCode = useScanQRCode();
@@ -179,11 +179,23 @@ export function useQRCodeCamera() {
   };
 
   const scanFromCamera = async (
-    _videoElement: HTMLVideoElement
+    videoElement: HTMLVideoElement
   ): Promise<QRScanResult | null> => {
     try {
-      // This would integrate with a QR code scanning library like jsQR
-      // For now, return null as placeholder
+      // Use qr-scanner library for robust QR code detection
+      const { default: QrScanner } = await import('qr-scanner');
+
+      // Try to scan QR code from video element
+      const result = await QrScanner.scanImage(videoElement, {
+        returnDetailedScanResult: true,
+      });
+
+      if (result && result.data) {
+        // Process the scanned QR code data
+        const scanResult = await scanQRCode.mutateAsync(result.data);
+        return scanResult;
+      }
+
       return null;
     } catch (error) {
       console.error('Failed to scan QR code:', error);
@@ -191,10 +203,53 @@ export function useQRCodeCamera() {
     }
   };
 
+  const continuousScanning = async (
+    videoElement: HTMLVideoElement,
+    onResult: (result: QRScanResult) => void,
+    onError: (error: Error) => void
+  ): Promise<() => void> => {
+    try {
+      const { default: QrScanner } = await import('qr-scanner');
+
+      const scanner = new QrScanner(
+        videoElement,
+        async result => {
+          try {
+            const scanResult = await scanQRCode.mutateAsync(result.data);
+            if (scanResult) {
+              onResult(scanResult);
+            }
+          } catch (error) {
+            onError(error as Error);
+          }
+        },
+        {
+          preferredCamera: 'environment',
+          highlightScanRegion: true,
+          highlightCodeOutline: true,
+          returnDetailedScanResult: true,
+        }
+      );
+
+      await scanner.start();
+
+      // Return cleanup function
+      return () => {
+        scanner.stop();
+        scanner.destroy();
+      };
+    } catch (error) {
+      console.error('Failed to start continuous scanning:', error);
+      onError(error as Error);
+      return () => {}; // Return empty cleanup function
+    }
+  };
+
   return {
     startCamera,
     stopCamera,
     scanFromCamera,
+    continuousScanning,
     scanQRCode: scanQRCode.mutateAsync,
     isScanning: scanQRCode.isPending,
     scanResult: scanQRCode.data,
