@@ -168,7 +168,7 @@ const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
         {/* Validation Errors */}
         {showValidationErrors && validation && !validation.isValid && (
           <div className='space-y-1'>
-            {validation.errors.map((error, index) => (
+            {validation.errors['map']((error, index) => (
               <p key={index} className='text-sm text-red-600 flex items-center'>
                 <svg
                   className='w-4 h-4 mr-1'

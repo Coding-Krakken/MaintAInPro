@@ -1,9 +1,12 @@
 // Base components
 export { Button } from './Button';
 export { Input } from './Input';
+export { LabeledInput } from './LabeledInput';
 export { Select } from './Select';
+export { LabeledSelect } from './LabeledSelect';
 export { Textarea } from './Textarea';
 export { Checkbox } from './Checkbox';
+export { LabeledCheckbox } from './LabeledCheckbox';
 export { RadioGroup } from './RadioGroup';
 export { DatePicker } from './DatePicker';
 

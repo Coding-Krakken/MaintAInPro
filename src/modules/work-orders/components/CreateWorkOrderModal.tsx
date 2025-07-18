@@ -162,7 +162,7 @@ export const CreateWorkOrderModal: React.FC<CreateWorkOrderModalProps> = ({
                 id='title'
                 {...register('title')}
                 placeholder='Enter work order title'
-                // error={errors.title?.message}
+                // error={errors["title"]?.message}
               />
             </div>
 
@@ -192,7 +192,7 @@ export const CreateWorkOrderModal: React.FC<CreateWorkOrderModalProps> = ({
                 id='priority'
                 {...register('priority')}
                 options={priorityOptions}
-                // error={errors.priority?.message}
+                // error={errors["priority"]?.message}
               />
             </div>
 
@@ -207,7 +207,7 @@ export const CreateWorkOrderModal: React.FC<CreateWorkOrderModalProps> = ({
                 id='type'
                 {...register('type')}
                 options={typeOptions}
-                // error={errors.type?.message}
+                // error={errors["type"]?.message}
               />
             </div>
           </div>
@@ -339,7 +339,7 @@ export const CreateWorkOrderModal: React.FC<CreateWorkOrderModalProps> = ({
                           <Input
                             {...register(`checklist_items.${index}.task`)}
                             placeholder='Task description'
-                            // error={errors.checklist_items?.[index]?.task?.message}
+                            // error={errors["checklist"]_items?.[index]?.task?.message}
                           />
                         </div>
                         <div>
