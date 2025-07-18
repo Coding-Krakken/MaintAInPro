@@ -6,15 +6,26 @@ import { Button } from '../../../components/ui/Button';
 import { Input } from '../../../components/ui/Input';
 import { Textarea } from '../../../components/ui/Textarea';
 import { Select } from '../../../components/ui/Select';
+import { SearchableSelect } from '../../../components/ui/SearchableSelect';
 import { Card } from '../../../components/ui/Card';
 import { Modal } from '../../../components/ui/Modal';
 import { useCreateWorkOrder } from '../hooks/useWorkOrders';
+import {
+  useEquipmentOptions,
+  useTechnicians,
+} from '../../equipment/hooks/useEquipmentSelection';
 import {
   WorkOrderPriority,
   WorkOrderType,
   CreateWorkOrderRequest,
 } from '../types/workOrder';
-import { PlusIcon, MinusIcon } from 'lucide-react';
+import { EquipmentOptionData, UserOptionData } from '../types/selections';
+import {
+  PlusIcon,
+  MinusIcon,
+  UserIcon,
+  WrenchScrewdriverIcon,
+} from '@heroicons/react/24/outline';
 
 const workOrderSchema = z.object({
   title: z.string().min(1, 'Title is required').max(255, 'Title is too long'),
@@ -54,17 +65,39 @@ export const CreateWorkOrderModal: React.FC<CreateWorkOrderModalProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const createWorkOrder = useCreateWorkOrder();
 
-  const { register, handleSubmit, control, reset } = useForm<WorkOrderFormData>(
-    {
-      resolver: zodResolver(workOrderSchema),
-      defaultValues: {
-        priority: WorkOrderPriority.MEDIUM,
-        type: WorkOrderType.CORRECTIVE,
-        equipment_id: equipmentId,
-        checklist_items: [],
-      },
-    }
-  );
+  // Load equipment and technician options
+  const { data: equipmentOptions = [], isLoading: loadingEquipment } =
+    useEquipmentOptions();
+  const { data: technicians = [], isLoading: loadingTechnicians } =
+    useTechnicians();
+
+  const {
+    register,
+    handleSubmit,
+    control,
+    reset,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useForm<WorkOrderFormData>({
+    resolver: zodResolver(workOrderSchema),
+    defaultValues: {
+      priority: WorkOrderPriority.MEDIUM,
+      type: WorkOrderType.CORRECTIVE,
+      equipment_id: equipmentId,
+      checklist_items: [],
+    },
+  });
+
+  const selectedEquipmentId = watch('equipment_id');
+  const selectedAssignedTo = watch('assigned_to');
+
+  // Convert technicians to options format
+  const technicianOptions = technicians.map(tech => ({
+    value: tech.id,
+    label: `${tech.first_name} ${tech.last_name} (${tech.role || 'Technician'})`,
+    data: tech,
+  }));
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -162,8 +195,12 @@ export const CreateWorkOrderModal: React.FC<CreateWorkOrderModalProps> = ({
                 id='title'
                 {...register('title')}
                 placeholder='Enter work order title'
-                // error={errors["title"]?.message}
               />
+              {errors.title && (
+                <p className='mt-1 text-sm text-red-600'>
+                  {errors.title.message}
+                </p>
+              )}
             </div>
 
             <div className='md:col-span-2'>
@@ -192,8 +229,12 @@ export const CreateWorkOrderModal: React.FC<CreateWorkOrderModalProps> = ({
                 id='priority'
                 {...register('priority')}
                 options={priorityOptions}
-                // error={errors["priority"]?.message}
               />
+              {errors.priority && (
+                <p className='mt-1 text-sm text-red-600'>
+                  {errors.priority.message}
+                </p>
+              )}
             </div>
 
             <div>
@@ -203,12 +244,12 @@ export const CreateWorkOrderModal: React.FC<CreateWorkOrderModalProps> = ({
               >
                 Type *
               </label>
-              <Select
-                id='type'
-                {...register('type')}
-                options={typeOptions}
-                // error={errors["type"]?.message}
-              />
+              <Select id='type' {...register('type')} options={typeOptions} />
+              {errors.type && (
+                <p className='mt-1 text-sm text-red-600'>
+                  {errors.type.message}
+                </p>
+              )}
             </div>
           </div>
 
@@ -219,14 +260,37 @@ export const CreateWorkOrderModal: React.FC<CreateWorkOrderModalProps> = ({
                 htmlFor='equipment_id'
                 className='block text-sm font-medium text-gray-700 mb-1'
               >
+                <WrenchScrewdriverIcon className='h-4 w-4 inline mr-1' />
                 Equipment
               </label>
-              <Input
-                id='equipment_id'
-                {...register('equipment_id')}
-                placeholder='Select equipment'
-                // TODO: Replace with equipment selection dropdown
+              <SearchableSelect
+                options={equipmentOptions}
+                value={selectedEquipmentId || ''}
+                onChange={value => setValue('equipment_id', value)}
+                placeholder='Search and select equipment...'
+                loading={loadingEquipment}
+                clearable
+                error={errors.equipment_id?.message}
+                renderOption={option => {
+                  const equipment = option.data as EquipmentOptionData;
+                  return (
+                    <div>
+                      <div className='font-medium'>{equipment?.name}</div>
+                      <div className='text-sm text-gray-500'>
+                        {equipment?.asset_tag &&
+                          `Tag: ${equipment.asset_tag} • `}
+                        {equipment?.location &&
+                          `Location: ${equipment.location}`}
+                      </div>
+                    </div>
+                  );
+                }}
               />
+              {errors.equipment_id && (
+                <p className='mt-1 text-sm text-red-600'>
+                  {errors.equipment_id.message}
+                </p>
+              )}
             </div>
 
             <div>
@@ -234,14 +298,36 @@ export const CreateWorkOrderModal: React.FC<CreateWorkOrderModalProps> = ({
                 htmlFor='assigned_to'
                 className='block text-sm font-medium text-gray-700 mb-1'
               >
+                <UserIcon className='h-4 w-4 inline mr-1' />
                 Assigned To
               </label>
-              <Input
-                id='assigned_to'
-                {...register('assigned_to')}
-                placeholder='Select technician'
-                // TODO: Replace with user selection dropdown
+              <SearchableSelect
+                options={technicianOptions}
+                value={selectedAssignedTo || ''}
+                onChange={value => setValue('assigned_to', value)}
+                placeholder='Search and select technician...'
+                loading={loadingTechnicians}
+                clearable
+                error={errors.assigned_to?.message}
+                renderOption={option => {
+                  const user = option.data as UserOptionData;
+                  return (
+                    <div>
+                      <div className='font-medium'>
+                        {user?.first_name} {user?.last_name}
+                      </div>
+                      <div className='text-sm text-gray-500'>
+                        {user?.role || 'Technician'} •{user?.email}
+                      </div>
+                    </div>
+                  );
+                }}
               />
+              {errors.assigned_to && (
+                <p className='mt-1 text-sm text-red-600'>
+                  {errors.assigned_to.message}
+                </p>
+              )}
             </div>
 
             <div>

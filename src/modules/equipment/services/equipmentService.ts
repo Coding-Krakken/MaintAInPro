@@ -156,4 +156,78 @@ export class EquipmentService {
     const locations = [...new Set(data.map(item => item.location))];
     return locations.filter(Boolean);
   }
+
+  /**
+   * Get equipment options for work order assignment
+   */
+  static async getEquipmentOptions() {
+    const { data, error } = await supabase
+      .from('equipment')
+      .select(
+        `
+        id,
+        name,
+        asset_tag,
+        location,
+        status,
+        condition,
+        categories(name)
+      `
+      )
+      .eq('status', 'active')
+      .order('name');
+
+    if (error) {
+      throw new Error(`Failed to fetch equipment options: ${error.message}`);
+    }
+
+    return (
+      data?.map(equipment => ({
+        value: equipment.id,
+        label: `${equipment.name} (${equipment.asset_tag || 'No Tag'}) - ${equipment.location || 'No Location'}`,
+        data: equipment,
+      })) || []
+    );
+  }
+
+  /**
+   * Search equipment by name, asset tag, or location
+   */
+  static async searchEquipment(searchTerm: string) {
+    if (!searchTerm || searchTerm.length < 2) {
+      return [];
+    }
+
+    const { data, error } = await supabase
+      .from('equipment')
+      .select(
+        `
+        id,
+        name,
+        asset_tag,
+        location,
+        status,
+        condition,
+        categories(name)
+      `
+      )
+      .or(
+        `name.ilike.%${searchTerm}%,asset_tag.ilike.%${searchTerm}%,location.ilike.%${searchTerm}%`
+      )
+      .eq('status', 'active')
+      .order('name')
+      .limit(50);
+
+    if (error) {
+      throw new Error(`Failed to search equipment: ${error.message}`);
+    }
+
+    return (
+      data?.map(equipment => ({
+        value: equipment.id,
+        label: `${equipment.name} (${equipment.asset_tag || 'No Tag'}) - ${equipment.location || 'No Location'}`,
+        data: equipment,
+      })) || []
+    );
+  }
 }
