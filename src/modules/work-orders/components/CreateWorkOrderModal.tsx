@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -38,6 +38,7 @@ const workOrderSchema = z.object({
   scheduled_end: z.string().optional(),
   estimated_hours: z.number().min(0).optional(),
   estimated_cost: z.number().min(0).optional(),
+  attachments: z.any().optional(),
   checklist_items: z
     .array(
       z.object({
@@ -63,6 +64,8 @@ export const CreateWorkOrderModal: React.FC<CreateWorkOrderModalProps> = ({
   equipmentId,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [workOrderNumber, setWorkOrderNumber] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const createWorkOrder = useCreateWorkOrder();
 
   // Load equipment and technician options
@@ -104,6 +107,14 @@ export const CreateWorkOrderModal: React.FC<CreateWorkOrderModalProps> = ({
     name: 'checklist_items',
   });
 
+  // Generate a unique work order number (simple example, replace with backend logic as needed)
+  React.useEffect(() => {
+    if (isOpen) {
+      const now = Date.now();
+      setWorkOrderNumber(`WO-${now}`);
+    }
+  }, [isOpen]);
+
   const onSubmit = async (data: WorkOrderFormData) => {
     setIsLoading(true);
     try {
@@ -112,6 +123,10 @@ export const CreateWorkOrderModal: React.FC<CreateWorkOrderModalProps> = ({
         priority: data.priority,
         type: data.type,
       };
+      if (workOrderNumber) {
+        (requestData as CreateWorkOrderRequest).work_order_number =
+          workOrderNumber;
+      }
 
       // Add optional fields only if they have values
       if (data.description) requestData.description = data.description;
@@ -147,8 +162,20 @@ export const CreateWorkOrderModal: React.FC<CreateWorkOrderModalProps> = ({
         );
       }
 
+      // Handle file attachments (upload logic should be implemented in useCreateWorkOrder or here)
+      let attachments: File[] = [];
+      if (fileInputRef.current && fileInputRef.current.files) {
+        attachments = Array.from(fileInputRef.current.files);
+        // TODO: Implement actual upload logic and attach URLs/IDs to requestData
+        // For now, just add file names as a placeholder
+        if (attachments.length > 0) {
+          requestData.attachments = attachments.map(f => f.name);
+        }
+      }
+
       await createWorkOrder.mutateAsync(requestData);
       reset();
+      setWorkOrderNumber(null);
       onClose();
     } catch (error) {
       console.error('Failed to create work order:', error);
@@ -182,6 +209,40 @@ export const CreateWorkOrderModal: React.FC<CreateWorkOrderModalProps> = ({
         </h2>
 
         <form onSubmit={handleSubmit(onSubmit)} className='space-y-6'>
+          {/* Work Order Number (auto-generated) */}
+          {workOrderNumber && (
+            <div>
+              <label
+                htmlFor='work_order_number'
+                className='block text-sm font-medium text-gray-700 mb-1'
+              >
+                Work Order Number
+              </label>
+              <Input
+                id='work_order_number'
+                value={workOrderNumber}
+                readOnly
+                className='bg-gray-100'
+              />
+            </div>
+          )}
+          {/* File/Image Attachments */}
+          <div>
+            <label
+              htmlFor='attachments'
+              className='block text-sm font-medium text-gray-700 mb-1'
+            >
+              Attachments (images, files)
+            </label>
+            <input
+              id='attachments'
+              type='file'
+              multiple
+              ref={fileInputRef}
+              accept='image/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+              className='block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100'
+            />
+          </div>
           {/* Basic Information */}
           <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
             <div className='md:col-span-2'>

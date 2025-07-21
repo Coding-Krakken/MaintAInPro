@@ -128,6 +128,8 @@ export interface CreateWorkOrderRequest {
     is_required: boolean;
     order_index: number;
   }>;
+  work_order_number?: string;
+  attachments?: string[];
 }
 
 export interface UpdateWorkOrderRequest {
