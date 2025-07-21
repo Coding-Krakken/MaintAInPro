@@ -186,7 +186,9 @@ export const WorkOrderMobile: React.FC<WorkOrderMobileProps> = ({
             </Button>
             <PriorityIcon className='h-6 w-6' />
             <div>
-              <h1 className='text-lg font-semibold'>#{workOrder.wo_number}</h1>
+              <h1 className='text-lg font-semibold'>
+                #{workOrder.work_order_number}
+              </h1>
               <p className='text-sm opacity-90'>
                 {priorityConfig.text} Priority
               </p>

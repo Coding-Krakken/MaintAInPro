@@ -60,7 +60,7 @@ class OfflineDatabase extends Dexie {
 
     this.version(1).stores({
       work_orders:
-        '++id, organization_id, equipment_id, wo_number, status, priority, type, assigned_to, sync_status, last_modified_offline',
+        '++id, organization_id, equipment_id, work_order_number, status, priority, type, assigned_to, sync_status, last_modified_offline',
       checklist_items:
         '++id, work_order_id, order_index, is_completed, sync_status, last_modified_offline',
       attachments:

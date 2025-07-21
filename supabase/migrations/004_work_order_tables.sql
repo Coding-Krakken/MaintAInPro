@@ -3,15 +3,15 @@
 
 -- Update work_orders table structure
 ALTER TABLE work_orders 
-  DROP COLUMN IF EXISTS work_order_number,
-  ADD COLUMN IF NOT EXISTS wo_number VARCHAR(100) UNIQUE NOT NULL DEFAULT 'WO-' || DATE_PART('year', NOW()) || '-' || LPAD(NEXTVAL('wo_number_seq')::text, 4, '0'),
+  DROP COLUMN IF EXISTS wo_number,
+  ADD COLUMN IF NOT EXISTS work_order_number VARCHAR(100) UNIQUE NOT NULL DEFAULT 'WO-' || DATE_PART('year', NOW()) || '-' || LPAD(NEXTVAL('work_order_number_seq')::text, 4, '0'),
   ADD COLUMN IF NOT EXISTS assigned_team VARCHAR(100),
   ADD COLUMN IF NOT EXISTS verified_by UUID REFERENCES users(id),
   ADD COLUMN IF NOT EXISTS verified_at TIMESTAMP WITH TIME ZONE,
   ADD COLUMN IF NOT EXISTS metadata JSONB DEFAULT '{}';
 
 -- Create sequence for work order numbering if not exists
-CREATE SEQUENCE IF NOT EXISTS wo_number_seq START 1;
+CREATE SEQUENCE IF NOT EXISTS work_order_number_seq START 1;
 
 -- Update work_orders table columns to match enum values
 ALTER TABLE work_orders 

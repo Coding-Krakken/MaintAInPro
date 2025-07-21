@@ -263,7 +263,7 @@ export const WorkOrderList: React.FC = () => {
                 <div className='flex items-start justify-between mb-3'>
                   <div className='flex items-center space-x-2'>
                     <span className='text-sm font-medium text-gray-500'>
-                      {workOrder.wo_number}
+                      {workOrder.work_order_number}
                     </span>
                     {workOrder.is_overdue && (
                       <AlertTriangleIcon className='h-4 w-4 text-red-500' />

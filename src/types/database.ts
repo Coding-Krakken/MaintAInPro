@@ -205,7 +205,7 @@ export interface Database {
           id: string;
           organization_id: string;
           warehouse_id: string;
-          wo_number: string;
+          work_order_number: string;
           title: string;
           description: string;
           type: string;
@@ -234,7 +234,7 @@ export interface Database {
           id?: string;
           organization_id: string;
           warehouse_id: string;
-          wo_number: string;
+          work_order_number: string;
           title: string;
           description: string;
           type: string;
@@ -263,7 +263,7 @@ export interface Database {
           id?: string;
           organization_id?: string;
           warehouse_id?: string;
-          wo_number?: string;
+          work_order_number?: string;
           title?: string;
           description?: string;
           type?: string;

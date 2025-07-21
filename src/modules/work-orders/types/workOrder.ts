@@ -4,7 +4,7 @@ export interface WorkOrder {
   organization_id: string;
   equipment_id?: string;
   warehouse_id?: string;
-  wo_number: string;
+  work_order_number: string;
   title: string;
   description?: string;
   priority: WorkOrderPriority;
@@ -190,7 +190,7 @@ export interface WorkOrderFormData {
 
 export interface WorkOrderListItem {
   id: string;
-  wo_number: string;
+  work_order_number: string;
   title: string;
   priority: WorkOrderPriority;
   status: WorkOrderStatus;

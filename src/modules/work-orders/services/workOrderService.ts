@@ -32,7 +32,7 @@ class WorkOrderService {
       .select(
         `
         id,
-        wo_number,
+        work_order_number,
         title,
         priority,
         status,
@@ -74,7 +74,7 @@ class WorkOrderService {
     }
     if (filters.search) {
       query = query.or(
-        `title.ilike.%${filters.search}%,wo_number.ilike.%${filters.search}%`
+        `title.ilike.%${filters.search}%,work_order_number.ilike.%${filters.search}%`
       );
     }
 
@@ -88,7 +88,7 @@ class WorkOrderService {
     const workOrders: WorkOrderListItem[] = (data || []).map(
       (wo: {
         id: string;
-        wo_number: string;
+        work_order_number: string;
         title: string;
         priority: WorkOrderPriority;
         status: WorkOrderStatus;
@@ -99,7 +99,7 @@ class WorkOrderService {
         equipment: { name: string }[] | null;
       }) => ({
         id: wo.id,
-        wo_number: wo.wo_number,
+        work_order_number: wo.work_order_number,
         title: wo.title,
         priority: wo.priority,
         status: wo.status,
@@ -171,7 +171,7 @@ class WorkOrderService {
 
     const workOrderData = {
       ...request,
-      wo_number: woNumber,
+      work_order_number: woNumber,
       requested_by: userId,
       status: WorkOrderStatus.OPEN,
       created_at: new Date().toISOString(),
@@ -535,9 +535,9 @@ class WorkOrderService {
     const year = new Date().getFullYear();
     const { data, error } = await supabase
       .from('work_orders')
-      .select('wo_number')
-      .like('wo_number', `WO-${year}-%`)
-      .order('wo_number', { ascending: false })
+      .select('work_order_number')
+      .like('work_order_number', `WO-${year}-%`)
+      .order('work_order_number', { ascending: false })
       .limit(1);
 
     if (error) {
@@ -545,8 +545,8 @@ class WorkOrderService {
     }
 
     let nextNumber = 1;
-    if (data && data.length > 0 && data[0]?.wo_number) {
-      const lastNumber = data[0].wo_number.split('-').pop();
+    if (data && data.length > 0 && data[0]?.work_order_number) {
+      const lastNumber = data[0].work_order_number.split('-').pop();
       nextNumber = parseInt(lastNumber || '0') + 1;
     }
 
