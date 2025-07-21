@@ -1,78 +1,87 @@
 # Railway Deployment Guide
 
-This project is configured for deployment on Railway. The main issue was that Railway was
-auto-detecting the project as a Deno project due to the `deno.json` file in the
-`supabase/functions/` directory, when it should be treated as a Node.js project.
+## Port Configuration
 
-## Files Created for Railway Deployment
+### Issue
+Railway defaults to expecting applications on port 80, but this app runs on port 8080.
 
-1. **railway.toml** - Railway configuration file
-2. **nixpacks.toml** - Nixpacks configuration for Node.js detection
-3. **.railwayignore** - Excludes supabase functions from detection
-4. **Dockerfile** - Docker configuration for containerized deployment
-5. **.dockerignore** - Optimizes Docker build
-6. **Procfile** - Process file for Railway
-7. **railway-deploy.sh** - Deployment script
+### Solution
+The following configurations prevent port mismatch issues:
 
-## Deployment Methods
+### 1. railway.json Configuration
+```json
+{
+  "variables": {
+    "PORT": "8080"
+  }
+}
+```
 
-### Method 1: Using Railway CLI (Recommended)
+### 2. Railway Dashboard Settings
+- Go to your Railway project dashboard
+- Navigate to **Settings** > **Variables**
+- Set `PORT=8080`
+- Or in **Networking** settings, set the internal port to 8080
 
+### 3. Dockerfile
+```dockerfile
+EXPOSE 8080
+```
+
+### 4. Server Code
+```typescript
+const port = process.env.PORT || 8080; // Default to 8080 for Railway
+```
+
+## Automatic Prevention
+
+### Method 1: Using railway.json (Recommended)
+Set the PORT variable in `railway.json` to ensure consistent deployment:
+
+```json
+{
+  "variables": {
+    "PORT": "8080"
+  }
+}
+```
+
+### Method 2: Railway CLI
+Set the variable via CLI:
 ```bash
-# Install Railway CLI
-npm install -g @railway/cli
-
-# Login to Railway
-railway login
-
-# Deploy
-railway up
+railway variables set PORT=8080
 ```
 
-### Method 2: Using Docker
-
+### Method 3: Environment Variables
+Add to your environment:
 ```bash
-# Build the image
-docker build -t maintainpro .
-
-# Run locally to test
-docker run -p 3000:3000 maintainpro
+export PORT=8080
 ```
 
-### Method 3: GitHub Integration
+## Verification
 
-1. Connect your GitHub repository to Railway
-2. Railway will automatically detect the configuration and deploy
+After deployment, verify the port configuration:
 
-## Environment Variables
+1. **Check Health Endpoint**: 
+   ```bash
+   curl https://your-app.railway.app/api/health
+   ```
 
-Set these environment variables in your Railway project:
+2. **Check Logs**:
+   ```bash
+   railway logs
+   ```
 
-```
-VITE_SUPABASE_URL=your_supabase_url
-VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-VITE_APP_NAME=MaintainPro CMMS
-VITE_APP_VERSION=1.0.0
-NODE_ENV=production
-```
-
-## Build Process
-
-1. Railway detects this as a Node.js project
-2. Installs dependencies with `npm ci`
-3. Builds the application with `npm run build`
-4. Serves the built files using `serve` package
-5. Application runs on the PORT provided by Railway
+3. **Look for**: `Server is running on http://0.0.0.0:8080`
 
 ## Troubleshooting
 
-If Railway still detects as Deno:
+### Common Issues:
+- **502 Bad Gateway**: Port mismatch between Railway and application
+- **Connection refused**: Application not binding to correct host (0.0.0.0)
+- **Health check failures**: Wrong health check path or port
 
-1. Ensure `.railwayignore` is properly excluding `supabase/functions/`
-2. Check that `package.json` has the correct `engines` field
-3. Verify that the `nixpacks.toml` specifies Node.js providers
-
-## Health Check
-
-The application includes a health check endpoint at `/` that Railway will use to verify the
-deployment is successful.
+### Quick Fix:
+1. Set `PORT=8080` in Railway dashboard
+2. Ensure app binds to `0.0.0.0:${PORT}`
+3. Verify health check path is correct

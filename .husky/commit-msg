@@ -1,5 +1,0 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
-
-# Check if commit message follows conventional commits format
-npx commitlint --edit $1

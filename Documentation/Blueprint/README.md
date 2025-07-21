@@ -13,14 +13,8 @@ high-level vision to implementation details.
 
 **Location**: `/1-Vision/`
 
-- **ProductVision.md**: Comprehensive vision statement with problem definition, solution approach,
-  user personas, success criteria, competitive positioning, and strategic roadmap
-- **VisionSummary.md**: One-page executive summary with key value propositions, metrics, and
-  implementation priorities
-- **StrategicContext.md**: Market landscape analysis, competitive positioning, and go-to-market
-  strategy
-- **VisionAlignmentChecklist.md**: Decision framework to ensure all development aligns with vision
-  and competitive advantages
+- **ProductVision.md**: Complete vision statement with problem definition, solution approach, user
+  personas, and success criteria
 
 ### 2. Feature & Module Breakdown (Functional Specification)
 
