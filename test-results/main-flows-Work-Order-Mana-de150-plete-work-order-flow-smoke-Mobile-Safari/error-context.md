@@ -1,0 +1,59 @@
+# Page snapshot
+
+```yaml
+- region "Notifications (F8)":
+  - list
+- banner:
+  - button:
+    - img
+  - button:
+    - img
+  - button:
+    - img
+  - button "TU":
+    - text: TU
+    - img
+- main:
+  - heading "Maintenance Dashboard" [level=1]
+  - paragraph: Overview of maintenance operations and key performance indicators
+  - button "Last 7 Days":
+    - img
+    - text: Last 7 Days
+  - paragraph: Total Work Orders
+  - paragraph: "0"
+  - paragraph: +12% from last week
+  - img
+  - paragraph: Pending Work Orders
+  - paragraph: "0"
+  - paragraph: Requires immediate attention
+  - img
+  - paragraph: Completed Work Orders
+  - paragraph: "0"
+  - paragraph: 0 completed this week
+  - img
+  - paragraph: Active Equipment
+  - paragraph: "0"
+  - paragraph: 0 of 0 assets
+  - img
+  - text: Recent Work Orders
+  - combobox: All Status
+  - combobox: All Priority
+  - button "+ New Work Order"
+  - paragraph: No work orders found
+  - button "Create First Work Order"
+  - text: Quick Actions
+  - button "Scan QR Code":
+    - img
+    - text: Scan QR Code
+  - button "Create Work Order":
+    - img
+    - text: Create Work Order
+  - button "Check Inventory":
+    - img
+    - text: Check Inventory
+  - img
+  - text: Upcoming Maintenance
+  - paragraph: No upcoming maintenance scheduled
+  - text: Recent Alerts
+  - paragraph: No recent alerts
+```

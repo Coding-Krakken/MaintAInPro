@@ -1,8 +1,5 @@
-import { defineConfig, devices } from '@playwright/test';
+import { defineConfig, devices } from '@playwright/test'
 
-/**
- * See https://playwright.dev/docs/test-configuration.
- */
 export default defineConfig({
   testDir: './tests/e2e',
   fullyParallel: true,
@@ -11,75 +8,42 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: [
     ['html'],
-    ['junit', { outputFile: 'test-results/junit.xml' }],
-    ['json', { outputFile: 'test-results/test-results.json' }],
+    ['json', { outputFile: 'test-results/results.json' }],
+    ['junit', { outputFile: 'test-results/results.xml' }],
   ],
   use: {
-    baseURL: 'http://localhost:8080',
+    baseURL: process.env.BASE_URL || 'http://localhost:5000',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
+    // Force headless mode in CI or when no DISPLAY is available
+    headless: !!process.env.CI || !process.env.DISPLAY,
   },
-
   projects: [
     {
-      name: 'setup',
-      testMatch: /.*\.setup\.ts/,
-    },
-    {
       name: 'chromium',
-      use: {
-        ...devices['Desktop Chrome'],
-        // Use auth state after setup
-        storageState: 'tests/e2e/auth.json',
-      },
-      dependencies: ['setup'],
+      use: { ...devices['Desktop Chrome'] },
     },
-
     {
       name: 'firefox',
-      use: {
-        ...devices['Desktop Firefox'],
-        storageState: 'tests/e2e/auth.json',
-      },
-      dependencies: ['setup'],
+      use: { ...devices['Desktop Firefox'] },
     },
-
     {
       name: 'webkit',
-      use: {
-        ...devices['Desktop Safari'],
-        storageState: 'tests/e2e/auth.json',
-      },
-      dependencies: ['setup'],
+      use: { ...devices['Desktop Safari'] },
     },
-
     {
       name: 'Mobile Chrome',
-      use: {
-        ...devices['Pixel 5'],
-        storageState: 'tests/e2e/auth.json',
-      },
-      dependencies: ['setup'],
+      use: { ...devices['Pixel 5'] },
     },
-
     {
       name: 'Mobile Safari',
-      use: {
-        ...devices['iPhone 12'],
-        storageState: 'tests/e2e/auth.json',
-      },
-      dependencies: ['setup'],
+      use: { ...devices['iPhone 12'] },
     },
   ],
-
   webServer: {
     command: 'npm run dev',
-    url: 'http://localhost:8080',
+    port: 5000,
     reuseExistingServer: !process.env.CI,
-    timeout: 120 * 1000,
-    env: {
-      VITE_APP_URL: 'http://localhost:8080',
-    },
   },
-});
+})

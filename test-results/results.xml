@@ -1,0 +1,217 @@
+<testsuites id="" name="" tests="5" failures="5" skipped="0" errors="0" time="162.246002">
+<testsuite name="main-flows.spec.ts" timestamp="2025-07-17T18:48:17.533Z" hostname="chromium" tests="1" failures="1" skipped="0" time="32.204" errors="0">
+<testcase name="Work Order Management › technician can complete work order flow @smoke" classname="main-flows.spec.ts" time="32.204">
+<failure message="main-flows.spec.ts:77:3 technician can complete work order flow @smoke" type="FAILURE">
+<![CDATA[  [chromium] › main-flows.spec.ts:77:3 › Work Order Management › technician can complete work order flow @smoke 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: page.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for locator('[data-testid="work-order-card"]:first-child')
+
+
+      81 |     
+      82 |     // Select first work order
+    > 83 |     await page.click('[data-testid="work-order-card"]:first-child')
+         |                ^
+      84 |     
+      85 |     // Update status to in progress
+      86 |     await page.selectOption('[data-testid="status-select"]', 'in_progress')
+        at /workspaces/MaintainPro-Replit/tests/e2e/main-flows.spec.ts:83:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../test-results/main-flows-Work-Order-Mana-de150-plete-work-order-flow-smoke-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../test-results/main-flows-Work-Order-Mana-de150-plete-work-order-flow-smoke-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../test-results/main-flows-Work-Order-Mana-de150-plete-work-order-flow-smoke-chromium/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|main-flows-Work-Order-Mana-de150-plete-work-order-flow-smoke-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|main-flows-Work-Order-Mana-de150-plete-work-order-flow-smoke-chromium/video.webm]]
+
+[[ATTACHMENT|main-flows-Work-Order-Mana-de150-plete-work-order-flow-smoke-chromium/error-context.md]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="main-flows.spec.ts" timestamp="2025-07-17T18:48:17.533Z" hostname="firefox" tests="1" failures="1" skipped="0" time="30.195" errors="0">
+<testcase name="Work Order Management › technician can complete work order flow @smoke" classname="main-flows.spec.ts" time="30.195">
+<failure message="main-flows.spec.ts:77:3 technician can complete work order flow @smoke" type="FAILURE">
+<![CDATA[  [firefox] › main-flows.spec.ts:77:3 › Work Order Management › technician can complete work order flow @smoke 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: page.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for locator('[data-testid="work-order-card"]:first-child')
+
+
+      81 |     
+      82 |     // Select first work order
+    > 83 |     await page.click('[data-testid="work-order-card"]:first-child')
+         |                ^
+      84 |     
+      85 |     // Update status to in progress
+      86 |     await page.selectOption('[data-testid="status-select"]', 'in_progress')
+        at /workspaces/MaintainPro-Replit/tests/e2e/main-flows.spec.ts:83:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../test-results/main-flows-Work-Order-Mana-de150-plete-work-order-flow-smoke-firefox/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../test-results/main-flows-Work-Order-Mana-de150-plete-work-order-flow-smoke-firefox/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../test-results/main-flows-Work-Order-Mana-de150-plete-work-order-flow-smoke-firefox/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|main-flows-Work-Order-Mana-de150-plete-work-order-flow-smoke-firefox/test-failed-1.png]]
+
+[[ATTACHMENT|main-flows-Work-Order-Mana-de150-plete-work-order-flow-smoke-firefox/video.webm]]
+
+[[ATTACHMENT|main-flows-Work-Order-Mana-de150-plete-work-order-flow-smoke-firefox/error-context.md]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="main-flows.spec.ts" timestamp="2025-07-17T18:48:17.533Z" hostname="webkit" tests="1" failures="1" skipped="0" time="31.406" errors="0">
+<testcase name="Work Order Management › technician can complete work order flow @smoke" classname="main-flows.spec.ts" time="31.406">
+<failure message="main-flows.spec.ts:77:3 technician can complete work order flow @smoke" type="FAILURE">
+<![CDATA[  [webkit] › main-flows.spec.ts:77:3 › Work Order Management › technician can complete work order flow @smoke 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: page.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for locator('[data-testid="work-order-card"]:first-child')
+
+
+      81 |     
+      82 |     // Select first work order
+    > 83 |     await page.click('[data-testid="work-order-card"]:first-child')
+         |                ^
+      84 |     
+      85 |     // Update status to in progress
+      86 |     await page.selectOption('[data-testid="status-select"]', 'in_progress')
+        at /workspaces/MaintainPro-Replit/tests/e2e/main-flows.spec.ts:83:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../test-results/main-flows-Work-Order-Mana-de150-plete-work-order-flow-smoke-webkit/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../test-results/main-flows-Work-Order-Mana-de150-plete-work-order-flow-smoke-webkit/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../test-results/main-flows-Work-Order-Mana-de150-plete-work-order-flow-smoke-webkit/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|main-flows-Work-Order-Mana-de150-plete-work-order-flow-smoke-webkit/test-failed-1.png]]
+
+[[ATTACHMENT|main-flows-Work-Order-Mana-de150-plete-work-order-flow-smoke-webkit/video.webm]]
+
+[[ATTACHMENT|main-flows-Work-Order-Mana-de150-plete-work-order-flow-smoke-webkit/error-context.md]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="main-flows.spec.ts" timestamp="2025-07-17T18:48:17.533Z" hostname="Mobile Chrome" tests="1" failures="1" skipped="0" time="31.646" errors="0">
+<testcase name="Work Order Management › technician can complete work order flow @smoke" classname="main-flows.spec.ts" time="31.646">
+<failure message="main-flows.spec.ts:77:3 technician can complete work order flow @smoke" type="FAILURE">
+<![CDATA[  [Mobile Chrome] › main-flows.spec.ts:77:3 › Work Order Management › technician can complete work order flow @smoke 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: page.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for locator('[data-testid="nav-work-orders"]')
+
+
+      77 |   test('technician can complete work order flow @smoke', async ({ page }) => {
+      78 |     // Navigate to work orders
+    > 79 |     await page.click('[data-testid="nav-work-orders"]')
+         |                ^
+      80 |     await expect(page).toHaveURL('/work-orders')
+      81 |     
+      82 |     // Select first work order
+        at /workspaces/MaintainPro-Replit/tests/e2e/main-flows.spec.ts:79:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../test-results/main-flows-Work-Order-Mana-de150-plete-work-order-flow-smoke-Mobile-Chrome/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../test-results/main-flows-Work-Order-Mana-de150-plete-work-order-flow-smoke-Mobile-Chrome/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../test-results/main-flows-Work-Order-Mana-de150-plete-work-order-flow-smoke-Mobile-Chrome/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|main-flows-Work-Order-Mana-de150-plete-work-order-flow-smoke-Mobile-Chrome/test-failed-1.png]]
+
+[[ATTACHMENT|main-flows-Work-Order-Mana-de150-plete-work-order-flow-smoke-Mobile-Chrome/video.webm]]
+
+[[ATTACHMENT|main-flows-Work-Order-Mana-de150-plete-work-order-flow-smoke-Mobile-Chrome/error-context.md]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="main-flows.spec.ts" timestamp="2025-07-17T18:48:17.533Z" hostname="Mobile Safari" tests="1" failures="1" skipped="0" time="31.082" errors="0">
+<testcase name="Work Order Management › technician can complete work order flow @smoke" classname="main-flows.spec.ts" time="31.082">
+<failure message="main-flows.spec.ts:77:3 technician can complete work order flow @smoke" type="FAILURE">
+<![CDATA[  [Mobile Safari] › main-flows.spec.ts:77:3 › Work Order Management › technician can complete work order flow @smoke 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: page.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for locator('[data-testid="nav-work-orders"]')
+
+
+      77 |   test('technician can complete work order flow @smoke', async ({ page }) => {
+      78 |     // Navigate to work orders
+    > 79 |     await page.click('[data-testid="nav-work-orders"]')
+         |                ^
+      80 |     await expect(page).toHaveURL('/work-orders')
+      81 |     
+      82 |     // Select first work order
+        at /workspaces/MaintainPro-Replit/tests/e2e/main-flows.spec.ts:79:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../test-results/main-flows-Work-Order-Mana-de150-plete-work-order-flow-smoke-Mobile-Safari/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../test-results/main-flows-Work-Order-Mana-de150-plete-work-order-flow-smoke-Mobile-Safari/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../test-results/main-flows-Work-Order-Mana-de150-plete-work-order-flow-smoke-Mobile-Safari/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|main-flows-Work-Order-Mana-de150-plete-work-order-flow-smoke-Mobile-Safari/test-failed-1.png]]
+
+[[ATTACHMENT|main-flows-Work-Order-Mana-de150-plete-work-order-flow-smoke-Mobile-Safari/video.webm]]
+
+[[ATTACHMENT|main-flows-Work-Order-Mana-de150-plete-work-order-flow-smoke-Mobile-Safari/error-context.md]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+</testsuites>

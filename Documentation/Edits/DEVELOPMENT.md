@@ -1,320 +1,242 @@
-# MaintAInPro CMMS - Development Guide
+# MaintainPro CMMS - Development Guide
 
-## 🚀 Quick Start
+## 🚀 Getting Started
 
 ### Prerequisites
-
-- Node.js 18+
-- npm or yarn
+- Node.js 18+ 
+- PostgreSQL 13+ (for production)
 - Git
 
-### Setup
-
+### Quick Start
 ```bash
-# Clone the repository
-git clone https://github.com/Coding-Krakken/MaintAInPro.git
-cd MaintAInPro
+# Clone repository
+git clone [repository-url]
+cd MaintainPro-Replit
 
 # Install dependencies
 npm install
 
-# Copy environment variables
-cp .env.example .env.local
-
 # Start development server
 npm run dev
+
+# Run tests
+npm run test:all
 ```
 
-### Test Credentials
+## 🏗️ Architecture Overview
 
-- **Email**: admin@demo.com
-- **Password**: admin123
+### Frontend (React + TypeScript)
+- **Framework**: React 18+ with TypeScript
+- **Build Tool**: Vite for fast development and building
+- **Styling**: Tailwind CSS with Shadcn/ui component library
+- **State Management**: TanStack Query for server state
+- **Routing**: Wouter for lightweight routing
+- **Forms**: React Hook Form with Zod validation
 
-## 📋 Available Scripts
+### Backend (Express + TypeScript)
+- **Framework**: Express.js with TypeScript
+- **Database**: PostgreSQL with Drizzle ORM
+- **Authentication**: Header-based with role validation
+- **API**: RESTful endpoints with proper error handling
+- **File Storage**: Local storage with configurable options
 
-### Development
+### Database Schema
+- **Multi-tenant**: Warehouse-based data isolation
+- **Relational**: Proper foreign key relationships
+- **Scalable**: Designed for enterprise-level data volumes
+- **Extensible**: Easy to add new modules and features
 
-```bash
-npm run dev              # Start development server (http://localhost:3000)
-npm run build           # Build for production
-npm run preview         # Preview production build
-```
-
-### Testing
-
-```bash
-npm run test            # Run unit tests
-npm run test:coverage   # Run tests with coverage report
-npm run test:e2e        # Run end-to-end tests
-npm run test:ui         # Run tests with interactive UI
-```
-
-### Code Quality
-
-```bash
-npm run lint            # Run ESLint
-npm run lint:fix        # Fix ESLint issues
-npm run format          # Format code with Prettier
-npm run type-check      # TypeScript type checking
-```
-
-## 🏗️ Project Structure
+## 📁 Project Structure
 
 ```
-MaintAInPro/
-├── src/
-│   ├── components/          # Reusable UI components
-│   │   ├── ui/             # Base components (Button, Input, Modal)
-│   │   └── layout/         # Layout components (Header, Sidebar)
-│   ├── modules/            # Feature modules
-│   │   └── auth/           # Authentication module
-│   ├── pages/              # Page components
-│   ├── hooks/              # Custom React hooks
-│   ├── lib/                # External library configurations
-│   ├── services/           # API services
-│   ├── test/               # Test utilities and setup
-│   ├── types/              # TypeScript type definitions
-│   └── utils/              # Utility functions
-├── tests/
-│   └── e2e/                # End-to-end tests
-├── Documentation/          # Project documentation
-├── supabase/              # Database migrations and schema
-└── public/                # Static assets
+├── client/                 # React frontend
+│   ├── src/
+│   │   ├── components/    # Reusable UI components
+│   │   │   ├── ui/       # Base UI components (Shadcn/ui)
+│   │   │   ├── layout/   # Layout components
+│   │   │   ├── work-orders/ # Work order components
+│   │   │   ├── equipment/   # Equipment components
+│   │   │   └── inventory/   # Inventory components
+│   │   ├── pages/         # Route components
+│   │   ├── hooks/         # Custom React hooks
+│   │   ├── types/         # TypeScript definitions
+│   │   ├── lib/           # Utility libraries
+│   │   └── utils/         # Helper functions
+├── server/                # Express.js backend
+│   ├── routes.ts          # API route definitions
+│   ├── storage.ts         # Data access layer
+│   ├── index.ts           # Server entry point
+│   └── services/          # Business logic services
+├── shared/                # Shared types and schemas
+│   └── schema.ts          # Database schema definitions
+├── tests/                 # Test suites
+│   ├── unit/             # Unit tests
+│   ├── integration/      # Integration tests
+│   ├── e2e/              # End-to-end tests
+│   └── utils/            # Test utilities
+└── Documentation/         # Project documentation
 ```
 
-## 🧪 Testing
+## 🧪 Testing Strategy
 
-### Unit Tests
+### Test Types
+1. **Unit Tests** - Individual component and function testing
+2. **Integration Tests** - API and database integration
+3. **E2E Tests** - Full user journey testing
+4. **Accessibility Tests** - WCAG compliance testing
+5. **Performance Tests** - Load and response time testing
 
-- **Framework**: Vitest with React Testing Library
-- **Coverage**: 85% minimum threshold
-- **Location**: `src/**/*.test.{ts,tsx}`
-
-### E2E Tests
-
-- **Framework**: Playwright
-- **Browsers**: Chrome, Firefox, Safari + Mobile
-- **Location**: `tests/e2e/*.spec.ts`
+### Test Environment Setup
+- **Sample Data**: Consistent test data with fixed IDs
+- **Mock Services**: MSW for API mocking
+- **Test IDs**: Comprehensive `data-testid` attributes
+- **Cross-Browser**: Chrome, Firefox, Safari, Mobile testing
 
 ### Running Tests
-
 ```bash
-# Unit tests
-npm run test                # Run all unit tests
-npm run test:coverage       # With coverage report
-npm run test:watch          # Watch mode
+# All tests
+npm run test:all
 
-# E2E tests
-npm run test:e2e            # All browsers
-npm run test:e2e:chrome     # Chrome only
-npm run test:e2e:mobile     # Mobile devices
+# Specific test types
+npm run test:unit
+npm run test:integration
+npm run test:e2e
+npm run test:accessibility
+
+# Interactive testing
+npm run test:ui
+npm run test:e2e:ui
 ```
 
-## 🎨 UI Components
+## 🔧 Development Workflow
 
-### Base Components
+### 1. Feature Development
+1. Create feature branch from `main`
+2. Implement feature with tests
+3. Run full test suite
+4. Create pull request
+5. Review and merge
 
-- **Button**: Multiple variants with loading states
-- **Input**: Form inputs with validation
-- **Modal**: Accessible dialogs
-- **LoadingSpinner**: Consistent loading indicators
+### 2. Testing Workflow
+1. Write unit tests for new components/functions
+2. Add integration tests for API endpoints
+3. Update E2E tests for new user flows
+4. Ensure accessibility compliance
+5. Run performance tests for critical paths
 
-### Usage Example
+### 3. Code Quality
+- **TypeScript**: Strict type checking enabled
+- **ESLint**: Code linting and formatting
+- **Prettier**: Consistent code formatting
+- **Husky**: Pre-commit hooks for quality checks
 
-```tsx
-import { Button } from '@/components/ui/Button';
+## 📊 Key Modules
 
-function MyComponent() {
-  return (
-    <Button variant='primary' size='lg' onClick={handleClick}>
-      Click me
-    </Button>
-  );
-}
+### 1. Authentication & Authorization
+- **File**: `client/src/hooks/useAuth.tsx`
+- **Features**: Role-based access, multi-warehouse support
+- **Roles**: Admin, Manager, Supervisor, Technician, etc.
+
+### 2. Work Order Management
+- **Components**: `client/src/components/work-orders/`
+- **API**: `/api/work-orders`
+- **Features**: Lifecycle management, mobile support, QR integration
+
+### 3. Equipment Tracking
+- **Components**: `client/src/components/equipment/`
+- **API**: `/api/equipment`
+- **Features**: Asset tracking, QR codes, maintenance history
+
+### 4. Inventory Management
+- **Components**: `client/src/components/inventory/`
+- **API**: `/api/parts`
+- **Features**: Stock tracking, reorder alerts, usage monitoring
+
+## 🛠️ Configuration
+
+### Environment Variables
+```env
+NODE_ENV=development
+PORT=5000
+DATABASE_URL=postgresql://user:password@localhost:5432/maintainpro
 ```
-
-## 🔐 Authentication
-
-### How It Works
-
-1. **Supabase Auth**: JWT-based authentication
-2. **Protected Routes**: Route-level protection
-3. **Session Management**: Automatic token refresh
-4. **Error Handling**: Comprehensive error states
-
-### Auth Hook Usage
-
-```tsx
-import { useAuth } from '@/modules/auth/hooks/useAuth';
-
-function MyComponent() {
-  const { user, isLoading, isAuthenticated, signIn, signOut } = useAuth();
-
-  if (isLoading) return <LoadingSpinner />;
-
-  return isAuthenticated ? <Dashboard /> : <LoginForm />;
-}
-```
-
-## 💾 Database
-
-### Schema
-
-- **Users**: User profiles and permissions
-- **Organizations**: Multi-tenant organization data
-- **Equipment**: Asset and equipment management
-- **Work Orders**: Maintenance work orders
-- **Inventory**: Parts and inventory tracking
-
-### Database Service
-
-```tsx
-import { userService } from '@/lib/database';
-
-// Get user profile
-const user = await userService.getProfile(userId);
-
-// Update user profile
-await userService.updateProfile(userId, { firstName: 'John' });
-```
-
-## 🔄 State Management
-
-### Auth State
-
-- **Provider**: AuthProvider wraps the app
-- **Hook**: useAuth() for auth operations
-- **Persistence**: Automatic session persistence
-
-### Server State
-
-- **React Query**: For server state management
-- **Caching**: Intelligent caching and invalidation
-- **Offline**: Offline-first approach
-
-## 🎯 Code Standards
-
-### TypeScript
-
-- **Strict Mode**: Enabled for type safety
-- **Interfaces**: Prefer interfaces over types
-- **Generics**: Use for reusable components
-
-### React
-
-- **Hooks**: Prefer hooks over class components
-- **Components**: Functional components with TypeScript
-- **Props**: Explicit prop types with interfaces
-
-### Styling
-
-- **Tailwind CSS**: Utility-first approach
-- **Components**: Consistent component API
-- **Responsive**: Mobile-first design
-
-## 🐛 Debugging
 
 ### Development Tools
+- **Vite**: Fast development server and building
+- **TypeScript**: Type safety and better developer experience
+- **Tailwind CSS**: Utility-first CSS framework
+- **React Query**: Server state management
+- **Drizzle ORM**: Type-safe database operations
 
-- **React DevTools**: Component inspection
-- **Browser DevTools**: Network and console debugging
-- **VS Code**: Integrated debugging support
+## 🚀 Deployment
 
-### Common Issues
-
-1. **Loading Forever**: Check auth hook implementation
-2. **Database Errors**: Verify field name mapping
-3. **Type Errors**: Check TypeScript configurations
-4. **Test Failures**: Verify test setup and mocks
-
-## 📝 Contributing
-
-### Development Workflow
-
-1. **Branch**: Create feature branch from main
-2. **Code**: Implement feature with tests
-3. **Test**: Run all tests and ensure coverage
-4. **Commit**: Use conventional commit format
-5. **PR**: Create pull request with description
-
-### Commit Format
-
-```
-feat(auth): add password reset functionality
-fix(ui): resolve button loading state issue
-docs(readme): update setup instructions
-test(auth): add unit tests for login flow
+### Production Build
+```bash
+npm run build
+npm start
 ```
 
-### Code Review Checklist
-
-- [ ] Tests written and passing
-- [ ] TypeScript errors resolved
-- [ ] ESLint warnings addressed
-- [ ] Documentation updated
-- [ ] Responsive design verified
-
-## 🔧 Environment Variables
-
-### Required Variables
-
-```env
-# Supabase Configuration
-VITE_SUPABASE_URL=your_supabase_url
-VITE_SUPABASE_ANON_KEY=your_anon_key
-
-# Application Configuration
-VITE_APP_NAME=MaintAInPro
-VITE_APP_VERSION=1.0.0
-VITE_APP_ENVIRONMENT=development
+### Docker Support
+```dockerfile
+FROM node:18-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+COPY . .
+RUN npm run build
+EXPOSE 5000
+CMD ["npm", "start"]
 ```
 
-### Optional Variables
+### Environment Configuration
+- **Development**: SQLite with sample data
+- **Production**: PostgreSQL with proper credentials
+- **Testing**: In-memory database for fast tests
 
-```env
-# Analytics and Monitoring
-VITE_SENTRY_DSN=your_sentry_dsn
-VITE_GOOGLE_ANALYTICS_ID=your_ga_id
+## 📈 Performance Considerations
 
-# Feature Flags
-VITE_ENABLE_PWA=true
-VITE_ENABLE_REALTIME=true
-VITE_ENABLE_NOTIFICATIONS=true
-```
+### Frontend Optimization
+- **Code Splitting**: Lazy loading for routes
+- **Bundle Analysis**: Webpack bundle analyzer
+- **Image Optimization**: Proper image formats and sizes
+- **Caching**: Browser caching strategies
 
-## 📚 Resources
+### Backend Optimization
+- **Database Indexing**: Proper indexes for queries
+- **Connection Pooling**: Efficient database connections
+- **Caching**: Redis for session and data caching
+- **Compression**: Gzip compression for responses
 
-### Documentation
+## 🔒 Security
 
-- [Phase 1 Implementation Summary](Documentation/Phase1-Implementation-Summary.md)
-- [Development Roadmap](ROADMAP.md)
-- [API Specification](Documentation/Development/APISpecification.md)
+### Authentication
+- **JWT Tokens**: Secure token-based authentication
+- **Role-Based Access**: Granular permission system
+- **Session Management**: Secure session handling
 
-### External Resources
+### Data Protection
+- **Input Validation**: Zod schema validation
+- **SQL Injection**: Parameterized queries
+- **XSS Protection**: Content Security Policy
+- **HTTPS**: Secure transport layer
 
-- [React Documentation](https://react.dev/)
-- [TypeScript Handbook](https://www.typescriptlang.org/docs/)
-- [Tailwind CSS](https://tailwindcss.com/docs)
-- [Supabase Documentation](https://supabase.com/docs)
-- [Vitest Documentation](https://vitest.dev/)
-- [Playwright Documentation](https://playwright.dev/)
+## 📚 Additional Resources
 
-## 🆘 Support
+- **API Documentation**: See `/api` endpoints in routes.ts
+- **Database Schema**: See `shared/schema.ts`
+- **Component Library**: Shadcn/ui documentation
+- **Testing Guide**: See `tests/README.md`
+- **Roadmap**: See `ROADMAP.md` for future features
 
-### Getting Help
+## 🤝 Contributing
 
-1. **Documentation**: Check project documentation first
-2. **Issues**: Create GitHub issue with detailed description
-3. **Discussions**: Use GitHub discussions for questions
-4. **Code Review**: Request code review for complex changes
+1. Fork the repository
+2. Create feature branch
+3. Make changes with tests
+4. Run test suite
+5. Submit pull request
+6. Code review and merge
 
-### Common Solutions
+## 📝 License
 
-- **Build Issues**: Clear node_modules and reinstall
-- **Type Errors**: Check TypeScript configuration
-- **Test Failures**: Verify test setup and environment
-- **Database Issues**: Check environment variables and schema
-
----
-
-**Happy coding! 🚀**
+MIT License - see LICENSE file for details.
