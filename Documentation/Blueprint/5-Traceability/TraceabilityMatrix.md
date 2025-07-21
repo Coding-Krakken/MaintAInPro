@@ -107,18 +107,35 @@ requirements are properly implemented and tested.
 
 ## 🏢 Vendor & Contractor Management Module
 
-| Req ID  | Requirement Description  | Priority | Status | Linked Code                                                | Test Coverage                   |
-| ------- | ------------------------ | -------- | ------ | ---------------------------------------------------------- | ------------------------------- |
-| VND-001 | Vendor Registration      | P2       | ❌     | `/src/modules/vendors/components/VendorRegistration.tsx`   | `vendor-registration.test.ts`   |
-| VND-002 | Contractor Management    | P2       | ❌     | `/src/modules/vendors/components/ContractorManagement.tsx` | `contractor-management.test.ts` |
-| VND-003 | Work Order Assignment    | P2       | ❌     | `/src/modules/vendors/services/wo-assignment.ts`           | `vendor-wo-assignment.test.ts`  |
-| VND-004 | Parts Procurement        | P2       | ❌     | `/src/modules/vendors/services/procurement.ts`             | `procurement.test.ts`           |
-| VND-005 | Document Management      | P2       | ❌     | `/src/modules/vendors/services/document-management.ts`     | `vendor-docs.test.ts`           |
-| VND-006 | Performance Analytics    | P2       | ❌     | `/src/modules/vendors/services/performance.ts`             | `vendor-performance.test.ts`    |
-| VND-007 | Communication Tools      | P2       | ❌     | `/src/modules/vendors/services/communication.ts`           | `vendor-communication.test.ts`  |
-| VND-008 | Contract Management      | P2       | ❌     | `/src/modules/vendors/services/contract-management.ts`     | `contract-management.test.ts`   |
-| VND-009 | Financial Management     | P2       | ❌     | `/src/modules/vendors/services/financial.ts`               | `vendor-financial.test.ts`      |
-| VND-010 | Mobile Vendor Management | P2       | ❌     | `/src/modules/vendors/mobile/VendorMobile.tsx`             | `mobile-vendor.test.ts`         |
+| Req ID  | Requirement Description | Priority | Status | Linked Code                                                | Test Coverage                   |
+| ------- | ----------------------- | -------- | ------ | ---------------------------------------------------------- | ------------------------------- |
+| VND-001 | Vendor Registration     | P2       | ❌     | `/src/modules/vendors/components/VendorRegistration.tsx`   | `vendor-registration.test.ts`   |
+| VND-002 | Contractor Management   | P2       | ❌     | `/src/modules/vendors/components/ContractorManagement.tsx` | `contractor-management.test.ts` |
+| VND-003 | Work Order Assignment   | P2       | ❌     | `/src/modules/vendors/services/wo-assignment.ts`           | `vendor-wo-assignment.test.ts`  |
+| VND-004 | Parts Procurement       | P2       | ❌     | `/src/modules/vendors/services/procurement.ts`             | `procurement.test.ts`           |
+| VND-005 | Document Management     | P2       | ❌     | `/src/modules/vendors/services/document-management.ts`     | `vendor-docs.test.ts`           |
+| VND-006 | Performance Analytics   | P2       | ❌     | `/src/modules/vendors/services/performance.ts`             | `vendor-performance.test.ts`    |
+| VND-007 | Communication Tools     | P2       | ❌     | `/src/modules/vendors/services/communication.ts`           | `vendor-communication.test.ts`  |
+| VND-008 | Contract Management     | P2       | ❌     | `/src/modules/vendors/services/contract-management.ts`     | `contract-management.test.ts`   |
+| VND-009 | Financial Management    | P2       | ❌     | `/src/modules/vendors/services/financial.ts`               | `vendor-financial.test.ts`      |
+
+## 🚀 2025+ Enhancements Traceability
+
+| Enhancement ID | Enhancement Title                       | Category                      | Status | Linked Blueprint Section(s)                    |
+| -------------- | --------------------------------------- | ----------------------------- | ------ | ---------------------------------------------- | ----------------------- |
+| ENH-001        | Unified Asset Digital Twin              | Core Features & Functionality | ⏳     | 1-Vision/ProductVision.md, VisionSummary.md    |
+| ENH-002        | Automated Root Cause Analysis           | Core Features & Functionality | ⏳     | 1-Vision/ProductVision.md, VisionSummary.md    |
+| ENH-003        | Adaptive UI Personalization             | UX & UI Design                | ⏳     | 1-Vision/ProductVision.md, VisionSummary.md    |
+| ENH-004        | Voice-Activated Workflows               | UX & UI Design                | ⏳     | 1-Vision/ProductVision.md, VisionSummary.md    |
+| ENH-005        | Edge Computing for Offline Analytics    | Performance & Scalability     | ⏳     | 1-Vision/ProductVision.md, VisionSummary.md    |
+| ENH-006        | Multi-Tenant SaaS Scalability           | Performance & Scalability     | ⏳     | 1-Vision/ProductVision.md, VisionSummary.md    |
+| ENH-007        | Autonomous Scheduling Agent             | AI & Automation Capabilities  | ⏳     | 1-Vision/ProductVision.md, VisionSummary.md    |
+| ENH-008        | Predictive Parts Inventory Optimization | AI & Automation Capabilities  | ⏳     | 1-Vision/ProductVision.md, VisionSummary.md    |
+| ENH-009        | Augmented Reality (AR) Guided Repairs   | Cutting-Edge Technologies     | ⏳     | 1-Vision/ProductVision.md, VisionSummary.md    |
+| ENH-010        | Blockchain-Based Maintenance Records    | Cutting-Edge Technologies     | ⏳     | 1-Vision/ProductVision.md, VisionSummary.md    |
+| ENH-011        | Modular Plugin Architecture             | Developer Experience          | ⏳     | 1-Vision/ProductVision.md, VisionSummary.md    |
+| ENH-012        | Automated Test & Deployment Pipelines   | Developer Experience          | ⏳     | 1-Vision/ProductVision.md, VisionSummary.md    |
+| VND-010        | Mobile Vendor Management                | P2                            | ❌     | `/src/modules/vendors/mobile/VendorMobile.tsx` | `mobile-vendor.test.ts` |
 
 ## ⚙️ System Configuration Module
 
