@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { format } from 'date-fns';
 import { Button } from '../../../components/ui/Button';
 import { Card } from '../../../components/ui/Card';
@@ -8,7 +9,7 @@ import { Select } from '../../../components/ui/Select';
 import { Pagination } from '../../../components/ui/Pagination';
 import { LoadingSpinner } from '../../../components/ui/LoadingSpinner';
 import { useWorkOrders } from '../hooks/useWorkOrders';
-import { CreateWorkOrderModal } from './CreateWorkOrderModal';
+// import { CreateWorkOrderModal } from './CreateWorkOrderModal';
 import {
   WorkOrderPriority,
   WorkOrderStatus,
@@ -48,7 +49,7 @@ const statusColors = {
 export const WorkOrderList: React.FC = () => {
   const [page, setPage] = useState(1);
   const [filters, setFilters] = useState<WorkOrderFilters>({});
-  const [showCreateModal, setShowCreateModal] = useState(false);
+  // Remove modal in favor of navigation
   const [showFilters, setShowFilters] = useState(false);
 
   const limit = 20;
@@ -124,10 +125,13 @@ export const WorkOrderList: React.FC = () => {
             Manage and track maintenance work orders
           </p>
         </div>
-        <Button onClick={() => setShowCreateModal(true)}>
+        <Link
+          to='/work-orders/create'
+          className='btn btn-primary flex items-center'
+        >
           <PlusIcon className='h-4 w-4 mr-2' />
           Create Work Order
-        </Button>
+        </Link>
       </div>
 
       {/* Search and Filters */}
@@ -246,10 +250,7 @@ export const WorkOrderList: React.FC = () => {
           <p className='text-gray-600 mb-4'>
             Get started by creating your first work order.
           </p>
-          <Button onClick={() => setShowCreateModal(true)}>
-            <PlusIcon className='h-4 w-4 mr-2' />
-            Create Work Order
-          </Button>
+          {/* Removed modal button, use page navigation for create */}
         </Card>
       ) : (
         <>
@@ -316,16 +317,12 @@ export const WorkOrderList: React.FC = () => {
                     <CalendarIcon className='h-3 w-3 mr-1' />
                     {format(new Date(workOrder.created_at), 'MMM d, yyyy')}
                   </div>
-                  <Button
-                    variant='outline'
-                    size='sm'
-                    onClick={() => {
-                      // TODO: Navigate to work order details
-                      console.log('View work order:', workOrder.id);
-                    }}
+                  <Link
+                    to={`/work-orders/${workOrder.id}`}
+                    className='btn btn-xs btn-secondary'
                   >
                     View
-                  </Button>
+                  </Link>
                 </div>
               </Card>
             ))}
@@ -342,11 +339,7 @@ export const WorkOrderList: React.FC = () => {
         </>
       )}
 
-      {/* Create Work Order Modal */}
-      <CreateWorkOrderModal
-        isOpen={showCreateModal}
-        onClose={() => setShowCreateModal(false)}
-      />
+      {/* No modal, use page navigation for create */}
     </div>
   );
 };
