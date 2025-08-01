@@ -16,69 +16,68 @@ export const userService = {
     try {
       console.log('🔍 Getting profile for user:', userId);
 
-      // Add timeout to prevent hanging
+      // Try to get from sessionStorage first
+      const cacheKey = `userProfile_${userId}`;
+      const cached = sessionStorage.getItem(cacheKey);
+      if (cached) {
+        try {
+          const parsed = JSON.parse(cached);
+          if (parsed && parsed.id === userId) {
+            console.log('⚡ Using cached user profile');
+            return parsed;
+          }
+        } catch (e) {
+          // Failed to parse cached user profile, ignore and fetch from DB
+        }
+      }
+
+      // Only fetch minimal fields needed for login
       const profilePromise = supabase
         .from('users')
         .select(
-          `
-          *,
-          organization:organizations(*)
-        `
+          'id, email, first_name, last_name, role, organization_id, avatar_url, is_active'
         )
         .eq('id', userId)
         .single();
 
-      // Create a timeout promise
+      // Increase timeout to 20s for dev
       const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('Profile query timeout')), 8000)
+        setTimeout(() => reject(new Error('Profile query timeout')), 20000)
       );
 
-      // Race the profile query against the timeout
-      const { data, error } = (await Promise.race([
-        profilePromise,
-        timeoutPromise,
-      ])) as any;
-
-      if (error) {
-        console.warn('Failed to get user with organization:', error.message);
-
-        // If the join fails, try without the organization join
-        const { data: userData, error: userError } = await supabase
-          .from('users')
-          .select('*')
-          .eq('id', userId)
-          .single();
-
-        if (userError) {
-          console.warn(
-            'Failed to get user without organization:',
-            userError.message
-          );
-          return null;
-        }
-
-        // Try to get organization separately
-        if (userData.organization_id) {
-          const { data: orgData } = await supabase
-            .from('organizations')
-            .select('*')
-            .eq('id', userData.organization_id)
-            .single();
-
-          return {
-            ...userData,
-            organization: orgData,
-          };
-        }
-
-        return userData;
+      let data, error;
+      try {
+        ({ data, error } = (await Promise.race([
+          profilePromise,
+          timeoutPromise,
+        ])) as any);
+      } catch (timeoutError) {
+        console.error('❌ Profile query timed out:', timeoutError);
+        return { id: userId, error: 'timeout' };
       }
 
+      if (error) {
+        console.warn('Failed to get user:', error.message);
+        return { id: userId, error: error.message };
+      }
+
+      // Optionally fetch organization if needed (not for login screen)
+      // ...
+
+      // Cache the profile for this session
+      sessionStorage.setItem(cacheKey, JSON.stringify(data));
+
       console.log('✅ Successfully got user profile');
-      return data;
+      return {
+        ...data,
+        organizationId: data.organization_id,
+      };
     } catch (error) {
       console.error('❌ Error in getProfile:', error);
-      return null;
+      return {
+        id: userId,
+        error: error instanceof Error ? error.message : String(error),
+      };
     }
   },
 

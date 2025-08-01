@@ -24,7 +24,7 @@ export interface Equipment {
   serialNumber?: string;
   assetTag?: string;
   qrCode?: string;
-  location?: string;
+  locationZoneId?: string;
   categoryId?: string;
   status: EquipmentStatus;
   condition: EquipmentCondition;

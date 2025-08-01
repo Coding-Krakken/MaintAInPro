@@ -18,6 +18,18 @@ const WorkOrders = React.lazy(
 const WorkOrderDetail = React.lazy(
   () => import('@/modules/work-orders/pages/WorkOrderDetailPage')
 );
+const CreateWorkOrder = React.lazy(
+  () => import('@/modules/work-orders/pages/CreateWorkOrderPage')
+);
+const EditWorkOrder = React.lazy(
+  () => import('@/modules/work-orders/pages/EditWorkOrderPage')
+);
+const WorkOrderChecklist = React.lazy(
+  () => import('@/modules/work-orders/pages/WorkOrderChecklistPage')
+);
+const WorkOrderHistory = React.lazy(
+  () => import('@/modules/work-orders/pages/WorkOrderHistoryPage')
+);
 const Equipment = React.lazy(
   () => import('@/modules/equipment/pages/EquipmentPage')
 );
@@ -135,8 +147,24 @@ const App: React.FC = () => {
                   {/* Work Orders */}
                   <Route path='/work-orders' element={<WorkOrders />} />
                   <Route
+                    path='/work-orders/create'
+                    element={<CreateWorkOrder />}
+                  />
+                  <Route
                     path='/work-orders/:id'
                     element={<WorkOrderDetail />}
+                  />
+                  <Route
+                    path='/work-orders/:id/edit'
+                    element={<EditWorkOrder />}
+                  />
+                  <Route
+                    path='/work-orders/:id/checklist'
+                    element={<WorkOrderChecklist />}
+                  />
+                  <Route
+                    path='/work-orders/:id/history'
+                    element={<WorkOrderHistory />}
                   />
 
                   {/* Equipment & Assets */}

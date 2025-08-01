@@ -53,8 +53,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, user }) => {
   const filteredNavigation = navigation.filter(item => {
     if (!item.permissions) return true;
     if (!user) return false;
-    return item.permissions.some(permission =>
-      user.permissions.includes(permission)
+    return item.permissions.some(
+      permission =>
+        Array.isArray(user.permissions) && user.permissions.includes(permission)
     );
   });
 

@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { useAuth } from '@/modules/auth/hooks/useAuth';
+import { useWarehouses } from '../hooks/useWarehouses';
+import { useLocationsZonesByWarehouse } from '../hooks/useLocationsZonesByWarehouse';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -26,7 +29,7 @@ const equipmentSchema = z.object({
   serialNumber: z.string().optional(),
   purchaseDate: z.string().optional(),
   warrantyExpiry: z.string().optional(),
-  location: z.string().min(1, 'Location is required'),
+  locationZoneId: z.string().min(1, 'Location/Zone is required'),
   status: z.nativeEnum(EquipmentStatus),
   condition: z.nativeEnum(EquipmentCondition),
   purchaseCost: z.number().min(0).optional(),
@@ -48,6 +51,36 @@ export const EquipmentForm: React.FC<EquipmentFormProps> = ({
   mode = 'create',
 }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedWarehouseId, setSelectedWarehouseId] = useState<string>('');
+  const { user } = useAuth();
+  const organizationId = user?.organizationId ?? '';
+  // Debug: log user and organizationId
+  console.log('User:', user);
+  console.log('Organization ID:', organizationId);
+  // Fetch warehouses for organization
+  const { data: warehouses, isLoading: isWarehousesLoading } =
+    useWarehouses(organizationId);
+  // Debug: log warehouses
+  console.log('Warehouses:', warehouses);
+  // Fetch zones for selected warehouse
+  const { data: locationsZones, isLoading: isZonesLoading } =
+    useLocationsZonesByWarehouse(selectedWarehouseId);
+  // Debug: log locationsZones
+  console.log('Selected Warehouse ID:', selectedWarehouseId);
+  console.log('Locations/Zones:', locationsZones);
+
+  React.useEffect(() => {
+    if (
+      Array.isArray(warehouses) &&
+      warehouses.length > 0 &&
+      !selectedWarehouseId
+    ) {
+      const firstWarehouse = warehouses[0];
+      if (firstWarehouse && firstWarehouse.id) {
+        setSelectedWarehouseId(firstWarehouse.id);
+      }
+    }
+  }, [warehouses, selectedWarehouseId]);
 
   const createEquipment = useCreateEquipment();
   const updateEquipment = useUpdateEquipment();
@@ -67,21 +100,44 @@ export const EquipmentForm: React.FC<EquipmentFormProps> = ({
           serialNumber: equipment.serialNumber || '',
           purchaseDate: equipment.purchaseDate || '',
           warrantyExpiry: equipment.warrantyExpiry || '',
-          location: equipment.location || '',
+          locationZoneId: equipment.locationZoneId || '',
           status: equipment.status,
           condition: equipment.condition,
           purchaseCost: equipment.purchaseCost || 0,
         }
       : {
+          name: '',
+          description: '',
+          manufacturer: '',
+          model: '',
+          serialNumber: '',
+          purchaseDate: '',
+          warrantyExpiry: '',
+          locationZoneId: '',
           status: EquipmentStatus.OPERATIONAL,
           condition: EquipmentCondition.GOOD,
+          purchaseCost: 0,
         },
   });
 
   const onSubmit = async (data: EquipmentFormData) => {
+    // Debug: Print current Supabase user and session, and block insert if session is missing/invalid
     setIsLoading(true);
     try {
-      // Convert form data to match database schema
+      let supabase, userData, userError, sessionData, sessionError;
+      if (typeof window !== 'undefined') {
+        ({ supabase } = await import('@/lib/supabase'));
+        ({ data: userData, error: userError } = await supabase.auth.getUser());
+        ({ data: sessionData, error: sessionError } =
+          await supabase.auth.getSession());
+        console.log('Supabase auth.getUser:', userData, userError);
+        console.log('Supabase auth.getSession:', sessionData, sessionError);
+        if (!sessionData?.session || !userData?.user) {
+          window.alert('You are not authenticated. Please log in again.');
+          setIsLoading(false);
+          return;
+        }
+      }
       const equipmentData = {
         name: data.name,
         description: data.description || null,
@@ -90,38 +146,44 @@ export const EquipmentForm: React.FC<EquipmentFormProps> = ({
         serial_number: data.serialNumber || null,
         purchase_date: data.purchaseDate || null,
         warranty_expiry: data.warrantyExpiry || null,
-        location: data.location,
+        location_zone_id: data.locationZoneId,
         status: data.status,
         condition: data.condition,
         purchase_cost: data.purchaseCost || null,
-        organization_id: '00000000-0000-0000-0000-000000000000', // TODO: Get from auth context
-        warehouse_id: '00000000-0000-0000-0000-000000000000', // TODO: Get from context
+        organization_id: organizationId,
+        warehouse_id: selectedWarehouseId,
       };
-
       if (mode === 'create') {
         await createEquipment.mutateAsync(equipmentData);
       } else if (equipment?.id) {
         await updateEquipment.mutateAsync({
           id: equipment.id,
           updates: {
-            name: data.name,
-            description: data.description || null,
-            manufacturer: data.manufacturer || null,
-            model: data.model || null,
-            serial_number: data.serialNumber || null,
-            purchase_date: data.purchaseDate || null,
-            warranty_expiry: data.warrantyExpiry || null,
-            location: data.location,
-            status: data.status,
-            condition: data.condition,
-            purchase_cost: data.purchaseCost || null,
+            ...equipmentData,
           },
         });
       }
-
       onSuccess?.();
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Failed to save equipment:', error);
+      let message = 'Failed to save equipment.';
+      if (
+        typeof error === 'object' &&
+        error !== null &&
+        'message' in error &&
+        typeof (error as { message?: string }).message === 'string' &&
+        ((error as { message: string }).message.includes(
+          'row-level security'
+        ) ||
+          (error as { message: string }).message.includes('permission'))
+      ) {
+        message =
+          'You do not have permission to add equipment. Please contact your administrator.';
+      }
+      // Show notification (replace with your notification system if needed)
+      if (typeof window !== 'undefined' && window.alert) {
+        window.alert(message);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -212,49 +274,59 @@ export const EquipmentForm: React.FC<EquipmentFormProps> = ({
             />
           </div>
 
+          {/* Warehouse Dropdown */}
           <div>
             <label
-              htmlFor='model'
+              htmlFor='warehouseId'
               className='block text-sm font-medium text-gray-700 mb-1'
             >
-              Model
+              Warehouse *
             </label>
-            <Input
-              id='model'
-              {...register('model')}
-              placeholder='Enter model'
+            <Select
+              id='warehouseId'
+              value={selectedWarehouseId}
+              onChange={e => setSelectedWarehouseId(e.target.value)}
+              options={
+                isWarehousesLoading
+                  ? [{ value: '', label: 'Loading...' }]
+                  : Array.isArray(warehouses)
+                    ? warehouses.map((wh: { id: string; name: string }) => ({
+                        value: wh.id,
+                        label: wh.name,
+                      }))
+                    : []
+              }
+              placeholder='Select warehouse'
             />
           </div>
 
           <div>
             <label
-              htmlFor='serialNumber'
+              htmlFor='locationZoneId'
               className='block text-sm font-medium text-gray-700 mb-1'
             >
-              Serial Number
+              Location/Zone *
             </label>
-            <Input
-              id='serialNumber'
-              {...register('serialNumber')}
-              placeholder='Enter serial number'
+            <Select
+              id='locationZoneId'
+              {...register('locationZoneId')}
+              options={
+                isZonesLoading
+                  ? [{ value: '', label: 'Loading...' }]
+                  : Array.isArray(locationsZones)
+                    ? locationsZones.map(
+                        (lz: { id: string; name: string }) => ({
+                          value: lz.id,
+                          label: lz.name,
+                        })
+                      )
+                    : []
+              }
+              placeholder='Select location/zone'
             />
-          </div>
-
-          <div>
-            <label
-              htmlFor='location'
-              className='block text-sm font-medium text-gray-700 mb-1'
-            >
-              Location *
-            </label>
-            <Input
-              id='location'
-              {...register('location')}
-              placeholder='Enter location'
-            />
-            {errors.location && (
+            {errors.locationZoneId && (
               <p className='mt-1 text-sm text-red-600'>
-                {errors.location.message}
+                {errors.locationZoneId.message}
               </p>
             )}
           </div>
