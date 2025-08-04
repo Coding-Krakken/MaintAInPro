@@ -1,11 +1,14 @@
+
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 import path from 'path';
+import securityHeaders from './vite-plugin-security-headers';
 
 export default defineConfig({
   plugins: [
     react(),
+    securityHeaders(),
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
@@ -22,11 +25,32 @@ export default defineConfig({
         icons: [
           { src: 'pwa-192x192.png', sizes: '192x192', type: 'image/png' },
           { src: 'pwa-512x512.png', sizes: '512x512', type: 'image/png' },
-          { src: 'pwa-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'any maskable' },
-          { src: 'android/android-launchericon-144-144.png', sizes: '144x144', type: 'image/png' },
-          { src: 'android/android-launchericon-96-96.png', sizes: '96x96', type: 'image/png' },
-          { src: 'android/android-launchericon-72-72.png', sizes: '72x72', type: 'image/png' },
-          { src: 'android/android-launchericon-48-48.png', sizes: '48x48', type: 'image/png' },
+          {
+            src: 'pwa-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'any maskable',
+          },
+          {
+            src: 'android/android-launchericon-144-144.png',
+            sizes: '144x144',
+            type: 'image/png',
+          },
+          {
+            src: 'android/android-launchericon-96-96.png',
+            sizes: '96x96',
+            type: 'image/png',
+          },
+          {
+            src: 'android/android-launchericon-72-72.png',
+            sizes: '72x72',
+            type: 'image/png',
+          },
+          {
+            src: 'android/android-launchericon-48-48.png',
+            sizes: '48x48',
+            type: 'image/png',
+          },
           { src: 'ios/180.png', sizes: '180x180', type: 'image/png' },
           { src: 'ios/192.png', sizes: '192x192', type: 'image/png' },
           { src: 'ios/256.png', sizes: '256x256', type: 'image/png' },

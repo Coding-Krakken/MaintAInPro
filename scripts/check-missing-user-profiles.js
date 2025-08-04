@@ -17,18 +17,32 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
 async function findMissingProfiles() {
   // Find all profiles with organization_id: null
-  const { data: nullOrgProfiles, error: nullOrgError } = await supabase.from('users').select('*').is('organization_id', null);
+  const { data: nullOrgProfiles, error: nullOrgError } = await supabase
+    .from('users')
+    .select('*')
+    .is('organization_id', null);
   if (nullOrgError) {
-    console.error('Error fetching profiles with null organization_id:', nullOrgError.message);
+    console.error(
+      'Error fetching profiles with null organization_id:',
+      nullOrgError.message
+    );
     process.exit(1);
   }
 
   if (nullOrgProfiles.length > 0) {
-    console.log(`Deleting ${nullOrgProfiles.length} profiles with null organization_id...`);
+    console.log(
+      `Deleting ${nullOrgProfiles.length} profiles with null organization_id...`
+    );
     for (const profile of nullOrgProfiles) {
-      const { error: deleteError } = await supabase.from('users').delete().eq('id', profile.id);
+      const { error: deleteError } = await supabase
+        .from('users')
+        .delete()
+        .eq('id', profile.id);
       if (deleteError) {
-        console.error(`Failed to delete profile ${profile.email}:`, deleteError.message);
+        console.error(
+          `Failed to delete profile ${profile.email}:`,
+          deleteError.message
+        );
       } else {
         console.log(`Deleted profile ${profile.email}`);
       }
@@ -51,10 +65,13 @@ async function findMissingProfiles() {
         is_active: profile.is_active !== undefined ? profile.is_active : true,
         last_login: profile.last_login || null,
         created_at: now,
-        updated_at: now
+        updated_at: now,
       });
       if (insertError) {
-        console.error(`Failed to insert profile for ${profile.email}:`, insertError.message);
+        console.error(
+          `Failed to insert profile for ${profile.email}:`,
+          insertError.message
+        );
       } else {
         console.log(`Inserted profile for ${profile.email}`);
       }
@@ -62,14 +79,17 @@ async function findMissingProfiles() {
     console.log('✅ Profile re-insertion complete.');
   }
   // Get all users from Supabase Auth
-  const { data: authUsers, error: authError } = await supabase.auth.admin.listUsers();
+  const { data: authUsers, error: authError } =
+    await supabase.auth.admin.listUsers();
   if (authError) {
     console.error('Error fetching auth users:', authError.message);
     process.exit(1);
   }
 
   // Get all user profiles from 'users' table
-  const { data: userProfiles, error: profileError } = await supabase.from('users').select('id');
+  const { data: userProfiles, error: profileError } = await supabase
+    .from('users')
+    .select('id');
   if (profileError) {
     console.error('Error fetching user profiles:', profileError.message);
     process.exit(1);
@@ -102,10 +122,13 @@ async function findMissingProfiles() {
       is_active: true,
       last_login: null,
       created_at: now,
-      updated_at: now
+      updated_at: now,
     });
     if (insertError) {
-      console.error(`Failed to insert profile for ${u.email}:`, insertError.message);
+      console.error(
+        `Failed to insert profile for ${u.email}:`,
+        insertError.message
+      );
     } else {
       console.log(`Inserted profile for ${u.email}`);
     }

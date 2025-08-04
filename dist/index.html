@@ -1,6 +1,10 @@
 <!doctype html>
 <html lang="en">
   <head>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src *; font-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self';">
+  <meta http-equiv="X-Frame-Options" content="DENY">
+  <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,19 +15,24 @@
     <meta name="theme-color" content="#0f172a" />
 
     <!-- Security Headers -->
-    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
-    <meta http-equiv="X-Frame-Options" content="DENY" />
-    <meta http-equiv="X-XSS-Protection" content="1; mode=block" />
-    <meta
-      http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' https:; connect-src 'self' https://*.supabase.co; frame-ancestors 'none';"
-    />
+    <!-- Security headers (X-Frame-Options, X-Content-Type-Options, X-XSS-Protection, Content-Security-Policy) should be set via HTTP response headers, not meta tags. -->
+    <!-- Example CSP for Netlify or Vercel (set in netlify.toml/vercel.json or server):
+      Content-Security-Policy: default-src 'self';
+        script-src 'self' 'unsafe-inline' 'unsafe-eval';
+        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+        font-src 'self' https://fonts.gstatic.com;
+        img-src 'self' data: https:;
+        connect-src 'self' https://*.supabase.co wss://*.supabase.co;
+        frame-ancestors 'none';
+    -->
 
     <!-- Apple Touch Icon -->
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/pwa-192x192.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/pwa-512x512.png" />
 
     <!-- Manifest -->
-    <link rel="manifest" href="/manifest.json" />
+    <link rel="manifest" href="/manifest.webmanifest" />
 
     <!-- Preconnect to external domains -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -42,13 +51,13 @@
     />
 
     <title>MaintainPro CMMS</title>
-    <script type="module" crossorigin src="/assets/index-BPmAvOnA.js"></script>
-    <link rel="modulepreload" crossorigin href="/assets/vendor-DvOFIV6I.js">
-    <link rel="modulepreload" crossorigin href="/assets/query-BUfge9XW.js">
-    <link rel="modulepreload" crossorigin href="/assets/router-CS0kZv0d.js">
-    <link rel="modulepreload" crossorigin href="/assets/supabase-8hkAhPV2.js">
+    <script type="module" crossorigin src="/assets/index-UOGD29yl.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/vendor-oxSIIS9b.js">
+    <link rel="modulepreload" crossorigin href="/assets/router-CIxT34gc.js">
+    <link rel="modulepreload" crossorigin href="/assets/query-CLuFM9qe.js">
+    <link rel="modulepreload" crossorigin href="/assets/supabase-sunz-wJP.js">
     <link rel="modulepreload" crossorigin href="/assets/utils-B0gfkMDq.js">
-    <link rel="modulepreload" crossorigin href="/assets/ui-BJtQb1QS.js">
+    <link rel="modulepreload" crossorigin href="/assets/ui-4GILbMi1.js">
     <link rel="stylesheet" crossorigin href="/assets/index-BxwavDYF.css">
   <link rel="manifest" href="/manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="/registerSW.js"></script></head>
   <body>
