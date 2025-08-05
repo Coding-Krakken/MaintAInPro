@@ -12,7 +12,12 @@ export class UserService {
       .from('users')
       .select('*')
       .eq('is_active', true)
-      .in('role', ['technician', 'senior_technician', 'supervisor'])
+      .in('role', [
+        'technician',
+        'maintenance tech',
+        'senior_technician',
+        'supervisor',
+      ])
       .order('first_name');
 
     if (error) {

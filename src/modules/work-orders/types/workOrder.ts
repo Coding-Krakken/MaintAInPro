@@ -130,6 +130,10 @@ export interface CreateWorkOrderRequest {
   }>;
   work_order_number?: string;
   attachments?: string[];
+  parts?: Array<{
+    part_id: string;
+    quantity: number;
+  }>;
 }
 
 export interface UpdateWorkOrderRequest {

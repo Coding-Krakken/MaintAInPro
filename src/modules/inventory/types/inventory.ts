@@ -35,6 +35,8 @@ export interface PartFilters {
   isConsumable?: boolean;
   lowStock?: boolean;
   isActive?: boolean;
+  // Allow snake_case for direct DB filter
+  is_active?: boolean;
 }
 
 export enum StockStatus {

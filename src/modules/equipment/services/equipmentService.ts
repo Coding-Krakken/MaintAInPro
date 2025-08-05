@@ -174,7 +174,7 @@ export class EquipmentService {
         categories(name)
       `
       )
-      .eq('status', 'active')
+      .in('status', ['active', 'operational'])
       .order('name');
 
     if (error) {

@@ -20,6 +20,7 @@ import {
   CreateWorkOrderRequest,
 } from '../types/workOrder';
 import { EquipmentOptionData, UserOptionData } from '../types/selections';
+import { usePartsOptions } from '../../inventory/hooks/usePartsOptions';
 import {
   PlusIcon,
   MinusIcon,
@@ -37,7 +38,7 @@ const workOrderSchema = z.object({
   scheduled_start: z.string().optional(),
   scheduled_end: z.string().optional(),
   estimated_hours: z.number().min(0).optional(),
-  estimated_cost: z.number().min(0).optional(),
+  // estimated_cost: z.number().min(0).optional(),
   attachments: z.any().optional(),
   checklist_items: z
     .array(
@@ -45,6 +46,14 @@ const workOrderSchema = z.object({
         task: z.string().min(1, 'Task is required'),
         description: z.string().optional(),
         is_required: z.boolean().default(false),
+      })
+    )
+    .optional(),
+  parts: z
+    .array(
+      z.object({
+        part_id: z.string(),
+        quantity: z.number().min(1, 'Quantity must be at least 1'),
       })
     )
     .optional(),
@@ -89,7 +98,21 @@ export const CreateWorkOrderModal: React.FC<CreateWorkOrderModalProps> = ({
       type: WorkOrderType.CORRECTIVE,
       equipment_id: equipmentId,
       checklist_items: [],
+      parts: [],
     },
+  });
+
+  // Load parts options
+  const { data: partsOptions = [], isLoading: loadingParts } =
+    usePartsOptions();
+  // Parts field array
+  const {
+    fields: partFields,
+    append: appendPart,
+    remove: removePart,
+  } = useFieldArray({
+    control,
+    name: 'parts',
   });
 
   const selectedEquipmentId = watch('equipment_id');
@@ -137,7 +160,7 @@ export const CreateWorkOrderModal: React.FC<CreateWorkOrderModalProps> = ({
       if (data.scheduled_end) requestData.scheduled_end = data.scheduled_end;
       if (data.estimated_hours)
         requestData.estimated_hours = data.estimated_hours;
-      if (data.estimated_cost) requestData.estimated_cost = data.estimated_cost;
+      // if (data.estimated_cost) requestData.estimated_cost = data.estimated_cost;
 
       if (data.checklist_items?.length) {
         requestData.checklist_items = data.checklist_items.map(
@@ -171,6 +194,14 @@ export const CreateWorkOrderModal: React.FC<CreateWorkOrderModalProps> = ({
         if (attachments.length > 0) {
           requestData.attachments = attachments.map(f => f.name);
         }
+      }
+
+      // Add parts if present
+      if (data.parts?.length) {
+        requestData.parts = data.parts.map(item => ({
+          part_id: item.part_id,
+          quantity: item.quantity,
+        }));
       }
 
       await createWorkOrder.mutateAsync(requestData);
@@ -439,22 +470,65 @@ export const CreateWorkOrderModal: React.FC<CreateWorkOrderModalProps> = ({
               />
             </div>
 
-            <div>
-              <label
-                htmlFor='estimated_cost'
-                className='block text-sm font-medium text-gray-700 mb-1'
+            {/* Estimated Cost field removed */}
+          </div>
+
+          {/* Parts Section */}
+          <div>
+            <div className='flex items-center justify-between mb-3'>
+              <h3 className='text-sm font-medium text-gray-700'>Parts</h3>
+              <Button
+                type='button'
+                variant='outline'
+                size='sm'
+                onClick={() => appendPart({ part_id: '', quantity: 1 })}
               >
-                Estimated Cost
-              </label>
-              <Input
-                id='estimated_cost'
-                {...register('estimated_cost', { valueAsNumber: true })}
-                type='number'
-                step='0.01'
-                min='0'
-                placeholder='0.00'
-              />
+                <PlusIcon className='h-4 w-4 mr-1' />
+                Add Part
+              </Button>
             </div>
+            {partFields.length > 0 && (
+              <div className='space-y-3'>
+                {partFields.map((field, index) => (
+                  <Card key={field.id} className='p-4'>
+                    <div className='flex items-center gap-3'>
+                      <div className='flex-1'>
+                        <SearchableSelect
+                          options={partsOptions}
+                          value={watch(`parts.${index}.part_id`) || ''}
+                          onChange={val =>
+                            setValue(`parts.${index}.part_id`, val)
+                          }
+                          placeholder='Select part...'
+                          loading={loadingParts}
+                        />
+                      </div>
+                      <div>
+                        <Input
+                          type='number'
+                          min={1}
+                          step={1}
+                          {...register(`parts.${index}.quantity`, {
+                            valueAsNumber: true,
+                          })}
+                          placeholder='Qty'
+                          className='w-20'
+                        />
+                      </div>
+                      <Button
+                        type='button'
+                        variant='ghost'
+                        size='sm'
+                        onClick={() => removePart(index)}
+                        className='text-red-600 hover:text-red-700'
+                      >
+                        <MinusIcon className='h-4 w-4' />
+                      </Button>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Checklist Items */}

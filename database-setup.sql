@@ -75,20 +75,40 @@ VALUES (
   true
 ) ON CONFLICT (id) DO NOTHING;
 
--- Maintenance Technician
+-- Maintenance Technicians
 INSERT INTO users (id, organization_id, email, first_name, last_name, role, permissions, department, employee_id, is_active)
-VALUES (
-  '44444444-4444-4444-4444-444444444444',
-  '550e8400-e29b-41d4-a716-446655440000',
-  'technician@acme.com',
-  'Mike',
-  'Technician',
-  'technician',
-  '["work_orders:read", "work_orders:write", "equipment:read", "equipment:write", "inventory:read", "inventory:write"]',
-  'Maintenance',
-  'EMP004',
-  true
-) ON CONFLICT (id) DO NOTHING;
+VALUES
+  ('44444444-4444-4444-4444-444444444444',
+   '550e8400-e29b-41d4-a716-446655440000',
+   'technician@acme.com',
+   'Mike',
+   'Technician',
+   'maintenance tech',
+   '["work_orders:read", "work_orders:write", "equipment:read", "equipment:write", "inventory:read", "inventory:write"]',
+   'Maintenance',
+   'EMP004',
+   true),
+  ('44444444-4444-4444-4444-444444444445',
+   '550e8400-e29b-41d4-a716-446655440000',
+   'jane.maintenance@acme.com',
+   'Jane',
+   'Maintenance',
+   'maintenance tech',
+   '["work_orders:read", "work_orders:write", "equipment:read", "equipment:write", "inventory:read", "inventory:write"]',
+   'Maintenance',
+   'EMP007',
+   true),
+  ('44444444-4444-4444-4444-444444444446',
+   '550e8400-e29b-41d4-a716-446655440000',
+   'bob.maintenance@acme.com',
+   'Bob',
+   'Maintenance',
+   'maintenance tech',
+   '["work_orders:read", "work_orders:write", "equipment:read", "equipment:write", "inventory:read", "inventory:write"]',
+   'Maintenance',
+   'EMP008',
+   true)
+ON CONFLICT (email) DO NOTHING;
 
 -- Inventory Manager
 INSERT INTO users (id, organization_id, email, first_name, last_name, role, permissions, department, employee_id, is_active)

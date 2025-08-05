@@ -40,10 +40,10 @@ export class InventoryService {
       query = query.ilike('location', `%${filters.location}%`);
     }
 
+    // Fix: Use correct DB field names for filters
     if (filters.isConsumable !== undefined) {
       query = query.eq('is_consumable', filters.isConsumable);
     }
-
     if (filters.isActive !== undefined) {
       query = query.eq('is_active', filters.isActive);
     }

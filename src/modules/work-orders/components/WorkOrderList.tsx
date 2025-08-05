@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+
 import { format } from 'date-fns';
 import { Button } from '../../../components/ui/Button';
 import { Card } from '../../../components/ui/Card';
@@ -9,7 +9,7 @@ import { Select } from '../../../components/ui/Select';
 import { Pagination } from '../../../components/ui/Pagination';
 import { LoadingSpinner } from '../../../components/ui/LoadingSpinner';
 import { useWorkOrders } from '../hooks/useWorkOrders';
-// import { CreateWorkOrderModal } from './CreateWorkOrderModal';
+import { CreateWorkOrderModal } from './CreateWorkOrderModal';
 import {
   WorkOrderPriority,
   WorkOrderStatus,
@@ -49,8 +49,8 @@ const statusColors = {
 export const WorkOrderList: React.FC = () => {
   const [page, setPage] = useState(1);
   const [filters, setFilters] = useState<WorkOrderFilters>({});
-  // Remove modal in favor of navigation
   const [showFilters, setShowFilters] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
   const limit = 20;
   const { data, isLoading, error } = useWorkOrders(filters, page, limit);
@@ -125,13 +125,13 @@ export const WorkOrderList: React.FC = () => {
             Manage and track maintenance work orders
           </p>
         </div>
-        <Link
-          to='/work-orders/create'
+        <Button
           className='btn btn-primary flex items-center'
+          onClick={() => setShowCreateModal(true)}
         >
           <PlusIcon className='h-4 w-4 mr-2' />
           Create Work Order
-        </Link>
+        </Button>
       </div>
 
       {/* Search and Filters */}
@@ -317,12 +317,14 @@ export const WorkOrderList: React.FC = () => {
                     <CalendarIcon className='h-3 w-3 mr-1' />
                     {format(new Date(workOrder.created_at), 'MMM d, yyyy')}
                   </div>
-                  <Link
-                    to={`/work-orders/${workOrder.id}`}
+                  <Button
                     className='btn btn-xs btn-secondary'
+                    onClick={() =>
+                      (window.location.href = `/work-orders/${workOrder.id}`)
+                    }
                   >
                     View
-                  </Link>
+                  </Button>
                 </div>
               </Card>
             ))}
@@ -339,7 +341,10 @@ export const WorkOrderList: React.FC = () => {
         </>
       )}
 
-      {/* No modal, use page navigation for create */}
+      <CreateWorkOrderModal
+        isOpen={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+      />
     </div>
   );
 };

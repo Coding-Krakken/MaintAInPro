@@ -1,3 +1,4 @@
+// NOTE: This form is now legacy. Use CreateWorkOrderModal for new work orders.
 import React, { useRef, useState } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { z } from 'zod';
