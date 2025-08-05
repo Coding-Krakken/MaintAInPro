@@ -8,3 +8,4 @@ coverage/
 .next/
 .nuxt/
 .output/
+supabase/functions/

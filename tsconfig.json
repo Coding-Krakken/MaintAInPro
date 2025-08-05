@@ -48,7 +48,8 @@
     "supabase/functions/**/*",
     "supabase/functions",
     "**/supabase/functions/**",
-    "**/*.deno.ts"
+    "**/*.deno.ts",
+    "**/supabase/functions/"
   ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
