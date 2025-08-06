@@ -3,9 +3,9 @@ import { format, formatDistanceToNow, isValid, parseISO } from 'date-fns';
 export function formatDate(date: string | Date, formatString: string = 'MMM d, yyyy'): string {
   try {
     const dateObj = typeof date === 'string' ? parseISO(date) : date;
-    return isValid(dateObj) ? format(dateObj, formatString) : 'Invalid date';
+    return isValid(dateObj) ? format(dateObj, formatString) : 'Invalid Date';
   } catch {
-    return 'Invalid date';
+    return 'Invalid Date';
   }
 }
 
@@ -46,34 +46,39 @@ export function formatNumber(value: number | string, decimals: number = 0): stri
 }
 
 export function formatFileSize(bytes: number): string {
-  if (bytes === 0) return '0 Bytes';
+  if (bytes === 0) return '0 B';
   
   const k = 1024;
-  const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+  const sizes = ['B', 'KB', 'MB', 'GB'];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
   
-  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
-}
-
-export function formatDuration(hours: number | string): string {
-  const numHours = typeof hours === 'string' ? parseFloat(hours) : hours;
-  
-  if (isNaN(numHours)) return '0h';
-  
-  const wholeHours = Math.floor(numHours);
-  const minutes = Math.round((numHours - wholeHours) * 60);
-  
-  if (wholeHours === 0) {
-    return `${minutes}m`;
-  } else if (minutes === 0) {
-    return `${wholeHours}h`;
-  } else {
-    return `${wholeHours}h ${minutes}m`;
+  if (i === 0) {
+    return `${bytes} ${sizes[i]}`;
   }
+  
+  const value = bytes / Math.pow(k, i);
+  return `${value.toFixed(1)} ${sizes[i]}`;
 }
 
-export function formatPercentage(value: number, decimals: number = 1): string {
-  return `${value.toFixed(decimals)}%`;
+export function formatDuration(minutes: number | string): string {
+  const numMinutes = typeof minutes === 'string' ? parseFloat(minutes) : minutes;
+  
+  if (isNaN(numMinutes) || numMinutes === 0) return '0m';
+  
+  const days = Math.floor(numMinutes / (24 * 60));
+  const hours = Math.floor((numMinutes % (24 * 60)) / 60);
+  const mins = Math.round(numMinutes % 60);
+  
+  const parts = [];
+  if (days > 0) parts.push(`${days}d`);
+  if (hours > 0) parts.push(`${hours}h`);
+  if (mins > 0) parts.push(`${mins}m`);
+  
+  return parts.length > 0 ? parts.join(' ') : '0m';
+}
+
+export function formatPercentage(value: number, decimals: number = 2): string {
+  return `${(value * 100).toFixed(decimals)}%`;
 }
 
 export function formatWorkOrderNumber(number: string): string {
@@ -112,9 +117,14 @@ export function formatPriority(priority: string): string {
   return priority.charAt(0).toUpperCase() + priority.slice(1);
 }
 
-export function truncateText(text: string, maxLength: number = 50): string {
+export function capitalizeFirst(str: string): string {
+  if (!str) return str;
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+export function truncateText(text: string, maxLength: number = 50, suffix: string = '...'): string {
   if (text.length <= maxLength) return text;
-  return `${text.slice(0, maxLength)}...`;
+  return `${text.slice(0, maxLength - suffix.length)}${suffix}`;
 }
 
 export function formatEquipmentSpecifications(specs: Record<string, any>): string {

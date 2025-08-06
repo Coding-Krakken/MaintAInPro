@@ -1,4 +1,6 @@
 import dotenv from 'dotenv';
+// Load environment variables from .env.local and .env
+dotenv.config({ path: '.env.local' });
 dotenv.config();
 
 import { drizzle } from 'drizzle-orm/node-postgres';

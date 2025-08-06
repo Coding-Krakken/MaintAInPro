@@ -11,11 +11,11 @@ describe('Schema Validation Tests', () => {
   describe('Equipment Schema', () => {
     it('should validate valid equipment data', () => {
       const validEquipment = {
-        name: 'Test Machine',
-        warehouse_id: 'warehouse-1',
-        status: 'operational',
+        assetTag: 'ASSET-001',
+        model: 'Test Machine',
+        warehouseId: '00000000-0000-0000-0000-000000000001',
+        status: 'active',
         criticality: 'high',
-        qr_code: 'QR12345',
         description: 'Test equipment description'
       }
 
@@ -25,11 +25,11 @@ describe('Schema Validation Tests', () => {
 
     it('should reject equipment with invalid status', () => {
       const invalidEquipment = {
-        name: 'Test Machine',
-        warehouse_id: 'warehouse-1',
+        assetTag: 'ASSET-001',
+        model: 'Test Machine',
+        warehouseId: '00000000-0000-0000-0000-000000000001',
         status: 'invalid-status',
-        criticality: 'high',
-        qr_code: 'QR12345'
+        criticality: 'high'
       }
 
       const result = equipmentInsertSchema.safeParse(invalidEquipment)
@@ -41,11 +41,11 @@ describe('Schema Validation Tests', () => {
 
     it('should reject equipment with invalid criticality', () => {
       const invalidEquipment = {
-        name: 'Test Machine',
-        warehouse_id: 'warehouse-1',
-        status: 'operational',
-        criticality: 'invalid-criticality',
-        qr_code: 'QR12345'
+        assetTag: 'ASSET-001',
+        model: 'Test Machine',
+        warehouseId: '00000000-0000-0000-0000-000000000001',
+        status: 'active',
+        criticality: 'invalid-criticality'
       }
 
       const result = equipmentInsertSchema.safeParse(invalidEquipment)
@@ -57,7 +57,6 @@ describe('Schema Validation Tests', () => {
 
     it('should require mandatory fields', () => {
       const incompleteEquipment = {
-        name: 'Test Machine'
         // Missing required fields
       }
 
@@ -65,22 +64,27 @@ describe('Schema Validation Tests', () => {
       expect(result.success).toBe(false)
       if (!result.success) {
         const missingFields = result.error.issues.map(issue => issue.path[0])
-        expect(missingFields).toContain('warehouse_id')
+        expect(missingFields).toContain('warehouseId')
         expect(missingFields).toContain('status')
+        expect(missingFields).toContain('assetTag')
+        expect(missingFields).toContain('model')
+        expect(missingFields).toContain('criticality')
       }
     })
 
     it('should validate PM schedule if provided', () => {
       const equipmentWithPM = {
-        name: 'Test Machine',
-        warehouse_id: 'warehouse-1',
-        status: 'operational',
+        assetTag: 'ASSET-001',
+        model: 'Test Machine',
+        warehouseId: '00000000-0000-0000-0000-000000000001',
+        status: 'active',
         criticality: 'high',
-        qr_code: 'QR12345',
-        pm_schedule: {
-          frequency: 'daily',
-          last_pm_date: new Date(),
-          next_pm_date: new Date()
+        specifications: {
+          pmSchedule: {
+            frequency: 'daily',
+            lastPmDate: new Date(),
+            nextPmDate: new Date()
+          }
         }
       }
 
@@ -92,14 +96,14 @@ describe('Schema Validation Tests', () => {
   describe('Work Order Schema', () => {
     it('should validate valid work order data', () => {
       const validWorkOrder = {
-        title: 'Fix conveyor belt',
+        foNumber: 'WO-001',
         description: 'Conveyor belt is making unusual noise',
         type: 'corrective',
         priority: 'high',
-        status: 'pending',
-        equipment_id: 'equipment-1',
-        warehouse_id: 'warehouse-1',
-        due_date: new Date()
+        status: 'new',
+        requestedBy: '00000000-0000-0000-0000-000000000002',
+        equipmentId: '00000000-0000-0000-0000-000000000006',
+        dueDate: new Date()
       }
 
       const result = workOrderInsertSchema.safeParse(validWorkOrder)
@@ -108,13 +112,12 @@ describe('Schema Validation Tests', () => {
 
     it('should reject work order with invalid type', () => {
       const invalidWorkOrder = {
-        title: 'Fix conveyor belt',
+        foNumber: 'WO-001',
         description: 'Conveyor belt is making unusual noise',
         type: 'invalid-type',
         priority: 'high',
-        status: 'pending',
-        equipment_id: 'equipment-1',
-        warehouse_id: 'warehouse-1'
+        status: 'new',
+        requestedBy: '00000000-0000-0000-0000-000000000002'
       }
 
       const result = workOrderInsertSchema.safeParse(invalidWorkOrder)
@@ -126,13 +129,12 @@ describe('Schema Validation Tests', () => {
 
     it('should reject work order with invalid priority', () => {
       const invalidWorkOrder = {
-        title: 'Fix conveyor belt',
+        foNumber: 'WO-001',
         description: 'Conveyor belt is making unusual noise',
         type: 'corrective',
         priority: 'invalid-priority',
-        status: 'pending',
-        equipment_id: 'equipment-1',
-        warehouse_id: 'warehouse-1'
+        status: 'new',
+        requestedBy: '00000000-0000-0000-0000-000000000002'
       }
 
       const result = workOrderInsertSchema.safeParse(invalidWorkOrder)
@@ -144,15 +146,15 @@ describe('Schema Validation Tests', () => {
 
     it('should validate with optional assigned_to field', () => {
       const workOrderWithAssignment = {
-        title: 'Fix conveyor belt',
+        foNumber: 'WO-001',
         description: 'Conveyor belt is making unusual noise',
         type: 'corrective',
         priority: 'high',
-        status: 'in-progress',
-        equipment_id: 'equipment-1',
-        warehouse_id: 'warehouse-1',
-        assigned_to: 'technician-1',
-        due_date: new Date()
+        status: 'assigned',
+        requestedBy: '00000000-0000-0000-0000-000000000002',
+        assignedTo: '00000000-0000-0000-0000-000000000003',
+        equipmentId: '00000000-0000-0000-0000-000000000006',
+        dueDate: new Date()
       }
 
       const result = workOrderInsertSchema.safeParse(workOrderWithAssignment)
@@ -165,9 +167,10 @@ describe('Schema Validation Tests', () => {
       const validUser = {
         email: 'test@example.com',
         password: 'SecurePassword123!',
-        name: 'John Doe',
+        firstName: 'John',
+        lastName: 'Doe',
         role: 'technician',
-        warehouse_id: 'warehouse-1'
+        warehouseId: '00000000-0000-0000-0000-000000000001'
       }
 
       const result = userInsertSchema.safeParse(validUser)
@@ -178,9 +181,10 @@ describe('Schema Validation Tests', () => {
       const invalidUser = {
         email: 'invalid-email',
         password: 'SecurePassword123!',
-        name: 'John Doe',
+        firstName: 'John',
+        lastName: 'Doe',
         role: 'technician',
-        warehouse_id: 'warehouse-1'
+        warehouseId: '00000000-0000-0000-0000-000000000001'
       }
 
       const result = userInsertSchema.safeParse(invalidUser)
@@ -194,9 +198,10 @@ describe('Schema Validation Tests', () => {
       const invalidUser = {
         email: 'test@example.com',
         password: '123',
-        name: 'John Doe',
+        firstName: 'John',
+        lastName: 'Doe',
         role: 'technician',
-        warehouse_id: 'warehouse-1'
+        warehouseId: '00000000-0000-0000-0000-000000000001'
       }
 
       const result = userInsertSchema.safeParse(invalidUser)
@@ -210,9 +215,10 @@ describe('Schema Validation Tests', () => {
       const invalidUser = {
         email: 'test@example.com',
         password: 'SecurePassword123!',
-        name: 'John Doe',
+        firstName: 'John',
+        lastName: 'Doe',
         role: 'invalid-role',
-        warehouse_id: 'warehouse-1'
+        warehouseId: '00000000-0000-0000-0000-000000000001'
       }
 
       const result = userInsertSchema.safeParse(invalidUser)
@@ -227,13 +233,15 @@ describe('Schema Validation Tests', () => {
     it('should validate valid part data', () => {
       const validPart = {
         name: 'Bearing Assembly',
-        part_number: 'BRG-001',
+        partNumber: 'BRG-001',
+        description: 'High-quality bearing assembly for industrial use',
         category: 'mechanical',
-        warehouse_id: 'warehouse-1',
-        quantity: 50,
-        min_quantity: 10,
-        cost: 25.99,
-        supplier: 'ABC Parts Co'
+        unitOfMeasure: 'each',
+        warehouseId: '00000000-0000-0000-0000-000000000001',
+        stockLevel: 50,
+        reorderPoint: 10,
+        unitCost: 25.99,
+        vendor: 'ABC Parts Co'
       }
 
       const result = partInsertSchema.safeParse(validPart)
@@ -243,36 +251,40 @@ describe('Schema Validation Tests', () => {
     it('should reject negative quantities', () => {
       const invalidPart = {
         name: 'Bearing Assembly',
-        part_number: 'BRG-001',
+        partNumber: 'BRG-001',
+        description: 'High-quality bearing assembly for industrial use',
         category: 'mechanical',
-        warehouse_id: 'warehouse-1',
-        quantity: -5,
-        min_quantity: 10,
-        cost: 25.99
+        unitOfMeasure: 'each',
+        warehouseId: '00000000-0000-0000-0000-000000000001',
+        stockLevel: -5,
+        reorderPoint: 10,
+        unitCost: 25.99
       }
 
       const result = partInsertSchema.safeParse(invalidPart)
       expect(result.success).toBe(false)
       if (!result.success) {
-        expect(result.error.issues[0].path).toContain('quantity')
+        expect(result.error.issues[0].path).toContain('stockLevel')
       }
     })
 
     it('should reject negative costs', () => {
       const invalidPart = {
         name: 'Bearing Assembly',
-        part_number: 'BRG-001',
+        partNumber: 'BRG-001',
+        description: 'High-quality bearing assembly for industrial use',
         category: 'mechanical',
-        warehouse_id: 'warehouse-1',
-        quantity: 50,
-        min_quantity: 10,
-        cost: -25.99
+        unitOfMeasure: 'each',
+        warehouseId: '00000000-0000-0000-0000-000000000001',
+        stockLevel: 50,
+        reorderPoint: 10,
+        unitCost: -25.99
       }
 
       const result = partInsertSchema.safeParse(invalidPart)
       expect(result.success).toBe(false)
       if (!result.success) {
-        expect(result.error.issues[0].path).toContain('cost')
+        expect(result.error.issues[0].path).toContain('unitCost')
       }
     })
   })
@@ -280,11 +292,10 @@ describe('Schema Validation Tests', () => {
   describe('Notification Schema', () => {
     it('should validate valid notification data', () => {
       const validNotification = {
-        user_id: 'user-1',
+        userId: '00000000-0000-0000-0000-000000000002',
         title: 'System Alert',
         message: 'This is a test notification',
-        type: 'info',
-        priority: 'medium'
+        type: 'wo_assigned'
       }
 
       const result = notificationInsertSchema.safeParse(validNotification)
@@ -293,11 +304,10 @@ describe('Schema Validation Tests', () => {
 
     it('should reject invalid notification type', () => {
       const invalidNotification = {
-        user_id: 'user-1',
+        userId: '00000000-0000-0000-0000-000000000002',
         title: 'System Alert',
         message: 'This is a test notification',
-        type: 'invalid-type',
-        priority: 'medium'
+        type: 'invalid-type'
       }
 
       const result = notificationInsertSchema.safeParse(invalidNotification)
@@ -309,15 +319,12 @@ describe('Schema Validation Tests', () => {
 
     it('should validate with optional metadata', () => {
       const notificationWithMetadata = {
-        user_id: 'user-1',
+        userId: '00000000-0000-0000-0000-000000000002',
         title: 'Work Order Alert',
         message: 'Work order has been assigned',
-        type: 'info',
-        priority: 'medium',
-        metadata: {
-          work_order_id: 'wo-123',
-          action: 'assigned'
-        }
+        type: 'wo_assigned',
+        workOrderId: '00000000-0000-0000-0000-000000000004',
+        equipmentId: '00000000-0000-0000-0000-000000000005'
       }
 
       const result = notificationInsertSchema.safeParse(notificationWithMetadata)
@@ -329,7 +336,7 @@ describe('Schema Validation Tests', () => {
     it('should handle empty strings appropriately', () => {
       const equipmentWithEmptyString = {
         name: '',
-        warehouse_id: 'warehouse-1',
+        warehouse_id: '00000000-0000-0000-0000-000000000001',
         status: 'operational',
         criticality: 'high',
         qr_code: 'QR12345'
@@ -343,7 +350,7 @@ describe('Schema Validation Tests', () => {
       const longString = 'a'.repeat(1000)
       const equipmentWithLongName = {
         name: longString,
-        warehouse_id: 'warehouse-1',
+        warehouse_id: '00000000-0000-0000-0000-000000000001',
         status: 'operational',
         criticality: 'high',
         qr_code: 'QR12345'
@@ -361,8 +368,8 @@ describe('Schema Validation Tests', () => {
         type: 'corrective',
         priority: 'high',
         status: 'pending',
-        equipment_id: 'equipment-1',
-        warehouse_id: 'warehouse-1',
+        equipment_id: '00000000-0000-0000-0000-000000000006',
+        warehouse_id: '00000000-0000-0000-0000-000000000001',
         due_date: 'invalid-date'
       }
 

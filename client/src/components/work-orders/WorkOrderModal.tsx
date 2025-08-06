@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '../ui/dialog';
 import WorkOrderForm from './WorkOrderForm';
 
 interface WorkOrderModalProps {
@@ -19,6 +19,9 @@ export default function WorkOrderModal({ isOpen, onClose, workOrderId }: WorkOrd
           <DialogTitle>
             {workOrderId ? 'Edit Work Order' : 'Create Work Order'}
           </DialogTitle>
+          <DialogDescription>
+            {workOrderId ? 'Update the work order details below.' : 'Fill out the form to create a new work order.'}
+          </DialogDescription>
         </DialogHeader>
         
         <WorkOrderForm

@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { renderHook, act, waitFor } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { useAuth } from '../../../client/src/hooks/useAuth'
+import { useAuth, AuthProvider } from '../../../client/src/hooks/useAuth'
 import React from 'react'
 
 // Mock fetch globally
@@ -24,7 +24,11 @@ const Wrapper = ({ children }: { children: React.ReactNode }) => {
       mutations: { retry: false },
     },
   })
-  return React.createElement(QueryClientProvider, { client: queryClient }, children)
+  return React.createElement(
+    QueryClientProvider,
+    { client: queryClient },
+    React.createElement(AuthProvider, { children })
+  )
 }
 
 describe('useAuth Hook', () => {
@@ -38,14 +42,15 @@ describe('useAuth Hook', () => {
     
     expect(result.current.user).toBeNull()
     expect(result.current.isAuthenticated).toBe(false)
-    expect(result.current.isLoading).toBe(false)
+    expect(result.current.loading).toBe(false)
   })
 
   it('should login successfully with valid credentials', async () => {
     const mockUser = {
       id: '1',
       email: 'test@example.com',
-      name: 'Test User',
+      firstName: 'Test',
+      lastName: 'User',
       role: 'technician'
     }
 
@@ -164,15 +169,16 @@ describe('useAuth Hook', () => {
     })
   })
 
-  it('should update user profile successfully', async () => {
+  it('should change password successfully', async () => {
     const mockUser = {
       id: '1',
       email: 'test@example.com',
-      name: 'Test User',
+      firstName: 'Test',
+      lastName: 'User',
       role: 'technician'
     }
 
-    // First login
+    // Login first
     mockFetch.mockResolvedValueOnce({
       ok: true,
       json: async () => ({
@@ -187,17 +193,15 @@ describe('useAuth Hook', () => {
       await result.current.login('test@example.com', 'password123')
     })
 
-    // Update profile
-    const updatedUser = { ...mockUser, name: 'Updated Name' }
+    // Change password
     mockFetch.mockResolvedValueOnce({
       ok: true,
-      json: async () => updatedUser
+      json: async () => ({ success: true })
     })
 
     await act(async () => {
-      await result.current.updateProfile({ name: 'Updated Name' })
+      const response = await result.current.changePassword('oldPassword', 'newPassword')
+      expect(response.success).toBe(true)
     })
-
-    expect(result.current.user?.name).toBe('Updated Name')
   })
 })

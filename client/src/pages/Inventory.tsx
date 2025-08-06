@@ -6,10 +6,12 @@ import { Badge } from '../components/ui/badge';
 import { Search, Plus, Package, AlertTriangle } from 'lucide-react';
 import { useParts, useLowStockParts } from '../hooks/useInventory';
 import { Part } from '../types';
+import PartFormModal from '../components/inventory/PartFormModal';
 
 export default function Inventory() {
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
+  const [isPartModalOpen, setIsPartModalOpen] = useState(false);
 
   const { data: parts, isLoading } = useParts();
   const { data: lowStockParts } = useLowStockParts();
@@ -48,7 +50,7 @@ export default function Inventory() {
             Manage parts and inventory levels
           </p>
         </div>
-        <Button>
+        <Button onClick={() => setIsPartModalOpen(true)}>
           <Plus className="w-4 h-4 mr-2" />
           Add Part
         </Button>
@@ -225,6 +227,12 @@ export default function Inventory() {
           )}
         </CardContent>
       </Card>
+
+      {/* Add Part Modal */}
+      <PartFormModal 
+        isOpen={isPartModalOpen} 
+        onClose={() => setIsPartModalOpen(false)} 
+      />
     </div>
   );
 }

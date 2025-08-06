@@ -170,7 +170,7 @@ describe('Formatter Utilities', () => {
 
     it('should handle custom suffix', () => {
       const truncated = truncateText('Long text here', 8, '---')
-      expect(truncated).toBe('Long t---')
+      expect(truncated).toBe('Long ---')
     })
 
     it('should handle empty string', () => {

@@ -344,7 +344,19 @@ export const jobQueue = pgTable("job_queue", {
 });
 
 // Schema exports for forms
-export const insertProfileSchema = createInsertSchema(profiles);
+export const insertProfileSchema = z.object({
+  email: z.string().email('Invalid email format'),
+  firstName: z.string().min(1, 'First name is required'),
+  lastName: z.string().min(1, 'Last name is required'),
+  role: z.enum(['technician', 'supervisor', 'manager', 'admin', 'inventory_clerk', 'contractor', 'requester']),
+  warehouseId: z.string().uuid().optional(),
+  active: z.boolean().optional(),
+  emailVerified: z.boolean().optional(),
+  emailVerificationToken: z.string().optional(),
+  phoneNumber: z.string().optional(),
+  preferences: z.any().optional(),
+  password: z.string().min(8, 'Password must be at least 8 characters'),
+});
 export const insertUserCredentialsSchema = createInsertSchema(userCredentials);
 export const insertUserSessionSchema = createInsertSchema(userSessions);
 export const insertUserMfaSchema = createInsertSchema(userMfa);
@@ -355,35 +367,71 @@ export const insertRateLimitSchema = createInsertSchema(rateLimits);
 
 export const insertWarehouseSchema = createInsertSchema(warehouses);
 
-export const insertEquipmentSchema = createInsertSchema(equipment);
-
-// Enhanced work order schema with proper validation
-export const insertWorkOrderSchema = createInsertSchema(workOrders, {
-  type: z.enum(['corrective', 'preventive', 'emergency']),
-  status: z.enum(['new', 'assigned', 'in_progress', 'completed', 'verified', 'closed']),
-  priority: z.enum(['low', 'medium', 'high', 'critical']),
-  foNumber: z.string().min(1, 'FO Number is required'),
-  description: z.string().min(1, 'Description is required'),
-}).extend({
+export const insertEquipmentSchema = z.object({
+  assetTag: z.string().min(1, 'Asset tag is required'),
+  model: z.string().min(1, 'Model is required'),
+  description: z.string().optional(),
   area: z.string().optional(),
-  assetModel: z.string().optional(),
-  notes: z.string().optional(),
-  estimatedHours: z.string().optional(),
-  actualHours: z.string().optional(),
-  requestedBy: z.string().uuid().optional(),
-  assignedTo: z.string().uuid().optional(),
-  equipmentId: z.string().uuid().optional(),
-  warehouseId: z.string().uuid().optional(),
-  dueDate: z.union([z.string(), z.date()]).optional(),
-  escalated: z.boolean().optional(),
-  escalationLevel: z.number().optional(),
-  followUp: z.boolean().optional(),
-  updatedAt: z.date().optional(),
+  status: z.enum(['active', 'inactive', 'maintenance', 'retired']),
+  criticality: z.enum(['low', 'medium', 'high', 'critical']),
+  installDate: z.union([z.string(), z.date()]).optional(),
+  warrantyExpiry: z.union([z.string(), z.date()]).optional(),
+  manufacturer: z.string().optional(),
+  serialNumber: z.string().optional(),
+  specifications: z.any().optional(),
+  warehouseId: z.string().uuid(),
 });
 
-export const insertPartSchema = createInsertSchema(parts);
+// Enhanced work order schema with proper validation
+export const insertWorkOrderSchema = z.object({
+  foNumber: z.string().min(1, 'FO Number is required'),
+  type: z.enum(['corrective', 'preventive', 'emergency']),
+  description: z.string().min(1, 'Description is required'),
+  area: z.string().optional(),
+  assetModel: z.string().optional(),
+  status: z.enum(['new', 'assigned', 'in_progress', 'completed', 'verified', 'closed']),
+  priority: z.enum(['low', 'medium', 'high', 'critical']),
+  requestedBy: z.string().uuid(),
+  assignedTo: z.string().uuid().optional(),
+  equipmentId: z.string().uuid().optional(),
+  dueDate: z.union([z.string(), z.date()]).optional(),
+  completedAt: z.union([z.string(), z.date()]).optional(),
+  verifiedBy: z.string().uuid().optional(),
+  estimatedHours: z.string().optional(),
+  actualHours: z.string().optional(),
+  notes: z.string().optional(),
+  followUp: z.boolean().optional(),
+  escalated: z.boolean().optional(),
+  escalationLevel: z.number().optional(),
+  warehouseId: z.string().uuid().optional(),
+});
 
-export const insertNotificationSchema = createInsertSchema(notifications);
+export const insertPartSchema = z.object({
+  partNumber: z.string().min(1, 'Part number is required'),
+  name: z.string().min(1, 'Name is required'),
+  description: z.string().min(1, 'Description is required'),
+  category: z.string().optional(),
+  unitOfMeasure: z.string().min(1, 'Unit of measure is required'),
+  unitCost: z.number().min(0, 'Unit cost cannot be negative').optional(),
+  stockLevel: z.number().min(0, 'Stock level cannot be negative').optional(),
+  reorderPoint: z.number().min(0, 'Reorder point cannot be negative').optional(),
+  maxStock: z.number().min(0, 'Max stock cannot be negative').optional(),
+  location: z.string().optional(),
+  vendor: z.string().optional(),
+  active: z.boolean().optional(),
+  warehouseId: z.string().uuid(),
+});
+
+export const insertNotificationSchema = z.object({
+  userId: z.string().uuid(),
+  type: z.enum(['wo_assigned', 'wo_overdue', 'part_low_stock', 'pm_due', 'equipment_alert']),
+  title: z.string().min(1, 'Title is required'),
+  message: z.string().min(1, 'Message is required'),
+  read: z.boolean().optional(),
+  workOrderId: z.string().uuid().optional(),
+  equipmentId: z.string().uuid().optional(),
+  partId: z.string().uuid().optional(),
+});
 
 // Enhanced vendor schema with proper validation
 export const insertVendorSchema = createInsertSchema(vendors, {
@@ -413,6 +461,20 @@ export const insertLaborTimeSchema = createInsertSchema(laborTime).extend({
   duration: z.number().min(1, 'Duration must be at least 1 minute').optional(),
   description: z.string().min(1, 'Description is required'),
 });
+
+// Alias exports for test compatibility
+export { insertEquipmentSchema as equipmentInsertSchema };
+export { insertWorkOrderSchema as workOrderInsertSchema };
+export { insertPartSchema as partInsertSchema };
+export { insertNotificationSchema as notificationInsertSchema };
+export { insertVendorSchema as vendorInsertSchema };
+export { insertPmTemplateSchema as pmTemplateInsertSchema };
+export { insertAttachmentSchema as attachmentInsertSchema };
+export { insertEscalationRuleSchema as escalationRuleInsertSchema };
+export { insertEscalationHistorySchema as escalationHistoryInsertSchema };
+export { insertJobQueueSchema as jobQueueInsertSchema };
+export { insertLaborTimeSchema as laborTimeInsertSchema };
+export { insertProfileSchema as userInsertSchema };
 
 // Type exports
 export type Profile = typeof profiles.$inferSelect;
