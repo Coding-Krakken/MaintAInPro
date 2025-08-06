@@ -1,133 +1,184 @@
-## Database Implementation: Advanced Development Workflow Prompt
+MaintAInPro CMMS — PostgreSQL Backend | Full Stack Alignment | Production Readiness
 
-**Objective:**  
-Continue implementing and refining the MaintAInPro CMMS PostgreSQL database and related backend, ensuring a fully working, production-grade, and maintainable system. Always evaluate the codebase for completeness, correctness, and best practices.
+📄 Reference Document: All design, schema, and roadmap decisions must be aligned with Documentation/Development/DatabaseImplementation.md. Treat this as the single source of truth.
 
----
+🎯 Objective
+Ensure the MaintAInPro CMMS backend and PostgreSQL database are developed to the highest possible engineering standard. The implementation must be production-hardened, scalable, test-verified, schema-aligned, security-audited, fully observable, and CI/CD-ready at all times.
 
-### Current Progress Summary (Updated: August 6, 2025)
+✅ CURRENT STATUS SNAPSHOT (Last Updated: 2025-08-06)
+🔒 SYSTEM STABILITY
+PostgreSQL schema: validated & active
 
-#### ✅ **Completed Milestones:**
-1. **Migration & Schema Alignment**: Created unified audit/system logs migration (`0005_unify_audit_system_logs.sql`)
-2. **Database Structure**: All migration scripts applied successfully, tables verified
-3. **Frontend API Integration**: Fixed Equipment and Parts creation with proper API endpoints
-4. **Schema Validation**: Added alias exports for backward compatibility with tests
-5. **Utility Functions**: Created `/shared/utils.ts` with required utility functions
-6. **Service Mocks**: Fixed MemoryStorage export for test compatibility
-7. **UI Components**: 
-   - Fixed controlled/uncontrolled input warnings in forms
-   - Added DialogDescription components for accessibility
-   - Created PartFormModal for inventory management
-   - Updated EquipmentFormModal to use proper hooks
+Migration scripts: 0005_unify_audit_system_logs.sql complete
 
-#### 🔧 **Currently In Progress:**
-1. **Test Suite Alignment**: Schema validation tests need field name mapping (snake_case vs camelCase)
-2. **API Endpoint Enhancement**: Basic CRUD operations for Equipment and Parts
-3. **Database Implementation Refinement**: Production-ready optimizations
+Backend APIs: operational & connected
 
-#### 📋 **Next Priorities:**
-1. **Schema Test Compatibility**: Align test expectations with actual database schema
-2. **Enhanced API Validation**: Implement comprehensive field validation 
-3. **Performance Optimization**: Database indexing and query optimization
-4. **Security Hardening**: Enhanced authentication and authorization
-5. **Error Handling**: Comprehensive error logging and recovery
+Frontend forms: functioning and integrated
 
----
+🔧 REMAINING PRIORITY ITEMS
+🔁 Schema validation: fix field mapping (camelCase ↔ snake_case)
 
-### Technical Implementation Status
+📑 API validation: expand input validation rules using Zod
 
-#### **Database Schema** (✅ Complete)
-- PostgreSQL tables: 15+ entities (Users, Work Orders, Equipment, Parts, etc.)
-- Drizzle ORM integration with TypeScript types
-- Migration scripts: 5 applied successfully
-- Audit/system logging unified
+⚡️ Performance: index bottlenecks, optimize queries
 
-#### **Backend API** (🔧 In Progress)
-- Express.js server with TypeScript
-- RESTful endpoints for core entities
-- Authentication middleware
-- Rate limiting and security features
-- File upload and management
+🔐 Security: harden endpoints and authentication flows
 
-#### **Frontend Integration** (✅ Mostly Complete)
-- React components with shadcn/ui
-- React Hook Form with Zod validation
-- TanStack Query for API state management
-- Modal forms for CRUD operations
-- Accessibility improvements
+🪵 Logging: unify structured logs across layers
 
-#### **Testing Infrastructure** (🔧 Needs Alignment)
-- Vitest test runner configured
-- Unit tests for services and utilities
-- Integration tests for API endpoints
-- Schema validation tests (require field mapping fixes)
+🧬 WORKFLOW STRUCTURE (Follow Precisely)
+1. 📖 Reference & Sync to Blueprint
+Sync all implementation decisions with Documentation/Development/DatabaseImplementation.md
 
----
+Confirm database schema alignment with stated specs, including:
 
-### Workflow Instructions
+UUID PKs
 
-1. **Evaluate the Current State**
-   - Review the entire codebase and documentation for gaps, inconsistencies, or missing features.
-   - Ensure all schema, migrations, and seed data are up-to-date and match the documented roadmap.
-   - Check for deprecated patterns, security issues, or performance bottlenecks.
+Multi-tenancy (organization_id)
 
-2. **Iterative Development**
-   - For each new feature, bugfix, or refactor:
-     - Write or update the schema, migration, and seed scripts.
-     - Implement code with verbose logging and debugging enabled by default.
-     - Add or update comprehensive documentation (inline, README, and API docs).
-     - Write full unit, integration, and end-to-end tests for all new/changed code.
-     - Ensure all code is type-safe (TypeScript), linted, and formatted.
+Soft deletes (deleted_at)
 
-3. **Testing & Validation**
-   - Run all tests (unit, integration, E2E) after every change.
-   - Use test coverage tools to ensure all critical paths are tested.
-   - Manually test edge cases and error handling.
-   - Validate migrations and seed scripts in a fresh environment.
+Full audit fields
 
-4. **Debugging & Logging**
-   - Use structured, verbose logging for all database and API operations.
-   - Ensure logs include context (user, org, request ID, timestamps).
-   - Add debug-level logs for all critical workflows and error paths.
+Extensible entities
 
-5. **Documentation**
-   - Update `DatabaseImplementation.md` and related docs after every milestone.
-   - Document schema changes, migration steps, and any breaking changes.
-   - Provide usage examples, troubleshooting tips, and rollback instructions.
+Indexing & partitioning strategy
 
-6. **Commit & Push Workflow**
-   - After every successful milestone (feature, fix, refactor, or doc update):
-     - Stage and commit all changes with a clear, descriptive message.
-     - Push to the remote repository.
-     - Optionally, open a pull request for review if working in a team.
+PostGIS where applicable
 
-7. **Continuous Integration**
-   - Ensure CI runs all tests, lints, and type checks on every push.
-   - Block merges on failed checks or insufficient coverage.
+2. 🔍 Codebase Evaluation Loop
+Examine: migrations, models, services, controllers, API types
 
-8. **Review & Repeat**
-   - Regularly review code, tests, and documentation for improvements.
-   - Refactor and optimize as needed.
-   - Repeat the cycle for each new requirement or improvement.
+Identify: schema drifts, deprecated code, inconsistencies
 
----
+Confirm: adherence to TypeScript best practices, Drizzle ORM schema matching, and end-to-end typings
 
-### Additional Senior Developer Instructions
+Ensure all seed data and migrations boot cleanly in ephemeral environments
 
-- Proactively identify and address technical debt.
-- Ensure all database changes are backward-compatible or provide clear migration paths.
-- Use feature flags for risky or experimental features.
-- Maintain a changelog for all database and API changes.
-- Automate repetitive tasks (e.g., code generation, documentation updates).
-- Enforce code reviews and pair programming for critical changes.
-- Monitor and profile database performance regularly.
-- Plan for disaster recovery and data migration scenarios.
-- Always keep security, compliance, and data privacy in mind.
+3. 🚀 Development Protocol
+For every feature, enhancement, fix, or refactor:
 
----
+ Update schema + migration
 
-**Prompt for Next Steps:**  
-> Continue implementing the MaintAInPro CMMS database and backend according to the roadmap. For each change, follow the workflow above: evaluate, implement, log, test, document, commit, and push. Ensure the system is always in a deployable, production-ready state. After each milestone, update this document with what was accomplished and what remains.
+ Apply changes using repeatable scripts
 
-**Current Focus:** Fix schema validation test compatibility, enhance API validation, and continue database optimization for production deployment.
+ Update ORM types and service layer
+
+ Implement controller logic with full logging and error handling
+
+ Sync form validation rules (Zod ↔ backend schema)
+
+ Add tests: unit, integration, schema, E2E
+
+ Document changes and update roadmap file
+
+Enforce:
+
+Full typing (no any, no @ts-ignore)
+
+Lint & format on save
+
+Coverage minimum: 90%
+
+Logs must include: org ID, user ID, request ID, timestamps, and operation context
+
+4. 🧪 Test & Validate
+Run full test suite after every change
+
+Validate seed + migration flow in a fresh environment (no state leaks)
+
+Check test coverage using vitest --coverage
+
+Edge-case testing: deletion cascades, missing fields, race conditions
+
+5. 🔧 Debugging & Observability
+Use structured logs (pino, winston, or equivalent)
+
+Trace logs from API → service → DB
+
+Enable verbose logging mode in local dev for deep tracing
+
+Implement retry logic for transient failures (e.g., deadlocks, timeouts)
+
+📘 Documentation Guidelines
+Update DatabaseImplementation.md after every milestone
+
+Changes must include:
+
+➕ New tables / fields
+
+🔄 Modified behaviors
+
+💥 Breaking changes
+
+🧪 Test case summary
+
+🚑 Rollback steps
+
+Use embedded ER diagrams or MermaidJS as needed
+
+Maintain code examples for API usage, errors, and edge case handling
+
+🚀 CI/CD & Deployment Rules
+Git commits must be atomic, descriptive, and scoped (feat:, fix:, db:, etc.)
+
+Push must trigger CI:
+
+✅ Unit & integration tests
+
+✅ Lint & format
+
+✅ Type check
+
+✅ Migration verification
+
+Fail CI on:
+
+⛔️ Test regressions
+
+⛔️ Untyped exports
+
+⛔️ Coverage < 90%
+
+Optionally open PR with reviewer tag if in team mode
+
+🧠 Senior-Level Engineering Directives
+These policies must be followed by all contributors acting at a senior engineer level:
+
+🔍 Maintain strict traceability between documentation and implementation
+
+🧱 Avoid fragile abstractions; favor clarity and modularity
+
+🛑 No hardcoded values outside config/environment layers
+
+🧪 Treat seed + migration testing as mandatory per cycle
+
+🚀 Use feature flags for all experimental code
+
+📦 Automate: changelog updates, schema diffing, seed resets
+
+🗃 Version-lock all dependencies and use lockfile linting
+
+⚠️ Validate all user input with typed Zod schemas (no req.body.any)
+
+🧩 Use tags for all breaking or critical migrations
+
+🔁 Plan for data migration, export, import, backup, recovery
+
+🧑‍💻 Pair-review or self-review all changes above 50 LOC
+
+🏛 Maintain operational readiness (0 downtime, 1-command restore, 99.99% uptime assumption)
+
+📌 Prompt for Next Steps
+Begin the next cycle of implementation following this elite-level workflow. The authoritative roadmap is located at Documentation/Development/DatabaseImplementation.md. Sync all logic to it.
+
+Focus on:
+
+✅ Finalizing schema test compatibility (camelCase ↔ snake_case)
+
+✅ Strengthening API request validation with full field coverage
+
+✅ Benchmarking and applying performance optimizations for high-load production environments
+
+Ensure the database and backend remain in a clean, tested, deployable state after each change.
 

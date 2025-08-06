@@ -51,14 +51,18 @@ describe('useAuth Hook', () => {
       email: 'test@example.com',
       firstName: 'Test',
       lastName: 'User',
-      role: 'technician'
+      role: 'technician',
+      warehouseId: 'warehouse-1',
+      active: true
     }
 
     mockFetch.mockResolvedValueOnce({
       ok: true,
       json: async () => ({
         token: 'valid-jwt-token',
-        user: mockUser
+        user: mockUser,
+        refreshToken: 'refresh-token',
+        sessionId: 'session-id'
       })
     })
 
@@ -70,7 +74,7 @@ describe('useAuth Hook', () => {
 
     expect(result.current.user).toEqual(mockUser)
     expect(result.current.isAuthenticated).toBe(true)
-    expect(localStorageMock.setItem).toHaveBeenCalledWith('auth_token', 'valid-jwt-token')
+    expect(localStorageMock.setItem).toHaveBeenCalledWith('authToken', 'valid-jwt-token')
   })
 
   it('should handle login failure correctly', async () => {
@@ -97,15 +101,20 @@ describe('useAuth Hook', () => {
     const mockUser = {
       id: '1',
       email: 'test@example.com',
-      name: 'Test User',
-      role: 'technician'
+      firstName: 'Test',
+      lastName: 'User',
+      role: 'technician',
+      warehouseId: 'warehouse-1',
+      active: true
     }
 
     mockFetch.mockResolvedValueOnce({
       ok: true,
       json: async () => ({
         token: 'valid-jwt-token',
-        user: mockUser
+        user: mockUser,
+        refreshToken: 'refresh-token',
+        sessionId: 'session-id'
       })
     })
 
@@ -127,15 +136,18 @@ describe('useAuth Hook', () => {
 
     expect(result.current.user).toBeNull()
     expect(result.current.isAuthenticated).toBe(false)
-    expect(localStorageMock.removeItem).toHaveBeenCalledWith('auth_token')
+    expect(localStorageMock.removeItem).toHaveBeenCalledWith('authToken')
   })
 
   it('should restore user from token on initialization', async () => {
     const mockUser = {
       id: '1',
       email: 'test@example.com',
-      name: 'Test User',
-      role: 'technician'
+      firstName: 'Test',
+      lastName: 'User',
+      role: 'technician',
+      warehouseId: 'warehouse-1',
+      active: true
     }
 
     localStorageMock.getItem.mockReturnValue('existing-token')
@@ -165,7 +177,7 @@ describe('useAuth Hook', () => {
     await waitFor(() => {
       expect(result.current.user).toBeNull()
       expect(result.current.isAuthenticated).toBe(false)
-      expect(localStorageMock.removeItem).toHaveBeenCalledWith('auth_token')
+      expect(localStorageMock.removeItem).toHaveBeenCalledWith('authToken')
     })
   })
 
