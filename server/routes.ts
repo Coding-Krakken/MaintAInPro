@@ -10,6 +10,7 @@ import {
   insertAttachmentSchema,
   insertVendorSchema
 } from "@shared/schema";
+import { fieldValidators, flexibleDateSchema } from "@shared/validation-utils";
 import { z } from "zod";
 import { SecurityService } from "./services/auth/security.service";
 import { notificationService } from "./services/notification.service";
@@ -689,7 +690,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.patch("/api/equipment/:id", async (req, res) => {
     try {
-      const equipmentData = insertEquipmentSchema.partial().parse(req.body);
+      // Create a partial schema from the base object
+      const baseSchema = z.object({
+        assetTag: fieldValidators.nonEmptyString('Asset tag'),
+        model: fieldValidators.nonEmptyString('Model'),
+        description: z.string().optional(),
+        area: z.string().optional(),
+        status: fieldValidators.status,
+        criticality: fieldValidators.priority,
+        installDate: flexibleDateSchema.optional(),
+        warrantyExpiry: flexibleDateSchema.optional(),
+        manufacturer: z.string().optional(),
+        serialNumber: z.string().optional(),
+        specifications: z.record(z.any()).optional(),
+        warehouseId: fieldValidators.requiredUuid('Warehouse ID'),
+      });
+      const equipmentData = baseSchema.partial().parse(req.body);
       const equipment = await storage.updateEquipment(req.params.id, equipmentData);
       res.json(equipment);
     } catch (error) {
@@ -801,7 +817,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.patch("/api/work-orders/:id", authenticateRequest, async (req, res) => {
     try {
-      const workOrderData = insertWorkOrderSchema.partial().parse(req.body);
+      // Create a partial schema from the base object  
+      const baseSchema = z.object({
+        foNumber: fieldValidators.nonEmptyString('FO Number'),
+        type: fieldValidators.workOrderType,
+        description: fieldValidators.nonEmptyString('Description'),
+        area: z.string().optional(),
+        assetModel: z.string().optional(),
+        status: fieldValidators.workOrderStatus,
+        priority: fieldValidators.priority,
+        requestedBy: fieldValidators.requiredUuid('Requested by'),
+        assignedTo: fieldValidators.optionalUuid('Assigned to'),
+        equipmentId: fieldValidators.optionalUuid('Equipment ID'),
+        dueDate: flexibleDateSchema.optional(),
+        completedAt: flexibleDateSchema.optional(),
+        verifiedBy: fieldValidators.optionalUuid('Verified by'),
+        estimatedHours: z.union([z.string(), z.number()]).optional().transform(val => 
+          typeof val === 'string' ? parseFloat(val) : val
+        ),
+        actualHours: z.union([z.string(), z.number()]).optional().transform(val => 
+          typeof val === 'string' ? parseFloat(val) : val
+        ),
+        notes: z.string().optional(),
+        warehouseId: fieldValidators.optionalUuid('Warehouse ID'),
+      });
+      const workOrderData = baseSchema.partial().parse(req.body);
       const workOrder = await storage.updateWorkOrder(req.params.id, workOrderData);
       
       // Send real-time notifications for updates
@@ -974,7 +1014,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.patch("/api/parts/:id", async (req, res) => {
     try {
-      const partData = insertPartSchema.partial().parse(req.body);
+      // Create a partial schema from the base object
+      const baseSchema = z.object({
+        partNumber: fieldValidators.nonEmptyString('Part number'),
+        name: fieldValidators.nonEmptyString('Name'),
+        description: fieldValidators.nonEmptyString('Description'),
+        category: z.string().optional(),
+        unitOfMeasure: fieldValidators.nonEmptyString('Unit of measure'),
+        unitCost: fieldValidators.nonNegativeNumber('Unit cost').optional(),
+        stockLevel: fieldValidators.nonNegativeNumber('Stock level').optional().default(0),
+        reorderPoint: fieldValidators.nonNegativeNumber('Reorder point').optional().default(0),
+        maxStock: fieldValidators.nonNegativeNumber('Max stock').optional(),
+        location: z.string().optional(),
+        vendor: z.string().optional(),
+        active: z.boolean().optional().default(true),
+        warehouseId: fieldValidators.requiredUuid('Warehouse ID'),
+      });
+      const partData = baseSchema.partial().parse(req.body);
       const part = await storage.updatePart(req.params.id, partData);
       res.json(part);
     } catch (error) {

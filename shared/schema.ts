@@ -1,6 +1,14 @@
 import { pgTable, text, serial, integer, boolean, timestamp, uuid, decimal, jsonb } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
+import { 
+  fieldValidators, 
+  createFlexibleSchema, 
+  flexibleDateSchema, 
+  emailSchema, 
+  passwordSchema,
+  uuidSchema 
+} from "./validation-utils";
 
 // Users and Authentication
 export const profiles = pgTable("profiles", {
@@ -343,19 +351,19 @@ export const jobQueue = pgTable("job_queue", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
-// Schema exports for forms
-export const insertProfileSchema = z.object({
-  email: z.string().email('Invalid email format'),
-  firstName: z.string().min(1, 'First name is required'),
-  lastName: z.string().min(1, 'Last name is required'),
-  role: z.enum(['technician', 'supervisor', 'manager', 'admin', 'inventory_clerk', 'contractor', 'requester']),
-  warehouseId: z.string().uuid().optional(),
-  active: z.boolean().optional(),
-  emailVerified: z.boolean().optional(),
+// Enhanced Schema exports with comprehensive validation
+export const insertProfileSchema = createFlexibleSchema({
+  email: emailSchema,
+  firstName: fieldValidators.nonEmptyString('First name'),
+  lastName: fieldValidators.nonEmptyString('Last name'),
+  role: fieldValidators.userRole,
+  warehouseId: fieldValidators.optionalUuid('Warehouse ID'),
+  active: z.boolean().optional().default(true),
+  emailVerified: z.boolean().optional().default(false),
   emailVerificationToken: z.string().optional(),
   phoneNumber: z.string().optional(),
-  preferences: z.any().optional(),
-  password: z.string().min(8, 'Password must be at least 8 characters'),
+  preferences: z.record(z.any()).optional(),
+  password: passwordSchema,
 });
 export const insertUserCredentialsSchema = createInsertSchema(userCredentials);
 export const insertUserSessionSchema = createInsertSchema(userSessions);
@@ -367,70 +375,74 @@ export const insertRateLimitSchema = createInsertSchema(rateLimits);
 
 export const insertWarehouseSchema = createInsertSchema(warehouses);
 
-export const insertEquipmentSchema = z.object({
-  assetTag: z.string().min(1, 'Asset tag is required'),
-  model: z.string().min(1, 'Model is required'),
+export const insertEquipmentSchema = createFlexibleSchema({
+  assetTag: fieldValidators.nonEmptyString('Asset tag'),
+  model: fieldValidators.nonEmptyString('Model'),
   description: z.string().optional(),
   area: z.string().optional(),
-  status: z.enum(['active', 'inactive', 'maintenance', 'retired']),
-  criticality: z.enum(['low', 'medium', 'high', 'critical']),
-  installDate: z.union([z.string(), z.date()]).optional(),
-  warrantyExpiry: z.union([z.string(), z.date()]).optional(),
+  status: fieldValidators.status,
+  criticality: fieldValidators.priority,
+  installDate: flexibleDateSchema.optional(),
+  warrantyExpiry: flexibleDateSchema.optional(),
   manufacturer: z.string().optional(),
   serialNumber: z.string().optional(),
-  specifications: z.any().optional(),
-  warehouseId: z.string().uuid(),
+  specifications: z.record(z.any()).optional(),
+  warehouseId: fieldValidators.requiredUuid('Warehouse ID'),
 });
 
-// Enhanced work order schema with proper validation
-export const insertWorkOrderSchema = z.object({
-  foNumber: z.string().min(1, 'FO Number is required'),
-  type: z.enum(['corrective', 'preventive', 'emergency']),
-  description: z.string().min(1, 'Description is required'),
+// Enhanced work order schema with proper validation and field mapping
+export const insertWorkOrderSchema = createFlexibleSchema({
+  foNumber: fieldValidators.nonEmptyString('FO Number'),
+  type: fieldValidators.workOrderType,
+  description: fieldValidators.nonEmptyString('Description'),
   area: z.string().optional(),
   assetModel: z.string().optional(),
-  status: z.enum(['new', 'assigned', 'in_progress', 'completed', 'verified', 'closed']),
-  priority: z.enum(['low', 'medium', 'high', 'critical']),
-  requestedBy: z.string().uuid(),
-  assignedTo: z.string().uuid().optional(),
-  equipmentId: z.string().uuid().optional(),
-  dueDate: z.union([z.string(), z.date()]).optional(),
-  completedAt: z.union([z.string(), z.date()]).optional(),
-  verifiedBy: z.string().uuid().optional(),
-  estimatedHours: z.string().optional(),
-  actualHours: z.string().optional(),
+  status: fieldValidators.workOrderStatus,
+  priority: fieldValidators.priority,
+  requestedBy: fieldValidators.requiredUuid('Requested by'),
+  assignedTo: fieldValidators.optionalUuid('Assigned to'),
+  equipmentId: fieldValidators.optionalUuid('Equipment ID'),
+  dueDate: flexibleDateSchema.optional(),
+  completedAt: flexibleDateSchema.optional(),
+  verifiedBy: fieldValidators.optionalUuid('Verified by'),
+  estimatedHours: z.union([z.string(), z.number()]).optional().transform(val => 
+    typeof val === 'string' ? parseFloat(val) : val
+  ),
+  actualHours: z.union([z.string(), z.number()]).optional().transform(val => 
+    typeof val === 'string' ? parseFloat(val) : val
+  ),
   notes: z.string().optional(),
-  followUp: z.boolean().optional(),
-  escalated: z.boolean().optional(),
-  escalationLevel: z.number().optional(),
-  warehouseId: z.string().uuid().optional(),
+  followUp: z.boolean().optional().default(false),
+  escalated: z.boolean().optional().default(false),
+  escalationLevel: z.number().optional().default(0),
+  warehouseId: fieldValidators.optionalUuid('Warehouse ID'),
 });
 
-export const insertPartSchema = z.object({
-  partNumber: z.string().min(1, 'Part number is required'),
-  name: z.string().min(1, 'Name is required'),
-  description: z.string().min(1, 'Description is required'),
+export const insertPartSchema = createFlexibleSchema({
+  partNumber: fieldValidators.nonEmptyString('Part number'),
+  name: fieldValidators.nonEmptyString('Name'),
+  description: fieldValidators.nonEmptyString('Description'),
   category: z.string().optional(),
-  unitOfMeasure: z.string().min(1, 'Unit of measure is required'),
-  unitCost: z.number().min(0, 'Unit cost cannot be negative').optional(),
-  stockLevel: z.number().min(0, 'Stock level cannot be negative').optional(),
-  reorderPoint: z.number().min(0, 'Reorder point cannot be negative').optional(),
-  maxStock: z.number().min(0, 'Max stock cannot be negative').optional(),
+  unitOfMeasure: fieldValidators.nonEmptyString('Unit of measure'),
+  unitCost: fieldValidators.nonNegativeNumber('Unit cost').optional(),
+  stockLevel: fieldValidators.nonNegativeNumber('Stock level').optional().default(0),
+  reorderPoint: fieldValidators.nonNegativeNumber('Reorder point').optional().default(0),
+  maxStock: fieldValidators.nonNegativeNumber('Max stock').optional(),
   location: z.string().optional(),
   vendor: z.string().optional(),
-  active: z.boolean().optional(),
-  warehouseId: z.string().uuid(),
+  active: z.boolean().optional().default(true),
+  warehouseId: fieldValidators.requiredUuid('Warehouse ID'),
 });
 
-export const insertNotificationSchema = z.object({
-  userId: z.string().uuid(),
+export const insertNotificationSchema = createFlexibleSchema({
+  userId: fieldValidators.requiredUuid('User ID'),
   type: z.enum(['wo_assigned', 'wo_overdue', 'part_low_stock', 'pm_due', 'equipment_alert', 'pm_escalation']),
-  title: z.string().min(1, 'Title is required'),
-  message: z.string().min(1, 'Message is required'),
-  read: z.boolean().optional(),
-  workOrderId: z.string().uuid().optional(),
-  equipmentId: z.string().uuid().optional(),
-  partId: z.string().uuid().optional(),
+  title: fieldValidators.nonEmptyString('Title'),
+  message: fieldValidators.nonEmptyString('Message'),
+  read: z.boolean().optional().default(false),
+  workOrderId: fieldValidators.optionalUuid('Work Order ID'),
+  equipmentId: fieldValidators.optionalUuid('Equipment ID'),
+  partId: fieldValidators.optionalUuid('Part ID'),
 });
 
 // Enhanced vendor schema with proper validation

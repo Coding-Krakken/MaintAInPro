@@ -10,6 +10,15 @@ import { pmScheduler } from "./services/pm-scheduler";
 import { backgroundJobScheduler } from "./services/background-jobs";
 import { CacheService } from "./services/cache.service";
 import { performanceService } from "./services/performance.service";
+import { databaseOptimizer } from "./services/database-optimizer.service";
+import { startupOptimizer } from "./services/startup-optimizer.service";
+import { loggingService, httpLoggingMiddleware, errorLoggingMiddleware } from "./services/logging.service";
+import { 
+  securityStack, 
+  apiRateLimit, 
+  authRateLimit, 
+  uploadRateLimit 
+} from "./middleware/security.middleware";
 
 const app = express();
 
@@ -29,6 +38,17 @@ const cacheService = CacheService.getInstance({
 
 // Performance monitoring middleware
 app.use(performanceService.createExpressMiddleware());
+
+// Enhanced security middleware stack
+app.use(securityStack);
+
+// Rate limiting for different endpoint types
+app.use('/api/auth', authRateLimit);
+app.use('/api/upload', uploadRateLimit); 
+app.use('/api', apiRateLimit);
+
+// HTTP request logging middleware
+app.use(httpLoggingMiddleware);
 
 // Compression middleware for better performance
 app.use(compression({
@@ -116,18 +136,40 @@ backgroundJobScheduler.startAll();
 
 // Initialize the app
 async function initializeApp() {
+  // Start production-optimized initialization
+  loggingService.info('🚀 Starting MaintAInPro CMMS Server with Production Optimizations');
+  
+  try {
+    // Initialize production systems with startup optimizer
+    await startupOptimizer.initializeProduction();
+    loggingService.info('✅ Production initialization completed successfully');
+  } catch (error) {
+    loggingService.error('❌ Production initialization failed', error);
+    // Continue startup even if some optimizations fail
+  }
+
   const server = await registerRoutes(app);
 
+  // Enhanced error handler with logging
+  app.use(errorLoggingMiddleware);
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";
 
-    // Log error in development
-    if (process.env.NODE_ENV === 'development') {
-      console.error('Server Error:', err);
-    }
+    // Log error with additional context
+    loggingService.error('Server Error', err, {
+      status,
+      path: _req.path,
+      method: _req.method,
+      ip: _req.ip,
+      userAgent: _req.get('User-Agent')
+    });
 
-    res.status(status).json({ message });
+    res.status(status).json({ 
+      error: message,
+      code: err.code || 'INTERNAL_ERROR',
+      timestamp: new Date().toISOString()
+    });
     
     // Don't throw in test environment to avoid test failures
     if (process.env.NODE_ENV !== 'test' && process.env.NODE_ENV !== 'development') {

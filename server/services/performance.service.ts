@@ -425,6 +425,25 @@ export class PerformanceService {
   }
 
   /**
+   * Start monitoring (alias for startSystemMetricsCollection)
+   */
+  startMonitoring(): void {
+    this.startSystemMetricsCollection();
+  }
+
+  /**
+   * Get metrics (alias for getPerformanceSummary)
+   */
+  getMetrics(timeRangeMs: number = 300000): {
+    requests: any;
+    database: any;
+    system: SystemMetrics;
+    cache: any;
+  } {
+    return this.getPerformanceSummary(timeRangeMs);
+  }
+
+  /**
    * Stop metrics collection and cleanup
    */
   destroy(): void {
