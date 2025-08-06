@@ -11,6 +11,7 @@ export interface EscalationAction {
   escalatedAt: Date;
   reason: string;
   previousAssignee?: string;
+  newRule?: InsertEscalationRule;
 }
 
 export class EscalationEngine {
@@ -48,7 +49,6 @@ export class EscalationEngine {
           escalationAction: 'notify_manager' as const,
           warehouseId,
           active: true,
-          createdAt: new Date(),
         },
         {
           id: crypto.randomUUID(),
@@ -58,7 +58,6 @@ export class EscalationEngine {
           escalationAction: 'notify_supervisor' as const,
           warehouseId,
           active: true,
-          createdAt: new Date(),
         },
         {
           id: crypto.randomUUID(),
@@ -68,7 +67,6 @@ export class EscalationEngine {
           escalationAction: 'notify_supervisor' as const,
           warehouseId,
           active: true,
-          createdAt: new Date(),
         },
         {
           id: crypto.randomUUID(),
@@ -78,7 +76,6 @@ export class EscalationEngine {
           escalationAction: 'notify_supervisor' as const,
           warehouseId,
           active: true,
-          createdAt: new Date(),
         }
       ];
 
@@ -236,7 +233,6 @@ export class EscalationEngine {
         escalated: true,
         escalationLevel: newEscalationLevel,
         assignedTo: escalationTarget.id,
-        updatedAt: new Date(),
       });
       
       // Create notification
@@ -292,7 +288,6 @@ export class EscalationEngine {
       message: `Work Order ${workOrder.foNumber} has been escalated to you. Priority: ${workOrder.priority.toUpperCase()}. Description: ${workOrder.description}`,
       read: false,
       workOrderId: workOrder.id,
-      createdAt: new Date(),
     };
     
     await storage.createNotification(notification);
@@ -372,7 +367,6 @@ export class EscalationEngine {
         escalated: true,
         escalationLevel: newEscalationLevel,
         assignedTo: escalateToUserId,
-        updatedAt: new Date(),
       });
       
       // Create notification
@@ -383,7 +377,6 @@ export class EscalationEngine {
         message: `Work Order ${workOrder.foNumber} has been manually escalated to you. Reason: ${reason}`,
         read: false,
         workOrderId: workOrderId,
-        createdAt: new Date(),
       };
       
       await storage.createNotification(notification);
@@ -461,7 +454,6 @@ export class EscalationEngine {
         escalateTo: rule.escalateTo || null,
         warehouseId: rule.warehouseId || null,
         active: rule.active ?? true,
-        createdAt: new Date(),
       };
       await db.insert(escalationRules).values(newRule);
       console.log(`Created new escalation rule ${ruleId}`);

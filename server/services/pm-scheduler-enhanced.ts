@@ -401,10 +401,8 @@ class PMSchedulerEnhanced {
             type: 'pm_escalation',
             title: `PM Escalation - Level ${level}`,
             message: `Equipment ${equipment?.assetTag} has ${complianceStatus.missedPMCount} missed PM(s). Compliance: ${complianceStatus.compliancePercentage}%`,
-            relatedEntityId: equipmentId,
-            relatedEntityType: 'equipment',
-            priority: 'high',
-            warehouseId: config.warehouseId,
+            equipmentId: equipmentId,
+            read: false,
           });
         }
       }

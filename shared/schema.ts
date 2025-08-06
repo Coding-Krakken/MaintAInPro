@@ -260,7 +260,7 @@ export const pmTemplates = pgTable("pm_templates", {
 export const notifications = pgTable("notifications", {
   id: uuid("id").primaryKey(),
   userId: uuid("user_id").references(() => profiles.id).notNull(),
-  type: text("type").notNull().$type<'wo_assigned' | 'wo_overdue' | 'part_low_stock' | 'pm_due' | 'equipment_alert'>(),
+  type: text("type").notNull().$type<'wo_assigned' | 'wo_overdue' | 'part_low_stock' | 'pm_due' | 'equipment_alert' | 'pm_escalation'>(),
   title: text("title").notNull(),
   message: text("message").notNull(),
   read: boolean("read").default(false),
@@ -424,7 +424,7 @@ export const insertPartSchema = z.object({
 
 export const insertNotificationSchema = z.object({
   userId: z.string().uuid(),
-  type: z.enum(['wo_assigned', 'wo_overdue', 'part_low_stock', 'pm_due', 'equipment_alert']),
+  type: z.enum(['wo_assigned', 'wo_overdue', 'part_low_stock', 'pm_due', 'equipment_alert', 'pm_escalation']),
   title: z.string().min(1, 'Title is required'),
   message: z.string().min(1, 'Message is required'),
   read: z.boolean().optional(),
