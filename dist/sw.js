@@ -99,115 +99,118 @@ define(['./workbox-e7681877'], (function (workbox) { 'use strict';
     "url": "apple-touch-icon.png",
     "revision": "a4e79da125ea1a9ca166bf34d3bdbeff"
   }, {
-    "url": "assets/browser-BXdiCFWD.js",
+    "url": "assets/browser-BJzWpxwN.js",
     "revision": null
   }, {
-    "url": "assets/building-CiwuF0Gi.js",
+    "url": "assets/building-DdUhP0R_.js",
     "revision": null
   }, {
-    "url": "assets/calendar-DNowwrJ0.js",
+    "url": "assets/calendar-B9izwJEY.js",
     "revision": null
   }, {
     "url": "assets/charts-BJm2rqVP.js",
     "revision": null
   }, {
-    "url": "assets/Checkbox-69sCtS0R.js",
+    "url": "assets/Checkbox-yXHcbUcR.js",
     "revision": null
   }, {
-    "url": "assets/circle-check-big-C5p8pnXA.js",
+    "url": "assets/circle-check-big-CsnqFIRQ.js",
     "revision": null
   }, {
-    "url": "assets/createLucideIcon-SvIfcLI1.js",
+    "url": "assets/circle-x-ButIHh4F.js",
     "revision": null
   }, {
-    "url": "assets/CreateWorkOrderPage-DLafbwRr.js",
+    "url": "assets/createLucideIcon-C_ZZonxE.js",
     "revision": null
   }, {
-    "url": "assets/Dashboard-BD_3Kdvs.js",
+    "url": "assets/CreateWorkOrderPage-BjWdoRPm.js",
     "revision": null
   }, {
-    "url": "assets/EditWorkOrderPage-DFaTf38t.js",
+    "url": "assets/Dashboard-DdlNRXiX.js",
     "revision": null
   }, {
-    "url": "assets/EquipmentDetailPage-BtgR2KZ-.js",
+    "url": "assets/EditWorkOrderPage-D4c2_jjc.js",
     "revision": null
   }, {
-    "url": "assets/EquipmentPage-B0RgiRjm.js",
+    "url": "assets/EquipmentDetailPage-CbuH5Oqv.js",
     "revision": null
   }, {
-    "url": "assets/equipmentService-_UkbqYvd.js",
+    "url": "assets/EquipmentPage-BkKQCs4F.js",
     "revision": null
   }, {
-    "url": "assets/forms-CscAoO0K.js",
+    "url": "assets/equipmentService-Bv-hPeL-.js",
     "revision": null
   }, {
-    "url": "assets/index-BxwavDYF.css",
+    "url": "assets/forms-DMy9WhkY.js",
     "revision": null
   }, {
-    "url": "assets/index-UOGD29yl.js",
+    "url": "assets/index-D3Z9eR0T.js",
     "revision": null
   }, {
-    "url": "assets/Input-CIDirpfo.js",
+    "url": "assets/index-DjaZjq1C.css",
     "revision": null
   }, {
-    "url": "assets/InventoryPage-aWtVwIhP.js",
+    "url": "assets/Input-BVegO4fL.js",
     "revision": null
   }, {
-    "url": "assets/LoginMFA-CjHuGAp2.js",
+    "url": "assets/InventoryPage-DtWuVEO8.js",
     "revision": null
   }, {
-    "url": "assets/map-pin-B15x2H9v.js",
+    "url": "assets/LoginMFA-LujHY_OF.js",
     "revision": null
   }, {
-    "url": "assets/Modal-D050nWwW.js",
+    "url": "assets/map-pin-CbNxiqca.js",
     "revision": null
   }, {
-    "url": "assets/NotFound-CXYtBxyT.js",
+    "url": "assets/Modal-Dv61TB9P.js",
     "revision": null
   }, {
-    "url": "assets/PartDetailPage-BZb7nglB.js",
+    "url": "assets/NotFound-BOjOy1Kl.js",
     "revision": null
   }, {
-    "url": "assets/PreventiveMaintenancePage-DcRLHPsL.js",
+    "url": "assets/Pagination-K5BBiD9u.js",
     "revision": null
   }, {
-    "url": "assets/Profile-BJY37N-L.js",
+    "url": "assets/PartDetailPage-BJcM6mP4.js",
+    "revision": null
+  }, {
+    "url": "assets/PreventiveMaintenancePage-D7FkGbIu.js",
+    "revision": null
+  }, {
+    "url": "assets/Profile-BhGvatr7.js",
     "revision": null
   }, {
     "url": "assets/query-CLuFM9qe.js",
     "revision": null
   }, {
-    "url": "assets/ReportsPage-BXXB8HJL.js",
+    "url": "assets/ReportsPage-D_FPsh5X.js",
     "revision": null
   }, {
     "url": "assets/router-CIxT34gc.js",
     "revision": null
   }, {
-    "url": "assets/Select-lkXRwbMq.js",
+    "url": "assets/Select-B7yBUAI5.js",
     "revision": null
   }, {
-    "url": "assets/settings-QPRnJnTJ.js",
+    "url": "assets/settings-BynPhurd.js",
     "revision": null
   }, {
-    "url": "assets/SettingsPage-BX468Lu7.js",
+    "url": "assets/SettingsPage-DdGGykuK.js",
     "revision": null
   }, {
     "url": "assets/supabase-sunz-wJP.js",
     "revision": null
   }, {
-    "url": "assets/Textarea-CgSMfPxY.js",
-    "revision": null
-  }, {
-    "url": "assets/triangle-alert-0KmtylHR.js",
-    "revision": null
-  }, {
     "url": "assets/ui-4GILbMi1.js",
     "revision": null
   }, {
-    "url": "assets/user-C_q-4pEu.js",
+    "url": "assets/useEquipmentSelection-DIoN9Lfq.js",
     "revision": null
   }, {
-    "url": "assets/useWorkOrders-BLjxNIm_.js",
+    "url": "assets/user-D0bixX27.js",
+    "revision": null
+  }, {
+    "url": "assets/useWorkOrders-DZMhu2M5.js",
     "revision": null
   }, {
     "url": "assets/utils-B0gfkMDq.js",
@@ -216,29 +219,29 @@ define(['./workbox-e7681877'], (function (workbox) { 'use strict';
     "url": "assets/vendor-oxSIIS9b.js",
     "revision": null
   }, {
-    "url": "assets/VendorsPage-BcNrgeMK.js",
+    "url": "assets/VendorsPage-DUbCQ_gh.js",
     "revision": null
   }, {
-    "url": "assets/WorkOrderChecklistPage-wmw3rSco.js",
+    "url": "assets/WorkOrderChecklistPage-Dy1iUqzj.js",
     "revision": null
   }, {
-    "url": "assets/WorkOrderDetailPage-BplSu1ZP.js",
+    "url": "assets/WorkOrderDetailPage-CRxS9yMF.js",
     "revision": null
   }, {
-    "url": "assets/WorkOrderForm-BkQRDdGp.js",
+    "url": "assets/WorkOrderForm-gwfXD_Te.js",
     "revision": null
   }, {
-    "url": "assets/WorkOrderHistoryPage-BwQVDJhT.js",
+    "url": "assets/WorkOrderHistoryPage-DNNfDXsa.js",
     "revision": null
   }, {
-    "url": "assets/WorkOrdersPage-DryExpVS.js",
+    "url": "assets/WorkOrdersPage-CB-2djdt.js",
     "revision": null
   }, {
-    "url": "assets/zod-Bu8zq2lL.js",
+    "url": "assets/zod-B6aXCBp6.js",
     "revision": null
   }, {
     "url": "index.html",
-    "revision": "0ceec7b4482f2aced99d3a93fa76b9b4"
+    "revision": "efbe97f57811b3e6113bf5ad9ea33cdf"
   }, {
     "url": "ios/100.png",
     "revision": "a3a17d03242cf57d040e87faefc441d1"
