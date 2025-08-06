@@ -137,19 +137,18 @@ const App: React.FC = () => {
             <Routes>
               {/* Public routes */}
               <Route path='/login' element={<Login />} />
-
               {/* Protected routes */}
               <Route element={<ProtectedRoute />}>
                 <Route element={<Layout />}>
                   <Route path='/' element={<Dashboard />} />
                   <Route path='/dashboard' element={<Dashboard />} />
-
                   {/* Work Orders */}
                   <Route path='/work-orders' element={<WorkOrders />} />
                   <Route
                     path='/work-orders/create'
                     element={<CreateWorkOrder />}
                   />
+
                   <Route
                     path='/work-orders/:id'
                     element={<WorkOrderDetail />}
@@ -166,35 +165,27 @@ const App: React.FC = () => {
                     path='/work-orders/:id/history'
                     element={<WorkOrderHistory />}
                   />
-
                   {/* Equipment & Assets */}
                   <Route path='/equipment' element={<Equipment />} />
                   <Route path='/equipment/:id' element={<EquipmentDetail />} />
-
                   {/* Parts & Inventory */}
                   <Route path='/inventory' element={<Inventory />} />
                   <Route path='/inventory/parts/:id' element={<PartDetail />} />
-
                   {/* Preventive Maintenance */}
                   <Route
                     path='/preventive-maintenance'
                     element={<PreventiveMaintenance />}
                   />
-
                   {/* Vendors & Contractors */}
                   <Route path='/vendors' element={<Vendors />} />
-
                   {/* Reports & Analytics */}
                   <Route path='/reports' element={<Reports />} />
-
                   {/* Settings */}
                   <Route path='/settings' element={<Settings />} />
-
                   {/* Profile */}
                   <Route path='/profile' element={<Profile />} />
                 </Route>
               </Route>
-
               {/* 404 page */}
               <Route path='*' element={<NotFound />} />
             </Routes>

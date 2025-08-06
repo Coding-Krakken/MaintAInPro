@@ -116,235 +116,239 @@ export const WorkOrderList: React.FC = () => {
   }
 
   return (
-    <div className='space-y-6'>
-      {/* Header */}
-      <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0'>
-        <div>
-          <h1 className='text-2xl font-bold text-gray-900'>Work Orders</h1>
-          <p className='text-gray-600'>
-            Manage and track maintenance work orders
-          </p>
-        </div>
-        <Button
-          className='btn btn-primary flex items-center'
-          onClick={() => setShowCreateModal(true)}
-        >
-          <PlusIcon className='h-4 w-4 mr-2' />
-          Create Work Order
-        </Button>
-      </div>
-
-      {/* Search and Filters */}
-      <Card className='p-4'>
-        <div className='flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4'>
-          <div className='flex-1'>
-            <div className='relative'>
-              <SearchIcon className='absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400' />
-              <Input
-                placeholder='Search work orders...'
-                value={filters.search || ''}
-                onChange={e => handleSearch(e.target.value)}
-                className='pl-10'
-              />
-            </div>
+    <>
+      <div className='space-y-6'>
+        {/* Header */}
+        <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0'>
+          <div>
+            <h1 className='text-2xl font-bold text-gray-900'>Work Orders</h1>
+            <p className='text-gray-600'>
+              Manage and track maintenance work orders
+            </p>
           </div>
           <Button
-            variant='outline'
-            onClick={() => setShowFilters(!showFilters)}
-            className='sm:w-auto'
+            className='btn btn-primary flex items-center'
+            onClick={() => {
+              console.log('[DEBUG] Create Work Order button clicked');
+              setShowCreateModal(true);
+            }}
           >
-            <FilterIcon className='h-4 w-4 mr-2' />
-            Filters
+            <PlusIcon className='h-4 w-4 mr-2' />
+            Create Work Order
           </Button>
         </div>
 
-        {showFilters && (
-          <div className='mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4'>
-            <div>
-              <label
-                htmlFor='status-filter'
-                className='block text-sm font-medium text-gray-700 mb-1'
-              >
-                Status
-              </label>
-              <Select
-                id='status-filter'
-                value={filters.status?.[0] || ''}
-                onChange={e =>
-                  handleFilterChange(
-                    'status',
-                    e.target.value
-                      ? [e.target.value as WorkOrderStatus]
-                      : undefined
-                  )
-                }
-                options={statusOptions}
-              />
+        {/* Search and Filters */}
+        <Card className='p-4'>
+          <div className='flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4'>
+            <div className='flex-1'>
+              <div className='relative'>
+                <SearchIcon className='absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400' />
+                <Input
+                  placeholder='Search work orders...'
+                  value={filters.search || ''}
+                  onChange={e => handleSearch(e.target.value)}
+                  className='pl-10'
+                />
+              </div>
             </div>
-            <div>
-              <label
-                htmlFor='priority-filter'
-                className='block text-sm font-medium text-gray-700 mb-1'
-              >
-                Priority
-              </label>
-              <Select
-                id='priority-filter'
-                value={filters.priority?.[0] || ''}
-                onChange={e =>
-                  handleFilterChange(
-                    'priority',
-                    e.target.value
-                      ? [e.target.value as WorkOrderPriority]
-                      : undefined
-                  )
-                }
-                options={priorityOptions}
-              />
-            </div>
-            <div>
-              <label
-                htmlFor='type-filter'
-                className='block text-sm font-medium text-gray-700 mb-1'
-              >
-                Type
-              </label>
-              <Select
-                id='type-filter'
-                value={filters.type?.[0] || ''}
-                onChange={e =>
-                  handleFilterChange(
-                    'type',
-                    e.target.value
-                      ? [e.target.value as WorkOrderType]
-                      : undefined
-                  )
-                }
-                options={typeOptions}
-              />
-            </div>
-            <div className='flex items-end'>
-              <Button
-                variant='outline'
-                onClick={clearFilters}
-                className='w-full'
-              >
-                Clear Filters
-              </Button>
-            </div>
+            <Button
+              variant='outline'
+              onClick={() => setShowFilters(!showFilters)}
+              className='sm:w-auto'
+            >
+              <FilterIcon className='h-4 w-4 mr-2' />
+              Filters
+            </Button>
           </div>
-        )}
-      </Card>
 
-      {/* Work Orders List */}
-      {isLoading ? (
-        <div className='flex justify-center py-8'>
-          <LoadingSpinner size='lg' />
-        </div>
-      ) : !data || data.data.length === 0 ? (
-        <Card className='p-8 text-center'>
-          <WrenchIcon className='h-12 w-12 text-gray-400 mx-auto mb-4' />
-          <h3 className='text-lg font-semibold text-gray-900 mb-2'>
-            No work orders found
-          </h3>
-          <p className='text-gray-600 mb-4'>
-            Get started by creating your first work order.
-          </p>
-          {/* Removed modal button, use page navigation for create */}
+          {showFilters && (
+            <div className='mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4'>
+              <div>
+                <label
+                  htmlFor='status-filter'
+                  className='block text-sm font-medium text-gray-700 mb-1'
+                >
+                  Status
+                </label>
+                <Select
+                  id='status-filter'
+                  value={filters.status?.[0] || ''}
+                  onChange={e =>
+                    handleFilterChange(
+                      'status',
+                      e.target.value
+                        ? [e.target.value as WorkOrderStatus]
+                        : undefined
+                    )
+                  }
+                  options={statusOptions}
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor='priority-filter'
+                  className='block text-sm font-medium text-gray-700 mb-1'
+                >
+                  Priority
+                </label>
+                <Select
+                  id='priority-filter'
+                  value={filters.priority?.[0] || ''}
+                  onChange={e =>
+                    handleFilterChange(
+                      'priority',
+                      e.target.value
+                        ? [e.target.value as WorkOrderPriority]
+                        : undefined
+                    )
+                  }
+                  options={priorityOptions}
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor='type-filter'
+                  className='block text-sm font-medium text-gray-700 mb-1'
+                >
+                  Type
+                </label>
+                <Select
+                  id='type-filter'
+                  value={filters.type?.[0] || ''}
+                  onChange={e =>
+                    handleFilterChange(
+                      'type',
+                      e.target.value
+                        ? [e.target.value as WorkOrderType]
+                        : undefined
+                    )
+                  }
+                  options={typeOptions}
+                />
+              </div>
+              <div className='flex items-end'>
+                <Button
+                  variant='outline'
+                  onClick={clearFilters}
+                  className='w-full'
+                >
+                  Clear Filters
+                </Button>
+              </div>
+            </div>
+          )}
         </Card>
-      ) : (
-        <>
-          {/* Work Orders Grid */}
-          <div className='grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4'>
-            {data.data.map(workOrder => (
-              <Card
-                key={workOrder.id}
-                className='p-4 hover:shadow-md transition-shadow'
-              >
-                <div className='flex items-start justify-between mb-3'>
-                  <div className='flex items-center space-x-2'>
-                    <span className='text-sm font-medium text-gray-500'>
-                      {workOrder.work_order_number}
-                    </span>
-                    {workOrder.is_overdue && (
-                      <AlertTriangleIcon className='h-4 w-4 text-red-500' />
-                    )}
-                  </div>
-                  <Badge className={priorityColors[workOrder.priority]}>
-                    {workOrder.priority.toUpperCase()}
-                  </Badge>
-                </div>
 
-                <h3 className='font-semibold text-gray-900 mb-2 line-clamp-2'>
-                  {workOrder.title}
-                </h3>
-
-                <div className='flex items-center justify-between mb-3'>
-                  <Badge className={statusColors[workOrder.status]}>
-                    {workOrder.status.replace('_', ' ').toUpperCase()}
-                  </Badge>
-                  <span className='text-xs text-gray-500'>
-                    {workOrder.type.toUpperCase()}
-                  </span>
-                </div>
-
-                <div className='space-y-2 mb-4'>
-                  {workOrder.equipment_name && (
-                    <div className='flex items-center text-sm text-gray-600'>
-                      <WrenchIcon className='h-4 w-4 mr-2' />
-                      {workOrder.equipment_name}
-                    </div>
-                  )}
-                  {workOrder.assigned_to_name && (
-                    <div className='flex items-center text-sm text-gray-600'>
-                      <UserIcon className='h-4 w-4 mr-2' />
-                      {workOrder.assigned_to_name}
-                    </div>
-                  )}
-                  {workOrder.scheduled_start && (
-                    <div className='flex items-center text-sm text-gray-600'>
-                      <ClockIcon className='h-4 w-4 mr-2' />
-                      {format(
-                        new Date(workOrder.scheduled_start),
-                        'MMM d, yyyy h:mm a'
+        {/* Work Orders List */}
+        {isLoading ? (
+          <div className='flex justify-center py-8'>
+            <LoadingSpinner size='lg' />
+          </div>
+        ) : !data || data.data.length === 0 ? (
+          <Card className='p-8 text-center'>
+            <WrenchIcon className='h-12 w-12 text-gray-400 mx-auto mb-4' />
+            <h3 className='text-lg font-semibold text-gray-900 mb-2'>
+              No work orders found
+            </h3>
+            <p className='text-gray-600 mb-4'>
+              Get started by creating your first work order.
+            </p>
+            {/* Removed modal button, use page navigation for create */}
+          </Card>
+        ) : (
+          <>
+            {/* Work Orders Grid */}
+            <div className='grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4'>
+              {data.data.map(workOrder => (
+                <Card
+                  key={workOrder.id}
+                  className='p-4 hover:shadow-md transition-shadow'
+                >
+                  <div className='flex items-start justify-between mb-3'>
+                    <div className='flex items-center space-x-2'>
+                      <span className='text-sm font-medium text-gray-500'>
+                        {workOrder.work_order_number}
+                      </span>
+                      {workOrder.is_overdue && (
+                        <AlertTriangleIcon className='h-4 w-4 text-red-500' />
                       )}
                     </div>
-                  )}
-                </div>
-
-                <div className='flex items-center justify-between text-xs text-gray-500'>
-                  <div className='flex items-center'>
-                    <CalendarIcon className='h-3 w-3 mr-1' />
-                    {format(new Date(workOrder.created_at), 'MMM d, yyyy')}
+                    <Badge className={priorityColors[workOrder.priority]}>
+                      {workOrder.priority.toUpperCase()}
+                    </Badge>
                   </div>
-                  <Button
-                    className='btn btn-xs btn-secondary'
-                    onClick={() =>
-                      (window.location.href = `/work-orders/${workOrder.id}`)
-                    }
-                  >
-                    View
-                  </Button>
-                </div>
-              </Card>
-            ))}
-          </div>
 
-          {/* Pagination */}
-          {data && data.total > limit && (
-            <Pagination
-              currentPage={page}
-              totalPages={Math.ceil(data.total / limit)}
-              onPageChange={setPage}
-            />
-          )}
-        </>
-      )}
+                  <h3 className='font-semibold text-gray-900 mb-2 line-clamp-2'>
+                    {workOrder.title}
+                  </h3>
 
+                  <div className='flex items-center justify-between mb-3'>
+                    <Badge className={statusColors[workOrder.status]}>
+                      {workOrder.status.replace('_', ' ').toUpperCase()}
+                    </Badge>
+                    <span className='text-xs text-gray-500'>
+                      {workOrder.type.toUpperCase()}
+                    </span>
+                  </div>
+
+                  <div className='space-y-2 mb-4'>
+                    {workOrder.equipment_name && (
+                      <div className='flex items-center text-sm text-gray-600'>
+                        <WrenchIcon className='h-4 w-4 mr-2' />
+                        {workOrder.equipment_name}
+                      </div>
+                    )}
+                    {workOrder.assigned_to_name && (
+                      <div className='flex items-center text-sm text-gray-600'>
+                        <UserIcon className='h-4 w-4 mr-2' />
+                        {workOrder.assigned_to_name}
+                      </div>
+                    )}
+                    {workOrder.scheduled_start && (
+                      <div className='flex items-center text-sm text-gray-600'>
+                        <ClockIcon className='h-4 w-4 mr-2' />
+                        {format(
+                          new Date(workOrder.scheduled_start),
+                          'MMM d, yyyy h:mm a'
+                        )}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className='flex items-center justify-between text-xs text-gray-500'>
+                    <div className='flex items-center'>
+                      <CalendarIcon className='h-3 w-3 mr-1' />
+                      {format(new Date(workOrder.created_at), 'MMM d, yyyy')}
+                    </div>
+                    <Button
+                      className='btn btn-xs btn-secondary'
+                      onClick={() =>
+                        (window.location.href = `/work-orders/${workOrder.id}`)
+                      }
+                    >
+                      View
+                    </Button>
+                  </div>
+                </Card>
+              ))}
+            </div>
+
+            {/* Pagination */}
+            {data && data.total > limit && (
+              <Pagination
+                currentPage={page}
+                totalPages={Math.ceil(data.total / limit)}
+                onPageChange={setPage}
+              />
+            )}
+          </>
+        )}
+      </div>
       <CreateWorkOrderModal
         isOpen={showCreateModal}
         onClose={() => setShowCreateModal(false)}
       />
-    </div>
+    </>
   );
 };

@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, createContext } from 'react';
+import { useState, useEffect, useContext, createContext, useRef } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { authService } from '../services/authService';
 import { AuthState } from '../types/auth';
@@ -30,6 +30,7 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [session, setSession] = useState<any>(null);
+  const prevUserId = useRef<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const queryClient = useQueryClient();
 
@@ -91,12 +92,21 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setSession(authState.session); // Use the actual session object
       setIsLoading(false);
 
+      // Always clear cached profile on sign out or user change
+      const newUserId = authState.user?.id || null;
+      if (prevUserId.current && prevUserId.current !== newUserId) {
+        // Remove cached profile for previous user
+        sessionStorage.removeItem(`userProfile_${prevUserId.current}`);
+      }
+      if (!newUserId) {
+        // Clear all cached data on sign out
+        queryClient.clear();
+      }
+      prevUserId.current = newUserId;
+
       if (authState.user) {
         // Refetch user data on sign in
         queryClient.invalidateQueries({ queryKey: ['auth', 'user'] });
-      } else {
-        // Clear all cached data on sign out
-        queryClient.clear();
       }
     });
 

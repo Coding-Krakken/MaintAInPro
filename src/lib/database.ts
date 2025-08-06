@@ -15,27 +15,13 @@ export const userService = {
   async getProfile(userId: string) {
     try {
       console.log('🔍 Getting profile for user:', userId);
-
-      // Try to get from sessionStorage first
       const cacheKey = `userProfile_${userId}`;
-      const cached = sessionStorage.getItem(cacheKey);
-      if (cached) {
-        try {
-          const parsed = JSON.parse(cached);
-          if (parsed && parsed.id === userId) {
-            console.log('⚡ Using cached user profile');
-            return parsed;
-          }
-        } catch (e) {
-          // Failed to parse cached user profile, ignore and fetch from DB
-        }
-      }
 
-      // Only fetch minimal fields needed for login
+      // Always fetch from Supabase after login/session change
       const profilePromise = supabase
         .from('users')
         .select(
-          'id, email, first_name, last_name, role, organization_id, avatar_url, is_active'
+          'id, email, first_name, last_name, role, organization_id, avatar_url, is_active, department, phone, employee_id'
         )
         .eq('id', userId)
         .single();
@@ -61,13 +47,10 @@ export const userService = {
         return { id: userId, error: error.message };
       }
 
-      // Optionally fetch organization if needed (not for login screen)
-      // ...
-
       // Cache the profile for this session
       sessionStorage.setItem(cacheKey, JSON.stringify(data));
 
-      console.log('✅ Successfully got user profile');
+      console.log('✅ Successfully got user profile (fresh)');
       return {
         ...data,
         organizationId: data.organization_id,

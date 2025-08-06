@@ -1,7 +1,7 @@
 // Setup type definitions for built-in Supabase Runtime APIs
-import "jsr:@supabase/functions-js/edge-runtime.d.ts";
-import { createClient } from 'jsr:@supabase/supabase-js@2';
-Deno.serve(async (req)=>{
+import { createClient } from "jsr:@supabase/supabase-js@2";
+
+Deno.serve(async (req) => {
   try {
     const supabase = createClient(Deno.env.get('SUPABASE_URL') ?? '', Deno.env.get('SUPABASE_ANON_KEY') ?? '', {
       global: {
@@ -10,22 +10,18 @@ Deno.serve(async (req)=>{
         }
       }
     });
-    // Removed unused table_name query
-    let event;
     let claims: any = {};
     let user = null;
+    let fullProfile = null;
     try {
-      // Read the raw body as text for debugging
       const rawBody = await req.text();
       console.log('DEBUG: Raw request body:', rawBody);
       if (!rawBody) {
         console.error('DEBUG: Empty request body received.');
       } else {
-        // Try to parse JSON
         const body = JSON.parse(rawBody);
-        user = body.user || body;
-        // Accept claims from the incoming payload (for Supabase hooks)
-        claims = body.claims || {};
+        user = body.user || body.event?.user || body.event?.record || body;
+        claims = body.claims || body.event?.claims || {};
       }
     } catch (e) {
       console.error('Error parsing request body:', e);
@@ -33,25 +29,42 @@ Deno.serve(async (req)=>{
     let organization_id = null;
     try {
       if (!user || !user.id) {
-        console.error('Missing user or user.id in request body');
+        console.error('Missing user or user.id in request body', { user });
       } else {
-        // Fetch the user's organization_id from the users table
         const supabaseAdmin = createClient(Deno.env.get('SUPABASE_URL'), Deno.env.get('SUPABASE_SERVICE_ROLE_KEY'));
-        const { data, error } = await supabaseAdmin.from('users').select('organization_id').eq('id', user.id).single();
+        const { data, error } = await supabaseAdmin
+          .from('users')
+          .select('*')
+          .eq('id', user.id)
+          .single();
         if (error || !data) {
-          console.error('Error fetching organization_id:', error);
+          console.error('Error fetching user profile:', error);
         } else {
           organization_id = data.organization_id;
+          fullProfile = data;
         }
       }
     } catch (e) {
       console.error('Unexpected error in jwt-claims function:', e);
     }
-    // Add or override organization_id in claims if available
     if (organization_id) {
       claims.organization_id = organization_id;
     }
-    // Always return the required structure, including all claims
+    if (fullProfile) {
+      claims.profile = {
+        id: fullProfile.id,
+        email: fullProfile.email,
+        first_name: fullProfile.first_name,
+        last_name: fullProfile.last_name,
+        role: fullProfile.role,
+        organization_id: fullProfile.organization_id,
+        department: fullProfile.department,
+        avatar_url: fullProfile.avatar_url,
+        phone: fullProfile.phone,
+        employee_id: fullProfile.employee_id,
+        is_active: fullProfile.is_active
+      };
+    }
     return new Response(JSON.stringify({
       app_metadata: {},
       user_metadata: {},
@@ -61,7 +74,6 @@ Deno.serve(async (req)=>{
         'Content-Type': 'application/json'
       }
     });
-    // ...existing code...
   } catch (err) {
     return new Response(JSON.stringify({
       message: err?.message ?? err

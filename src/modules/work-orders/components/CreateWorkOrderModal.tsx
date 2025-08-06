@@ -28,50 +28,52 @@ import {
   WrenchScrewdriverIcon,
 } from '@heroicons/react/24/outline';
 
-const workOrderSchema = z.object({
-  title: z.string().min(1, 'Title is required').max(255, 'Title is too long'),
-  description: z.string().optional(),
-  priority: z.nativeEnum(WorkOrderPriority),
-  type: z.nativeEnum(WorkOrderType),
-  equipment_id: z.string().optional(),
-  assigned_to: z.string().optional(),
-  scheduled_start: z.string().optional(),
-  scheduled_end: z.string().optional(),
-  estimated_hours: z.number().min(0).optional(),
-  // estimated_cost: z.number().min(0).optional(),
-  attachments: z.any().optional(),
-  checklist_items: z
-    .array(
-      z.object({
-        task: z.string().min(1, 'Task is required'),
-        description: z.string().optional(),
-        is_required: z.boolean().default(false),
-      })
-    )
-    .optional(),
-  parts: z
-    .array(
-      z.object({
-        part_id: z.string(),
-        quantity: z.number().min(1, 'Quantity must be at least 1'),
-      })
-    )
-    .optional(),
-});
-
-type WorkOrderFormData = z.infer<typeof workOrderSchema>;
-
-interface CreateWorkOrderModalProps {
+export const CreateWorkOrderModal: React.FC<{
   isOpen: boolean;
   onClose: () => void;
   equipmentId?: string;
-}
+}> = ({ isOpen, onClose, equipmentId }) => {
+  // ...existing code...
+  // useAuth() call removed as no values are used
 
-export const CreateWorkOrderModal: React.FC<CreateWorkOrderModalProps> = ({
-  isOpen,
-  onClose,
-  equipmentId,
-}) => {
+  // ...existing code...
+
+  // ...existing code...
+
+  const workOrderSchema = z.object({
+    title: z.string().min(1, 'Title is required').max(255, 'Title is too long'),
+    description: z.string().optional(),
+    priority: z.nativeEnum(WorkOrderPriority),
+    type: z.nativeEnum(WorkOrderType),
+    equipment_id: z.string().optional(),
+    assigned_to: z.string().optional(),
+    scheduled_start: z.string().optional(),
+    scheduled_end: z.string().optional(),
+    estimated_hours: z.number().min(0).optional(),
+    // estimated_cost: z.number().min(0).optional(),
+    attachments: z.any().optional(),
+    checklist_items: z
+      .array(
+        z.object({
+          task: z.string().min(1, 'Task is required'),
+          description: z.string().optional(),
+          is_required: z.boolean().default(false),
+        })
+      )
+      .optional(),
+    parts: z
+      .array(
+        z.object({
+          part_id: z.string(),
+          quantity: z.number().min(1, 'Quantity must be at least 1'),
+        })
+      )
+      .optional(),
+  });
+
+  type WorkOrderFormData = z.infer<typeof workOrderSchema>;
+
+  // ...existing code...
   const [isLoading, setIsLoading] = useState(false);
   const [workOrderNumber, setWorkOrderNumber] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -80,8 +82,11 @@ export const CreateWorkOrderModal: React.FC<CreateWorkOrderModalProps> = ({
   // Load equipment and technician options
   const { data: equipmentOptions = [], isLoading: loadingEquipment } =
     useEquipmentOptions();
-  const { data: technicians = [], isLoading: loadingTechnicians } =
-    useTechnicians();
+  const {
+    data: technicians = [],
+    isLoading: loadingTechnicians,
+    // error: techniciansError, (removed, unused)
+  } = useTechnicians();
 
   const {
     register,
@@ -251,7 +256,7 @@ export const CreateWorkOrderModal: React.FC<CreateWorkOrderModalProps> = ({
               </label>
               <Input
                 id='work_order_number'
-                value={workOrderNumber}
+                value={workOrderNumber ?? ''}
                 readOnly
                 className='bg-gray-100'
               />
@@ -290,7 +295,7 @@ export const CreateWorkOrderModal: React.FC<CreateWorkOrderModalProps> = ({
               />
               {errors.title && (
                 <p className='mt-1 text-sm text-red-600'>
-                  {errors.title.message}
+                  {errors.title?.message}
                 </p>
               )}
             </div>
@@ -324,7 +329,7 @@ export const CreateWorkOrderModal: React.FC<CreateWorkOrderModalProps> = ({
               />
               {errors.priority && (
                 <p className='mt-1 text-sm text-red-600'>
-                  {errors.priority.message}
+                  {errors.priority?.message}
                 </p>
               )}
             </div>
@@ -339,7 +344,7 @@ export const CreateWorkOrderModal: React.FC<CreateWorkOrderModalProps> = ({
               <Select id='type' {...register('type')} options={typeOptions} />
               {errors.type && (
                 <p className='mt-1 text-sm text-red-600'>
-                  {errors.type.message}
+                  {errors.type?.message}
                 </p>
               )}
             </div>
@@ -380,7 +385,7 @@ export const CreateWorkOrderModal: React.FC<CreateWorkOrderModalProps> = ({
               />
               {errors.equipment_id && (
                 <p className='mt-1 text-sm text-red-600'>
-                  {errors.equipment_id.message}
+                  {errors.equipment_id?.message}
                 </p>
               )}
             </div>
@@ -417,7 +422,7 @@ export const CreateWorkOrderModal: React.FC<CreateWorkOrderModalProps> = ({
               />
               {errors.assigned_to && (
                 <p className='mt-1 text-sm text-red-600'>
-                  {errors.assigned_to.message}
+                  {errors.assigned_to?.message}
                 </p>
               )}
             </div>
