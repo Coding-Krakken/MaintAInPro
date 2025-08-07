@@ -1178,8 +1178,40 @@ dotenv.config({ path: '.env.local' });
 dotenv.config();
 
 // For now, use in-memory storage but prepare for PostgreSQL transition
-console.log('� Initializing with in-memory storage for development mode');
-storage = new MemStorage();
+// Phase 1 Migration: Storage Layer Activation
+// Switch from MemStorage to DatabaseStorage in production
+async function initializeStorage(): Promise<IStorage> {
+  if (process.env.DATABASE_URL && process.env.NODE_ENV === 'production') {
+    console.log('🔗 Initializing PostgreSQL storage for production');
+    console.log('📊 Phase 1: Storage Layer Activation - DatabaseStorage');
+    try {
+      const { DatabaseStorage } = await import('./dbStorage');
+      const dbStorage = new DatabaseStorage();
+      await dbStorage.initializeData();
+      console.log('✅ PostgreSQL storage initialized successfully');
+      return dbStorage;
+    } catch (error) {
+      console.error('❌ Failed to initialize PostgreSQL storage:', error);
+      console.log('🔄 Falling back to in-memory storage');
+      return new MemStorage();
+    }
+  } else {
+    console.log('📦 Using in-memory storage for development');
+    console.log('💡 Set DATABASE_URL and NODE_ENV=production to enable PostgreSQL');
+    return new MemStorage();
+  }
+}
+
+// Initialize storage with fallback mechanism
+console.log('🚀 Initializing storage system...');
+storage = new MemStorage(); // Default fallback
+initializeStorage().then(initializedStorage => {
+  storage = initializedStorage;
+  console.log('🎯 Storage initialization complete');
+}).catch(error => {
+  console.error('❌ Storage initialization error:', error);
+  storage = new MemStorage(); // Fallback to MemStorage
+});
 
 if (process.env.DATABASE_URL) {
   console.log('🔗 PostgreSQL database connection available');

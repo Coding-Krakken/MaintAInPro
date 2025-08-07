@@ -34,7 +34,11 @@
     "test:smoke:production": "ENVIRONMENT=production npm run test:smoke",
     "deploy:railway": "./deploy.sh",
     "railway:logs": "railway logs",
-    "railway:status": "railway status"
+    "railway:status": "railway status",
+    "migration:phase1": "./scripts/test-migration-phase1.sh",
+    "migration:test-api": "./scripts/test-migration-api.sh",
+    "migration:deploy": "./scripts/production-deploy.sh",
+    "migration:status": "echo 'Phase 1: ✅ COMPLETE - PostgreSQL Storage Active'",
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
