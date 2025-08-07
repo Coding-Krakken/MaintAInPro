@@ -29,9 +29,21 @@ export interface AssignmentCriteria {
 }
 
 export interface AssignmentResult {
-  technician_id: string;
+  success: boolean;
+  technician_id?: string;
+  assigned_technician?: TechnicianAvailability;
   confidence_score: number;
   reasons: string[];
+  alternatives?: Array<{
+    technician: TechnicianAvailability;
+    score: number;
+    reason: string;
+  }>;
+}
+
+export interface BulkAssignmentResult {
+  work_order_id: string;
+  assignment_result: AssignmentResult;
 }
 
 class AssignmentService {
@@ -102,99 +114,100 @@ class AssignmentService {
   }
 
   /**
-   * Find the best technician for a work order
+   * Find best technician for assignment
    */
   async findBestTechnician(
     criteria: AssignmentCriteria
   ): Promise<AssignmentResult | null> {
-    const availableTechnicians = await this.getAvailableTechnicians(criteria);
+    const technicians = await this.getAvailableTechnicians(criteria);
 
-    if (availableTechnicians.length === 0) {
-      return null;
+    if (technicians.length === 0) {
+      return {
+        success: false,
+        confidence_score: 0,
+        reasons: ['No available technicians found'],
+      };
     }
 
-    const scoredTechnicians = availableTechnicians
-      .filter(tech => tech.is_available)
+    const scoredTechnicians = technicians
       .map(tech => {
         let score = 0;
         const reasons: string[] = [];
 
-        // Skills matching (30% weight)
-        if (criteria.skills_required?.length) {
+        // Availability score (40%)
+        if (tech.is_available) {
+          score += 40;
+          reasons.push('Available now');
+        } else {
+          reasons.push('Limited availability');
+        }
+
+        // Workload score (30%)
+        const workloadScore = Math.max(0, 30 - tech.current_workload);
+        score += workloadScore;
+        reasons.push(
+          `Workload: ${tech.current_workload}/${tech.max_concurrent_orders}`
+        );
+
+        // Skills match (20%)
+        if (criteria.skills_required) {
           const matchingSkills = criteria.skills_required.filter(skill =>
             tech.skills.includes(skill)
+          ).length;
+          const skillScore =
+            (matchingSkills / criteria.skills_required.length) * 20;
+          score += skillScore;
+          reasons.push(
+            `Skills match: ${matchingSkills}/${criteria.skills_required.length}`
           );
-          const skillsScore =
-            (matchingSkills.length / criteria.skills_required.length) * 30;
-          score += skillsScore;
-
-          if (skillsScore > 20) {
-            reasons.push(
-              `Has ${matchingSkills.length}/${criteria.skills_required.length} required skills`
-            );
-          }
+        } else {
+          score += 15; // Base skill score
+          reasons.push('No specific skills required');
         }
 
-        // Certifications matching (25% weight)
-        if (criteria.certifications_required?.length) {
+        // Certification match (10%)
+        if (criteria.certifications_required) {
           const matchingCerts = criteria.certifications_required.filter(cert =>
             tech.certifications.includes(cert)
+          ).length;
+          const certScore =
+            (matchingCerts / criteria.certifications_required.length) * 10;
+          score += certScore;
+          reasons.push(
+            `Certifications: ${matchingCerts}/${criteria.certifications_required.length}`
           );
-          const certsScore =
-            (matchingCerts.length / criteria.certifications_required.length) *
-            25;
-          score += certsScore;
-
-          if (certsScore > 15) {
-            reasons.push(
-              `Has ${matchingCerts.length}/${criteria.certifications_required.length} required certifications`
-            );
-          }
-        }
-
-        // Workload balancing (25% weight)
-        const workloadScore = Math.max(
-          0,
-          25 - (tech.current_workload / tech.max_concurrent_orders) * 25
-        );
-        score += workloadScore;
-
-        if (tech.current_workload < tech.max_concurrent_orders * 0.5) {
-          reasons.push('Low current workload');
-        }
-
-        // Location preference (20% weight)
-        if (
-          criteria.location_preference &&
-          tech.location === criteria.location_preference
-        ) {
-          score += 20;
-          reasons.push('Same location as work order');
-        }
-
-        // Priority bonus for high/critical/emergency
-        if (
-          [
-            WorkOrderPriority.HIGH,
-            WorkOrderPriority.CRITICAL,
-            WorkOrderPriority.EMERGENCY,
-          ].includes(criteria.priority)
-        ) {
-          if (tech.certifications.includes('emergency_response')) {
-            score += 10;
-            reasons.push('Emergency response certified');
-          }
+        } else {
+          score += 5; // Base certification score
+          reasons.push('No specific certifications required');
         }
 
         return {
+          success: true,
           technician_id: tech.id,
+          assigned_technician: tech,
           confidence_score: Math.round(score),
           reasons,
         };
       })
       .sort((a, b) => b.confidence_score - a.confidence_score);
 
-    return scoredTechnicians[0] || null;
+    const bestMatch = scoredTechnicians[0];
+    if (!bestMatch) {
+      return {
+        success: false,
+        confidence_score: 0,
+        reasons: ['No suitable technicians found'],
+      };
+    }
+
+    return {
+      ...bestMatch,
+      alternatives: scoredTechnicians.slice(1, 4).map(t => ({
+        technician: t.assigned_technician!,
+        score: t.confidence_score,
+        reason: t.reasons.join(', '),
+      })),
+    };
   }
 
   /**
@@ -258,8 +271,13 @@ class AssignmentService {
   ): Promise<WorkOrder | null> {
     const bestMatch = await this.findBestTechnician(criteria);
 
-    if (!bestMatch || bestMatch.confidence_score < 50) {
-      // Don't auto-assign if confidence is too low
+    if (
+      !bestMatch ||
+      !bestMatch.success ||
+      bestMatch.confidence_score < 50 ||
+      !bestMatch.technician_id
+    ) {
+      // Don't auto-assign if confidence is too low or no technician found
       return null;
     }
 
@@ -401,7 +419,9 @@ class AssignmentService {
         }
 
         return {
+          success: true,
           technician_id: tech.id,
+          assigned_technician: tech,
           confidence_score: Math.round(score),
           reasons,
         };
