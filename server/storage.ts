@@ -198,6 +198,7 @@ export class MemStorage implements IStorage {
   private seedData() {
     // Create default warehouse
     const warehouseId = 'default-warehouse-id'; // Use fixed ID for demo
+    const organizationId = 'default-organization-id'; // Add organizationId for new schema
     const warehouse: Warehouse = {
       id: warehouseId,
       name: "Main Warehouse",
@@ -218,10 +219,11 @@ export class MemStorage implements IStorage {
     
     const supervisor: Profile = {
       id: supervisorId,
-      email: "supervisor@maintainpro.com",
+      email: "supervisor@warehouse.com",
       firstName: "John",
       lastName: "Smith",
       role: "supervisor",
+      organizationId: organizationId,
       warehouseId,
       active: true,
       emailVerified: true,
@@ -233,14 +235,18 @@ export class MemStorage implements IStorage {
       preferences: null,
       createdAt: new Date(),
       updatedAt: new Date(),
+      deletedAt: null,
+      createdBy: null, // First user, no creator
+      updatedBy: null,
     };
     
     const technician: Profile = {
       id: technicianId,
-      email: "technician@maintainpro.com",
-      firstName: "Mike",
-      lastName: "Johnson",
+      email: "technician@warehouse.com",
+      firstName: "Jane",
+      lastName: "Doe",
       role: "technician",
+      organizationId: organizationId,
       warehouseId,
       active: true,
       emailVerified: true,
@@ -252,14 +258,16 @@ export class MemStorage implements IStorage {
       preferences: null,
       createdAt: new Date(),
       updatedAt: new Date(),
-    };
-    
-    const manager: Profile = {
+      deletedAt: null,
+      createdBy: supervisorId,
+      updatedBy: supervisorId,
+    };    const manager: Profile = {
       id: managerId,
-      email: "manager@maintainpro.com",
+      email: "manager@warehouse.com",
       firstName: "Sarah",
       lastName: "Wilson",
       role: "manager",
+      organizationId: organizationId,
       warehouseId,
       active: true,
       emailVerified: true,
@@ -271,6 +279,9 @@ export class MemStorage implements IStorage {
       preferences: null,
       createdAt: new Date(),
       updatedAt: new Date(),
+      deletedAt: null,
+      createdBy: supervisorId,
+      updatedBy: supervisorId,
     };
 
     this.profiles.set(supervisorId, supervisor);
@@ -295,8 +306,14 @@ export class MemStorage implements IStorage {
       manufacturer: "ConveyorCorp",
       serialNumber: "CB2000X-001",
       specifications: { speed: "2.5 m/s", capacity: "500 kg" },
+      organizationId: organizationId,
       warehouseId,
+      tsv: null,
       createdAt: new Date(),
+      updatedAt: new Date(),
+      deletedAt: null,
+      createdBy: managerId,
+      updatedBy: managerId,
     };
     
     const equipment2: Equipment = {
@@ -312,8 +329,14 @@ export class MemStorage implements IStorage {
       manufacturer: "ClimateControl Inc",
       serialNumber: "HVAC500-205",
       specifications: { capacity: "50 tons", efficiency: "95%" },
+      organizationId: organizationId,
       warehouseId,
+      tsv: null,
       createdAt: new Date(),
+      updatedAt: new Date(),
+      deletedAt: null,
+      createdBy: managerId,
+      updatedBy: managerId,
     };
     
     const equipment3: Equipment = {
@@ -328,12 +351,16 @@ export class MemStorage implements IStorage {
       warrantyExpiry: new Date("2026-03-10"),
       manufacturer: "LiftMaster",
       serialNumber: "FL3000-001",
-      specifications: { capacity: "3000 lbs", battery: "48V" },
+      specifications: { capacity: "3000 lbs", batteryLife: "8 hours" },
+      organizationId: organizationId,
       warehouseId,
+      tsv: null,
       createdAt: new Date(),
-    };
-
-    this.equipment.set(equipmentId1, equipment1);
+      updatedAt: new Date(),
+      deletedAt: null,
+      createdBy: managerId,
+      updatedBy: managerId,
+    };    this.equipment.set(equipmentId1, equipment1);
     this.equipment.set(equipmentId2, equipment2);
     this.equipment.set(equipmentId3, equipment3);
 
@@ -363,9 +390,14 @@ export class MemStorage implements IStorage {
       followUp: false,
       escalated: false,
       escalationLevel: 0,
+      organizationId: organizationId,
       warehouseId,
+      tsv: null,
       createdAt: new Date(),
       updatedAt: new Date(),
+      deletedAt: null,
+      createdBy: supervisorId,
+      updatedBy: supervisorId,
     };
     
     const workOrder2: WorkOrder = {
@@ -389,9 +421,14 @@ export class MemStorage implements IStorage {
       followUp: false,
       escalated: false,
       escalationLevel: 0,
+      organizationId: organizationId,
       warehouseId,
+      tsv: null,
       createdAt: new Date(),
       updatedAt: new Date(),
+      deletedAt: null,
+      createdBy: supervisorId,
+      updatedBy: supervisorId,
     };
     
     const workOrder3: WorkOrder = {
@@ -415,9 +452,14 @@ export class MemStorage implements IStorage {
       followUp: false,
       escalated: false,
       escalationLevel: 0,
+      organizationId: organizationId,
       warehouseId,
+      tsv: null,
       createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
       updatedAt: new Date(Date.now() - 12 * 60 * 60 * 1000),
+      deletedAt: null,
+      createdBy: supervisorId,
+      updatedBy: technicianId,
     };
 
     this.workOrders.set(workOrderId1, workOrder1);
