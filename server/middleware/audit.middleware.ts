@@ -1,15 +1,6 @@
-import type { Request, Response, NextFunction } from 'express';
+import type { Response, NextFunction } from 'express';
 import { auditTrailService } from '../services/audit-trail.service';
-
-interface AuditRequest extends Request {
-  user?: {
-    id: string;
-    sessionId?: string;
-    warehouseId?: string;
-    role: string;
-  };
-  startTime?: number;
-}
+import { AuditRequest } from '../../shared/types/auth';
 
 export function auditMiddleware() {
   return async (req: AuditRequest, res: Response, next: NextFunction) => {

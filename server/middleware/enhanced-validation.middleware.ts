@@ -9,37 +9,18 @@ import {
   snakeToCamel,
   fieldValidators 
 } from '@shared/validation-utils';
+import { EnhancedRequest, AuthenticatedUser, AuthenticatedRequest } from '../../shared/types/auth';
 
 /**
  * Enhanced validation middleware with comprehensive error handling and audit logging
  * Aligned with DatabaseImplementation.md specifications
  */
 
-// Enhanced request interface with audit context
-export interface EnhancedRequest extends Request {
-  user?: {
-    id: string;
-    organizationId: string;
-    role: string;
-    sessionId: string;
-  };
-  auditContext?: {
-    requestId: string;
-    correlationId: string;
-    startTime: number;
-    ipAddress: string;
-    userAgent: string;
-  };
-  validatedData?: any;
-  validated?: any; // For backwards compatibility
-  organizationId?: string;
-}
-
 export interface ValidationOptions {
   source?: 'body' | 'query' | 'params' | 'headers';
   transformFields?: boolean;
   stripUnknown?: boolean;
-  errorHandler?: (error: any, req: Request, res: Response, next: NextFunction) => void;
+  errorHandler?: (error: any, req: Request | EnhancedRequest, res: Response, next: NextFunction) => void;
   // Enhanced options
   auditValidation?: boolean;
   requireOrganization?: boolean;
@@ -316,20 +297,22 @@ export const createEnhancedRateLimit = (config: {
   return rateLimit({
     windowMs: config.windowMs,
     max: config.maxRequests,
-    keyGenerator: (req: EnhancedRequest) => {
-      if (config.perOrganization && req.organizationId) {
-        return `${req.organizationId}:${req.ip}`;
+    keyGenerator: (req: Request) => {
+      const enhancedReq = req as EnhancedRequest;
+      if (config.perOrganization && enhancedReq.organizationId) {
+        return `${enhancedReq.organizationId}:${req.ip}`;
       }
       return req.ip;
     },
     standardHeaders: true,
     legacyHeaders: false,
     skipSuccessfulRequests: config.skipSuccessfulRequests || false,
-    handler: (req: EnhancedRequest, res: Response) => {
+    handler: (req: Request, res: Response) => {
+      const enhancedReq = req as EnhancedRequest;
       res.status(429).json({
         error: 'RATE_LIMIT_EXCEEDED',
         message: 'Too many requests, please try again later',
-        requestId: req.auditContext?.requestId,
+        requestId: enhancedReq.auditContext?.requestId,
         retryAfter: Math.round(config.windowMs / 1000),
       });
     },
@@ -475,9 +458,15 @@ export function sanitizeInput(req: Request, res: Response, next: NextFunction) {
   };
 
   // Sanitize body, query, and params
-  if (req.body) req.body = sanitizeObject(req.body);
-  if (req.query) req.query = sanitizeObject(req.query);
-  if (req.params) req.params = sanitizeObject(req.params);
+  if (req.body) {
+    (req as any).body = sanitizeObject(req.body);
+  }
+  if ((req as any).query) {
+    (req as any).query = sanitizeObject((req as any).query);
+  }
+  if ((req as any).params) {
+    (req as any).params = sanitizeObject((req as any).params);
+  }
 
   next();
 }

@@ -64,7 +64,7 @@ describe('Schema Validation Tests', () => {
       expect(result.success).toBe(false)
       if (!result.success) {
         const missingFields = result.error.issues.map(issue => issue.path[0])
-        expect(missingFields).toContain('warehouseId')
+        // organizationId is now the primary multi-tenant field (warehouseId is legacy/optional)
         expect(missingFields).toContain('status')
         expect(missingFields).toContain('assetTag')
         expect(missingFields).toContain('model')

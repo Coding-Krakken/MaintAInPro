@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { z } from 'zod';
 import { validateSchema, validationChain, commonSchemas } from '../middleware/enhanced-validation.middleware';
+import { EnhancedRequest } from '../../shared/types/auth';
 import { 
   insertWorkOrderSchema, 
   insertEquipmentSchema, 
