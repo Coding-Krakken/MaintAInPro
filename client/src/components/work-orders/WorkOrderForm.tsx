@@ -64,7 +64,8 @@ export default function WorkOrderForm({ onSuccess, onCancel, initialData }: Work
 
   const onSubmit = async (data: WorkOrderFormData) => {
     try {
-      await createWorkOrder.mutateAsync({
+      // Convert dueDate string to Date if provided and estimatedHours to number
+      const submitData = {
         ...data,
         requestedBy: user!.id,
         warehouseId: user!.warehouseId,
@@ -72,7 +73,11 @@ export default function WorkOrderForm({ onSuccess, onCancel, initialData }: Work
         escalated: false,
         escalationLevel: 0,
         followUp: false,
-      });
+        dueDate: data.dueDate ? new Date(data.dueDate) : undefined,
+        estimatedHours: data.estimatedHours ? parseFloat(data.estimatedHours) : undefined,
+      };
+
+      await createWorkOrder.mutateAsync(submitData);
 
       toast({
         title: 'Success',

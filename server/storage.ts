@@ -616,7 +616,25 @@ export class MemStorage implements IStorage {
     const existing = this.profiles.get(id);
     if (!existing) throw new Error('Profile not found');
     
-    const updated: Profile = { ...existing, ...updateProfile };
+    // Type-safe role update
+    let roleUpdate: 'technician' | 'supervisor' | 'manager' | 'admin' | 'inventory_clerk' | 'contractor' | 'requester' | undefined = undefined;
+    const processedUpdate = { ...updateProfile };
+    if (processedUpdate.role) {
+      const validRoles = ['technician', 'supervisor', 'manager', 'admin', 'inventory_clerk', 'contractor', 'requester'] as const;
+      if (validRoles.includes(processedUpdate.role as any)) {
+        roleUpdate = processedUpdate.role as 'technician' | 'supervisor' | 'manager' | 'admin' | 'inventory_clerk' | 'contractor' | 'requester';
+      } else {
+        roleUpdate = 'technician'; // Default to technician if invalid
+      }
+      // Remove role from processedUpdate to avoid type conflicts
+      delete processedUpdate.role;
+    }
+    
+    const updated: Profile = { 
+      ...existing, 
+      ...(processedUpdate as Omit<Partial<InsertProfile>, 'role'>),
+      ...(roleUpdate && { role: roleUpdate })
+    };
     this.profiles.set(id, updated);
     return updated;
   }
@@ -679,9 +697,33 @@ export class MemStorage implements IStorage {
       updates.warrantyExpiry = new Date(updates.warrantyExpiry);
     }
     
+    // Type-safe status update
+    let statusUpdate: 'active' | 'inactive' | 'maintenance' | 'retired' | undefined = undefined;
+    if (updates.status) {
+      const validStatuses = ['active', 'inactive', 'maintenance', 'retired'] as const;
+      if (validStatuses.includes(updates.status as any)) {
+        statusUpdate = updates.status as 'active' | 'inactive' | 'maintenance' | 'retired';
+      } else {
+        statusUpdate = 'active'; // Default to active if invalid
+      }
+    }
+    
+    // Type-safe criticality update
+    let criticalityUpdate: 'low' | 'medium' | 'high' | 'critical' | undefined = undefined;
+    if (updates.criticality) {
+      const validCriticalities = ['low', 'medium', 'high', 'critical'] as const;
+      if (validCriticalities.includes(updates.criticality as any)) {
+        criticalityUpdate = updates.criticality as 'low' | 'medium' | 'high' | 'critical';
+      } else {
+        criticalityUpdate = 'medium'; // Default to medium if invalid
+      }
+    }
+    
     const updated: Equipment = { 
       ...existing, 
       ...updates,
+      ...(statusUpdate && { status: statusUpdate }),
+      ...(criticalityUpdate && { criticality: criticalityUpdate }),
       installDate: updates.installDate instanceof Date ? updates.installDate : existing.installDate,
       warrantyExpiry: updates.warrantyExpiry instanceof Date ? updates.warrantyExpiry : existing.warrantyExpiry
     };

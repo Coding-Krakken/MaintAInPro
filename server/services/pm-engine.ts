@@ -123,7 +123,7 @@ export class PMEngine {
       priority: 'medium',
       equipmentId: equipment.id,
       dueDate: this.calculateNextDueDate(template.frequency),
-      estimatedHours: '2.00', // Default estimate
+      estimatedHours: 2.00, // Default estimate
       warehouseId,
       notes: `Auto-generated PM based on ${template.frequency} maintenance schedule`,
     };
