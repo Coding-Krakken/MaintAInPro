@@ -22,7 +22,8 @@ export interface AuthenticatedRequest extends Request {
 /**
  * Audit request interface extending authenticated request
  */
-export interface AuditRequest extends AuthenticatedRequest {
+export interface AuditRequest extends Request {
+  user?: AuthenticatedUser;
   startTime?: number;
   auditContext?: {
     requestId: string;
@@ -36,13 +37,22 @@ export interface AuditRequest extends AuthenticatedRequest {
 /**
  * Enhanced request interface for validation middleware
  */
-export interface EnhancedRequest extends AuditRequest {
+export interface EnhancedRequest extends Request {
+  user?: AuthenticatedUser & { sessionId: string };
   validatedBody?: any;
   validatedQuery?: any;
   validatedParams?: any;
   validatedData?: any;
   validated?: any; // For backwards compatibility
   organizationId?: string;
+  startTime?: number;
+  auditContext?: {
+    requestId: string;
+    correlationId: string;
+    startTime: number;
+    ipAddress: string;
+    userAgent: string;
+  };
 }
 
 /**

@@ -38,6 +38,8 @@ declare global {
         email: string;
         role: string;
         organizationId: string;
+        sessionId?: string;
+        warehouseId?: string;
       };
       organizationId?: string;
     }

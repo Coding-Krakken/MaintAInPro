@@ -129,15 +129,16 @@ export function validateSchema<T extends z.ZodSchema>(
     fieldMapping = 'snakeToCamel'
   } = options;
 
-  return async (req: EnhancedRequest, res: Response, next: NextFunction) => {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    const enhancedReq = req as EnhancedRequest;
     try {
       // Check organization requirement
-      if (requireOrganization && !req.organizationId) {
+      if (requireOrganization && !enhancedReq.organizationId) {
         return res.status(400).json({
           success: false,
           error: 'ORGANIZATION_REQUIRED',
           message: 'Organization context is required for this operation',
-          requestId: req.auditContext?.requestId,
+          requestId: enhancedReq.auditContext?.requestId,
         });
       }
 
@@ -150,7 +151,7 @@ export function validateSchema<T extends z.ZodSchema>(
           error: 'VALIDATION_ERROR',
           message: `No ${source} data provided`,
           details: [],
-          requestId: req.auditContext?.requestId,
+          requestId: enhancedReq.auditContext?.requestId,
         });
       }
 
@@ -181,12 +182,12 @@ export function validateSchema<T extends z.ZodSchema>(
         }
 
         // Log validation failure for security monitoring
-        if (auditValidation && req.user && req.auditContext) {
-          console.warn(`[${req.auditContext.requestId}] Validation failed`, {
-            userId: req.user.id,
-            organizationId: req.organizationId,
-            method: req.method,
-            url: req.url,
+        if (auditValidation && enhancedReq.user && enhancedReq.auditContext) {
+          console.warn(`[${enhancedReq.auditContext.requestId}] Validation failed`, {
+            userId: enhancedReq.user.id,
+            organizationId: enhancedReq.organizationId,
+            method: enhancedReq.method,
+            url: enhancedReq.url,
             errors: errorDetails.errors,
             source,
           });
@@ -197,12 +198,12 @@ export function validateSchema<T extends z.ZodSchema>(
           error: errorDetails.type || 'VALIDATION_ERROR',
           message: errorDetails.message || 'Request validation failed',
           errors: errorDetails.errors || [],
-          requestId: req.auditContext?.requestId,
+          requestId: enhancedReq.auditContext?.requestId,
           timestamp: new Date().toISOString(),
         };
 
         if (errorHandler) {
-          return errorHandler(response, req, res, next);
+          return errorHandler(response, enhancedReq, res, next);
         }
 
         return res.status(400).json(response);
@@ -211,17 +212,17 @@ export function validateSchema<T extends z.ZodSchema>(
       // Transform back for database operations if needed
       if (transformFields && typeof validatedData === 'object' && fieldMapping === 'snakeToCamel') {
         // Keep both formats for flexibility
-        req.validatedData = validatedData; // camelCase for API
-        req.validated = camelToSnake(validatedData); // snake_case for DB
+        enhancedReq.validatedData = validatedData; // camelCase for API
+        enhancedReq.validated = camelToSnake(validatedData); // snake_case for DB
       } else {
-        req.validatedData = validatedData;
-        req.validated = validatedData;
+        enhancedReq.validatedData = validatedData;
+        enhancedReq.validated = validatedData;
       }
 
       // Log successful validation in development or if audit is enabled
       if (process.env.NODE_ENV === 'development' || auditValidation) {
-        console.log(`✅ Validation successful for ${req.method} ${req.path}`, {
-          requestId: req.auditContext?.requestId,
+        console.log(`✅ Validation successful for ${enhancedReq.method} ${enhancedReq.path}`, {
+          requestId: enhancedReq.auditContext?.requestId,
           source,
           fieldsCount: Object.keys(validatedData || {}).length,
           organizationId: req.organizationId,
@@ -230,18 +231,18 @@ export function validateSchema<T extends z.ZodSchema>(
 
       next();
     } catch (error) {
-      console.error(`[${req.auditContext?.requestId}] Validation middleware error:`, error);
+      console.error(`[${enhancedReq.auditContext?.requestId}] Validation middleware error:`, error);
       
       const serverError = {
         success: false,
         error: 'VALIDATION_SERVER_ERROR',
         message: 'Internal validation error',
-        requestId: req.auditContext?.requestId,
+        requestId: enhancedReq.auditContext?.requestId,
         timestamp: new Date().toISOString()
       };
 
       if (errorHandler) {
-        return errorHandler(serverError, req, res, next);
+        return errorHandler(serverError, enhancedReq, res, next);
       }
 
       return res.status(500).json(serverError);
@@ -299,8 +300,8 @@ export const createEnhancedRateLimit = (config: {
     max: config.maxRequests,
     keyGenerator: (req: Request) => {
       const enhancedReq = req as EnhancedRequest;
-      if (config.perOrganization && enhancedReq.organizationId) {
-        return `${enhancedReq.organizationId}:${req.ip}`;
+      if (config.perOrganization && enhancedReq.user?.organizationId) {
+        return `${enhancedReq.user.organizationId}:${req.ip}`;
       }
       return req.ip;
     },
