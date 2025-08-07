@@ -45,7 +45,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "date-fns": "^2.30.0",
-    "dexie": "^3.2.4",
+    "dexie": "^3.2.7",
     "dexie-react-hooks": "^1.1.7",
     "dotenv": "^17.2.0",
     "framer-motion": "^10.16.5",

@@ -32,10 +32,28 @@ function Form<T extends FieldValues>({
     >
       {React.Children.map(children, child => {
         if (React.isValidElement(child)) {
-          return React.cloneElement(child, { ...form } as Record<
-            string,
-            unknown
-          >);
+          // Only pass the form context to FormField components
+          if (child.type === FormField || child.type === FormSubmit) {
+            return React.cloneElement(child, {
+              register: form.register,
+              formState: form.formState,
+              control: form.control,
+              setValue: form.setValue,
+              getValues: form.getValues,
+              setError: form.setError,
+              clearErrors: form.clearErrors,
+              handleSubmit: form.handleSubmit,
+              watch: form.watch,
+              reset: form.reset,
+              trigger: form.trigger,
+              setFocus: form.setFocus,
+              getFieldState: form.getFieldState,
+              resetField: form.resetField,
+              unregister: form.unregister,
+              subscribe: form.subscribe,
+            } as Record<string, unknown>);
+          }
+          return child;
         }
         return child;
       })}
@@ -51,6 +69,8 @@ interface FormFieldProps {
   children: React.ReactNode;
   className?: string;
   error?: string;
+  register?: (name: string) => object;
+  formState?: { errors?: Record<string, { message?: string }> };
 }
 
 function FormField({
@@ -60,7 +80,36 @@ function FormField({
   children,
   className,
   error,
+  register,
+  formState,
 }: FormFieldProps) {
+  // Get field error from form state
+  const fieldError = formState?.errors?.[name]?.message || error;
+
+  // Clone children to ensure input elements have proper id attribute and register with form
+  const childrenWithProps = React.Children.map(children, child => {
+    if (
+      React.isValidElement(child) &&
+      (child.type === 'input' ||
+        child.type === 'textarea' ||
+        child.type === 'select')
+    ) {
+      const inputProps: Record<string, unknown> = {
+        id: name,
+        ...child.props,
+      };
+
+      // Add register if available
+      if (register) {
+        const registerProps = register(name);
+        Object.assign(inputProps, registerProps);
+      }
+
+      return React.cloneElement(child, inputProps);
+    }
+    return child;
+  });
+
   return (
     <div className={cn('space-y-2', className)}>
       {label && (
@@ -72,13 +121,13 @@ function FormField({
         </label>
       )}
 
-      {children}
+      {childrenWithProps}
 
       {description && (
         <p className='text-sm text-secondary-500'>{description}</p>
       )}
 
-      {error && <p className='text-sm text-error-600'>{error}</p>}
+      {fieldError && <p className='text-sm text-error-600'>{fieldError}</p>}
     </div>
   );
 }

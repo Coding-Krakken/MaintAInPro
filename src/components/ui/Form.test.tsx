@@ -52,7 +52,7 @@ describe('Form Components', () => {
     it('renders form with proper structure', () => {
       render(<TestForm />);
 
-      const form = screen.getByRole('form') || document.querySelector('form');
+      const form = document.querySelector('form');
       expect(form).toBeInTheDocument();
       expect(form).toHaveClass('space-y-6');
     });
@@ -102,11 +102,14 @@ describe('Form Components', () => {
       fireEvent.click(screen.getByText('Submit'));
 
       await waitFor(() => {
-        expect(mockOnSubmit).toHaveBeenCalledWith({
-          name: 'John Doe',
-          email: 'john@example.com',
-          password: 'password123',
-        });
+        expect(mockOnSubmit).toHaveBeenCalledWith(
+          {
+            name: 'John Doe',
+            email: 'john@example.com',
+            password: 'password123',
+          },
+          expect.anything()
+        );
       });
     });
 
@@ -395,11 +398,14 @@ describe('Form Components', () => {
 
       // Verify submission
       await waitFor(() => {
-        expect(mockOnSubmit).toHaveBeenCalledWith({
-          name: 'Jane Doe',
-          email: 'jane@example.com',
-          password: 'password123',
-        });
+        expect(mockOnSubmit).toHaveBeenCalledWith(
+          {
+            name: 'Jane Doe',
+            email: 'jane@example.com',
+            password: 'password123',
+          },
+          expect.anything()
+        );
       });
     });
 

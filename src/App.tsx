@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 
 import { Layout } from '@/components/layout/Layout';
@@ -8,6 +8,8 @@ import { useAuth } from '@/modules/auth/hooks/useAuth';
 import { ThemeProvider } from '@/components/ui/DarkModeToggle';
 import { ToastNotificationProvider } from '@/components/ui/NotificationCenter';
 import ErrorBoundary from '@/components/ui/ErrorBoundary';
+import { initializeOfflineDB } from '@/lib/offline/database';
+import { offlineSyncService } from '@/lib/offline/syncService';
 
 // Lazy load pages for better performance
 const Dashboard = React.lazy(() => import('@/pages/Dashboard'));
@@ -56,6 +58,30 @@ const NotFound = React.lazy(() => import('@/pages/NotFound'));
 
 const App: React.FC = () => {
   const { isLoading } = useAuth();
+
+  // Initialize offline functionality
+  useEffect(() => {
+    const initOffline = async () => {
+      try {
+        await initializeOfflineDB();
+        console.log('Offline functionality initialized');
+
+        // Start auto-sync if online
+        if (navigator.onLine) {
+          offlineSyncService.startAutoSync(30000); // 30 seconds
+        }
+      } catch (error) {
+        console.error('Failed to initialize offline functionality:', error);
+      }
+    };
+
+    initOffline();
+
+    // Cleanup on unmount
+    return () => {
+      offlineSyncService.stopAutoSync();
+    };
+  }, []);
 
   // Add a timeout fallback for loading state
   const [showLoadingFallback, setShowLoadingFallback] = React.useState(false);
