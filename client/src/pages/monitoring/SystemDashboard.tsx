@@ -62,6 +62,15 @@ function SystemDashboard() {
     error: metricsError
   } = useQuery<SystemMetrics>({
     queryKey: ['/api/monitoring/metrics'],
+    queryFn: async () => {
+      const response = await fetch('/api/monitoring/metrics', {
+        credentials: 'include'
+      });
+      if (!response.ok) {
+        throw new Error(`Failed to fetch metrics: ${response.status} ${response.statusText}`);
+      }
+      return response.json();
+    },
     refetchInterval: 30000, // Refresh every 30 seconds
   });
 
@@ -71,6 +80,15 @@ function SystemDashboard() {
     refetch: refetchAlerts
   } = useQuery<PerformanceAlert[]>({
     queryKey: ['/api/monitoring/alerts'],
+    queryFn: async () => {
+      const response = await fetch('/api/monitoring/alerts', {
+        credentials: 'include'
+      });
+      if (!response.ok) {
+        throw new Error(`Failed to fetch alerts: ${response.status} ${response.statusText}`);
+      }
+      return response.json();
+    },
     refetchInterval: 15000, // Refresh every 15 seconds
   });
 
@@ -142,12 +160,15 @@ function SystemDashboard() {
   }
 
   if (metricsError) {
+    console.error('System monitoring error:', metricsError);
     return (
       <div className="p-6">
         <Alert variant="destructive">
           <AlertTriangle className="h-4 w-4" />
           <AlertDescription>
-            Failed to load system metrics. Please refresh the page or contact support.
+            Failed to load system metrics: {metricsError.message}
+            <br />
+            <small>Check the browser console for more details.</small>
           </AlertDescription>
         </Alert>
       </div>
@@ -158,6 +179,34 @@ function SystemDashboard() {
   const errorRate = metrics?.performance.requestCount > 0 
     ? ((metrics.performance.errorCount / metrics.performance.requestCount) * 100).toFixed(2)
     : '0';
+
+  // Debug logging for production troubleshooting
+  console.log('SystemDashboard Debug:', {
+    metricsLoading,
+    alertsLoading,
+    metricsError: metricsError?.message,
+    hasMetrics: !!metrics,
+    hasAlerts: !!alerts,
+    metricsData: metrics,
+    alertsData: alerts
+  });
+
+  // Add a fallback for when metrics is undefined but not loading and no error
+  if (!metricsLoading && !metrics && !metricsError) {
+    console.warn('SystemDashboard: No metrics data received, but no error or loading state');
+    return (
+      <div className="p-6">
+        <Alert>
+          <AlertTriangle className="h-4 w-4" />
+          <AlertDescription>
+            No system metrics data available. This might be a configuration issue.
+            <br />
+            <small>Check the browser console for more details.</small>
+          </AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
 
   return (
     <div className="p-6 space-y-6">

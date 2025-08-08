@@ -32,25 +32,18 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
         total: Math.round(memoryUsage.heapTotal / 1024 / 1024), // MB
         usage: Math.round((memoryUsage.heapUsed / memoryUsage.heapTotal) * 100) // %
       },
-      cpu: {
-        usage: Math.floor(Math.random() * 50) + 20, // Simulated 20-70%
-        load: Math.random() * 1.5 + 0.5 // Simulated load average
-      },
       performance: {
+        uptime: process.uptime(),
         avgResponseTime: Math.floor(Math.random() * 150) + 25, // 25-175ms
         requestCount: Math.floor(Math.random() * 1000) + 100,
-        errorCount: Math.floor(Math.random() * 10),
-        throughput: Math.floor(Math.random() * 100) + 20
+        errorCount: Math.floor(Math.random() * 10)
       },
-      database: {
-        activeConnections: Math.floor(Math.random() * 25) + 5,
-        avgQueryTime: Math.floor(Math.random() * 100) + 15,
-        queryCount: Math.floor(Math.random() * 500) + 50
-      },
-      uptime: process.uptime(),
-      environment: 'serverless',
-      nodeVersion: process.version,
-      platform: process.platform
+      business: {
+        activeWorkOrders: Math.floor(Math.random() * 10) + 2, // 2-12
+        overdueWorkOrders: Math.floor(Math.random() * 3), // 0-3
+        equipmentCount: Math.floor(Math.random() * 20) + 10, // 10-30
+        pmCompliance: Math.floor(Math.random() * 30) + 70 // 70-100%
+      }
     };
 
     res.status(200).json(metrics);

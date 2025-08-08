@@ -9,26 +9,6 @@
       "dest": "/api/health"
     },
     {
-      "src": "/api/monitoring/health",
-      "dest": "/api/monitoring/health"
-    },
-    {
-      "src": "/api/monitoring/metrics",
-      "dest": "/api/monitoring/metrics"
-    },
-    {
-      "src": "/api/monitoring/alerts",
-      "dest": "/api/monitoring/alerts"
-    },
-    {
-      "src": "/api/monitoring/system",
-      "dest": "/api/monitoring/system"
-    },
-    {
-      "src": "/api/monitoring/kpi",
-      "dest": "/api/monitoring/kpi"
-    },
-    {
       "src": "/api/(.*)",
       "dest": "/api/$1"
     },
