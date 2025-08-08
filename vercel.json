@@ -1,31 +1,16 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist/public"
-      }
-    },
-    {
-      "src": "server/health.ts",
-      "use": "@vercel/node"
-    }
-  ],
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist/public",
   
   "routes": [
     {
       "src": "/health",
-      "dest": "/server/health.ts"
-    },
-    {
-      "src": "/api/health",
-      "dest": "/server/health.ts"
+      "dest": "/api/health"
     },
     {
       "src": "/api/(.*)",
-      "dest": "/api/index.ts"
+      "dest": "/api/$1"
     },
     {
       "src": "/assets/(.*)",
@@ -39,14 +24,5 @@
   
   "env": {
     "NODE_ENV": "production"
-  },
-
-  "functions": {
-    "server/health.ts": {
-      "maxDuration": 5
-    },
-    "api/index.ts": {
-      "maxDuration": 10
-    }
   }
 }
