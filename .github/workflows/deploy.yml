@@ -177,76 +177,32 @@ jobs:
           
           echo "🚀 Production deployed to: $DEPLOYMENT_URL"
       
-      - name: Create Deployment Helpers
+      - name: Test Deployment Health
+        id: health-check
         run: |
-          # Health check helper
-          cat > health_check.js << 'EOF'
-          const maxRetries = 15;
-          const retryDelay = 8000;
-          const url = process.argv[2];
+          echo "🔍 Testing deployment health..."
+          URL="${{ steps.deploy.outputs.production-url }}"
+          echo "Testing: $URL"
           
-          async function healthCheck() {
-            console.log(`Starting health check for: ${url}`);
+          # Simple health check with curl
+          for i in {1..5}; do
+            echo "Attempt $i/5..."
             
-            for (let i = 0; i < maxRetries; i++) {
-              try {
-                console.log(`Attempt ${i + 1}/${maxRetries}...`);
-                
-                // Try multiple endpoints to find one that works
-                const endpoints = ['/api/health', '/health', '/api', '/'];
-                
-                for (const endpoint of endpoints) {
-                  try {
-                    const response = await fetch(`${url}${endpoint}`, {
-                      method: 'GET',
-                      headers: { 
-                        'User-Agent': 'GitHub-Actions-Health-Check',
-                        'Accept': 'application/json, text/html'
-                      }
-                    });
-                    
-                    // Accept any 2xx response as healthy
-                    if (response.ok) {
-                      console.log(`✅ Healthy response from ${endpoint}: ${response.status}`);
-                      return true;
-                    }
-                    
-                    // If we get 401 from root but site loads, that's also OK (auth protection)
-                    if (response.status === 401 && endpoint === '/' && 
-                        response.headers.get('content-type') && 
-                        response.headers.get('content-type').includes('text/html')) {
-                      console.log(`✅ Site loads (protected by auth): ${response.status}`);
-                      return true;
-                    }
-                    
-                  } catch (endpointError) {
-                    // Try next endpoint
-                    continue;
-                  }
-                }
-                
-                console.log(`❌ All endpoints failed for attempt ${i + 1}`);
-                
-              } catch (error) {
-                console.log(`❌ ${error.message}`);
-              }
-              
-              if (i < maxRetries - 1) {
-                console.log(`⏳ Waiting ${retryDelay/1000}s before retry...`);
-                await new Promise(resolve => setTimeout(resolve, retryDelay));
-              }
-            }
+            # Try root endpoint - expect either 200 or 401 (auth protected)
+            HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "$URL/" || echo "000")
+            echo "HTTP Response: $HTTP_CODE"
             
-            console.log('❌ Health check failed - but deployment may still be successful');
-            // For Vercel auth-protected deployments, treat as healthy if consistently getting 401
-            console.log('✅ Treating auth-protected deployment as healthy');
-            return true;
-          }
+            if [ "$HTTP_CODE" = "200" ] || [ "$HTTP_CODE" = "401" ]; then
+              echo "✅ Deployment is healthy (HTTP $HTTP_CODE)"
+              exit 0
+            fi
+            
+            echo "⏳ Waiting 10s before retry..."
+            sleep 10
+          done
           
-          healthCheck().then(success => {
-            process.exit(success ? 0 : 1);
-          });
-          EOF
+          echo "❌ Health check failed after 5 attempts"
+          exit 1
                   signal: controller.signal
                 });
                 
