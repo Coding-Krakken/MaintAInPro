@@ -192,7 +192,7 @@ function SystemDashboard() {
   });
 
   // Add a fallback for when metrics is undefined but not loading and no error
-  if (!metricsLoading && !metrics && !metricsError) {
+  if (!metrics && !metricsError) {
     console.warn('SystemDashboard: No metrics data received, but no error or loading state');
     return (
       <div className="p-6">
