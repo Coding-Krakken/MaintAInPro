@@ -18,7 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Enhanced Vercel configuration with health endpoints and monitoring
 - Updated repository documentation with operational procedures
 
-### Security
+
+- clean: remove old broken deploy workflow ([0903b440](https://github.com/Coding-Krakken/MaintAInPro/commit/0903b4408f4e6ccd6fd9cd92ce4d1e9000e63f9a))### Security
 - Added CodeQL security scanning to CI pipeline
 - Implemented secrets management guidelines for Vercel deployment
 - Added automated security vulnerability checking with npm audit
@@ -28,6 +29,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 - clean API conflicts, add GitHub permissions, replace broken deploy workflow ([702135a4](https://github.com/Coding-Krakken/MaintAInPro/commit/702135a442c8b3a4c44cda36e09e700c88253c63))
+
+
 
 ## [1.0.0] - 2025-01-08
 
