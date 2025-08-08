@@ -26,6 +26,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - convert scripts to ES modules and create clean deploy workflow ([0894bc6b](https://github.com/Coding-Krakken/MaintAInPro/commit/0894bc6b89e5fa3f7a1a64637cd50ca813d6b26b))
 
 
+
+- clean API conflicts, add GitHub permissions, replace broken deploy workflow ([702135a4](https://github.com/Coding-Krakken/MaintAInPro/commit/702135a442c8b3a4c44cda36e09e700c88253c63))
+
 ## [1.0.0] - 2025-01-08
 
 ### Added
