@@ -19,6 +19,7 @@ import Analytics from "./pages/Analytics";
 import AdminPage from "./pages/AdminPage";
 import { PerformanceDashboard } from "./components/admin/PerformanceDashboard";
 import EnterpriseMonitoring from "./pages/EnterpriseMonitoring";
+import MonitoringDebugPage from "./pages/MonitoringDebugPage";
 import SystemDashboard from "./pages/monitoring/SystemDashboard";
 import NotFound from "@/pages/not-found";
 
@@ -112,6 +113,11 @@ function AppRoutes() {
       <Route path="/system-monitoring">
         <ProtectedRoute>
           <SystemDashboard />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/monitoring-debug">
+        <ProtectedRoute>
+          <MonitoringDebugPage />
         </ProtectedRoute>
       </Route>
       <Route path="/phase1-demo">
