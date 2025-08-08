@@ -943,6 +943,7 @@ router.get('/analytics/dashboard',
       let filteredWorkOrders = workOrders;
       if (filters.dateRange?.start || filters.dateRange?.end) {
         filteredWorkOrders = workOrders.filter(wo => {
+          if (!wo.createdAt) return false;
           const createdAt = new Date(wo.createdAt);
           if (filters.dateRange?.start && createdAt < filters.dateRange.start) return false;
           if (filters.dateRange?.end && createdAt > filters.dateRange.end) return false;
@@ -991,9 +992,15 @@ router.get('/analytics/dashboard',
         },
         parts: {
           total: parts.length,
-          lowStock: parts.filter(part => part.stockLevel <= part.reorderPoint).length,
+          lowStock: parts.filter(part => 
+            part.stockLevel !== null && part.reorderPoint !== null && 
+            part.stockLevel <= part.reorderPoint
+          ).length,
           outOfStock: parts.filter(part => part.stockLevel === 0).length,
-          totalValue: parts.reduce((sum, part) => sum + (parseFloat(part.unitCost) * part.stockLevel), 0)
+          totalValue: parts.reduce((sum, part) => {
+            if (!part.unitCost || part.stockLevel === null) return sum;
+            return sum + (parseFloat(part.unitCost) * part.stockLevel);
+          }, 0)
         },
         performance: {
           averageResolutionTime: calculateAverageResolutionTime(filteredWorkOrders),
@@ -1070,8 +1077,8 @@ router.patch('/work-orders/bulk/status',
       const { workOrderIds, status, reason } = req.validated;
       
       const results = {
-        updated: [],
-        failed: [],
+        updated: [] as Array<{ id: any; status: string }>,
+        failed: [] as Array<{ id: any; error: string }>,
         total: workOrderIds.length
       };
       
@@ -1089,7 +1096,7 @@ router.patch('/work-orders/bulk/status',
         } catch (error) {
           results.failed.push({
             id: workOrderId,
-            error: error.message
+            error: error instanceof Error ? error.message : 'Unknown error'
           });
         }
       }
@@ -1122,8 +1129,8 @@ router.patch('/work-orders/bulk/assign',
       const { workOrderIds, assignedTo, priority } = req.validated;
       
       const results = {
-        assigned: [],
-        failed: [],
+        assigned: [] as Array<{ id: any; assignedTo: string | null }>,
+        failed: [] as Array<{ id: any; error: string }>,
         total: workOrderIds.length
       };
       
@@ -1161,7 +1168,7 @@ router.patch('/work-orders/bulk/assign',
         } catch (error) {
           results.failed.push({
             id: workOrderId,
-            error: error.message
+            error: error instanceof Error ? error.message : 'Unknown error'
           });
         }
       }

@@ -224,7 +224,7 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
                   Uploaded by {attachment.uploadedBy || 'Unknown'}
                 </span>
                 <span>
-                  {new Date(attachment.createdAt).toLocaleDateString()}
+                  {attachment.createdAt ? new Date(attachment.createdAt).toLocaleDateString() : 'Unknown date'}
                 </span>
               </div>
               

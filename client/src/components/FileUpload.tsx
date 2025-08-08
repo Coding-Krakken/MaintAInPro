@@ -68,9 +68,16 @@ export const FileUpload: React.FC<FileUploadProps> = ({
       setUploads(prev => [...prev, newUpload]);
 
       try {
+        const uploadContext = {
+          ...(workOrderId && { workOrderId }),
+          ...(equipmentId && { equipmentId }),
+          ...(pmTemplateId && { pmTemplateId }),
+          ...(vendorId && { vendorId })
+        };
+        
         const result = await FileUploadService.uploadFile(
           file,
-          { workOrderId, equipmentId, pmTemplateId, vendorId },
+          uploadContext,
           {},
           (progress) => {
             setUploads(prev => prev.map(upload => 
@@ -82,7 +89,12 @@ export const FileUpload: React.FC<FileUploadProps> = ({
         if (result.success) {
           setUploads(prev => prev.map(upload => 
             upload.file === file 
-              ? { ...upload, progress: 100, url: result.fileUrl }
+              ? { 
+                  ...upload, 
+                  progress: 100, 
+                  ...(result.fileUrl && { url: result.fileUrl }),
+                  status: 'complete' as const
+                }
               : upload
           ));
           
@@ -92,7 +104,11 @@ export const FileUpload: React.FC<FileUploadProps> = ({
         } else {
           setUploads(prev => prev.map(upload => 
             upload.file === file 
-              ? { ...upload, error: result.error }
+              ? { 
+                  ...upload, 
+                  ...(result.error && { error: result.error }),
+                  status: 'error' as const
+                }
               : upload
           ));
           

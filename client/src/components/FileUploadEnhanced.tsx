@@ -100,7 +100,7 @@ const FileUploadEnhanced: React.FC<FileUploadEnhancedProps> = ({
         id: generateId(),
         status: 'uploading',
         progress: 0,
-        preview,
+        ...(preview && { preview }),
       });
     }
 

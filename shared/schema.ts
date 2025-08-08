@@ -29,7 +29,7 @@ export const organizations = pgTable("organizations", {
 });
 
 // Users and Authentication
-export const profiles = pgTable("profiles", {
+export const profiles: any = pgTable("profiles", {
   id: uuid("id").primaryKey(),
   email: text("email").notNull().unique(),
   firstName: text("first_name").notNull(),
@@ -48,8 +48,8 @@ export const profiles = pgTable("profiles", {
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
   deletedAt: timestamp("deleted_at"),
-  createdBy: uuid("created_by").references(() => profiles.id),
-  updatedBy: uuid("updated_by").references(() => profiles.id),
+  createdBy: uuid("created_by").references((): any => profiles.id),
+  updatedBy: uuid("updated_by").references((): any => profiles.id),
 });
 
 // User Authentication Credentials

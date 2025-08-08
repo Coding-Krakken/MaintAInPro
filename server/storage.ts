@@ -764,8 +764,8 @@ export class MemStorage implements IStorage {
     const updated: Equipment = { 
       ...existing, 
       ...updates,
-      ...(statusUpdate && { status: statusUpdate }),
-      ...(criticalityUpdate && { criticality: criticalityUpdate }),
+      status: statusUpdate || existing.status,
+      criticality: criticalityUpdate || existing.criticality,
       installDate: updates.installDate instanceof Date ? updates.installDate : existing.installDate,
       warrantyExpiry: updates.warrantyExpiry instanceof Date ? updates.warrantyExpiry : existing.warrantyExpiry
     };
@@ -787,7 +787,11 @@ export class MemStorage implements IStorage {
       workOrders = workOrders.filter(wo => filters.priority.includes(wo.priority));
     }
     
-    return workOrders.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    return workOrders.sort((a, b) => {
+      const aDate = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+      const bDate = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+      return bDate - aDate;
+    });
   }
 
   async getWorkOrder(id: string): Promise<WorkOrder | undefined> {
@@ -836,14 +840,18 @@ export class MemStorage implements IStorage {
   async getWorkOrdersByAssignee(userId: string): Promise<WorkOrder[]> {
     return Array.from(this.workOrders.values())
       .filter(wo => wo.assignedTo === userId)
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      .sort((a, b) => {
+        const aDate = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const bDate = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        return bDate - aDate;
+      });
   }
 
   // Checklist items
   async getChecklistItems(workOrderId: string): Promise<WorkOrderChecklistItem[]> {
     return Array.from(this.checklistItems.values())
       .filter(item => item.workOrderId === workOrderId)
-      .sort((a, b) => a.sortOrder - b.sortOrder);
+      .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
   }
 
   async createChecklistItem(item: Omit<WorkOrderChecklistItem, 'id' | 'createdAt'>): Promise<WorkOrderChecklistItem> {
@@ -950,7 +958,7 @@ export class MemStorage implements IStorage {
     // Filter by date
     if (filters.startDate) {
       usageList = usageList.filter(usage => 
-        new Date(usage.createdAt) >= filters.startDate!
+        usage.createdAt && new Date(usage.createdAt) >= filters.startDate!
       );
     }
     
@@ -1032,7 +1040,20 @@ export class MemStorage implements IStorage {
     const existing = this.pmTemplates.get(id);
     if (!existing) return null;
     
-    const updated: PmTemplate = { ...existing, ...updates };
+    // Type-safe frequency update
+    let frequencyUpdate: 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'annually' | undefined = undefined;
+    if ((updates as any).frequency) {
+      const validFrequencies = ['daily', 'weekly', 'monthly', 'quarterly', 'annually'] as const;
+      if (validFrequencies.includes((updates as any).frequency as any)) {
+        frequencyUpdate = (updates as any).frequency as 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'annually';
+      }
+    }
+    
+    const updated: PmTemplate = { 
+      ...existing, 
+      ...updates,
+      frequency: frequencyUpdate || existing.frequency
+    };
     this.pmTemplates.set(id, updated);
     return updated;
   }
@@ -1045,7 +1066,11 @@ export class MemStorage implements IStorage {
   async getNotifications(userId: string): Promise<Notification[]> {
     return Array.from(this.notifications.values())
       .filter(n => n.userId === userId)
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      .sort((a, b) => {
+        const aDate = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const bDate = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        return bDate - aDate;
+      });
   }
 
   async createNotification(insertNotification: InsertNotification): Promise<Notification> {

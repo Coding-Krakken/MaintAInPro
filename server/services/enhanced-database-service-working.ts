@@ -513,4 +513,4 @@ export class EnhancedDatabaseService {
   }
 }
 
-export { AuditContext };
+export type { AuditContext };
