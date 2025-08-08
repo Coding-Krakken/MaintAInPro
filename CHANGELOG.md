@@ -5,9 +5,7 @@ All notable changes to MaintAInPro CMMS will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
-
-### Added
+## [Unreleased]### Added
 - Autonomous systems engineering loop with GitHub Actions workflows
 - Blueprint planner that converts documentation tasks into GitHub Issues
 - Comprehensive CI/CD pipeline with quality gates and security scanning
@@ -24,6 +22,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added CodeQL security scanning to CI pipeline
 - Implemented secrets management guidelines for Vercel deployment
 - Added automated security vulnerability checking with npm audit
+### Fixed
+- convert scripts to ES modules and create clean deploy workflow ([0894bc6b](https://github.com/Coding-Krakken/MaintAInPro/commit/0894bc6b89e5fa3f7a1a64637cd50ca813d6b26b))
+
 
 ## [1.0.0] - 2025-01-08
 
