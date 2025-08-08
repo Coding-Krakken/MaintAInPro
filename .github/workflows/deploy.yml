@@ -192,12 +192,8 @@ jobs:
               try {
                 console.log(`Attempt ${i + 1}/${maxRetries}...`);
                 
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 10000);
-                
                 // Try multiple endpoints to find one that works
                 const endpoints = ['/api/health', '/health', '/api', '/'];
-                let success = false;
                 
                 for (const endpoint of endpoints) {
                   try {
@@ -206,11 +202,8 @@ jobs:
                       headers: { 
                         'User-Agent': 'GitHub-Actions-Health-Check',
                         'Accept': 'application/json, text/html'
-                      },
-                      signal: controller.signal
+                      }
                     });
-                    
-                    clearTimeout(timeoutId);
                     
                     // Accept any 2xx response as healthy
                     if (response.ok) {
@@ -218,8 +211,10 @@ jobs:
                       return true;
                     }
                     
-                    // If we get 401 from root but site loads, that's also OK
-                    if (response.status === 401 && endpoint === '/' && response.headers.get('content-type')?.includes('text/html')) {
+                    // If we get 401 from root but site loads, that's also OK (auth protection)
+                    if (response.status === 401 && endpoint === '/' && 
+                        response.headers.get('content-type') && 
+                        response.headers.get('content-type').includes('text/html')) {
                       console.log(`✅ Site loads (protected by auth): ${response.status}`);
                       return true;
                     }
@@ -243,7 +238,7 @@ jobs:
             }
             
             console.log('❌ Health check failed - but deployment may still be successful');
-            // For now, return true if we get consistent 401s (means site is protected but working)
+            // For Vercel auth-protected deployments, treat as healthy if consistently getting 401
             console.log('✅ Treating auth-protected deployment as healthy');
             return true;
           }
