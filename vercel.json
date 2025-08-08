@@ -16,6 +16,14 @@
   
   "routes": [
     {
+      "src": "/health",
+      "dest": "/api/health"
+    },
+    {
+      "src": "/api/health",
+      "dest": "/server/health.ts"
+    },
+    {
       "src": "/api/(.*)",
       "dest": "/server/index.ts"
     },
@@ -27,5 +35,18 @@
       "src": "/(.*)",
       "dest": "/index.html"
     }
-  ]
+  ],
+  
+  "env": {
+    "NODE_ENV": "production"
+  },
+  
+  "functions": {
+    "server/index.ts": {
+      "maxDuration": 10
+    },
+    "server/health.ts": {
+      "maxDuration": 5
+    }
+  }
 }

@@ -4,7 +4,77 @@
 
 Welcome to the MaintAInPro documentation! This comprehensive guide covers everything you need to know about our enterprise CMMS platform.
 
-## 📚 Core Documentation
+## � Autonomous Development Loop
+
+MaintAInPro implements a fully autonomous development cycle that operates without manual intervention:
+
+### How It Works
+
+```mermaid
+graph LR
+    A[Blueprint Tasks] --> B[Planner Workflow]
+    B --> C[GitHub Issues]
+    C --> D[Copilot Agent]
+    D --> E[Pull Requests]
+    E --> F[CI Quality Gate]
+    F --> G[Auto-merge]
+    G --> H[Vercel Deploy]
+    H --> I[Health Checks]
+    I --> J[Traceability]
+    J --> B
+```
+
+### Workflow Steps
+
+1. **📋 Planning**: Planner scans `Documentation/Blueprint/**` for `## Task:` blocks
+2. **🎯 Issue Creation**: Automatically creates GitHub Issues with `agent-ok` label
+3. **🤖 AI Development**: GitHub Copilot coding agent implements features
+4. **✅ Quality Gates**: Automated testing, security scanning, and validation
+5. **🚀 Deployment**: Vercel deployment with health checks and auto-rollback
+6. **📊 Traceability**: Complete audit logging and documentation updates
+7. **🔄 Loop Continuation**: Triggers next planning cycle
+
+### Key Features
+
+- **Autonomous Operation**: Runs 24/7 without human intervention
+- **Quality Assurance**: Comprehensive CI/CD with security scanning
+- **Auto-Recovery**: Automatic rollback and incident response
+- **Full Traceability**: Complete audit trail of all changes
+- **Safety Guardrails**: Multiple checkpoints and validation layers
+
+### Human Oversight
+
+- **Manual Review**: Add `needs-human` label for complex decisions
+- **Emergency Stop**: Add `blocked` label to pause automation
+- **Selective Automation**: Only `agent-ok` labeled issues are processed
+
+### Repository Labels
+
+| Label | Purpose | Usage |
+|-------|---------|--------|
+| `autoplan` | Auto-generated from Blueprint | System use only |
+| `agent-ok` | Approved for Copilot agent | Required for automation |
+| `automerge` | Auto-merge after CI passes | Add to approved PRs |
+| `blocked` | Pause all automation | Emergency brake |
+| `needs-human` | Requires manual review | Escalation path |
+
+### Monitoring
+
+- **GitHub Actions**: All workflows with detailed logging
+- **Vercel Deployments**: Real-time deployment status
+- **Health Checks**: Continuous system monitoring
+- **Audit Trail**: `Documentation/Blueprint/5-Traceability/Deployments.md`
+
+### Getting Started
+
+1. **Create Blueprint Task**: Add `## Task:` block to any Blueprint markdown file
+2. **Trigger Planner**: Workflow runs automatically every 6 hours or on Blueprint changes
+3. **Monitor Progress**: Check GitHub Issues and Actions tabs
+4. **Review Results**: See deployment traceability logs
+
+For detailed setup instructions, see [Autonomous Loop Setup Guide](Operations/AutonomousLoop.md).
+
+## �📚 Core Documentation
 
 ### Getting Started
 - **[README](../README.md)** - Project overview, features, and quick start guide

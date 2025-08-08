@@ -49,6 +49,53 @@ The project follows a comprehensive 6-tier documentation structure in `Documenta
 
 **Blueprint Usage**: Always reference relevant Blueprint sections when implementing features or making architectural decisions.
 
+## Copilot Agent Guidelines
+
+### Work Scope Restrictions
+- **ONLY** work on Issues labeled with `agent-ok`
+- **IGNORE** all other Issues, even if they seem important
+- If an Issue lacks the `agent-ok` label, comment asking for human review and label addition
+
+### PR Quality Standards
+- Keep PRs **single-purpose** and focused
+- **Maximum 300 lines changed** per PR (excluding auto-generated files)
+- If a task requires more than 300 lines, break it into multiple Issues/PRs
+- Use clear, descriptive commit messages following conventional commits
+
+### Required Testing
+- Add or extend **unit tests** matching all Acceptance Criteria
+- Ensure **integration tests** cover API endpoints if applicable
+- Add **E2E tests** for user-facing features
+- Run `npm run test:all` before submitting PR
+- Include test evidence in PR description
+
+### Documentation Requirements
+- Update relevant docs under `Documentation/` for any feature changes
+- Update API documentation for endpoint changes
+- Add entries to `CHANGELOG.md` for user-facing changes
+- Update Blueprint documentation if architecture changes
+
+### Code Quality Gates
+- All code must pass `npm run quality` (lint + format + type-check + tests)
+- Follow existing architectural patterns in the codebase
+- Use TypeScript strictly - no `any` types without justification
+- Implement proper error handling and logging
+- Follow security best practices (input validation, SQL injection prevention)
+
+### Multi-Tenant Considerations
+- Always include `organizationId` validation in database queries
+- Ensure data isolation between tenants
+- Use audit trails for all data modifications
+- Follow RBAC patterns for permission checks
+
+### Autonomous Decision Making
+- If requirements are **clear and unambiguous**: proceed with implementation
+- If requirements are **unclear or conflicting**: open PR with:
+  - Questions in the PR description
+  - Add `needs-human` label
+  - Request clarification in comments
+  - Propose alternative approaches
+
 ## Key Architectural Patterns
 
 ### Multi-Tenant Architecture
