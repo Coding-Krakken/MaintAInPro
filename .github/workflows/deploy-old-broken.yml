@@ -1,0 +1,431 @@
+name: Deploy & Verify
+
+on:
+  push:
+    branches:
+      - main
+      - Replit
+  pull_request:
+    types: [opened, synchronize, ready_for_review]
+
+permissions:
+  contents: write
+  pull-requests: write
+  deployments: write
+
+env:
+  NODE_VERSION: '18'
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+jobs:
+  deploy-preview:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    outputs:
+      preview-url: ${{ steps.deploy.outputs.preview-url }}
+      deployment-id: ${{ steps.deploy.outputs.deployment-id }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+      
+      - name: Pull Vercel Environment
+        run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+      
+      - name: Build Project
+        run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
+      
+      - name: Deploy to Vercel
+        id: deploy
+        run: |
+          DEPLOYMENT_URL=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
+          echo "preview-url=$DEPLOYMENT_URL" >> $GITHUB_OUTPUT
+          
+          # Extract deployment ID from URL
+          DEPLOYMENT_ID=$(echo "$DEPLOYMENT_URL" | grep -o '[^/]*\.vercel\.app' | head -1)
+          echo "deployment-id=$DEPLOYMENT_ID" >> $GITHUB_OUTPUT
+          
+          echo "🚀 Preview deployed to: $DEPLOYMENT_URL"
+      
+      - name: Health Check with Retry
+        id: health-check
+        run: |
+          cat > health_check.js << 'EOF'
+          const maxRetries = 12;
+          const retryDelay = 10000; // 10 seconds
+          const url = process.argv[2];
+          
+          async function healthCheck() {
+            for (let i = 0; i < maxRetries; i++) {
+              try {
+                console.log(`Health check attempt ${i + 1}/${maxRetries}...`);
+                
+                const response = await fetch(`${url}/health`, {
+                  method: 'GET',
+                  headers: { 'User-Agent': 'GitHub-Actions-Health-Check' }
+                });
+                
+                if (response.ok) {
+                  const data = await response.json();
+                  console.log('✅ Health check passed');
+                  console.log(`Status: ${data.status}`);
+                  console.log(`Build ID: ${data.buildId}`);
+                  console.log(`SHA: ${data.sha}`);
+                  return true;
+                }
+                
+                console.log(`❌ Health check failed with status: ${response.status}`);
+              } catch (error) {
+                console.log(`❌ Health check error: ${error.message}`);
+              }
+              
+              if (i < maxRetries - 1) {
+                console.log(`Waiting ${retryDelay/1000}s before retry...`);
+                await new Promise(resolve => setTimeout(resolve, retryDelay));
+              }
+            }
+            
+            console.log('❌ All health check attempts failed');
+            return false;
+          }
+          
+          healthCheck().then(success => {
+            process.exit(success ? 0 : 1);
+          });
+          EOF
+          
+          node health_check.js "${{ steps.deploy.outputs.preview-url }}"
+      
+      - name: Comment PR with Deployment Info
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const deploymentUrl = '${{ steps.deploy.outputs.preview-url }}';
+            const deploymentId = '${{ steps.deploy.outputs.deployment-id }}';
+            const commitSha = context.sha.substring(0, 7);
+            const healthStatus = '${{ steps.health-check.outcome }}' === 'success' ? '✅ Healthy' : '❌ Unhealthy';
+            
+            const comment = `## 🚀 Preview Deployment
+            
+            | Property | Value |
+            |----------|-------|
+            | **URL** | ${deploymentUrl} |
+            | **Deployment ID** | \`${deploymentId}\` |
+            | **Commit** | \`${commitSha}\` |
+            | **Health Check** | ${healthStatus} |
+            | **Deploy Time** | ${new Date().toISOString()} |
+            
+            ### Quick Links
+            - 🌐 [Open Preview](${deploymentUrl})
+            - 🔍 [Health Check](${deploymentUrl}/health)
+            - 📊 [Vercel Dashboard](https://vercel.com/dashboard)
+            `;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+  deploy-production:
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/Replit')
+    runs-on: ubuntu-latest
+    outputs:
+      production-url: ${{ steps.deploy.outputs.production-url }}
+      deployment-id: ${{ steps.deploy.outputs.deployment-id }}
+      success: ${{ steps.health-check.outcome == 'success' }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+      
+      - name: Pull Vercel Environment
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+      
+      - name: Build Project
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+      
+      - name: Deploy to Production
+        id: deploy
+        run: |
+          DEPLOYMENT_URL=$(vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }})
+          echo "production-url=$DEPLOYMENT_URL" >> $GITHUB_OUTPUT
+          
+          # Extract deployment ID
+          DEPLOYMENT_ID=$(echo "$DEPLOYMENT_URL" | grep -o '[^/]*\.vercel\.app' | head -1)
+          echo "deployment-id=$DEPLOYMENT_ID" >> $GITHUB_OUTPUT
+          
+          echo "🚀 Production deployed to: $DEPLOYMENT_URL"
+      
+      - name: Test Deployment Health
+        id: health-check
+        run: |
+          echo "🔍 Testing deployment health..."
+          URL="${{ steps.deploy.outputs.production-url }}"
+          echo "Testing: $URL"
+          
+          # Simple health check with curl
+          for i in {1..5}; do
+            echo "Attempt $i/5..."
+            
+            # Try root endpoint - expect either 200 or 401 (auth protected)
+            HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "$URL/" || echo "000")
+            echo "HTTP Response: $HTTP_CODE"
+            
+            if [ "$HTTP_CODE" = "200" ] || [ "$HTTP_CODE" = "401" ]; then
+              echo "✅ Deployment is healthy (HTTP $HTTP_CODE)"
+              exit 0
+            fi
+            
+            echo "⏳ Waiting 10s before retry..."
+            sleep 10
+          done
+          
+          echo "❌ Health check failed after 5 attempts"
+          exit 1
+
+      - name: Create Deployment Helpers
+        run: |
+          # Rollback helper
+          cat > rollback.js << 'EOF'
+          const maxRetries = 3;
+          
+          async function vercelApi(endpoint, method = 'GET', data = null) {
+            const url = `https://api.vercel.com${endpoint}`;
+            const options = {
+              method,
+              headers: {
+                'Authorization': `Bearer ${process.env.VERCEL_TOKEN}`,
+                'Content-Type': 'application/json'
+              }
+            };
+            
+            if (data) {
+              options.body = JSON.stringify(data);
+            }
+            
+            const response = await fetch(url, options);
+            return response.json();
+          }
+          
+          async function getLastSuccessfulDeployment() {
+            try {
+              console.log('🔍 Finding last successful production deployment...');
+              
+              const deployments = await vercelApi(`/v6/deployments?projectId=${process.env.VERCEL_PROJECT_ID}&limit=20`);
+              
+              if (!deployments.deployments) {
+                throw new Error('No deployments found');
+              }
+              
+              // Find last successful production deployment (excluding current)
+              const currentSha = process.env.GITHUB_SHA;
+              const lastGood = deployments.deployments.find(d => 
+                d.state === 'READY' && 
+                d.target === 'production' && 
+                d.meta?.githubCommitSha !== currentSha
+              );
+              
+              if (!lastGood) {
+                throw new Error('No previous successful deployment found');
+              }
+              
+              console.log(`Found deployment: ${lastGood.uid} from ${lastGood.createdAt}`);
+              return lastGood;
+            } catch (error) {
+              console.error('Failed to find last successful deployment:', error);
+              return null;
+            }
+          }
+          
+          async function promoteDeployment(deploymentId) {
+            try {
+              console.log(`🔄 Promoting deployment ${deploymentId}...`);
+              
+              const result = await vercelApi(`/v13/deployments/${deploymentId}/promote`, 'PATCH');
+              
+              if (result.error) {
+                throw new Error(result.error.message);
+              }
+              
+              console.log('✅ Deployment promoted successfully');
+              return true;
+            } catch (error) {
+              console.error('Failed to promote deployment:', error);
+              return false;
+            }
+          }
+          
+          async function rollback() {
+            const lastGood = await getLastSuccessfulDeployment();
+            if (!lastGood) {
+              console.log('❌ Cannot rollback: No previous deployment found');
+              return false;
+            }
+            
+            return await promoteDeployment(lastGood.uid);
+          }
+          
+          rollback().then(success => {
+            process.exit(success ? 0 : 1);
+          });
+          EOF
+      
+      - name: Post-Deploy Health Check
+        id: health-check
+        run: node health_check.js "${{ steps.deploy.outputs.production-url }}"
+      
+      - name: Attempt Recovery on Health Check Failure
+        if: steps.health-check.outcome == 'failure'
+        id: recovery
+        run: |
+          echo "🚨 Production health check failed. Starting recovery procedure..."
+          
+          # Step 1: Try toggling feature flags (if any are problematic)
+          echo "🎛️ Step 1: Checking feature flags..."
+          
+          # Step 2: Attempt rollback to last known good deployment
+          echo "🔄 Step 2: Attempting automatic rollback..."
+          
+          ROLLBACK_SUCCESS=false
+          if node rollback.js; then
+            echo "✅ Rollback completed successfully"
+            ROLLBACK_SUCCESS=true
+            
+            # Wait and test rolled-back deployment
+            echo "⏳ Waiting 30s for rollback to propagate..."
+            sleep 30
+            
+            if node health_check.js "${{ steps.deploy.outputs.production-url }}"; then
+              echo "✅ Rollback health check passed"
+              echo "rollback-success=true" >> $GITHUB_OUTPUT
+            else
+              echo "❌ Rollback health check failed"
+              ROLLBACK_SUCCESS=false
+            fi
+          else
+            echo "❌ Automatic rollback failed"
+          fi
+          
+          echo "rollback-success=$ROLLBACK_SUCCESS" >> $GITHUB_OUTPUT
+          
+          if [ "$ROLLBACK_SUCCESS" = "false" ]; then
+            echo "🚨 CRITICAL: Automatic recovery failed!"
+            echo "Manual intervention required immediately."
+            exit 1
+          fi
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          GITHUB_SHA: ${{ github.sha }}
+      
+      - name: Create Recovery Issue on Failure
+        if: steps.recovery.outcome == 'failure'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issue = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '🚨 CRITICAL: Production Deployment Failed - Manual Intervention Required',
+              body: `## Production Deployment Failure
+              
+              **Deployment ID**: \`${{ steps.deploy.outputs.deployment-id }}\`
+              **Commit**: \`${{ github.sha }}\`
+              **Time**: ${new Date().toISOString()}
+              **Workflow**: [${context.runId}](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})
+              
+              ### What Happened
+              1. ❌ Production deployment health check failed
+              2. ❌ Automatic rollback failed
+              3. 🚨 Production may be in degraded state
+              
+              ### Immediate Actions Required
+              1. **Check production status**: [Health Check](${{ steps.deploy.outputs.production-url }}/health)
+              2. **Manual rollback**: Use Vercel dashboard to promote last known good deployment
+              3. **Investigate logs**: Check Vercel function logs for errors
+              4. **Monitor**: Watch for user reports and error rates
+              
+              ### Recovery Steps
+              \`\`\`bash
+              # Emergency manual rollback
+              vercel ls --scope=team  # Find last good deployment
+              vercel promote DEPLOYMENT_URL --scope=team
+              
+              # Verify recovery
+              curl -f ${{ steps.deploy.outputs.production-url }}/health
+              \`\`\`
+              
+              ### Debug Information
+              - **Production URL**: ${{ steps.deploy.outputs.production-url }}
+              - **Recovery Attempted**: ${{ steps.recovery.outcome }}
+              - **Rollback Success**: ${{ steps.recovery.outputs.rollback-success }}
+              
+              ---
+              
+              **Priority**: 🔴 CRITICAL  
+              **Assignee**: @on-call-engineer  
+              **Labels**: incident, production, deployment-failure
+              `,
+              labels: ['incident', 'production', 'deployment-failure', 'needs-human'],
+              assignees: [] // Add on-call engineer username here
+            });
+            
+            console.log(`Created emergency issue: #${issue.data.number}`);
+      
+      - name: Deployment Success Summary
+        if: steps.health-check.outcome == 'success'
+        run: |
+          echo "## 🚀 Production Deployment Successful" >> $GITHUB_STEP_SUMMARY
+          echo "- **URL**: ${{ steps.deploy.outputs.production-url }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Deployment ID**: \`${{ steps.deploy.outputs.deployment-id }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Commit**: \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Health Check**: ✅ Passed" >> $GITHUB_STEP_SUMMARY
+          echo "- **Deploy Time**: $(date -u +"%Y-%m-%d %H:%M:%S UTC")" >> $GITHUB_STEP_SUMMARY
+      
+      - name: Store Deployment Metadata
+        if: always()
+        run: |
+          cat > deployment-metadata.json << EOF
+          {
+            "timestamp": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")",
+            "sha": "${{ github.sha }}",
+            "deploymentId": "${{ steps.deploy.outputs.deployment-id }}",
+            "productionUrl": "${{ steps.deploy.outputs.production-url }}",
+            "healthCheckPassed": ${{ steps.health-check.outcome == 'success' }},
+            "rollbackPerformed": ${{ steps.recovery.outcome == 'success' }},
+            "actor": "${{ github.actor }}",
+            "workflowRun": "${{ github.run_id }}"
+          }
+          EOF
+          
+          echo "Deployment metadata:"
+          cat deployment-metadata.json
+      
+      - name: Upload Deployment Artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: deployment-metadata
+          path: deployment-metadata.json
+          retention-days: 90
