@@ -16,6 +16,7 @@ import Vendors from "./pages/Vendors";
 import Phase1Demo from "./pages/Phase1Demo";
 import Auth from "./pages/Auth";
 import Analytics from "./pages/Analytics";
+import AdminPage from "./pages/AdminPage";
 import { PerformanceDashboard } from "./components/admin/PerformanceDashboard";
 import EnterpriseMonitoring from "./pages/EnterpriseMonitoring";
 import SystemDashboard from "./pages/monitoring/SystemDashboard";
@@ -86,6 +87,11 @@ function AppRoutes() {
       <Route path="/analytics">
         <ProtectedRoute>
           <Analytics />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/admin">
+        <ProtectedRoute>
+          <AdminPage />
         </ProtectedRoute>
       </Route>
       <Route path="/admin/performance">
