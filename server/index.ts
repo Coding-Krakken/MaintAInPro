@@ -24,13 +24,7 @@ const app = express();
 
 // Initialize services
 const cacheService = CacheService.getInstance({
-  redis: {
-    url: process.env.REDIS_URL,
-    host: process.env.REDIS_HOST,
-    port: parseInt(process.env.REDIS_PORT || '6379'),
-    password: process.env.REDIS_PASSWORD,
-    db: parseInt(process.env.REDIS_DB || '0')
-  },
+  // Use memory cache only - simple and effective for development
   defaultTTL: 300, // 5 minutes
   enableMemoryCache: true,
   maxMemoryCacheSize: 1000
@@ -52,7 +46,7 @@ app.use(httpLoggingMiddleware);
 
 // Compression middleware for better performance
 app.use(compression({
-  filter: (req, res) => {
+  filter: (req: Request, res: Response) => {
     if (req.headers['x-no-compression']) {
       return false;
     }

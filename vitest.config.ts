@@ -20,8 +20,10 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
+      reportsDirectory: './test-results/coverage',
       exclude: [
         'coverage/**',
+        'test-results/**',
         'dist/**',
         'tests/**',
         '**/*.d.ts',

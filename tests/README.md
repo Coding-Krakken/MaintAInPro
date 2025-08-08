@@ -46,8 +46,15 @@ Accessibility tests ensure the application meets WCAG 2.1 AA standards.
 
 ## Test Configuration
 
+### Configuration Files
+Test configuration files are organized in the `tests/config/` directory:
+- `vitest.config.ts` - Main Vitest configuration
+- `vitest.config.unit.ts` - Unit test specific configuration
+- `vitest.config.integration.ts` - Integration test specific configuration
+- `playwright.config.ts` - Playwright E2E test configuration
+
 ### Vitest Configuration
-The main Vitest configuration (`vitest.config.ts`) includes:
+The main Vitest configuration (`tests/config/vitest.config.ts`) includes:
 - JSX support with React plugin
 - JSdom environment for DOM testing
 - Path aliases for imports
