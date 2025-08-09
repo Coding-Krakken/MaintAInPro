@@ -12,8 +12,8 @@ const OfflineIndicator: React.FC = () => {
   const [isSync, setIsSync] = useState(false);
 
   useEffect(() => {
-    const handleNetworkChange = (event: any) => {
-      setNetworkStatus(event.detail);
+    const handleNetworkChange = (event: Event) => {
+      setNetworkStatus((event as CustomEvent).detail);
     };
 
     const handleSyncComplete = () => {
@@ -34,7 +34,7 @@ const OfflineIndicator: React.FC = () => {
       window.removeEventListener('offlineSyncComplete', handleSyncComplete);
       clearInterval(interval);
     };
-  }, []);
+  }, [getPendingActionsCount]);
 
   const handleSync = async () => {
     if (!networkStatus.isOnline) return;

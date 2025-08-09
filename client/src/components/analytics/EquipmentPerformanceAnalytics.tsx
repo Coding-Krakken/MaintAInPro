@@ -2,24 +2,14 @@ import React, { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
-  TrendingUp, 
-  TrendingDown, 
   Clock, 
   AlertTriangle, 
   Activity,
-  BarChart3,
-  PieChart,
-  Settings,
-  Wrench,
-  DollarSign,
-  Calendar,
-  Target,
-  Zap
+  DollarSign
 } from 'lucide-react';
 import { formatDistanceToNow, parseISO, differenceInHours, differenceInDays } from 'date-fns';
 
@@ -77,7 +67,7 @@ const EquipmentPerformanceAnalytics: React.FC<EquipmentPerformanceAnalyticsProps
 }) => {
   const [selectedEquipment, setSelectedEquipment] = useState<string>(equipmentId || 'all');
   const [selectedTimeRange, setSelectedTimeRange] = useState(timeRange);
-  const [selectedMetric, setSelectedMetric] = useState<'mtbf' | 'mttr' | 'availability' | 'cost'>('availability');
+  const [_selectedMetric, _setSelectedMetric] = useState<'mtbf' | 'mttr' | 'availability' | 'cost'>('availability');
 
   // Fetch equipment list
   const { data: equipment = [] } = useQuery({
@@ -127,7 +117,10 @@ const EquipmentPerformanceAnalytics: React.FC<EquipmentPerformanceAnalyticsProps
       // Calculate MTTR (Mean Time To Repair)
       const completedWorkOrders = equipmentWorkOrders.filter(wo => wo.completedAt);
       const totalRepairTime = completedWorkOrders.reduce((sum, wo) => {
-        return sum + differenceInHours(parseISO(wo.completedAt!), parseISO(wo.createdAt));
+        if (wo.completedAt) {
+          return sum + differenceInHours(parseISO(wo.completedAt), parseISO(wo.createdAt));
+        }
+        return sum;
       }, 0);
       const mttr = completedWorkOrders.length > 0 ? totalRepairTime / completedWorkOrders.length : 0;
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -7,15 +7,15 @@ import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Progress } from '@/components/ui/progress';
 import { 
-  LineChart, Line, AreaChart, Area, BarChart, Bar, XAxis, YAxis, 
-  CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell,
-  ComposedChart, Scatter, ScatterChart, RadarChart, PolarGrid,
+  LineChart, Line, AreaChart, Area, XAxis, YAxis, 
+  CartesianGrid, Tooltip, ResponsiveContainer, 
+  ComposedChart, RadarChart, PolarGrid,
   PolarAngleAxis, PolarRadiusAxis, Radar
 } from 'recharts';
 import {
-  Activity, TrendingUp, TrendingDown, Zap, AlertTriangle, 
-  CheckCircle, Clock, DollarSign, Users, Database, Cpu, 
-  HardDrive, Wifi, BarChart3, Download, RefreshCw
+  Activity, TrendingUp, TrendingDown, AlertTriangle, 
+  Clock, Users, Cpu, 
+  HardDrive, Download, RefreshCw
 } from 'lucide-react';
 
 interface SystemMetrics {
@@ -75,7 +75,7 @@ const COLORS = {
 };
 
 export function EnterprisePerformanceMonitor() {
-  const [selectedTimeRange, setSelectedTimeRange] = useState<'1h' | '24h' | '7d' | '30d'>('24h');
+  const [selectedTimeRange, _setSelectedTimeRange] = useState<'1h' | '24h' | '7d' | '30d'>('24h');
   const [autoRefresh, setAutoRefresh] = useState(true);
 
   // Fetch system metrics

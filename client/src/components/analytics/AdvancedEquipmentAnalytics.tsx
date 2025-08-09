@@ -5,13 +5,13 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  BarChart, Bar, PieChart, Pie, Cell, ScatterChart, Scatter,
-  ComposedChart, Area, AreaChart
+  Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+  Bar, PieChart, Pie, Cell, ScatterChart, Scatter,
+  ComposedChart, Area
 } from 'recharts';
 import { 
   Activity, TrendingUp, TrendingDown, AlertTriangle, Clock, 
-  Wrench, DollarSign, Calendar, Zap, Target 
+  Wrench, DollarSign, Zap, Target 
 } from 'lucide-react';
 
 interface EquipmentMetrics {

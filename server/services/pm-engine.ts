@@ -253,7 +253,7 @@ export class PMEngine {
     }
     
     let missedPMCount = 0;
-    let totalPMCount = relevantTemplates.length;
+    const totalPMCount = relevantTemplates.length;
     let lastPMDate: Date | undefined;
     let nextPMDate: Date | undefined;
     

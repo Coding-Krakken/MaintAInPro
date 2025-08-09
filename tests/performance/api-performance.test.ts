@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { describe, it, expect, beforeEach } from 'vitest'
 import request from 'supertest'
 import express from 'express'
 import { createApp } from '../../server/index'
@@ -38,7 +38,7 @@ describe('API Performance Tests', () => {
     it('should respond to health check within 100ms', async () => {
       const start = Date.now()
       
-      const response = await request(app)
+      await request(app)
         .get('/api/health')
         .expect(200)
       
