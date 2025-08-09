@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom'
 import { cleanup } from '@testing-library/react'
 import { afterEach, vi } from 'vitest'
+
 // import { server } from './mocks/server'
 
 // Mock environment variables
@@ -12,7 +13,7 @@ vi.mock('process', () => ({
     JWT_SECRET: 'test-secret',
     SESSION_SECRET: 'test-session-secret',
   },
-}))
+}));
 
 // Mock localStorage
 const localStorageMock = {
@@ -20,8 +21,8 @@ const localStorageMock = {
   setItem: vi.fn(),
   removeItem: vi.fn(),
   clear: vi.fn(),
-}
-vi.stubGlobal('localStorage', localStorageMock)
+};
+vi.stubGlobal('localStorage', localStorageMock);
 
 // Mock sessionStorage
 const sessionStorageMock = {
@@ -29,8 +30,8 @@ const sessionStorageMock = {
   setItem: vi.fn(),
   removeItem: vi.fn(),
   clear: vi.fn(),
-}
-vi.stubGlobal('sessionStorage', sessionStorageMock)
+};
+vi.stubGlobal('sessionStorage', sessionStorageMock);
 
 // Mock window.matchMedia
 Object.defineProperty(window, 'matchMedia', {
@@ -45,26 +46,26 @@ Object.defineProperty(window, 'matchMedia', {
     removeEventListener: vi.fn(),
     dispatchEvent: vi.fn(),
   })),
-})
+});
 
 // Mock ResizeObserver
 global.ResizeObserver = vi.fn().mockImplementation(() => ({
   observe: vi.fn(),
   unobserve: vi.fn(),
   disconnect: vi.fn(),
-}))
+}));
 
 // Mock IntersectionObserver
 global.IntersectionObserver = vi.fn().mockImplementation(() => ({
   observe: vi.fn(),
   unobserve: vi.fn(),
   disconnect: vi.fn(),
-}))
+}));
 
 // Setup MSW
 // beforeAll(() => server.listen())
 afterEach(() => {
-  cleanup()
+  cleanup();
   // server.resetHandlers()
-  vi.clearAllMocks()
-})
+  vi.clearAllMocks();
+});

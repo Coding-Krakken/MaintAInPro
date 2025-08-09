@@ -96,14 +96,14 @@ export default function WorkOrderForm({ onSuccess, onCancel, initialData }: Work
 
   const handleQRScan = (result: string) => {
     setShowQRScanner(false);
-    
+
     // Find equipment by asset tag
     const foundEquipment = equipment?.find(e => e.assetTag === result);
     if (foundEquipment) {
       form.setValue('equipmentId', foundEquipment.id);
       form.setValue('assetModel', foundEquipment.model);
       form.setValue('area', foundEquipment.area || '');
-      
+
       toast({
         title: 'Equipment Found',
         description: `Linked to ${foundEquipment.assetTag} - ${foundEquipment.description}`,
@@ -120,20 +120,16 @@ export default function WorkOrderForm({ onSuccess, onCancel, initialData }: Work
   return (
     <>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
           {/* FO Number */}
           <FormField
             control={form.control}
-            name="foNumber"
+            name='foNumber'
             render={({ field }) => (
               <FormItem>
                 <FormLabel>FO Number</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="e.g., WO-2024-001"
-                    data-testid="fo-number-input"
-                    {...field}
-                  />
+                  <Input placeholder='e.g., WO-2024-001' data-testid='fo-number-input' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -143,18 +139,18 @@ export default function WorkOrderForm({ onSuccess, onCancel, initialData }: Work
           {/* Equipment Selection with QR Scanner */}
           <FormField
             control={form.control}
-            name="equipmentId"
+            name='equipmentId'
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Equipment</FormLabel>
-                <div className="flex space-x-2">
+                <div className='flex space-x-2'>
                   <FormControl>
                     <Select value={field.value} onValueChange={field.onChange}>
-                      <SelectTrigger className="flex-1">
-                        <SelectValue placeholder="Select equipment or scan QR code" />
+                      <SelectTrigger className='flex-1'>
+                        <SelectValue placeholder='Select equipment or scan QR code' />
                       </SelectTrigger>
                       <SelectContent>
-                        {equipment?.map((item) => (
+                        {equipment?.map(item => (
                           <SelectItem key={item.id} value={item.id}>
                             {item.assetTag} - {item.description}
                           </SelectItem>
@@ -163,12 +159,12 @@ export default function WorkOrderForm({ onSuccess, onCancel, initialData }: Work
                     </Select>
                   </FormControl>
                   <Button
-                    type="button"
-                    variant="outline"
-                    size="icon"
+                    type='button'
+                    variant='outline'
+                    size='icon'
                     onClick={() => setShowQRScanner(true)}
                   >
-                    <QrCode className="w-4 h-4" />
+                    <QrCode className='w-4 h-4' />
                   </Button>
                 </div>
                 <FormMessage />
@@ -179,15 +175,15 @@ export default function WorkOrderForm({ onSuccess, onCancel, initialData }: Work
           {/* Description */}
           <FormField
             control={form.control}
-            name="description"
+            name='description'
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Description</FormLabel>
                 <FormControl>
                   <Textarea
-                    placeholder="Describe the issue or maintenance required..."
+                    placeholder='Describe the issue or maintenance required...'
                     rows={3}
-                    data-testid="description-input"
+                    data-testid='description-input'
                     {...field}
                   />
                 </FormControl>
@@ -197,10 +193,10 @@ export default function WorkOrderForm({ onSuccess, onCancel, initialData }: Work
           />
 
           {/* Type and Priority */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className='grid grid-cols-2 gap-4'>
             <FormField
               control={form.control}
-              name="type"
+              name='type'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Type</FormLabel>
@@ -210,9 +206,9 @@ export default function WorkOrderForm({ onSuccess, onCancel, initialData }: Work
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="corrective">Corrective</SelectItem>
-                        <SelectItem value="preventive">Preventive</SelectItem>
-                        <SelectItem value="emergency">Emergency</SelectItem>
+                        <SelectItem value='corrective'>Corrective</SelectItem>
+                        <SelectItem value='preventive'>Preventive</SelectItem>
+                        <SelectItem value='emergency'>Emergency</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormControl>
@@ -223,20 +219,20 @@ export default function WorkOrderForm({ onSuccess, onCancel, initialData }: Work
 
             <FormField
               control={form.control}
-              name="priority"
+              name='priority'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Priority</FormLabel>
                   <FormControl>
                     <Select value={field.value} onValueChange={field.onChange}>
-                      <SelectTrigger data-testid="priority-select">
+                      <SelectTrigger data-testid='priority-select'>
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="low">Low</SelectItem>
-                        <SelectItem value="medium">Medium</SelectItem>
-                        <SelectItem value="high">High</SelectItem>
-                        <SelectItem value="critical">Critical</SelectItem>
+                        <SelectItem value='low'>Low</SelectItem>
+                        <SelectItem value='medium'>Medium</SelectItem>
+                        <SelectItem value='high'>High</SelectItem>
+                        <SelectItem value='critical'>Critical</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormControl>
@@ -247,15 +243,15 @@ export default function WorkOrderForm({ onSuccess, onCancel, initialData }: Work
           </div>
 
           {/* Area and Due Date */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className='grid grid-cols-2 gap-4'>
             <FormField
               control={form.control}
-              name="area"
+              name='area'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Area</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g., Warehouse A" {...field} />
+                    <Input placeholder='e.g., Warehouse A' {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -264,12 +260,12 @@ export default function WorkOrderForm({ onSuccess, onCancel, initialData }: Work
 
             <FormField
               control={form.control}
-              name="dueDate"
+              name='dueDate'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Due Date</FormLabel>
                   <FormControl>
-                    <Input type="datetime-local" {...field} />
+                    <Input type='datetime-local' {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -280,12 +276,12 @@ export default function WorkOrderForm({ onSuccess, onCancel, initialData }: Work
           {/* Estimated Hours */}
           <FormField
             control={form.control}
-            name="estimatedHours"
+            name='estimatedHours'
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Estimated Hours</FormLabel>
                 <FormControl>
-                  <Input type="number" step="0.25" placeholder="4.5" {...field} />
+                  <Input type='number' step='0.25' placeholder='4.5' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -295,12 +291,12 @@ export default function WorkOrderForm({ onSuccess, onCancel, initialData }: Work
           {/* Additional Notes */}
           <FormField
             control={form.control}
-            name="notes"
+            name='notes'
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Additional Notes</FormLabel>
                 <FormControl>
-                  <Textarea placeholder="Any additional information..." {...field} />
+                  <Textarea placeholder='Any additional information...' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -318,7 +314,7 @@ export default function WorkOrderForm({ onSuccess, onCancel, initialData }: Work
                   description: `${fileName} uploaded successfully`,
                 });
               }}
-              onUploadError={(error) => {
+              onUploadError={error => {
                 toast({
                   title: 'Upload Failed',
                   description: error,
@@ -326,22 +322,18 @@ export default function WorkOrderForm({ onSuccess, onCancel, initialData }: Work
                 });
               }}
               maxFiles={5}
-              className="mt-2"
+              className='mt-2'
             />
           </div>
 
           {/* Form Actions */}
-          <div className="flex space-x-3 pt-4">
+          <div className='flex space-x-3 pt-4'>
             {onCancel && (
-              <Button type="button" variant="outline" onClick={onCancel} className="flex-1">
+              <Button type='button' variant='outline' onClick={onCancel} className='flex-1'>
                 Cancel
               </Button>
             )}
-            <Button 
-              type="submit" 
-              className="flex-1"
-              disabled={createWorkOrder.isPending}
-            >
+            <Button type='submit' className='flex-1' disabled={createWorkOrder.isPending}>
               {createWorkOrder.isPending ? 'Creating...' : 'Create Work Order'}
             </Button>
           </div>

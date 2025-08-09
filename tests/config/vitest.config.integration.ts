@@ -4,6 +4,7 @@ import react from '@vitejs/plugin-react'
 import tsconfigPaths from 'vite-tsconfig-paths'
 import path from 'path'
 
+
 export default defineConfig({
   plugins: [react(), tsconfigPaths()],
   test: {
@@ -46,4 +47,4 @@ export default defineConfig({
       '@shared': path.resolve(__dirname, '../../shared'),
     },
   },
-})
+});

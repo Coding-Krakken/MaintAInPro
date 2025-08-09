@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import request from 'supertest'
 import express from 'express'
 
+
 // Simplified authentication integration tests - testing API structure
 describe('Authentication Integration Tests', () => {
   let testApp: express.Application
@@ -71,8 +72,8 @@ describe('Authentication Integration Tests', () => {
   })
 
   afterEach(() => {
-    vi.clearAllMocks()
-  })
+    vi.clearAllMocks();
+  });
 
   describe('POST /api/auth/register', () => {
     it('should register a new user successfully', async () => {
@@ -88,12 +89,12 @@ describe('Authentication Integration Tests', () => {
         .send(userData)
         .expect(201)
 
-      expect(response.body).toHaveProperty('token')
-      expect(response.body).toHaveProperty('user')
-      expect(response.body.user.email).toBe(userData.email)
-      expect(response.body.user.name).toBe(userData.name)
-      expect(response.body.user).not.toHaveProperty('password')
-    })
+      expect(response.body).toHaveProperty('token');
+      expect(response.body).toHaveProperty('user');
+      expect(response.body.user.email).toBe(userData.email);
+      expect(response.body.user.name).toBe(userData.name);
+      expect(response.body.user).not.toHaveProperty('password');
+    });
 
     it('should reject registration with missing fields', async () => {
       const userData = { email: 'test@example.com' }
@@ -128,8 +129,8 @@ describe('Authentication Integration Tests', () => {
     it('should login with valid credentials', async () => {
       const credentials = {
         email: 'test@example.com',
-        password: 'SecurePassword123!'
-      }
+        password: 'SecurePassword123!',
+      };
 
       const response = await request(testApp)
         .post('/api/auth/login')
@@ -198,7 +199,7 @@ describe('Authentication Integration Tests', () => {
       const response = await request(testApp)
         .get('/api/auth/me')
         .set('Authorization', 'Bearer invalid-token')
-        .expect(401)
+        .expect(401);
 
       expect(response.body).toHaveProperty('error')
       expect(response.body.error).toBe('Invalid token')

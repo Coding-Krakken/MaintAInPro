@@ -2,12 +2,15 @@
 
 ## Overview
 
-The Field Mapping Service provides production-ready field transformation between frontend camelCase and database snake_case formats with performance optimization and comprehensive error handling.
+The Field Mapping Service provides production-ready field transformation between
+frontend camelCase and database snake_case formats with performance optimization
+and comprehensive error handling.
 
 ## Features
 
 - **Bidirectional Transformation**: camelCase ↔ snake_case conversion
-- **Performance Caching**: Intelligent caching for frequently used transformations
+- **Performance Caching**: Intelligent caching for frequently used
+  transformations
 - **Type Safety**: Full TypeScript support with enhanced schemas
 - **Error Handling**: Comprehensive validation error reporting
 - **Schema Factory**: Flexible schema creation with field mapping support
@@ -33,14 +36,14 @@ import { fieldMappingService } from '../services/field-mapping.service';
 // Transform API input to database format
 const dbData = fieldMappingService.transformApiToDb({
   foNumber: 'WO-001',
-  equipmentId: 'uuid-here'
+  equipmentId: 'uuid-here',
 });
 // Result: { fo_number: 'WO-001', equipment_id: 'uuid-here' }
 
 // Transform database output to API format
 const apiData = fieldMappingService.transformDbToApi({
   fo_number: 'WO-001',
-  equipment_id: 'uuid-here'
+  equipment_id: 'uuid-here',
 });
 // Result: { foNumber: 'WO-001', equipmentId: 'uuid-here' }
 
@@ -58,13 +61,13 @@ import { SchemaFactory } from '../services/field-mapping.service';
 // Create organization schema
 const orgSchema = SchemaFactory.createOrganizationSchema();
 
-// Create work order schema  
+// Create work order schema
 const woSchema = SchemaFactory.createWorkOrderSchema();
 
 // Validate and transform data
 const validatedData = SchemaFactory.validateAndTransform(
-  woSchema, 
-  inputData, 
+  woSchema,
+  inputData,
   'work order creation'
 );
 ```
@@ -72,20 +75,22 @@ const validatedData = SchemaFactory.validateAndTransform(
 ## Available Schemas
 
 ### Organization Schema
+
 ```typescript
 {
-  name: string;                    // Required organization name
-  slug: string;                    // URL-friendly identifier
-  settings: Record<string, any>;   // Organization settings
-  branding: Record<string, any>;   // Branding configuration
+  name: string; // Required organization name
+  slug: string; // URL-friendly identifier
+  settings: Record<string, any>; // Organization settings
+  branding: Record<string, any>; // Branding configuration
   subscriptionTier: 'basic' | 'professional' | 'enterprise';
-  maxUsers: number;                // User limit (default: 10)
-  maxAssets: number;               // Asset limit (default: 100)
-  active: boolean;                 // Active status (default: true)
+  maxUsers: number; // User limit (default: 10)
+  maxAssets: number; // Asset limit (default: 100)
+  active: boolean; // Active status (default: true)
 }
 ```
 
 ### Work Order Schema
+
 ```typescript
 {
   foNumber: string;                // Format: WO-XXX-XXX
@@ -110,6 +115,7 @@ const validatedData = SchemaFactory.validateAndTransform(
 ```
 
 ### Equipment Schema
+
 ```typescript
 {
   assetTag: string;                // Unique identifier
@@ -130,6 +136,7 @@ const validatedData = SchemaFactory.validateAndTransform(
 ```
 
 ### Part Schema
+
 ```typescript
 {
   partNumber: string;              // Unique part identifier
@@ -149,11 +156,13 @@ const validatedData = SchemaFactory.validateAndTransform(
 ## Performance Features
 
 ### Caching
+
 - **Transformation Cache**: Frequently used transformations cached in memory
 - **Schema Cache**: Compiled schemas cached for reuse
 - **Batch Processing**: Optimized for multiple record transformations
 
 ### Monitoring
+
 ```typescript
 // Get cache statistics
 const stats = fieldMappingService.getCacheStats();
@@ -166,6 +175,7 @@ fieldMappingService.clearCache();
 ## Error Handling
 
 ### ValidationError Class
+
 ```typescript
 import { ValidationError } from '../services/field-mapping.service';
 
@@ -181,6 +191,7 @@ try {
 ```
 
 ### Error Response Format
+
 ```typescript
 {
   field: string;           // Field path (e.g., "equipment.assetTag")
@@ -193,6 +204,7 @@ try {
 ## Performance Monitoring
 
 ### ValidationPerformanceMonitor
+
 ```typescript
 import { ValidationPerformanceMonitor } from '../services/field-mapping.service';
 
@@ -216,6 +228,7 @@ console.log('Average validation time:', metrics.averageValidationTime);
 ## Field Mapping Examples
 
 ### Work Order Example
+
 ```typescript
 // Input from frontend
 const frontendData = {
@@ -264,7 +277,7 @@ import { fieldMappingService } from '../services/field-mapping.service';
 
 // Create work order with automatic field mapping
 const workOrder = await databaseService.createWorkOrder(
-  frontendData,  // camelCase input
+  frontendData, // camelCase input
   userId
 );
 // Returns camelCase output
@@ -273,7 +286,7 @@ const workOrder = await databaseService.createWorkOrder(
 const results = await databaseService.searchWorkOrders({
   query: 'hydraulic pump',
   organizationId: 'org-uuid',
-  limit: 10
+  limit: 10,
 });
 // Returns camelCase results
 ```
@@ -294,7 +307,7 @@ const fieldMappingService = FieldMappingService.getInstance();
 
 // Performance tuning
 ValidationPerformanceMonitor.resetMetrics(); // Reset counters
-fieldMappingService.clearCache();            // Clear transformation cache
+fieldMappingService.clearCache(); // Clear transformation cache
 ```
 
 ## Type Exports
@@ -306,6 +319,6 @@ import type {
   EnhancedWorkOrder,
   EnhancedEquipment,
   EnhancedPart,
-  ValidationErrorDetail
+  ValidationErrorDetail,
 } from '../services/field-mapping.service';
 ```

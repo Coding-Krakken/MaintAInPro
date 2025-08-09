@@ -6,13 +6,40 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { 
-  Building2, Users, FileText, Star, Phone, Mail, MapPin, 
-  Calendar, DollarSign, TrendingUp, AlertTriangle, CheckCircle,
-  Upload, Download, Eye, Edit, Trash2, Plus
+import {
+  Building2,
+  Users,
+  FileText,
+  Star,
+  Phone,
+  Mail,
+  MapPin,
+  Calendar,
+  DollarSign,
+  TrendingUp,
+  AlertTriangle,
+  CheckCircle,
+  Upload,
+  Download,
+  Eye,
+  Edit,
+  Trash2,
+  Plus,
 } from 'lucide-react';
 import { FileUpload } from '@/components/FileUpload';
 
@@ -66,17 +93,20 @@ interface VendorDocument {
 const EnhancedVendorManagement: React.FC = () => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  
+
   const [selectedVendor, setSelectedVendor] = useState<Vendor | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [dialogMode, setDialogMode] = useState<'create' | 'edit' | 'view'>('create');
   const [filterType, setFilterType] = useState<'all' | 'supplier' | 'contractor'>('all');
-  const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'inactive' | 'pending'>('all');
+  const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'inactive' | 'pending'>(
+    'all'
+  );
 
   // Fetch vendors
   const { data: vendors = [], isLoading } = useQuery<Vendor[]>({
     queryKey: ['vendors', filterType, filterStatus],
-    queryFn: () => fetch(`/api/vendors?type=${filterType}&status=${filterStatus}`).then(res => res.json()),
+    queryFn: () =>
+      fetch(`/api/vendors?type=${filterType}&status=${filterStatus}`).then(res => res.json()),
   });
 
   // Fetch vendor performance data
@@ -131,10 +161,14 @@ const EnhancedVendorManagement: React.FC = () => {
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'active': return <Badge className="bg-green-100 text-green-800">Active</Badge>;
-      case 'inactive': return <Badge className="bg-gray-100 text-gray-800">Inactive</Badge>;
-      case 'pending': return <Badge className="bg-yellow-100 text-yellow-800">Pending</Badge>;
-      default: return <Badge variant="outline">{status}</Badge>;
+      case 'active':
+        return <Badge className='bg-green-100 text-green-800'>Active</Badge>;
+      case 'inactive':
+        return <Badge className='bg-gray-100 text-gray-800'>Inactive</Badge>;
+      case 'pending':
+        return <Badge className='bg-yellow-100 text-yellow-800'>Pending</Badge>;
+      default:
+        return <Badge variant='outline'>{status}</Badge>;
     }
   };
 
@@ -147,8 +181,8 @@ const EnhancedVendorManagement: React.FC = () => {
 
   const getRatingStars = (rating: number) => {
     return [...Array(5)].map((_, i) => (
-      <Star 
-        key={i} 
+      <Star
+        key={i}
         className={`w-4 h-4 ${i < rating ? 'text-yellow-500 fill-current' : 'text-gray-300'}`}
       />
     ));
@@ -160,18 +194,19 @@ const EnhancedVendorManagement: React.FC = () => {
     activeVendors: vendors.filter(v => v.status === 'active').length,
     contractors: vendors.filter(v => v.type === 'contractor').length,
     suppliers: vendors.filter(v => v.type === 'supplier').length,
-    averageRating: vendors.length > 0 ? vendors.reduce((sum, v) => sum + v.rating, 0) / vendors.length : 0,
+    averageRating:
+      vendors.length > 0 ? vendors.reduce((sum, v) => sum + v.rating, 0) / vendors.length : 0,
     totalContractValue: vendors.reduce((sum, v) => sum + v.contractValue, 0),
   };
 
   if (isLoading) {
     return (
-      <div className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className='space-y-6'>
+        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6'>
           {[...Array(4)].map((_, i) => (
-            <Card key={i} className="animate-pulse">
-              <CardContent className="p-6">
-                <div className="h-20 bg-gray-200 rounded"></div>
+            <Card key={i} className='animate-pulse'>
+              <CardContent className='p-6'>
+                <div className='h-20 bg-gray-200 rounded'></div>
               </CardContent>
             </Card>
           ))}
@@ -181,59 +216,59 @@ const EnhancedVendorManagement: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className='space-y-6'>
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6'>
         <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
+          <CardContent className='p-6'>
+            <div className='flex items-center justify-between'>
               <div>
-                <p className="text-sm font-medium text-gray-600">Total Vendors</p>
-                <p className="text-2xl font-bold text-blue-600">{summaryMetrics.totalVendors}</p>
-                <p className="text-xs text-gray-500">{summaryMetrics.activeVendors} active</p>
+                <p className='text-sm font-medium text-gray-600'>Total Vendors</p>
+                <p className='text-2xl font-bold text-blue-600'>{summaryMetrics.totalVendors}</p>
+                <p className='text-xs text-gray-500'>{summaryMetrics.activeVendors} active</p>
               </div>
-              <Building2 className="w-8 h-8 text-blue-600" />
+              <Building2 className='w-8 h-8 text-blue-600' />
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
+          <CardContent className='p-6'>
+            <div className='flex items-center justify-between'>
               <div>
-                <p className="text-sm font-medium text-gray-600">Contractors</p>
-                <p className="text-2xl font-bold text-green-600">{summaryMetrics.contractors}</p>
-                <p className="text-xs text-gray-500">Service providers</p>
+                <p className='text-sm font-medium text-gray-600'>Contractors</p>
+                <p className='text-2xl font-bold text-green-600'>{summaryMetrics.contractors}</p>
+                <p className='text-xs text-gray-500'>Service providers</p>
               </div>
-              <Users className="w-8 h-8 text-green-600" />
+              <Users className='w-8 h-8 text-green-600' />
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
+          <CardContent className='p-6'>
+            <div className='flex items-center justify-between'>
               <div>
-                <p className="text-sm font-medium text-gray-600">Suppliers</p>
-                <p className="text-2xl font-bold text-purple-600">{summaryMetrics.suppliers}</p>
-                <p className="text-xs text-gray-500">Parts & materials</p>
+                <p className='text-sm font-medium text-gray-600'>Suppliers</p>
+                <p className='text-2xl font-bold text-purple-600'>{summaryMetrics.suppliers}</p>
+                <p className='text-xs text-gray-500'>Parts & materials</p>
               </div>
-              <FileText className="w-8 h-8 text-purple-600" />
+              <FileText className='w-8 h-8 text-purple-600' />
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
+          <CardContent className='p-6'>
+            <div className='flex items-center justify-between'>
               <div>
-                <p className="text-sm font-medium text-gray-600">Contract Value</p>
-                <p className="text-2xl font-bold text-orange-600">
+                <p className='text-sm font-medium text-gray-600'>Contract Value</p>
+                <p className='text-2xl font-bold text-orange-600'>
                   ${summaryMetrics.totalContractValue.toLocaleString()}
                 </p>
-                <p className="text-xs text-gray-500">Total active contracts</p>
+                <p className='text-xs text-gray-500'>Total active contracts</p>
               </div>
-              <DollarSign className="w-8 h-8 text-orange-600" />
+              <DollarSign className='w-8 h-8 text-orange-600' />
             </div>
           </CardContent>
         </Card>
@@ -242,35 +277,35 @@ const EnhancedVendorManagement: React.FC = () => {
       {/* Main Content */}
       <Card>
         <CardHeader>
-          <div className="flex items-center justify-between">
+          <div className='flex items-center justify-between'>
             <CardTitle>Vendor Management</CardTitle>
-            <div className="flex items-center space-x-4">
+            <div className='flex items-center space-x-4'>
               {/* Filters */}
               <Select value={filterType} onValueChange={(value: any) => setFilterType(value)}>
-                <SelectTrigger className="w-32">
+                <SelectTrigger className='w-32'>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Types</SelectItem>
-                  <SelectItem value="supplier">Suppliers</SelectItem>
-                  <SelectItem value="contractor">Contractors</SelectItem>
+                  <SelectItem value='all'>All Types</SelectItem>
+                  <SelectItem value='supplier'>Suppliers</SelectItem>
+                  <SelectItem value='contractor'>Contractors</SelectItem>
                 </SelectContent>
               </Select>
 
               <Select value={filterStatus} onValueChange={(value: any) => setFilterStatus(value)}>
-                <SelectTrigger className="w-32">
+                <SelectTrigger className='w-32'>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Status</SelectItem>
-                  <SelectItem value="active">Active</SelectItem>
-                  <SelectItem value="inactive">Inactive</SelectItem>
-                  <SelectItem value="pending">Pending</SelectItem>
+                  <SelectItem value='all'>All Status</SelectItem>
+                  <SelectItem value='active'>Active</SelectItem>
+                  <SelectItem value='inactive'>Inactive</SelectItem>
+                  <SelectItem value='pending'>Pending</SelectItem>
                 </SelectContent>
               </Select>
 
               <Button onClick={() => handleOpenDialog('create')}>
-                <Plus className="w-4 h-4 mr-2" />
+                <Plus className='w-4 h-4 mr-2' />
                 Add Vendor
               </Button>
             </div>
@@ -278,116 +313,123 @@ const EnhancedVendorManagement: React.FC = () => {
         </CardHeader>
 
         <CardContent>
-          <Tabs defaultValue="vendors" className="space-y-6">
+          <Tabs defaultValue='vendors' className='space-y-6'>
             <TabsList>
-              <TabsTrigger value="vendors">Vendors</TabsTrigger>
-              <TabsTrigger value="performance">Performance</TabsTrigger>
-              <TabsTrigger value="documents">Documents</TabsTrigger>
-              <TabsTrigger value="contracts">Contracts</TabsTrigger>
+              <TabsTrigger value='vendors'>Vendors</TabsTrigger>
+              <TabsTrigger value='performance'>Performance</TabsTrigger>
+              <TabsTrigger value='documents'>Documents</TabsTrigger>
+              <TabsTrigger value='contracts'>Contracts</TabsTrigger>
             </TabsList>
 
-            <TabsContent value="vendors" className="space-y-4">
-              <div className="grid gap-4">
-                {vendors.map((vendor) => (
-                  <Card key={vendor.id} className="hover:shadow-md transition-shadow">
-                    <CardContent className="p-6">
-                      <div className="flex items-start justify-between">
-                        <div className="flex items-start space-x-4">
-                          <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                            {vendor.type === 'contractor' ? 
-                              <Users className="w-6 h-6 text-blue-600" /> :
-                              <Building2 className="w-6 h-6 text-blue-600" />
-                            }
+            <TabsContent value='vendors' className='space-y-4'>
+              <div className='grid gap-4'>
+                {vendors.map(vendor => (
+                  <Card key={vendor.id} className='hover:shadow-md transition-shadow'>
+                    <CardContent className='p-6'>
+                      <div className='flex items-start justify-between'>
+                        <div className='flex items-start space-x-4'>
+                          <div className='w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center'>
+                            {vendor.type === 'contractor' ? (
+                              <Users className='w-6 h-6 text-blue-600' />
+                            ) : (
+                              <Building2 className='w-6 h-6 text-blue-600' />
+                            )}
                           </div>
-                          
-                          <div className="space-y-1">
-                            <div className="flex items-center space-x-2">
-                              <h3 className="font-semibold text-lg">{vendor.name}</h3>
+
+                          <div className='space-y-1'>
+                            <div className='flex items-center space-x-2'>
+                              <h3 className='font-semibold text-lg'>{vendor.name}</h3>
                               {vendor.preferredVendor && (
-                                <Badge className="bg-gold-100 text-gold-800">Preferred</Badge>
+                                <Badge className='bg-gold-100 text-gold-800'>Preferred</Badge>
                               )}
                               {getStatusBadge(vendor.status)}
                             </div>
-                            
-                            <div className="flex items-center space-x-1">
+
+                            <div className='flex items-center space-x-1'>
                               {getRatingStars(vendor.rating)}
-                              <span className="text-sm text-gray-600 ml-2">({vendor.rating}/5)</span>
+                              <span className='text-sm text-gray-600 ml-2'>
+                                ({vendor.rating}/5)
+                              </span>
                             </div>
-                            
-                            <div className="flex items-center space-x-4 text-sm text-gray-600">
-                              <div className="flex items-center space-x-1">
-                                <Mail className="w-4 h-4" />
+
+                            <div className='flex items-center space-x-4 text-sm text-gray-600'>
+                              <div className='flex items-center space-x-1'>
+                                <Mail className='w-4 h-4' />
                                 <span>{vendor.email}</span>
                               </div>
-                              <div className="flex items-center space-x-1">
-                                <Phone className="w-4 h-4" />
+                              <div className='flex items-center space-x-1'>
+                                <Phone className='w-4 h-4' />
                                 <span>{vendor.phone}</span>
                               </div>
-                              <div className="flex items-center space-x-1">
-                                <MapPin className="w-4 h-4" />
+                              <div className='flex items-center space-x-1'>
+                                <MapPin className='w-4 h-4' />
                                 <span>{vendor.address}</span>
                               </div>
                             </div>
                           </div>
                         </div>
 
-                        <div className="flex items-center space-x-2">
-                          <Button 
-                            variant="ghost" 
-                            size="sm"
+                        <div className='flex items-center space-x-2'>
+                          <Button
+                            variant='ghost'
+                            size='sm'
                             onClick={() => handleOpenDialog('view', vendor)}
                           >
-                            <Eye className="w-4 h-4" />
+                            <Eye className='w-4 h-4' />
                           </Button>
-                          <Button 
-                            variant="ghost" 
-                            size="sm"
+                          <Button
+                            variant='ghost'
+                            size='sm'
                             onClick={() => handleOpenDialog('edit', vendor)}
                           >
-                            <Edit className="w-4 h-4" />
+                            <Edit className='w-4 h-4' />
                           </Button>
                         </div>
                       </div>
 
                       {/* Performance Metrics */}
-                      <div className="mt-4 grid grid-cols-4 gap-4 pt-4 border-t">
-                        <div className="text-center">
-                          <div className={`text-lg font-semibold ${getPerformanceColor(vendor.onTimePerformance)}`}>
+                      <div className='mt-4 grid grid-cols-4 gap-4 pt-4 border-t'>
+                        <div className='text-center'>
+                          <div
+                            className={`text-lg font-semibold ${getPerformanceColor(vendor.onTimePerformance)}`}
+                          >
                             {vendor.onTimePerformance}%
                           </div>
-                          <div className="text-xs text-gray-500">On-Time</div>
+                          <div className='text-xs text-gray-500'>On-Time</div>
                         </div>
-                        <div className="text-center">
-                          <div className={`text-lg font-semibold ${getPerformanceColor(vendor.qualityScore)}`}>
+                        <div className='text-center'>
+                          <div
+                            className={`text-lg font-semibold ${getPerformanceColor(vendor.qualityScore)}`}
+                          >
                             {vendor.qualityScore}%
                           </div>
-                          <div className="text-xs text-gray-500">Quality</div>
+                          <div className='text-xs text-gray-500'>Quality</div>
                         </div>
-                        <div className="text-center">
-                          <div className="text-lg font-semibold text-blue-600">
+                        <div className='text-center'>
+                          <div className='text-lg font-semibold text-blue-600'>
                             {vendor.workOrdersCompleted}
                           </div>
-                          <div className="text-xs text-gray-500">Completed</div>
+                          <div className='text-xs text-gray-500'>Completed</div>
                         </div>
-                        <div className="text-center">
-                          <div className="text-lg font-semibold text-green-600">
+                        <div className='text-center'>
+                          <div className='text-lg font-semibold text-green-600'>
                             ${vendor.contractValue.toLocaleString()}
                           </div>
-                          <div className="text-xs text-gray-500">Contract Value</div>
+                          <div className='text-xs text-gray-500'>Contract Value</div>
                         </div>
                       </div>
 
                       {/* Services/Specializations */}
                       {vendor.services.length > 0 && (
-                        <div className="mt-4 pt-4 border-t">
-                          <div className="flex flex-wrap gap-2">
+                        <div className='mt-4 pt-4 border-t'>
+                          <div className='flex flex-wrap gap-2'>
                             {vendor.services.slice(0, 3).map((service, index) => (
-                              <Badge key={index} variant="outline" className="text-xs">
+                              <Badge key={index} variant='outline' className='text-xs'>
                                 {service}
                               </Badge>
                             ))}
                             {vendor.services.length > 3 && (
-                              <Badge variant="outline" className="text-xs">
+                              <Badge variant='outline' className='text-xs'>
                                 +{vendor.services.length - 3} more
                               </Badge>
                             )}
@@ -399,12 +441,12 @@ const EnhancedVendorManagement: React.FC = () => {
                 ))}
 
                 {vendors.length === 0 && (
-                  <div className="text-center py-12">
-                    <Building2 className="w-16 h-16 mx-auto text-gray-400 mb-4" />
-                    <h3 className="text-lg font-semibold text-gray-600 mb-2">No Vendors Found</h3>
-                    <p className="text-gray-500">Get started by adding your first vendor.</p>
-                    <Button className="mt-4" onClick={() => handleOpenDialog('create')}>
-                      <Plus className="w-4 h-4 mr-2" />
+                  <div className='text-center py-12'>
+                    <Building2 className='w-16 h-16 mx-auto text-gray-400 mb-4' />
+                    <h3 className='text-lg font-semibold text-gray-600 mb-2'>No Vendors Found</h3>
+                    <p className='text-gray-500'>Get started by adding your first vendor.</p>
+                    <Button className='mt-4' onClick={() => handleOpenDialog('create')}>
+                      <Plus className='w-4 h-4 mr-2' />
                       Add Vendor
                     </Button>
                   </div>
@@ -412,17 +454,17 @@ const EnhancedVendorManagement: React.FC = () => {
               </div>
             </TabsContent>
 
-            <TabsContent value="performance" className="space-y-4">
+            <TabsContent value='performance' className='space-y-4'>
               <Card>
                 <CardHeader>
                   <CardTitle>Vendor Performance Analytics</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-center py-12 text-muted-foreground">
-                    <TrendingUp className="w-16 h-16 mx-auto mb-4 opacity-50" />
-                    <h3 className="text-lg font-semibold mb-2">Performance Analytics</h3>
+                  <div className='text-center py-12 text-muted-foreground'>
+                    <TrendingUp className='w-16 h-16 mx-auto mb-4 opacity-50' />
+                    <h3 className='text-lg font-semibold mb-2'>Performance Analytics</h3>
                     <p>Detailed vendor performance analytics coming soon...</p>
-                    <p className="text-sm mt-2">
+                    <p className='text-sm mt-2'>
                       This will include cost analysis, quality metrics, and delivery performance.
                     </p>
                   </div>
@@ -430,41 +472,44 @@ const EnhancedVendorManagement: React.FC = () => {
               </Card>
             </TabsContent>
 
-            <TabsContent value="documents" className="space-y-4">
+            <TabsContent value='documents' className='space-y-4'>
               <Card>
                 <CardHeader>
                   <CardTitle>Document Management</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-4">
-                    {vendorDocuments.slice(0, 5).map((doc) => (
-                      <div key={doc.id} className="flex items-center justify-between p-4 border rounded-lg">
-                        <div className="flex items-center space-x-3">
-                          <FileText className="w-8 h-8 text-blue-600" />
+                  <div className='space-y-4'>
+                    {vendorDocuments.slice(0, 5).map(doc => (
+                      <div
+                        key={doc.id}
+                        className='flex items-center justify-between p-4 border rounded-lg'
+                      >
+                        <div className='flex items-center space-x-3'>
+                          <FileText className='w-8 h-8 text-blue-600' />
                           <div>
-                            <h4 className="font-medium">{doc.name}</h4>
-                            <p className="text-sm text-gray-600">Type: {doc.type}</p>
-                            <p className="text-xs text-gray-500">Uploaded: {doc.uploadedAt}</p>
+                            <h4 className='font-medium'>{doc.name}</h4>
+                            <p className='text-sm text-gray-600'>Type: {doc.type}</p>
+                            <p className='text-xs text-gray-500'>Uploaded: {doc.uploadedAt}</p>
                           </div>
                         </div>
-                        <div className="flex items-center space-x-2">
-                          <Badge 
+                        <div className='flex items-center space-x-2'>
+                          <Badge
                             variant={doc.status === 'active' ? 'default' : 'destructive'}
-                            className="text-xs"
+                            className='text-xs'
                           >
                             {doc.status.replace('_', ' ').toUpperCase()}
                           </Badge>
-                          <Button variant="ghost" size="sm">
-                            <Download className="w-4 h-4" />
+                          <Button variant='ghost' size='sm'>
+                            <Download className='w-4 h-4' />
                           </Button>
                         </div>
                       </div>
                     ))}
-                    
+
                     {vendorDocuments.length === 0 && (
-                      <div className="text-center py-8 text-gray-500">
-                        <FileText className="w-16 h-16 mx-auto mb-4 opacity-50" />
-                        <h3 className="text-lg font-semibold mb-2">No Documents</h3>
+                      <div className='text-center py-8 text-gray-500'>
+                        <FileText className='w-16 h-16 mx-auto mb-4 opacity-50' />
+                        <h3 className='text-lg font-semibold mb-2'>No Documents</h3>
                         <p>Vendor documents will appear here when uploaded.</p>
                       </div>
                     )}
@@ -473,18 +518,19 @@ const EnhancedVendorManagement: React.FC = () => {
               </Card>
             </TabsContent>
 
-            <TabsContent value="contracts" className="space-y-4">
+            <TabsContent value='contracts' className='space-y-4'>
               <Card>
                 <CardHeader>
                   <CardTitle>Contract Management</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-center py-12 text-muted-foreground">
-                    <FileText className="w-16 h-16 mx-auto mb-4 opacity-50" />
-                    <h3 className="text-lg font-semibold mb-2">Contract Management</h3>
+                  <div className='text-center py-12 text-muted-foreground'>
+                    <FileText className='w-16 h-16 mx-auto mb-4 opacity-50' />
+                    <h3 className='text-lg font-semibold mb-2'>Contract Management</h3>
                     <p>Advanced contract management features coming soon...</p>
-                    <p className="text-sm mt-2">
-                      This will include contract lifecycle management, renewal tracking, and compliance monitoring.
+                    <p className='text-sm mt-2'>
+                      This will include contract lifecycle management, renewal tracking, and
+                      compliance monitoring.
                     </p>
                   </div>
                 </CardContent>
@@ -496,79 +542,82 @@ const EnhancedVendorManagement: React.FC = () => {
 
       {/* Vendor Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className='max-w-4xl max-h-[90vh] overflow-y-auto'>
           <DialogHeader>
             <DialogTitle>
-              {dialogMode === 'create' ? 'Add New Vendor' :
-               dialogMode === 'edit' ? 'Edit Vendor' : 'Vendor Details'}
+              {dialogMode === 'create'
+                ? 'Add New Vendor'
+                : dialogMode === 'edit'
+                  ? 'Edit Vendor'
+                  : 'Vendor Details'}
             </DialogTitle>
           </DialogHeader>
-          
-          <div className="space-y-6">
+
+          <div className='space-y-6'>
             {/* Basic Information */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className='grid grid-cols-2 gap-4'>
               <div>
-                <label className="block text-sm font-medium mb-2">Vendor Name</label>
-                <Input 
-                  placeholder="Enter vendor name"
+                <label className='block text-sm font-medium mb-2'>Vendor Name</label>
+                <Input
+                  placeholder='Enter vendor name'
                   defaultValue={selectedVendor?.name}
                   disabled={dialogMode === 'view'}
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-2">Type</label>
+                <label className='block text-sm font-medium mb-2'>Type</label>
                 <Select defaultValue={selectedVendor?.type} disabled={dialogMode === 'view'}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select type" />
+                    <SelectValue placeholder='Select type' />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="supplier">Supplier</SelectItem>
-                    <SelectItem value="contractor">Contractor</SelectItem>
+                    <SelectItem value='supplier'>Supplier</SelectItem>
+                    <SelectItem value='contractor'>Contractor</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
             </div>
 
             {/* Contact Information */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className='grid grid-cols-2 gap-4'>
               <div>
-                <label className="block text-sm font-medium mb-2">Contact Person</label>
-                <Input 
-                  placeholder="Contact person name"
+                <label className='block text-sm font-medium mb-2'>Contact Person</label>
+                <Input
+                  placeholder='Contact person name'
                   defaultValue={selectedVendor?.contactPerson}
                   disabled={dialogMode === 'view'}
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-2">Email</label>
-                <Input 
-                  type="email"
-                  placeholder="email@example.com"
+                <label className='block text-sm font-medium mb-2'>Email</label>
+                <Input
+                  type='email'
+                  placeholder='email@example.com'
                   defaultValue={selectedVendor?.email}
                   disabled={dialogMode === 'view'}
                 />
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className='grid grid-cols-2 gap-4'>
               <div>
-                <label className="block text-sm font-medium mb-2">Phone</label>
-                <Input 
-                  placeholder="Phone number"
+                <label className='block text-sm font-medium mb-2'>Phone</label>
+                <Input
+                  placeholder='Phone number'
                   defaultValue={selectedVendor?.phone}
                   disabled={dialogMode === 'view'}
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-2">Status</label>
+                <label className='block text-sm font-medium mb-2'>Status</label>
                 <Select defaultValue={selectedVendor?.status} disabled={dialogMode === 'view'}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select status" />
+                    <SelectValue placeholder='Select status' />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="active">Active</SelectItem>
-                    <SelectItem value="inactive">Inactive</SelectItem>
-                    <SelectItem value="pending">Pending</SelectItem>
+                    <SelectItem value='active'>Active</SelectItem>
+                    <SelectItem value='inactive'>Inactive</SelectItem>
+                    <SelectItem value='pending'>Pending</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -576,9 +625,9 @@ const EnhancedVendorManagement: React.FC = () => {
 
             {/* Address */}
             <div>
-              <label className="block text-sm font-medium mb-2">Address</label>
-              <Textarea 
-                placeholder="Full address"
+              <label className='block text-sm font-medium mb-2'>Address</label>
+              <Textarea
+                placeholder='Full address'
                 defaultValue={selectedVendor?.address}
                 disabled={dialogMode === 'view'}
               />
@@ -586,9 +635,9 @@ const EnhancedVendorManagement: React.FC = () => {
 
             {/* Notes */}
             <div>
-              <label className="block text-sm font-medium mb-2">Notes</label>
-              <Textarea 
-                placeholder="Additional notes"
+              <label className='block text-sm font-medium mb-2'>Notes</label>
+              <Textarea
+                placeholder='Additional notes'
                 defaultValue={selectedVendor?.notes}
                 disabled={dialogMode === 'view'}
               />
@@ -597,7 +646,7 @@ const EnhancedVendorManagement: React.FC = () => {
             {/* Document Upload */}
             {dialogMode !== 'view' && (
               <div>
-                <label className="block text-sm font-medium mb-2">Upload Documents</label>
+                <label className='block text-sm font-medium mb-2'>Upload Documents</label>
                 <FileUpload
                   vendorId={selectedVendor?.id}
                   onUploadSuccess={(url, fileName) => {
@@ -606,7 +655,7 @@ const EnhancedVendorManagement: React.FC = () => {
                       description: `${fileName} uploaded successfully`,
                     });
                   }}
-                  onUploadError={(error) => {
+                  onUploadError={error => {
                     toast({
                       title: 'Upload Failed',
                       description: error,
@@ -618,8 +667,8 @@ const EnhancedVendorManagement: React.FC = () => {
             )}
 
             {/* Action Buttons */}
-            <div className="flex justify-end space-x-4 pt-4 border-t">
-              <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
+            <div className='flex justify-end space-x-4 pt-4 border-t'>
+              <Button variant='outline' onClick={() => setIsDialogOpen(false)}>
                 Cancel
               </Button>
               {dialogMode !== 'view' && (

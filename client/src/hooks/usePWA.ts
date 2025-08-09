@@ -28,7 +28,7 @@ export function usePWA() {
     initializePWA();
 
     // Setup event listeners
-    const unsubscribeStatus = pwaService.addEventListener('statusChange', (newStatus) => {
+    const unsubscribeStatus = pwaService.addEventListener('statusChange', newStatus => {
       setStatus(newStatus);
     });
 
@@ -40,7 +40,7 @@ export function usePWA() {
       setStatus(pwaService.getStatus());
     });
 
-    const unsubscribeNetwork = pwaService.addEventListener('networkChange', (data) => {
+    const unsubscribeNetwork = pwaService.addEventListener('networkChange', data => {
       setStatus(prev => ({ ...prev, isOnline: data.isOnline }));
     });
 
@@ -61,13 +61,13 @@ export function usePWA() {
     showInstallPrompt: () => pwaService.showInstallPrompt(),
     requestNotifications: () => pwaService.requestNotificationPermission(),
     updateApp: () => pwaService.updateServiceWorker(),
-    showNotification: (title: string, options?: NotificationOptions) => 
-      pwaService.showNotification(title, options)
+    showNotification: (title: string, options?: NotificationOptions) =>
+      pwaService.showNotification(title, options),
   };
 
   return {
     ...status,
     isLoading,
-    actions
+    actions,
   };
 }

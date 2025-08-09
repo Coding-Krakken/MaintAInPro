@@ -1,17 +1,20 @@
 # Automatic Domain Management Guide
 
-This guide explains how MaintAInPro automatically manages custom domain pointing to ensure your domains always point to the latest deployments.
+This guide explains how MaintAInPro automatically manages custom domain pointing
+to ensure your domains always point to the latest deployments.
 
 ## Overview
 
 The system automatically manages two sets of domains:
 
 ### Main Branch (Production)
+
 - `unitedautosupply.org` → Latest main branch deployment
 - `www.unitedautosupply.org` → Latest main branch deployment
 
 ### Stable Branch
-- `uasmaintenance.com` → Latest stable branch deployment  
+
+- `uasmaintenance.com` → Latest stable branch deployment
 - `www.uasmaintenance.com` → Latest stable branch deployment
 
 ## How It Works
@@ -26,18 +29,21 @@ When you push to `main` or `stable` branches, GitHub Actions automatically:
 
 #### Setup Requirements
 
-Ensure these secrets are configured in GitHub Settings > Secrets and variables > Actions:
+Ensure these secrets are configured in GitHub Settings > Secrets and variables >
+Actions:
 
 ```bash
 VERCEL_TOKEN=your_vercel_token
-VERCEL_ORG_ID=your_org_id  
+VERCEL_ORG_ID=your_org_id
 VERCEL_PROJECT_ID=your_project_id
 ```
 
 #### Branch Mapping
 
-- **Push to `main`** → Updates `unitedautosupply.org` and `www.unitedautosupply.org`
-- **Push to `stable`** → Updates `uasmaintenance.com` and `www.uasmaintenance.com`
+- **Push to `main`** → Updates `unitedautosupply.org` and
+  `www.unitedautosupply.org`
+- **Push to `stable`** → Updates `uasmaintenance.com` and
+  `www.uasmaintenance.com`
 
 ### 2. Manual Domain Management
 
@@ -50,7 +56,7 @@ Use the provided script for manual control:
 # Update main branch domains to latest deployment
 ./scripts/domain-management.sh update-main
 
-# Update stable branch domains to latest deployment  
+# Update stable branch domains to latest deployment
 ./scripts/domain-management.sh update-stable
 
 # Update all domains to latest deployment
@@ -106,6 +112,7 @@ vercel alias ls --scope coding-krakken-projects
    - Check for failures in domain alias steps
 
 2. **Verify Vercel permissions**:
+
    ```bash
    vercel domains ls --scope coding-krakken-projects
    ```
@@ -131,21 +138,25 @@ vercel alias ls --scope coding-krakken-projects
 ## Configuration Files
 
 ### `.github/workflows/deploy.yml`
+
 - Main deployment workflow
 - Handles build, deploy, and domain updates
 - Triggers on push to main, stable, or Replit branches
 
 ### `.github/workflows/domain-management.yml`
+
 - Dedicated domain management workflow
 - Can be triggered manually
 - Provides force update option
 
 ### `vercel.json`
+
 - Vercel configuration
 - Specifies build settings and routing
 - Enables deployment for main and stable branches
 
 ### `scripts/domain-management.sh`
+
 - Manual domain management script
 - Provides easy CLI interface
 - Includes verification and status checks
@@ -153,16 +164,19 @@ vercel alias ls --scope coding-krakken-projects
 ## Best Practices
 
 ### 1. Use Branch Strategy
+
 - **main**: Production-ready code → `unitedautosupply.org`
-- **stable**: Tested stable releases → `uasmaintenance.com`  
+- **stable**: Tested stable releases → `uasmaintenance.com`
 - **feature branches**: Use Vercel preview URLs
 
 ### 2. Monitor Deployments
+
 - Check GitHub Actions for deployment status
 - Verify domain updates in Vercel dashboard
 - Use health checks to confirm deployment success
 
 ### 3. Emergency Procedures
+
 - Keep manual scripts ready for quick fixes
 - Know how to rollback via Vercel dashboard
 - Have monitoring alerts set up
@@ -184,6 +198,7 @@ Use the GitHub Actions manual trigger:
 To add new domains:
 
 1. **Add domain to Vercel**:
+
    ```bash
    vercel domains add your-new-domain.com --scope coding-krakken-projects
    ```
@@ -195,8 +210,9 @@ To add new domains:
 ### Monitoring and Alerts
 
 Set up monitoring for:
+
 - Deployment failures
-- Domain pointing issues  
+- Domain pointing issues
 - SSL certificate renewals
 - Performance metrics
 

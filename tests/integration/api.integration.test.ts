@@ -7,16 +7,16 @@ import { securityStack } from '../../server/middleware/security.middleware';
 // Create a minimal test app
 const createTestApp = () => {
   const app = express();
-  
+
   // Apply security middleware stack first
   app.use(securityStack);
   app.use(express.json());
-  
+
   // Health endpoint
   app.get('/api/health', (req, res) => {
     res.json({ status: 'ok' });
   });
-  
+
   // Mock authentication middleware
   const requireAuth = (req, res, next) => {
     const auth = req.headers.authorization;
@@ -25,24 +25,24 @@ const createTestApp = () => {
     }
     next();
   };
-  
+
   app.get('/api/work-orders', requireAuth, (req, res) => {
     res.json({ workOrders: [] });
   });
-  
+
   app.post('/api/work-orders', requireAuth, (req, res) => {
     res.status(201).json({ id: '123', ...req.body });
   });
-  
+
   app.get('/api/equipment', requireAuth, (req, res) => {
     res.json({ equipment: [] });
   });
-  
+
   // 404 handler
   app.use((req, res) => {
     res.status(404).json({ error: 'Not found' });
   });
-  
+
   return app;
 };
 
@@ -54,7 +54,7 @@ describe('API Integration Tests', () => {
   beforeAll(async () => {
     app = createTestApp();
     storage = new MemStorage();
-    
+
     try {
       // Create test warehouse
       await storage.createWarehouse({
@@ -131,9 +131,7 @@ describe('API Integration Tests', () => {
     });
 
     it('should handle missing authorization header', async () => {
-      const response = await request(app)
-        .get('/api/work-orders')
-        .expect(401);
+      const response = await request(app).get('/api/work-orders').expect(401);
 
       expect(response.body).toHaveProperty('error');
     });
@@ -147,7 +145,7 @@ describe('API Integration Tests', () => {
         description: 'Test preventive maintenance',
         priority: 'high',
         equipmentId: '00000000-0000-0000-0000-000000000001',
-        area: 'Test Area'
+        area: 'Test Area',
       };
 
       const response = await request(app)
@@ -162,7 +160,7 @@ describe('API Integration Tests', () => {
 
     it('should validate required fields', async () => {
       const invalidWorkOrder = {
-        description: 'Missing required fields'
+        description: 'Missing required fields',
       };
 
       const response = await request(app)
@@ -205,9 +203,7 @@ describe('API Integration Tests', () => {
 
   describe('Security', () => {
     it('should include security headers', async () => {
-      const response = await request(app)
-        .get('/api/health')
-        .expect(200);
+      const response = await request(app).get('/api/health').expect(200);
 
       expect(response.headers).toHaveProperty('x-content-type-options', 'nosniff');
       expect(response.headers).toHaveProperty('x-frame-options', 'DENY');
@@ -215,13 +211,11 @@ describe('API Integration Tests', () => {
 
     it('should enforce rate limiting', async () => {
       // This test may need to be adjusted based on rate limiting configuration
-      const promises = Array.from({ length: 10 }, () =>
-        request(app).get('/api/health')
-      );
+      const promises = Array.from({ length: 10 }, () => request(app).get('/api/health'));
 
       const responses = await Promise.all(promises);
       const successCount = responses.filter(r => r.status === 200).length;
-      
+
       // Should allow reasonable number of requests
       expect(successCount).toBeGreaterThan(0);
     });

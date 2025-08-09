@@ -49,35 +49,41 @@ export function PWAInstallPrompt() {
   if (!isVisible) return null;
 
   return (
-    <Card className="fixed bottom-4 right-4 w-80 z-50 shadow-lg border-blue-200 bg-blue-50">
-      <CardHeader className="pb-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <Smartphone className="h-5 w-5 text-blue-600" />
-            <CardTitle className="text-sm">Install MaintainPro</CardTitle>
+    <Card className='fixed bottom-4 right-4 w-80 z-50 shadow-lg border-blue-200 bg-blue-50'>
+      <CardHeader className='pb-3'>
+        <div className='flex items-center justify-between'>
+          <div className='flex items-center space-x-2'>
+            <Smartphone className='h-5 w-5 text-blue-600' />
+            <CardTitle className='text-sm'>Install MaintainPro</CardTitle>
           </div>
           <Button
-            variant="ghost"
-            size="sm"
+            variant='ghost'
+            size='sm'
             onClick={() => setIsVisible(false)}
-            className="h-6 w-6 p-0"
+            className='h-6 w-6 p-0'
           >
-            <X className="h-4 w-4" />
+            <X className='h-4 w-4' />
           </Button>
         </div>
-        <CardDescription className="text-xs">
+        <CardDescription className='text-xs'>
           Install this app on your device for offline access and enhanced performance
         </CardDescription>
       </CardHeader>
-      <CardContent className="pt-0">
-        <div className="space-y-3">
-          <div className="flex flex-wrap gap-1">
-            <Badge variant="secondary" className="text-xs">Offline Access</Badge>
-            <Badge variant="secondary" className="text-xs">Push Notifications</Badge>
-            <Badge variant="secondary" className="text-xs">Faster Loading</Badge>
+      <CardContent className='pt-0'>
+        <div className='space-y-3'>
+          <div className='flex flex-wrap gap-1'>
+            <Badge variant='secondary' className='text-xs'>
+              Offline Access
+            </Badge>
+            <Badge variant='secondary' className='text-xs'>
+              Push Notifications
+            </Badge>
+            <Badge variant='secondary' className='text-xs'>
+              Faster Loading
+            </Badge>
           </div>
-          <Button onClick={handleInstall} className="w-full" size="sm">
-            <Download className="h-4 w-4 mr-2" />
+          <Button onClick={handleInstall} className='w-full' size='sm'>
+            <Download className='h-4 w-4 mr-2' />
             Install App
           </Button>
         </div>
@@ -121,29 +127,29 @@ export function PWAUpdatePrompt() {
   if (!hasUpdate) return null;
 
   return (
-    <Card className="fixed top-4 right-4 w-80 z-50 shadow-lg border-green-200 bg-green-50">
-      <CardHeader className="pb-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <RefreshCw className="h-5 w-5 text-green-600" />
-            <CardTitle className="text-sm">Update Available</CardTitle>
+    <Card className='fixed top-4 right-4 w-80 z-50 shadow-lg border-green-200 bg-green-50'>
+      <CardHeader className='pb-3'>
+        <div className='flex items-center justify-between'>
+          <div className='flex items-center space-x-2'>
+            <RefreshCw className='h-5 w-5 text-green-600' />
+            <CardTitle className='text-sm'>Update Available</CardTitle>
           </div>
           <Button
-            variant="ghost"
-            size="sm"
+            variant='ghost'
+            size='sm'
             onClick={() => setHasUpdate(false)}
-            className="h-6 w-6 p-0"
+            className='h-6 w-6 p-0'
           >
-            <X className="h-4 w-4" />
+            <X className='h-4 w-4' />
           </Button>
         </div>
-        <CardDescription className="text-xs">
+        <CardDescription className='text-xs'>
           A new version of MaintainPro is available with improvements and bug fixes
         </CardDescription>
       </CardHeader>
-      <CardContent className="pt-0">
-        <Button onClick={handleUpdate} className="w-full" size="sm">
-          <RefreshCw className="h-4 w-4 mr-2" />
+      <CardContent className='pt-0'>
+        <Button onClick={handleUpdate} className='w-full' size='sm'>
+          <RefreshCw className='h-4 w-4 mr-2' />
           Update Now
         </Button>
       </CardContent>
@@ -176,29 +182,27 @@ export function PWAOfflineIndicator() {
   if (isOnline && pendingActions === 0) return null;
 
   return (
-    <Card className="fixed top-4 left-4 z-50 shadow-lg">
-      <CardContent className="p-3">
-        <div className="flex items-center space-x-2">
+    <Card className='fixed top-4 left-4 z-50 shadow-lg'>
+      <CardContent className='p-3'>
+        <div className='flex items-center space-x-2'>
           {isOnline ? (
-            <Wifi className="h-4 w-4 text-green-600" />
+            <Wifi className='h-4 w-4 text-green-600' />
           ) : (
-            <WifiOff className="h-4 w-4 text-red-600" />
+            <WifiOff className='h-4 w-4 text-red-600' />
           )}
-          <div className="text-sm">
+          <div className='text-sm'>
             {isOnline ? (
               pendingActions > 0 ? (
-                <span className="text-amber-600">
-                  Syncing {pendingActions} changes...
-                </span>
+                <span className='text-amber-600'>Syncing {pendingActions} changes...</span>
               ) : (
-                <span className="text-green-600">Online</span>
+                <span className='text-green-600'>Online</span>
               )
             ) : (
-              <span className="text-red-600">Working Offline</span>
+              <span className='text-red-600'>Working Offline</span>
             )}
           </div>
           {pendingActions > 0 && (
-            <Badge variant="secondary" className="text-xs">
+            <Badge variant='secondary' className='text-xs'>
               {pendingActions}
             </Badge>
           )}

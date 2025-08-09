@@ -2,11 +2,13 @@
 
 ## Overview
 
-MaintainPro provides a comprehensive RESTful API for enterprise maintenance management system integration. This API enables external systems to interact with work orders, equipment, inventory, and receive real-time updates through webhooks.
+MaintainPro provides a comprehensive RESTful API for enterprise maintenance
+management system integration. This API enables external systems to interact
+with work orders, equipment, inventory, and receive real-time updates through
+webhooks.
 
-**Base URL:** `https://your-maintainpro-instance.com/api`
-**Authentication:** Bearer Token (JWT)
-**Content-Type:** `application/json`
+**Base URL:** `https://your-maintainpro-instance.com/api` **Authentication:**
+Bearer Token (JWT) **Content-Type:** `application/json`
 
 ## Authentication
 
@@ -30,6 +32,7 @@ Content-Type: application/json
 ```
 
 **Response:**
+
 ```json
 {
   "user": {
@@ -55,11 +58,13 @@ GET /api/work-orders?status=new,assigned&priority=high,medium
 ```
 
 **Query Parameters:**
+
 - `status` (string, optional): Comma-separated list of statuses to filter by
 - `assignedTo` (string, optional): User ID to filter by assignee
 - `priority` (string, optional): Comma-separated list of priorities
 
 **Response:**
+
 ```json
 [
   {
@@ -124,6 +129,7 @@ GET /api/equipment
 ```
 
 **Response:**
+
 ```json
 [
   {
@@ -170,6 +176,7 @@ GET /api/parts
 ```
 
 **Response:**
+
 ```json
 [
   {
@@ -229,6 +236,7 @@ Content-Type: application/json
 ```
 
 **Response:**
+
 ```json
 {
   "id": "webhook-uuid",
@@ -253,6 +261,7 @@ GET /api/webhooks/{id}/stats
 ```
 
 **Response:**
+
 ```json
 {
   "total": 150,
@@ -275,21 +284,21 @@ POST /api/webhooks/{id}/test
 
 ### Event Types
 
-| Event | Description | Payload |
-|-------|-------------|---------|
-| `work_order.created` | New work order created | Work order object with creator info |
-| `work_order.updated` | Work order modified | Work order with changes |
-| `work_order.completed` | Work order completed | Completed work order with metrics |
-| `work_order.escalated` | Work order escalated | Escalation details and new assignee |
-| `equipment.created` | New equipment added | Equipment object |
-| `equipment.updated` | Equipment modified | Equipment with changes |
-| `equipment.status_changed` | Equipment status change | Status change details |
-| `inventory.low_stock` | Stock below reorder point | Part details and stock levels |
-| `inventory.reorder` | Automatic reorder triggered | Reorder details |
-| `parts.consumed` | Parts used in work order | Consumption details |
-| `pm.scheduled` | PM work order created | PM details |
-| `pm.overdue` | PM becomes overdue | Overdue PM information |
-| `pm.completed` | PM completed | PM completion data |
+| Event                      | Description                 | Payload                             |
+| -------------------------- | --------------------------- | ----------------------------------- |
+| `work_order.created`       | New work order created      | Work order object with creator info |
+| `work_order.updated`       | Work order modified         | Work order with changes             |
+| `work_order.completed`     | Work order completed        | Completed work order with metrics   |
+| `work_order.escalated`     | Work order escalated        | Escalation details and new assignee |
+| `equipment.created`        | New equipment added         | Equipment object                    |
+| `equipment.updated`        | Equipment modified          | Equipment with changes              |
+| `equipment.status_changed` | Equipment status change     | Status change details               |
+| `inventory.low_stock`      | Stock below reorder point   | Part details and stock levels       |
+| `inventory.reorder`        | Automatic reorder triggered | Reorder details                     |
+| `parts.consumed`           | Parts used in work order    | Consumption details                 |
+| `pm.scheduled`             | PM work order created       | PM details                          |
+| `pm.overdue`               | PM becomes overdue          | Overdue PM information              |
+| `pm.completed`             | PM completed                | PM completion data                  |
 
 ### Webhook Payload Structure
 
@@ -303,7 +312,9 @@ POST /api/webhooks/{id}/test
     "entityId": "work-order-uuid",
     "warehouseId": "warehouse-uuid",
     "payload": {
-      "workOrder": { /* work order object */ },
+      "workOrder": {
+        /* work order object */
+      },
       "createdBy": "user-uuid",
       "timestamp": "2025-01-20T10:30:00.000Z"
     }
@@ -314,11 +325,13 @@ POST /api/webhooks/{id}/test
 ### Webhook Security
 
 All webhook requests include:
+
 - `X-MaintainPro-Signature`: HMAC-SHA256 signature of payload
 - `X-MaintainPro-Event`: Event type
 - `X-MaintainPro-Delivery`: Unique delivery ID
 
 **Signature Verification (Node.js example):**
+
 ```javascript
 const crypto = require('crypto');
 
@@ -327,7 +340,7 @@ function verifyWebhook(payload, signature, secret) {
     .createHmac('sha256', secret)
     .update(payload, 'utf8')
     .digest('hex');
-  
+
   return crypto.timingSafeEqual(
     Buffer.from(signature, 'hex'),
     Buffer.from(expectedSignature, 'hex')
@@ -386,6 +399,7 @@ GET /api/admin/performance/summary
 ```
 
 **Response:**
+
 ```json
 {
   "timestamp": "2025-01-20T10:00:00.000Z",
@@ -440,6 +454,7 @@ GET /api/admin/performance/summary
 - Webhook endpoints: 100 requests per minute per endpoint
 
 Rate limit headers are included in responses:
+
 ```
 X-RateLimit-Limit: 1000
 X-RateLimit-Remaining: 999
@@ -453,6 +468,7 @@ X-RateLimit-Reset: 1642694400
 ### cURL Examples
 
 **Create a work order:**
+
 ```bash
 curl -X POST https://api.maintainpro.com/api/work-orders \
   -H "Authorization: Bearer YOUR_TOKEN" \
@@ -471,20 +487,20 @@ const MaintainProAPI = require('@maintainpro/api-sdk');
 
 const client = new MaintainProAPI({
   baseUrl: 'https://your-instance.maintainpro.com/api',
-  token: 'your-jwt-token'
+  token: 'your-jwt-token',
 });
 
 // Create work order
 const workOrder = await client.workOrders.create({
   title: 'Emergency Repair',
   priority: 'high',
-  equipmentId: 'equipment-123'
+  equipmentId: 'equipment-123',
 });
 
 // Set up webhook
 await client.webhooks.create({
   url: 'https://your-app.com/webhooks',
-  events: ['work_order.created', 'work_order.completed']
+  events: ['work_order.created', 'work_order.completed'],
 });
 ```
 
@@ -493,9 +509,9 @@ await client.webhooks.create({
 ## Support
 
 For API support and integration assistance:
+
 - Documentation: https://docs.maintainpro.com
 - Support: api-support@maintainpro.com
 - Status Page: https://status.maintainpro.com
 
-Last Updated: January 2025
-API Version: 1.0
+Last Updated: January 2025 API Version: 1.0

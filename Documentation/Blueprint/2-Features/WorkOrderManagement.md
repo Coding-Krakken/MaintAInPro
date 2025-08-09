@@ -9,17 +9,17 @@
 
 ## 🎯 Description
 
-A comprehensive work order management system that enables creation, assignment, tracking, and
-completion of maintenance tasks with mobile-first design, real-time collaboration, and intelligent
-automation.
+A comprehensive work order management system that enables creation, assignment,
+tracking, and completion of maintenance tasks with mobile-first design,
+real-time collaboration, and intelligent automation.
 
 ## ✅ Acceptance Criteria
 
 ### WO-001: Work Order Creation
 
 **Feature**: Create New Work Order  
-**User Story**: As a maintenance manager, I can create work orders with complete task details so
-that technicians have clear instructions.
+**User Story**: As a maintenance manager, I can create work orders with complete
+task details so that technicians have clear instructions.
 
 **Acceptance Criteria**:
 
@@ -37,8 +37,8 @@ that technicians have clear instructions.
 ### WO-002: Mobile Work Order Execution
 
 **Feature**: Mobile Work Order Interface  
-**User Story**: As a technician, I can access and update work orders from my mobile device so that I
-can work efficiently in the field.
+**User Story**: As a technician, I can access and update work orders from my
+mobile device so that I can work efficiently in the field.
 
 **Acceptance Criteria**:
 
@@ -56,8 +56,8 @@ can work efficiently in the field.
 ### WO-003: Work Order Assignment & Routing
 
 **Feature**: Intelligent Work Order Assignment  
-**User Story**: As a supervisor, I can assign work orders to appropriate technicians based on skills
-and availability.
+**User Story**: As a supervisor, I can assign work orders to appropriate
+technicians based on skills and availability.
 
 **Acceptance Criteria**:
 
@@ -75,12 +75,13 @@ and availability.
 ### WO-004: Work Order Lifecycle Management
 
 **Feature**: Complete Work Order Lifecycle  
-**User Story**: As a maintenance team, we need to track work orders through all stages from creation
-to completion.
+**User Story**: As a maintenance team, we need to track work orders through all
+stages from creation to completion.
 
 **Acceptance Criteria**:
 
-- Must support status progression: Open → Assigned → In Progress → Completed → Verified → Closed
+- Must support status progression: Open → Assigned → In Progress → Completed →
+  Verified → Closed
 - Must prevent invalid status transitions
 - Must track time spent in each status
 - Must require supervisor verification for completion
@@ -94,8 +95,8 @@ to completion.
 ### WO-005: Preventive Maintenance Integration
 
 **Feature**: Automated PM Work Order Generation  
-**User Story**: As a maintenance planner, I want PM work orders generated automatically based on
-schedules.
+**User Story**: As a maintenance planner, I want PM work orders generated
+automatically based on schedules.
 
 **Acceptance Criteria**:
 
@@ -113,8 +114,8 @@ schedules.
 ### WO-006: Escalation Management
 
 **Feature**: Automated Work Order Escalation  
-**User Story**: As a manager, I want overdue work orders to escalate automatically to ensure timely
-completion.
+**User Story**: As a manager, I want overdue work orders to escalate
+automatically to ensure timely completion.
 
 **Acceptance Criteria**:
 
@@ -132,8 +133,8 @@ completion.
 ### WO-007: Real-Time Collaboration
 
 **Feature**: Real-Time Work Order Updates  
-**User Story**: As a maintenance team member, I want to see real-time updates on work order
-progress.
+**User Story**: As a maintenance team member, I want to see real-time updates on
+work order progress.
 
 **Acceptance Criteria**:
 
@@ -151,7 +152,8 @@ progress.
 ### WO-008: Work Order Reporting & Analytics
 
 **Feature**: Work Order Performance Analytics  
-**User Story**: As a manager, I need comprehensive reporting on work order performance and trends.
+**User Story**: As a manager, I need comprehensive reporting on work order
+performance and trends.
 
 **Acceptance Criteria**:
 
@@ -169,7 +171,8 @@ progress.
 ### WO-009: Parts Integration
 
 **Feature**: Parts Usage Tracking  
-**User Story**: As a technician, I can track parts used during work order completion.
+**User Story**: As a technician, I can track parts used during work order
+completion.
 
 **Acceptance Criteria**:
 
@@ -187,8 +190,8 @@ progress.
 ### WO-010: Offline Functionality
 
 **Feature**: Complete Offline Work Order Capability  
-**User Story**: As a field technician, I can work with work orders even without internet
-connectivity.
+**User Story**: As a field technician, I can work with work orders even without
+internet connectivity.
 
 **Acceptance Criteria**:
 

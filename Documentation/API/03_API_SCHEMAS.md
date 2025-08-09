@@ -2,13 +2,16 @@
 
 ## Overview
 
-Comprehensive Zod validation schemas for the MaintAInPro CMMS API endpoints. All schemas include automatic field mapping between camelCase (API) and snake_case (database) formats.
+Comprehensive Zod validation schemas for the MaintAInPro CMMS API endpoints. All
+schemas include automatic field mapping between camelCase (API) and snake_case
+(database) formats.
 
 ## Core Validation Schemas
 
 ### Work Order Schemas
 
 #### CreateWorkOrderSchema
+
 ```typescript
 {
   foNumber: string,          // Work order number (required)
@@ -27,6 +30,7 @@ Comprehensive Zod validation schemas for the MaintAInPro CMMS API endpoints. All
 ```
 
 #### UpdateWorkOrderSchema
+
 ```typescript
 {
   foNumber?: string,         // Optional updates
@@ -42,6 +46,7 @@ Comprehensive Zod validation schemas for the MaintAInPro CMMS API endpoints. All
 ```
 
 #### WorkOrderSearchSchema
+
 ```typescript
 {
   query?: string,            // Search term
@@ -57,6 +62,7 @@ Comprehensive Zod validation schemas for the MaintAInPro CMMS API endpoints. All
 ### Equipment Schemas
 
 #### CreateEquipmentSchema
+
 ```typescript
 {
   equipmentTag: string,      // Unique equipment identifier
@@ -75,6 +81,7 @@ Comprehensive Zod validation schemas for the MaintAInPro CMMS API endpoints. All
 ```
 
 #### UpdateEquipmentSchema
+
 ```typescript
 {
   equipmentTag?: string,     // Optional updates
@@ -94,6 +101,7 @@ Comprehensive Zod validation schemas for the MaintAInPro CMMS API endpoints. All
 ### User Management Schemas
 
 #### CreateUserSchema
+
 ```typescript
 {
   email: string,             // Valid email address
@@ -108,6 +116,7 @@ Comprehensive Zod validation schemas for the MaintAInPro CMMS API endpoints. All
 ```
 
 #### UpdateUserSchema
+
 ```typescript
 {
   firstName?: string,        // Optional updates
@@ -122,6 +131,7 @@ Comprehensive Zod validation schemas for the MaintAInPro CMMS API endpoints. All
 ### Location Schemas
 
 #### CreateLocationSchema
+
 ```typescript
 {
   locationCode: string,      // Unique location code
@@ -136,6 +146,7 @@ Comprehensive Zod validation schemas for the MaintAInPro CMMS API endpoints. All
 ```
 
 #### UpdateLocationSchema
+
 ```typescript
 {
   locationCode?: string,     // Optional updates
@@ -151,6 +162,7 @@ Comprehensive Zod validation schemas for the MaintAInPro CMMS API endpoints. All
 ### Preventive Maintenance Schemas
 
 #### CreatePreventiveMaintenanceSchema
+
 ```typescript
 {
   title: string,             // PM title
@@ -167,6 +179,7 @@ Comprehensive Zod validation schemas for the MaintAInPro CMMS API endpoints. All
 ```
 
 #### UpdatePreventiveMaintenanceSchema
+
 ```typescript
 {
   title?: string,            // Optional updates
@@ -183,6 +196,7 @@ Comprehensive Zod validation schemas for the MaintAInPro CMMS API endpoints. All
 ### Parts Inventory Schemas
 
 #### CreatePartSchema
+
 ```typescript
 {
   partNumber: string,        // Unique part number
@@ -201,6 +215,7 @@ Comprehensive Zod validation schemas for the MaintAInPro CMMS API endpoints. All
 ```
 
 #### UpdatePartSchema
+
 ```typescript
 {
   partNumber?: string,       // Optional updates
@@ -220,45 +235,55 @@ Comprehensive Zod validation schemas for the MaintAInPro CMMS API endpoints. All
 ## Common Field Patterns
 
 ### UUID Fields
+
 All ID fields are validated as UUIDs:
+
 ```typescript
-id: z.string().uuid()
-organizationId: z.string().uuid()
-equipmentId: z.string().uuid().nullable()
+id: z.string().uuid();
+organizationId: z.string().uuid();
+equipmentId: z.string().uuid().nullable();
 ```
 
 ### Date Fields
+
 Date fields accept ISO date strings:
+
 ```typescript
-scheduledDate: z.string().datetime().nullable()
-createdAt: z.string().datetime()
-updatedAt: z.string().datetime()
+scheduledDate: z.string().datetime().nullable();
+createdAt: z.string().datetime();
+updatedAt: z.string().datetime();
 ```
 
 ### Enum Fields
+
 Status and type fields use predefined values:
+
 ```typescript
-status: z.enum(['new', 'assigned', 'in_progress', 'completed', 'cancelled'])
-priority: z.enum(['low', 'medium', 'high', 'critical'])
-type: z.enum(['corrective', 'preventive', 'emergency', 'project'])
+status: z.enum(['new', 'assigned', 'in_progress', 'completed', 'cancelled']);
+priority: z.enum(['low', 'medium', 'high', 'critical']);
+type: z.enum(['corrective', 'preventive', 'emergency', 'project']);
 ```
 
 ### Pagination Fields
+
 Search schemas include pagination:
+
 ```typescript
-limit: z.number().int().min(1).max(100).default(10)
-offset: z.number().int().min(0).default(0)
-sortBy: z.string().optional()
-sortOrder: z.enum(['asc', 'desc']).default('desc')
+limit: z.number().int().min(1).max(100).default(10);
+offset: z.number().int().min(0).default(0);
+sortBy: z.string().optional();
+sortOrder: z.enum(['asc', 'desc']).default('desc');
 ```
 
 ## Field Mapping
 
 ### Automatic Transformations
 
-The validation middleware automatically maps between API and database field formats:
+The validation middleware automatically maps between API and database field
+formats:
 
 #### API → Database (snake_case)
+
 ```javascript
 // Input (camelCase)
 {
@@ -278,6 +303,7 @@ The validation middleware automatically maps between API and database field form
 ```
 
 #### Database → API (camelCase)
+
 ```javascript
 // Database output (snake_case)
 {
@@ -299,6 +325,7 @@ The validation middleware automatically maps between API and database field form
 ### Custom Field Mappings
 
 Some fields have special mappings:
+
 ```typescript
 // API field → Database field
 foNumber → fo_number
@@ -312,61 +339,70 @@ isActive → is_active
 ## Validation Rules
 
 ### String Validation
+
 ```typescript
 // Required strings
-description: z.string().min(1, "Description is required")
+description: z.string().min(1, 'Description is required');
 
 // Optional strings
-notes: z.string().nullable()
+notes: z.string().nullable();
 
 // Email validation
-email: z.string().email("Invalid email format")
+email: z.string().email('Invalid email format');
 
 // Pattern validation
-equipmentTag: z.string().regex(/^[A-Z0-9-]+$/, "Invalid equipment tag format")
+equipmentTag: z.string().regex(/^[A-Z0-9-]+$/, 'Invalid equipment tag format');
 ```
 
 ### Number Validation
+
 ```typescript
 // Positive numbers
-estimatedHours: z.number().positive("Must be positive")
+estimatedHours: z.number().positive('Must be positive');
 
 // Integer validation
-limit: z.number().int().min(1).max(100)
+limit: z.number().int().min(1).max(100);
 
 // Currency validation
-unitCost: z.number().multipleOf(0.01, "Invalid currency format")
+unitCost: z.number().multipleOf(0.01, 'Invalid currency format');
 ```
 
 ### Array Validation
+
 ```typescript
 // Array of UUIDs
-equipmentIds: z.array(z.string().uuid())
+equipmentIds: z.array(z.string().uuid());
 
 // Array of objects
-attachments: z.array(z.object({
-  filename: z.string(),
-  url: z.string().url()
-}))
+attachments: z.array(
+  z.object({
+    filename: z.string(),
+    url: z.string().url(),
+  })
+);
 ```
 
 ### Object Validation
+
 ```typescript
 // JSON specifications
 specifications: z.object({
   voltage: z.number().optional(),
   amperage: z.number().optional(),
-  dimensions: z.object({
-    length: z.number(),
-    width: z.number(),
-    height: z.number()
-  }).optional()
-}).nullable()
+  dimensions: z
+    .object({
+      length: z.number(),
+      width: z.number(),
+      height: z.number(),
+    })
+    .optional(),
+}).nullable();
 ```
 
 ## Error Responses
 
 ### Validation Error Format
+
 ```typescript
 {
   success: false,
@@ -387,6 +423,7 @@ specifications: z.object({
 ```
 
 ### Common Error Codes
+
 - `invalid_type` - Wrong data type
 - `invalid_string` - String validation failed
 - `invalid_enum_value` - Enum value not allowed
@@ -397,24 +434,31 @@ specifications: z.object({
 ## Schema Usage Examples
 
 ### Endpoint Validation
+
 ```typescript
-import { validateBody, validateQuery } from '../middleware/validation.middleware';
+import {
+  validateBody,
+  validateQuery,
+} from '../middleware/validation.middleware';
 import { CreateWorkOrderSchema, WorkOrderSearchSchema } from '../schemas';
 
 // Create endpoint
-app.post('/api/work-orders', 
+app.post(
+  '/api/work-orders',
   validateBody(CreateWorkOrderSchema),
   workOrderController.create
 );
 
 // Search endpoint
-app.get('/api/work-orders',
+app.get(
+  '/api/work-orders',
   validateQuery(WorkOrderSearchSchema),
   workOrderController.search
 );
 ```
 
 ### Manual Validation
+
 ```typescript
 import { CreateWorkOrderSchema } from '../schemas';
 
@@ -427,10 +471,11 @@ if (!result.success) {
 ```
 
 ### Custom Validation
+
 ```typescript
 // Extend existing schema
 const ExtendedWorkOrderSchema = CreateWorkOrderSchema.extend({
-  customField: z.string().optional()
+  customField: z.string().optional(),
 });
 
 // Partial schema for updates
@@ -442,7 +487,8 @@ const PartialWorkOrderSchema = CreateWorkOrderSchema.partial();
 1. **Always validate input** - Use appropriate schemas for all endpoints
 2. **Handle errors gracefully** - Provide clear error messages to clients
 3. **Use appropriate schemas** - Create vs Update vs Search schemas
-4. **Leverage field mapping** - Trust automatic camelCase ↔ snake_case conversion
+4. **Leverage field mapping** - Trust automatic camelCase ↔ snake_case
+   conversion
 5. **Validate UUIDs** - Ensure all ID fields are valid UUIDs
 6. **Set reasonable limits** - Use pagination limits to prevent large responses
 7. **Use nullable for optional** - Distinguish between undefined and null values
@@ -450,26 +496,33 @@ const PartialWorkOrderSchema = CreateWorkOrderSchema.partial();
 ## Schema Evolution
 
 ### Adding New Fields
+
 ```typescript
 // Add optional field to existing schema
 const UpdatedSchema = ExistingSchema.extend({
-  newField: z.string().optional()
+  newField: z.string().optional(),
 });
 ```
 
 ### Deprecating Fields
+
 ```typescript
 // Mark field as deprecated but keep validation
 const DeprecatedSchema = ExistingSchema.extend({
-  oldField: z.string().optional().describe('Deprecated: use newField instead')
+  oldField: z.string().optional().describe('Deprecated: use newField instead'),
 });
 ```
 
 ### Version Compatibility
+
 ```typescript
 // Support multiple versions
-const v1Schema = z.object({ /* v1 fields */ });
-const v2Schema = v1Schema.extend({ /* additional v2 fields */ });
+const v1Schema = z.object({
+  /* v1 fields */
+});
+const v2Schema = v1Schema.extend({
+  /* additional v2 fields */
+});
 
 // Route-specific validation
 app.post('/api/v1/work-orders', validateBody(v1Schema), handler);

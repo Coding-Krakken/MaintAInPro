@@ -1,5 +1,5 @@
-import { pmEngine } from "./pm-engine";
-import { storage } from "../storage";
+import { pmEngine } from './pm-engine';
+import { storage } from '../storage';
 
 export class PMScheduler {
   private static instance: PMScheduler;
@@ -32,9 +32,12 @@ export class PMScheduler {
     this.runScheduledCheck();
 
     // Then run every hour
-    this.intervalId = setInterval(() => {
-      this.runScheduledCheck();
-    }, 60 * 60 * 1000); // 1 hour
+    this.intervalId = setInterval(
+      () => {
+        this.runScheduledCheck();
+      },
+      60 * 60 * 1000
+    ); // 1 hour
   }
 
   /**
@@ -55,24 +58,26 @@ export class PMScheduler {
   private async runScheduledCheck(): Promise<void> {
     try {
       console.log('Running scheduled PM check...');
-      
+
       const warehouses = await storage.getWarehouses();
-      
+
       for (const warehouse of warehouses) {
         if (warehouse.active) {
           console.log(`Running PM automation for warehouse: ${warehouse.name}`);
           const result = await pmEngine.runPMAutomation(warehouse.id);
-          
+
           if (result.generated > 0) {
-            console.log(`Generated ${result.generated} PM work orders for warehouse ${warehouse.name}`);
+            console.log(
+              `Generated ${result.generated} PM work orders for warehouse ${warehouse.name}`
+            );
           }
-          
+
           if (result.errors.length > 0) {
             console.error(`PM automation errors for warehouse ${warehouse.name}:`, result.errors);
           }
         }
       }
-      
+
       console.log('Scheduled PM check completed');
     } catch (error) {
       console.error('Error in scheduled PM check:', error);
@@ -86,11 +91,11 @@ export class PMScheduler {
     try {
       console.log(`Running PM check for warehouse: ${warehouseId}`);
       const result = await pmEngine.runPMAutomation(warehouseId);
-      
+
       if (result.generated > 0) {
         console.log(`Generated ${result.generated} PM work orders`);
       }
-      
+
       if (result.errors.length > 0) {
         console.error('PM automation errors:', result.errors);
       }
@@ -105,7 +110,7 @@ export class PMScheduler {
   public getStatus(): { isRunning: boolean; nextRun?: Date } {
     return {
       isRunning: this.isRunning,
-      nextRun: this.isRunning ? new Date(Date.now() + 60 * 60 * 1000) : undefined
+      nextRun: this.isRunning ? new Date(Date.now() + 60 * 60 * 1000) : undefined,
     };
   }
 }

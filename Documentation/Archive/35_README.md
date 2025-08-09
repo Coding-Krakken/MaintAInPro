@@ -12,34 +12,53 @@
 
 ## 🏆 Production-Ready Enterprise CMMS
 
-MaintAInPro is a **production-hardened**, enterprise-grade Computerized Maintenance Management System (CMMS) designed to transform industrial maintenance operations. Built with modern web technologies, comprehensive security measures, and a state-of-the-art database service, it provides enterprise-scale maintenance operations management.
+MaintAInPro is a **production-hardened**, enterprise-grade Computerized
+Maintenance Management System (CMMS) designed to transform industrial
+maintenance operations. Built with modern web technologies, comprehensive
+security measures, and a state-of-the-art database service, it provides
+enterprise-scale maintenance operations management.
 
 ### ⭐ Latest Release - v1.4.0 Enhanced Database Architecture
 
-- **✅ Enhanced Database Service**: Production-ready database layer with audit trails ✨ **NEW**
-- **✅ Multi-Tenant Architecture**: Organization-based data isolation and security ✨ **NEW**  
-- **✅ Full-Text Search**: Optimized PostgreSQL search with ILIKE performance ✨ **NEW**
-- **✅ Transaction Management**: ACID compliance with rollback support ✨ **NEW**
-- **✅ Field Mapping System**: Automatic camelCase ↔ snake_case transformation ✨ **NEW**
+- **✅ Enhanced Database Service**: Production-ready database layer with audit
+  trails ✨ **NEW**
+- **✅ Multi-Tenant Architecture**: Organization-based data isolation and
+  security ✨ **NEW**
+- **✅ Full-Text Search**: Optimized PostgreSQL search with ILIKE performance ✨
+  **NEW**
+- **✅ Transaction Management**: ACID compliance with rollback support ✨
+  **NEW**
+- **✅ Field Mapping System**: Automatic camelCase ↔ snake_case transformation
+  ✨ **NEW**
 - **✅ TypeScript Perfection**: Zero compilation errors, complete type safety
-- **✅ Comprehensive API v2**: 15+ endpoints with analytics, bulk operations, and smart notifications
-- **✅ Advanced Analytics**: Real-time dashboards with trend analysis and performance metrics
-- **✅ Enterprise Features**: Bulk operations, smart notifications, webhook integration
-- **✅ Test Excellence**: 193 tests passing with comprehensive validation (97.9% coverage)
-- **✅ Production Security**: IPv6-safe rate limiting, SQL injection protection, audit logging
-- **✅ Performance Optimized**: 20+ strategic database indexes, sub-100ms response times
-- **✅ Database Excellence**: Health monitoring, automated maintenance operations
+- **✅ Comprehensive API v2**: 15+ endpoints with analytics, bulk operations,
+  and smart notifications
+- **✅ Advanced Analytics**: Real-time dashboards with trend analysis and
+  performance metrics
+- **✅ Enterprise Features**: Bulk operations, smart notifications, webhook
+  integration
+- **✅ Test Excellence**: 193 tests passing with comprehensive validation (97.9%
+  coverage)
+- **✅ Production Security**: IPv6-safe rate limiting, SQL injection protection,
+  audit logging
+- **✅ Performance Optimized**: 20+ strategic database indexes, sub-100ms
+  response times
+- **✅ Database Excellence**: Health monitoring, automated maintenance
+  operations
 - **✅ PM Engine**: 100% test coverage with enterprise-grade reliability
-- **✅ Mobile-First Design**: Optimized for field technicians and mobile operations
+- **✅ Mobile-First Design**: Optimized for field technicians and mobile
+  operations
 
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - **Node.js 18+**
 - **PostgreSQL 13+** (optional - includes in-memory storage)
 - **npm** or **yarn**
 
 ### Installation
+
 ```bash
 # Clone repository
 git clone <repository-url>
@@ -58,6 +77,7 @@ npm run dev
 **Access**: http://localhost:5000
 
 ### Default Development Access
+
 ```bash
 # Headers for API testing
 x-user-id: supervisor-id
@@ -68,20 +88,21 @@ x-warehouse-id: default-warehouse-id
 
 ### Core Modules
 
-| Module | Status | Description |
-|--------|--------|-------------|
-| **Work Order Management** | ✅ Complete | Full lifecycle with intelligent escalation |
-| **Equipment Tracking** | ✅ Complete | QR code-enabled asset management |
-| **Parts Inventory** | ✅ Complete | Smart tracking with automated reorder alerts |
-| **Preventive Maintenance** | ✅ Complete | Advanced template-based scheduling |
-| **Analytics Dashboard** | ✅ Complete | Real-time metrics and reporting |
-| **Multi-Warehouse** | ✅ Complete | Enterprise multi-location management |
-| **Security & RBAC** | ✅ Complete | Role-based access with audit trails |
-| **Mobile Responsive** | ✅ Complete | Field technician optimized |
+| Module                     | Status      | Description                                  |
+| -------------------------- | ----------- | -------------------------------------------- |
+| **Work Order Management**  | ✅ Complete | Full lifecycle with intelligent escalation   |
+| **Equipment Tracking**     | ✅ Complete | QR code-enabled asset management             |
+| **Parts Inventory**        | ✅ Complete | Smart tracking with automated reorder alerts |
+| **Preventive Maintenance** | ✅ Complete | Advanced template-based scheduling           |
+| **Analytics Dashboard**    | ✅ Complete | Real-time metrics and reporting              |
+| **Multi-Warehouse**        | ✅ Complete | Enterprise multi-location management         |
+| **Security & RBAC**        | ✅ Complete | Role-based access with audit trails          |
+| **Mobile Responsive**      | ✅ Complete | Field technician optimized                   |
 
 ### Advanced Capabilities
 
-- **🤖 Background Processing**: Automated PM generation and escalation monitoring
+- **🤖 Background Processing**: Automated PM generation and escalation
+  monitoring
 - **📊 Real-time Analytics**: Live dashboards with comprehensive reporting
 - **🔄 API-First Design**: RESTful APIs with comprehensive validation
 - **📱 Mobile QR Scanning**: Field technician tools with offline capability
@@ -130,17 +151,17 @@ MaintAInPro/
 
 ## Available Scripts
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start development server with hot reload |
-| `npm run build` | Build application for production |
-| `npm start` | Start production server |
-| `npm run check` | Run TypeScript type checking |
-| `npm run db:push` | Push database schema changes |
-| `npm run db:generate` | Generate database migrations |
-| `npm run db:migrate` | Run database migrations |
-| `npm run lint` | Run TypeScript linting |
-| `npm run clean` | Clean build artifacts |
+| Command               | Description                              |
+| --------------------- | ---------------------------------------- |
+| `npm run dev`         | Start development server with hot reload |
+| `npm run build`       | Build application for production         |
+| `npm start`           | Start production server                  |
+| `npm run check`       | Run TypeScript type checking             |
+| `npm run db:push`     | Push database schema changes             |
+| `npm run db:generate` | Generate database migrations             |
+| `npm run db:migrate`  | Run database migrations                  |
+| `npm run lint`        | Run TypeScript linting                   |
+| `npm run clean`       | Clean build artifacts                    |
 
 ## Production Deployment
 
@@ -174,7 +195,8 @@ npm start
 
 ### Railway Deployment
 
-The application is configured for easy deployment on Railway with the following files:
+The application is configured for easy deployment on Railway with the following
+files:
 
 - `railway.json`: Railway-specific configuration
 - `nixpacks.toml`: Build and runtime configuration
@@ -186,7 +208,8 @@ Set these environment variables in Railway:
 
 - `NODE_ENV`: Set to "production"
 - `PORT`: Port number (Railway sets this automatically)
-- `DATABASE_URL`: PostgreSQL connection string (optional - uses in-memory storage as fallback)
+- `DATABASE_URL`: PostgreSQL connection string (optional - uses in-memory
+  storage as fallback)
 
 #### Deployment Steps
 
@@ -198,18 +221,21 @@ Set these environment variables in Railway:
    - Start the server
    - Monitor health checks
 
-For detailed deployment troubleshooting, see [DEPLOYMENT_FIXES.md](./DEPLOYMENT_FIXES.md).
+For detailed deployment troubleshooting, see
+[DEPLOYMENT_FIXES.md](./DEPLOYMENT_FIXES.md).
 
 ### Manual Deployment
 
 For manual deployment on other platforms:
 
 1. **Build the application**:
+
    ```bash
    npm run build
    ```
 
 2. **Set environment variables**:
+
    ```bash
    export NODE_ENV=production
    export PORT=5000
@@ -221,13 +247,15 @@ For manual deployment on other platforms:
    npm start
    ```
 
-The application will be available at `http://localhost:5000` with the health check at `/api/health`.
+The application will be available at `http://localhost:5000` with the health
+check at `/api/health`.
 
 ## Current Implementation Status
 
 ### ✅ Completed Features
 
 #### Core Infrastructure
+
 - [x] Modern React 18+ with TypeScript and Vite
 - [x] Express.js backend with TypeScript
 - [x] PostgreSQL database with Drizzle ORM
@@ -237,12 +265,14 @@ The application will be available at `http://localhost:5000` with the health che
 - [x] Tailwind CSS with Shadcn/ui components
 
 #### Authentication & Authorization
+
 - [x] Header-based authentication system
 - [x] Role-based access control (7 roles)
 - [x] Multi-warehouse support
 - [x] User profile management
 
 #### Equipment Management
+
 - [x] Complete equipment CRUD operations
 - [x] Asset tracking with unique tags
 - [x] Equipment status and criticality levels
@@ -251,6 +281,7 @@ The application will be available at `http://localhost:5000` with the health che
 - [x] Filtering and search functionality
 
 #### Work Order Management
+
 - [x] Full work order lifecycle (New → Closed)
 - [x] Work order creation with form validation
 - [x] Priority and status management
@@ -260,6 +291,7 @@ The application will be available at `http://localhost:5000` with the health che
 - [x] Work order cards with status indicators
 
 #### Inventory Management
+
 - [x] Parts catalog with search and filtering
 - [x] Stock level tracking
 - [x] Reorder point alerts
@@ -268,6 +300,7 @@ The application will be available at `http://localhost:5000` with the health che
 - [x] Category-based organization
 
 #### Dashboard & Analytics
+
 - [x] Real-time dashboard with key metrics
 - [x] Work order statistics
 - [x] Equipment status overview
@@ -276,6 +309,7 @@ The application will be available at `http://localhost:5000` with the health che
 - [x] Upcoming maintenance preview
 
 #### User Interface
+
 - [x] Responsive design for mobile and desktop
 - [x] Modern, intuitive interface
 - [x] Loading states and error handling
@@ -286,6 +320,7 @@ The application will be available at `http://localhost:5000` with the health che
 ### 🚧 Partially Implemented
 
 #### Mobile Features
+
 - [x] QR code scanner component
 - [x] Responsive design
 - [ ] Camera integration for photos
@@ -293,12 +328,14 @@ The application will be available at `http://localhost:5000` with the health che
 - [ ] Push notifications
 
 #### Preventive Maintenance
+
 - [x] PM template schema
 - [ ] Automated PM work order generation
 - [ ] Scheduling engine
 - [ ] Compliance tracking
 
 #### Notifications
+
 - [x] Notification data model
 - [x] Basic notification creation
 - [ ] Real-time notification delivery
@@ -308,31 +345,40 @@ The application will be available at `http://localhost:5000` with the health che
 ## Core Modules Overview
 
 ### 1. Equipment & Asset Management
+
 - **Purpose**: Centralized equipment tracking and lifecycle management
-- **Features**: QR codes, asset hierarchy, maintenance history, performance metrics
+- **Features**: QR codes, asset hierarchy, maintenance history, performance
+  metrics
 - **Status**: ✅ Fully implemented with mobile QR scanning
 
-### 2. Work Order Management  
+### 2. Work Order Management
+
 - **Purpose**: Complete maintenance workflow management
-- **Features**: Lifecycle tracking, mobile execution, auto-escalation, checklist support
+- **Features**: Lifecycle tracking, mobile execution, auto-escalation, checklist
+  support
 - **Status**: ✅ Core functionality complete, escalation and attachments pending
 
 ### 3. Parts & Inventory Management
+
 - **Purpose**: Smart inventory tracking with automated reordering
-- **Features**: Stock levels, vendor integration, multi-warehouse support, usage tracking
+- **Features**: Stock levels, vendor integration, multi-warehouse support, usage
+  tracking
 - **Status**: ✅ Basic inventory management complete, vendor integration pending
 
 ### 4. Preventive Maintenance
+
 - **Purpose**: Automated PM scheduling and compliance tracking
 - **Features**: Template-based scheduling, automated work order generation
 - **Status**: 🚧 Schema complete, automation engine pending
 
 ### 5. User Roles & Permissions
+
 - **Purpose**: Multi-tenant security with role-based access
 - **Features**: 7 distinct roles, warehouse isolation, granular permissions
 - **Status**: ✅ Core RBAC implemented, advanced features pending
 
 ### 6. Dashboard & Analytics
+
 - **Purpose**: Real-time operational insights and KPIs
 - **Features**: Live metrics, performance tracking, executive dashboards
 - **Status**: ✅ Basic dashboard complete, advanced analytics pending
@@ -340,13 +386,16 @@ The application will be available at `http://localhost:5000` with the health che
 ## API Documentation
 
 ### Authentication
+
 All API endpoints require authentication headers:
+
 - `x-user-id`: Current user identifier
 - `x-warehouse-id`: Current warehouse identifier
 
 ### Core Endpoints
 
 #### Equipment Management
+
 ```
 GET    /api/equipment              # List all equipment
 GET    /api/equipment/:id          # Get equipment by ID
@@ -356,6 +405,7 @@ PATCH  /api/equipment/:id          # Update equipment
 ```
 
 #### Work Orders
+
 ```
 GET    /api/work-orders                    # List work orders (with filters)
 GET    /api/work-orders/:id               # Get work order details
@@ -366,6 +416,7 @@ POST   /api/work-orders/:id/checklist     # Add checklist item
 ```
 
 #### Inventory
+
 ```
 GET    /api/parts                 # List all parts
 GET    /api/parts/:id            # Get part details
@@ -375,6 +426,7 @@ GET    /api/parts/number/:number # Get part by number
 ```
 
 #### Dashboard
+
 ```
 GET    /api/dashboard/stats      # Get dashboard statistics
 GET    /api/notifications        # Get user notifications
@@ -382,7 +434,8 @@ GET    /api/notifications        # Get user notifications
 
 ## Database Schema
 
-The system uses a comprehensive PostgreSQL schema with the following core tables:
+The system uses a comprehensive PostgreSQL schema with the following core
+tables:
 
 - **profiles**: User management and role assignments
 - **warehouses**: Multi-location support
@@ -400,6 +453,7 @@ The system uses a comprehensive PostgreSQL schema with the following core tables
 ## Development Workflow
 
 ### Code Quality
+
 - TypeScript for type safety
 - ESLint for code linting
 - Consistent code formatting
@@ -407,12 +461,14 @@ The system uses a comprehensive PostgreSQL schema with the following core tables
 - Custom hooks for reusability
 
 ### Testing Strategy
+
 - Unit tests for utilities and hooks
 - Integration tests for API endpoints
 - Component testing for UI elements
 - E2E testing for critical workflows
 
 ### Performance Optimization
+
 - Code splitting with lazy loading
 - Efficient database queries
 - Caching strategies
@@ -428,6 +484,7 @@ The system uses a comprehensive PostgreSQL schema with the following core tables
 5. Open a Pull Request
 
 ### Development Guidelines
+
 - Follow TypeScript best practices
 - Use semantic commit messages
 - Add tests for new features
@@ -436,11 +493,13 @@ The system uses a comprehensive PostgreSQL schema with the following core tables
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
+for details.
 
 ## Support
 
-For support, please create an issue in the repository or contact the development team.
+For support, please create an issue in the repository or contact the development
+team.
 
 ---
 
@@ -450,15 +509,20 @@ For support, please create an issue in the repository or contact the development
 
 ### 🧪 Comprehensive Test Suite
 
-MaintainPro includes a robust testing framework ensuring reliability and maintainability:
+MaintainPro includes a robust testing framework ensuring reliability and
+maintainability:
 
 #### Test Types & Coverage
+
 - **Unit Tests**: ✅ **17/17 PASSING** - Component and utility function testing
-- **Integration Tests**: ✅ **3/3 PASSING** - API and database integration testing  
-- **E2E Tests**: ✅ **Authentication Flow Working** - Browser-based user journey testing
+- **Integration Tests**: ✅ **3/3 PASSING** - API and database integration
+  testing
+- **E2E Tests**: ✅ **Authentication Flow Working** - Browser-based user journey
+  testing
 - **Accessibility Tests**: ⚠️ **Configured** - WCAG 2.1 AA compliance testing
 
 #### Testing Technologies
+
 - **Vitest** - Fast unit testing framework with coverage reporting
 - **Playwright** - Cross-browser E2E testing (Chrome, Firefox, Safari, Mobile)
 - **Jest + jest-axe** - Accessibility compliance testing
@@ -466,6 +530,7 @@ MaintainPro includes a robust testing framework ensuring reliability and maintai
 - **MSW (Mock Service Worker)** - API mocking and testing utilities
 
 #### Test Commands
+
 ```bash
 # Run all tests
 npm run test:all
@@ -482,15 +547,20 @@ npm run test:ui              # Interactive test UI
 ```
 
 #### Test Infrastructure
+
 - **Automated Test Data**: Sample data with fixed IDs for consistent testing
-- **Multi-Browser Support**: Tests run across Chrome, Firefox, Safari, and mobile
+- **Multi-Browser Support**: Tests run across Chrome, Firefox, Safari, and
+  mobile
 - **Auto-Server Startup**: Playwright automatically starts development server
-- **Test IDs**: Comprehensive `data-testid` attributes for reliable element selection
+- **Test IDs**: Comprehensive `data-testid` attributes for reliable element
+  selection
 - **Mock Data**: Realistic mock data for offline testing scenarios
 
 #### Key Testing Features
+
 - **Authentication Flow**: Login, logout, and role-based access testing
-- **Work Order Management**: Complete workflow testing from creation to completion
+- **Work Order Management**: Complete workflow testing from creation to
+  completion
 - **Equipment Tracking**: QR code scanning and asset management testing
 - **Mobile Responsiveness**: Touch interactions and mobile-specific UI testing
 - **Error Handling**: Comprehensive error scenario testing
@@ -499,11 +569,16 @@ npm run test:ui              # Interactive test UI
 ## 📚 Production Documentation
 
 ### Security & Performance Guides
-- **[Production Security Guide](PRODUCTION_SECURITY_GUIDE.md)**: Comprehensive security implementation
-- **[Performance Optimization Guide](PRODUCTION_PERFORMANCE_GUIDE.md)**: Database and system optimization
-- **[Test Coverage Report](TEST_COVERAGE_REPORT.md)**: Complete testing documentation
+
+- **[Production Security Guide](PRODUCTION_SECURITY_GUIDE.md)**: Comprehensive
+  security implementation
+- **[Performance Optimization Guide](PRODUCTION_PERFORMANCE_GUIDE.md)**:
+  Database and system optimization
+- **[Test Coverage Report](TEST_COVERAGE_REPORT.md)**: Complete testing
+  documentation
 
 ### Security Features
+
 - **🔒 IPv6-Safe Rate Limiting**: Comprehensive protection against abuse
 - **🛡️ SQL Injection Protection**: Multi-layer input validation and sanitization
 - **🔐 Enhanced Authentication**: JWT with session validation and audit logging
@@ -511,16 +586,24 @@ npm run test:ui              # Interactive test UI
 - **🌐 CORS Security**: Dynamic origin validation for multiple environments
 
 ### Performance Optimization
-- **⚡ Database Optimization**: 20+ strategic indexes for optimal query performance
-- **📈 Performance Monitoring**: Real-time metrics with grading system (A-D scale)
+
+- **⚡ Database Optimization**: 20+ strategic indexes for optimal query
+  performance
+- **📈 Performance Monitoring**: Real-time metrics with grading system (A-D
+  scale)
 - **🚀 Startup Coordination**: Intelligent production initialization sequence
 - **💾 Memory Management**: Efficient resource utilization and leak detection
 - **📊 Load Testing**: Validated for 1000+ concurrent users
 
 ### Test Coverage
-- **🧪 173 Passing Tests**: Comprehensive validation across all system components
-- **🔒 Security Testing**: Complete coverage of security middleware and protections
+
+- **🧪 173 Passing Tests**: Comprehensive validation across all system
+  components
+- **🔒 Security Testing**: Complete coverage of security middleware and
+  protections
 - **⚡ Performance Testing**: Load testing and response time validation
 - **🎯 Integration Testing**: Full API and workflow validation
 
-For detailed testing documentation, see [TEST_COVERAGE_REPORT.md](TEST_COVERAGE_REPORT.md) and [tests/README.md](tests/README.md).
+For detailed testing documentation, see
+[TEST_COVERAGE_REPORT.md](TEST_COVERAGE_REPORT.md) and
+[tests/README.md](tests/README.md).

@@ -2,7 +2,11 @@
 
 ## Overview
 
-The Enhanced Database Service is a production-ready database abstraction layer that implements the complete DatabaseImplementation.md specifications. It provides a robust, type-safe interface for database operations with comprehensive audit trails, multi-tenant support, and full-text search capabilities.
+The Enhanced Database Service is a production-ready database abstraction layer
+that implements the complete DatabaseImplementation.md specifications. It
+provides a robust, type-safe interface for database operations with
+comprehensive audit trails, multi-tenant support, and full-text search
+capabilities.
 
 ## Architecture
 
@@ -75,7 +79,8 @@ The Enhanced Database Service is a production-ready database abstraction layer t
 
 ### 🔄 Field Mapping System
 
-The service automatically handles field name transformations between TypeScript (camelCase) and PostgreSQL (snake_case):
+The service automatically handles field name transformations between TypeScript
+(camelCase) and PostgreSQL (snake_case):
 
 ```typescript
 // Input (camelCase)
@@ -102,21 +107,26 @@ const workOrder = {
 Creates a new organization with full audit trail.
 
 **Parameters:**
+
 - `data`: Organization data (name, slug, settings, etc.)
 - `context`: Audit context with user and session information
 
 **Returns:** Created organization object
 
 **Example:**
+
 ```typescript
-const org = await service.createOrganization({
-  name: 'Acme Manufacturing',
-  slug: 'acme-manufacturing',
-  subscriptionTier: 'enterprise',
-  maxUsers: 100,
-  maxAssets: 1000,
-  active: true
-}, context);
+const org = await service.createOrganization(
+  {
+    name: 'Acme Manufacturing',
+    slug: 'acme-manufacturing',
+    subscriptionTier: 'enterprise',
+    maxUsers: 100,
+    maxAssets: 1000,
+    active: true,
+  },
+  context
+);
 ```
 
 #### `getOrganization(id: string): Promise<Organization | null>`
@@ -130,6 +140,7 @@ Retrieves an organization by ID.
 Creates a new work order with automatic field mapping and audit trail.
 
 **Parameters:**
+
 - `data`: Work order data
 - `context`: Audit context
 
@@ -144,6 +155,7 @@ Updates an existing work order with audit trail.
 Performs full-text search and filtering on work orders.
 
 **Search Options:**
+
 ```typescript
 interface SearchOptions {
   organizationId: string;
@@ -193,43 +205,53 @@ Performs database maintenance operations (VACUUM, ANALYZE).
 ```typescript
 // Initialize service
 const service = new EnhancedDatabaseService({
-  connectionString: process.env.DATABASE_URL!
+  connectionString: process.env.DATABASE_URL!,
 });
 
 // Create work order
-const workOrder = await service.createWorkOrder({
-  foNumber: 'WO-001-PUMP',
-  type: 'corrective',
-  description: 'Repair hydraulic pump',
-  status: 'new',
-  priority: 'high',
-  requestedBy: userId,
-  organizationId: orgId,
-  followUp: false,
-  escalated: false,
-  escalationLevel: 0
-}, context);
+const workOrder = await service.createWorkOrder(
+  {
+    foNumber: 'WO-001-PUMP',
+    type: 'corrective',
+    description: 'Repair hydraulic pump',
+    status: 'new',
+    priority: 'high',
+    requestedBy: userId,
+    organizationId: orgId,
+    followUp: false,
+    escalated: false,
+    escalationLevel: 0,
+  },
+  context
+);
 
 // Search work orders
-const results = await service.searchWorkOrders({
-  organizationId: orgId,
-  searchTerm: 'hydraulic',
-  filters: { priority: 'high' },
-  limit: 10
-}, context);
+const results = await service.searchWorkOrders(
+  {
+    organizationId: orgId,
+    searchTerm: 'hydraulic',
+    filters: { priority: 'high' },
+    limit: 10,
+  },
+  context
+);
 
 // Update work order
-const updated = await service.updateWorkOrder(workOrder.id, {
-  status: 'completed',
-  actualHours: 4.5,
-  notes: 'Pump repaired successfully'
-}, context);
+const updated = await service.updateWorkOrder(
+  workOrder.id,
+  {
+    status: 'completed',
+    actualHours: 4.5,
+    notes: 'Pump repaired successfully',
+  },
+  context
+);
 ```
 
 ### Transaction Example
 
 ```typescript
-const result = await service.withTransaction(async (client) => {
+const result = await service.withTransaction(async client => {
   // Multiple operations in transaction
   const workOrder = await service.createWorkOrder(data1, context);
   await service.addEntityTag('work_order', workOrder.id, 'urgent', context);
@@ -242,19 +264,23 @@ const result = await service.withTransaction(async (client) => {
 The service fully complies with DatabaseImplementation.md specifications:
 
 ### ✅ Core Principles
+
 - UUID primary keys for all entities
-- Comprehensive audit fields (createdAt, updatedAt, deletedAt, createdBy, updatedBy)
+- Comprehensive audit fields (createdAt, updatedAt, deletedAt, createdBy,
+  updatedBy)
 - Multi-tenant organization isolation
 - Soft delete functionality
 - Full-text search capabilities (tsv fields)
 
 ### ✅ Performance Features
+
 - Connection pooling (max 20 connections)
 - Optimized queries with proper indexing
 - Transaction support with rollback
 - Health monitoring and metrics
 
 ### ✅ Security Features
+
 - Organization-based data isolation
 - Audit trails for all operations
 - Input validation and sanitization
@@ -262,7 +288,8 @@ The service fully complies with DatabaseImplementation.md specifications:
 
 ## Testing
 
-The service includes comprehensive integration tests (`enhanced-database-integration.test.ts`) covering:
+The service includes comprehensive integration tests
+(`enhanced-database-integration.test.ts`) covering:
 
 - ✅ Multi-tenant organization management (2 tests)
 - ✅ Full-text search and work order management (4 tests)
@@ -332,6 +359,7 @@ The service provides real-time monitoring through:
 ## Future Enhancements
 
 ### Planned Features
+
 - Equipment CRUD operations implementation
 - Advanced reporting and analytics
 - Real-time notifications
@@ -341,6 +369,7 @@ The service provides real-time monitoring through:
 - Caching layer integration
 
 ### Performance Optimizations
+
 - Query result caching
 - Read replicas support
 - Sharding strategies
@@ -348,4 +377,7 @@ The service provides real-time monitoring through:
 
 ## Conclusion
 
-The Enhanced Database Service provides a production-ready, scalable foundation for the MaintAInPro CMMS system. With 100% test coverage and full compliance with database specifications, it offers reliable, secure, and performant database operations for enterprise maintenance management.
+The Enhanced Database Service provides a production-ready, scalable foundation
+for the MaintAInPro CMMS system. With 100% test coverage and full compliance
+with database specifications, it offers reliable, secure, and performant
+database operations for enterprise maintenance management.

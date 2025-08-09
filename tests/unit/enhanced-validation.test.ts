@@ -1,14 +1,14 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { z } from 'zod';
-import { 
-  camelToSnake, 
-  snakeToCamel, 
+import {
+  camelToSnake,
+  snakeToCamel,
   validateAndTransform,
   fieldValidators,
   createFlexibleSchema,
   flexibleDateSchema,
   emailSchema,
-  passwordSchema
+  passwordSchema,
 } from '../../shared/validation-utils';
 
 describe('Enhanced Validation System', () => {
@@ -21,8 +21,8 @@ describe('Enhanced Validation System', () => {
         createdAt: new Date(),
         metaData: {
           userRole: 'admin',
-          lastLoginDate: '2024-01-01'
-        }
+          lastLoginDate: '2024-01-01',
+        },
       };
 
       const expected = {
@@ -32,8 +32,8 @@ describe('Enhanced Validation System', () => {
         created_at: input.createdAt,
         meta_data: {
           user_role: 'admin',
-          last_login_date: '2024-01-01'
-        }
+          last_login_date: '2024-01-01',
+        },
       };
 
       expect(camelToSnake(input)).toEqual(expected);
@@ -47,8 +47,8 @@ describe('Enhanced Validation System', () => {
         created_at: new Date(),
         meta_data: {
           user_role: 'admin',
-          last_login_date: '2024-01-01'
-        }
+          last_login_date: '2024-01-01',
+        },
       };
 
       const expected = {
@@ -58,8 +58,8 @@ describe('Enhanced Validation System', () => {
         createdAt: input.created_at,
         metaData: {
           userRole: 'admin',
-          lastLoginDate: '2024-01-01'
-        }
+          lastLoginDate: '2024-01-01',
+        },
       };
 
       expect(snakeToCamel(input)).toEqual(expected);
@@ -69,8 +69,8 @@ describe('Enhanced Validation System', () => {
       const input = {
         userList: [
           { firstName: 'John', lastName: 'Doe' },
-          { firstName: 'Jane', lastName: 'Smith' }
-        ]
+          { firstName: 'Jane', lastName: 'Smith' },
+        ],
       };
 
       const result = camelToSnake(input);
@@ -82,21 +82,21 @@ describe('Enhanced Validation System', () => {
   describe('Enhanced Field Validators', () => {
     it('should validate non-empty strings with trimming', () => {
       const validator = fieldValidators.nonEmptyString('Name');
-      
+
       expect(validator.parse('John')).toBe('John');
       expect(validator.parse('  John  ')).toBe('John');
-      
+
       expect(() => validator.parse('')).toThrow();
       expect(() => validator.parse('   ')).toThrow();
     });
 
     it('should validate positive numbers with coercion', () => {
       const validator = fieldValidators.positiveNumber('Amount');
-      
+
       expect(validator.parse(10)).toBe(10);
       expect(validator.parse('10')).toBe(10);
       expect(validator.parse('10.5')).toBe(10.5);
-      
+
       expect(() => validator.parse(-1)).toThrow();
       expect(() => validator.parse('0')).toThrow();
       expect(() => validator.parse('abc')).toThrow();
@@ -105,10 +105,10 @@ describe('Enhanced Validation System', () => {
     it('should validate UUIDs correctly', () => {
       const validUuid = '00000000-0000-0000-0000-000000000001';
       const invalidUuid = 'not-a-uuid';
-      
+
       expect(fieldValidators.requiredUuid('ID').parse(validUuid)).toBe(validUuid);
       expect(fieldValidators.optionalUuid('ID').parse(undefined)).toBeUndefined();
-      
+
       expect(() => fieldValidators.requiredUuid('ID').parse(invalidUuid)).toThrow();
     });
 
@@ -116,14 +116,14 @@ describe('Enhanced Validation System', () => {
       expect(fieldValidators.status.parse('active')).toBe('active');
       expect(fieldValidators.status.parse('ACTIVE')).toBe('active');
       expect(fieldValidators.status.parse('Active')).toBe('active');
-      
+
       expect(() => fieldValidators.status.parse('invalid')).toThrow();
     });
 
     it('should validate email addresses correctly', () => {
       expect(emailSchema.parse('test@example.com')).toBe('test@example.com');
       expect(emailSchema.parse('  TEST@EXAMPLE.COM  ')).toBe('test@example.com');
-      
+
       expect(() => emailSchema.parse('invalid-email')).toThrow();
       expect(() => emailSchema.parse('')).toThrow();
     });
@@ -131,9 +131,9 @@ describe('Enhanced Validation System', () => {
     it('should validate passwords with complexity requirements', () => {
       const validPassword = 'StrongPass123!';
       const weakPassword = 'weak';
-      
+
       expect(passwordSchema.parse(validPassword)).toBe(validPassword);
-      
+
       expect(() => passwordSchema.parse(weakPassword)).toThrow();
       expect(() => passwordSchema.parse('NoSpecialChar123')).toThrow();
       expect(() => passwordSchema.parse('nostrongpass123!')).toThrow();
@@ -145,7 +145,7 @@ describe('Enhanced Validation System', () => {
       const dateString = '2024-01-01';
       const dateTimeString = '2024-01-01T12:00:00Z';
       const dateObj = new Date('2024-01-01');
-      
+
       expect(flexibleDateSchema.parse(dateString)).toBeInstanceOf(Date);
       expect(flexibleDateSchema.parse(dateTimeString)).toBeInstanceOf(Date);
       expect(flexibleDateSchema.parse(dateObj)).toBeInstanceOf(Date);
@@ -162,21 +162,21 @@ describe('Enhanced Validation System', () => {
       const schema = createFlexibleSchema({
         firstName: fieldValidators.nonEmptyString('First Name'),
         lastName: fieldValidators.nonEmptyString('Last Name'),
-        warehouseId: fieldValidators.optionalUuid('Warehouse ID')
+        warehouseId: fieldValidators.optionalUuid('Warehouse ID'),
       });
 
       // Test camelCase input
       const camelCaseInput = {
         firstName: 'John',
         lastName: 'Doe',
-        warehouseId: '00000000-0000-0000-0000-000000000001'
+        warehouseId: '00000000-0000-0000-0000-000000000001',
       };
 
       // Test snake_case input
       const snakeCaseInput = {
         first_name: 'John',
         last_name: 'Doe',
-        warehouse_id: '00000000-0000-0000-0000-000000000001'
+        warehouse_id: '00000000-0000-0000-0000-000000000001',
       };
 
       const result1 = schema.parse(camelCaseInput);
@@ -192,12 +192,12 @@ describe('Enhanced Validation System', () => {
     it('should handle mixed case inputs gracefully', () => {
       const schema = createFlexibleSchema({
         firstName: fieldValidators.nonEmptyString('First Name'),
-        lastName: fieldValidators.nonEmptyString('Last Name')
+        lastName: fieldValidators.nonEmptyString('Last Name'),
       });
 
       const mixedInput = {
-        firstName: 'John',    // camelCase
-        last_name: 'Doe'      // snake_case
+        firstName: 'John', // camelCase
+        last_name: 'Doe', // snake_case
       };
 
       const result = schema.parse(mixedInput);
@@ -211,17 +211,17 @@ describe('Enhanced Validation System', () => {
       const schema = z.object({
         email: emailSchema,
         age: fieldValidators.positiveNumber('Age'),
-        status: fieldValidators.status
+        status: fieldValidators.status,
       });
 
       const invalidInput = {
         email: 'invalid-email',
         age: -5,
-        status: 'invalid-status'
+        status: 'invalid-status',
       };
 
       expect(() => validateAndTransform(schema)(invalidInput)).toThrow();
-      
+
       try {
         validateAndTransform(schema)(invalidInput);
       } catch (error: any) {
@@ -244,16 +244,16 @@ describe('Enhanced Validation System', () => {
         description: fieldValidators.nonEmptyString('Description'),
         priority: fieldValidators.priority,
         requestedBy: fieldValidators.requiredUuid('Requested By'),
-        warehouseId: fieldValidators.requiredUuid('Warehouse ID')
+        warehouseId: fieldValidators.requiredUuid('Warehouse ID'),
       });
-      
+
       const workOrderData = {
-        fo_number: 'WO-2024-001',  // snake_case
+        fo_number: 'WO-2024-001', // snake_case
         type: 'preventive',
         description: 'Regular maintenance',
         priority: 'medium',
-        requestedBy: '00000000-0000-0000-0000-000000000001',  // camelCase
-        warehouse_id: '00000000-0000-0000-0000-000000000002'  // snake_case
+        requestedBy: '00000000-0000-0000-0000-000000000001', // camelCase
+        warehouse_id: '00000000-0000-0000-0000-000000000002', // snake_case
       };
 
       expect(() => workOrderSchema.parse(workOrderData)).not.toThrow();
@@ -267,15 +267,15 @@ describe('Enhanced Validation System', () => {
         model: fieldValidators.nonEmptyString('Model'),
         description: fieldValidators.nonEmptyString('Description'),
         status: fieldValidators.status,
-        warehouseId: fieldValidators.requiredUuid('Warehouse ID')
+        warehouseId: fieldValidators.requiredUuid('Warehouse ID'),
       });
-      
+
       const equipmentData = {
         assetTag: 'EQ-001',
         model: 'Industrial Pump X1',
         description: 'Main water pump for facility',
-        status: 'ACTIVE',  // Should be normalized to lowercase
-        warehouseId: '00000000-0000-0000-0000-000000000001'
+        status: 'ACTIVE', // Should be normalized to lowercase
+        warehouseId: '00000000-0000-0000-0000-000000000001',
       };
 
       const result = equipmentSchema.parse(equipmentData);
@@ -316,7 +316,7 @@ describe('Enhanced Validation System', () => {
       const date = new Date();
       const input = { createdAt: date };
       const result = camelToSnake(input);
-      
+
       expect(result.created_at).toBe(date);
       expect(result.created_at).toBeInstanceOf(Date);
     });
@@ -346,9 +346,9 @@ describe('Integration with Real Schemas', () => {
       followUp: z.boolean().default(false),
       escalated: z.boolean().default(false),
       escalationLevel: z.number().default(0),
-      warehouseId: fieldValidators.requiredUuid('Warehouse ID')
+      warehouseId: fieldValidators.requiredUuid('Warehouse ID'),
     });
-    
+
     // Simulate API request with mixed field naming
     const apiRequest = {
       fo_number: 'WO-2024-TEST-001',
@@ -366,11 +366,11 @@ describe('Integration with Real Schemas', () => {
       follow_up: false,
       escalated: false,
       escalation_level: 0,
-      warehouse_id: '00000000-0000-0000-0000-000000000004'
+      warehouse_id: '00000000-0000-0000-0000-000000000004',
     };
 
     const validatedData = workOrderSchema.parse(apiRequest);
-    
+
     // Verify data normalization
     expect(validatedData.foNumber).toBe('WO-2024-TEST-001');
     expect(validatedData.type).toBe('corrective');
@@ -386,10 +386,10 @@ describe('Integration with Real Schemas', () => {
       lastName: 'Doe',
       contactInfo: {
         emailAddress: 'john@example.com',
-        phoneNumber: '+1-555-0123'
+        phoneNumber: '+1-555-0123',
       },
       preferences: ['email', 'sms'],
-      createdAt: new Date('2024-01-01')
+      createdAt: new Date('2024-01-01'),
     };
 
     // Transform to snake_case and back

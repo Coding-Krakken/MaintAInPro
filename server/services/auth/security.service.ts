@@ -50,25 +50,28 @@ export class SecurityService {
       requireUppercase: true,
       requireLowercase: true,
       requireNumbers: true,
-      requireSpecialChars: true
+      requireSpecialChars: true,
     },
     sessionConfig: {
       maxConcurrentSessions: 5,
       sessionTimeout: 15,
-      requireHttps: process.env.NODE_ENV === 'production'
+      requireHttps: process.env.NODE_ENV === 'production',
     },
     rateLimiting: {
       windowMs: 15 * 60 * 1000, // 15 minutes
-      maxRequests: 100
-    }
+      maxRequests: 100,
+    },
   };
 
   // Track failed login attempts
-  private static failedAttempts = new Map<string, { count: number; lastAttempt: Date; lockedUntil?: Date }>();
-  
+  private static failedAttempts = new Map<
+    string,
+    { count: number; lastAttempt: Date; lockedUntil?: Date }
+  >();
+
   // Track suspicious IPs
   private static suspiciousIPs = new Set<string>();
-  
+
   // Known bad IPs (would be populated from threat intelligence feeds)
   private static blacklistedIPs = new Set<string>();
 
@@ -86,7 +89,7 @@ export class SecurityService {
         "child-src 'self'",
         "frame-ancestors 'none'",
         "form-action 'self'",
-        "base-uri 'self'"
+        "base-uri 'self'",
       ].join('; '),
       'X-Content-Type-Options': 'nosniff',
       'X-Frame-Options': 'DENY',
@@ -101,30 +104,30 @@ export class SecurityService {
         'gyroscope=()',
         'speaker=()',
         'vibrate=()',
-        'fullscreen=(self)'
-      ].join(', ')
+        'fullscreen=(self)',
+      ].join(', '),
     };
   }
 
   static securityHeadersMiddleware(req: Request, res: Response, next: NextFunction): void {
     const headers = SecurityService.getSecurityHeaders();
-    
+
     Object.entries(headers).forEach(([key, value]) => {
       res.setHeader(key, value);
     });
-    
+
     next();
   }
 
   static createRateLimiter(options?: Partial<SecurityConfig['rateLimiting']>) {
     const config = { ...this.DEFAULT_CONFIG.rateLimiting, ...options };
-    
+
     return rateLimit({
       windowMs: config.windowMs,
       max: config.maxRequests,
       message: {
         error: 'Too many requests from this IP, please try again later.',
-        retryAfter: Math.ceil(config.windowMs / 1000)
+        retryAfter: Math.ceil(config.windowMs / 1000),
       },
       standardHeaders: true,
       legacyHeaders: false,
@@ -134,38 +137,40 @@ export class SecurityService {
         if (userId) return `user:${userId}`;
         // Use express-rate-limit's ipKeyGenerator for IPv6 compatibility
         return `ip:${ipKeyGenerator(req)}`;
-      }
+      },
     });
   }
 
   static recordFailedLogin(identifier: string): boolean {
     const now = new Date();
     const attempt = this.failedAttempts.get(identifier);
-    
+
     if (attempt) {
       // Check if lockout period has expired
       if (attempt.lockedUntil && now > attempt.lockedUntil) {
         this.failedAttempts.delete(identifier);
         return false; // Not locked
       }
-      
+
       // Increment failed attempts
       attempt.count++;
       attempt.lastAttempt = now;
-      
+
       // Lock account if max attempts reached
       if (attempt.count >= this.DEFAULT_CONFIG.maxLoginAttempts) {
-        attempt.lockedUntil = new Date(now.getTime() + (this.DEFAULT_CONFIG.lockoutDuration * 60 * 1000));
+        attempt.lockedUntil = new Date(
+          now.getTime() + this.DEFAULT_CONFIG.lockoutDuration * 60 * 1000
+        );
         return true; // Locked
       }
     } else {
       // First failed attempt
       this.failedAttempts.set(identifier, {
         count: 1,
-        lastAttempt: now
+        lastAttempt: now,
       });
     }
-    
+
     return false; // Not locked yet
   }
 
@@ -175,28 +180,28 @@ export class SecurityService {
 
   static isAccountLocked(identifier: string): boolean {
     const attempt = this.failedAttempts.get(identifier);
-    
+
     if (!attempt || !attempt.lockedUntil) {
       return false;
     }
-    
+
     const now = new Date();
     if (now > attempt.lockedUntil) {
       // Lockout period expired, clean up
       this.failedAttempts.delete(identifier);
       return false;
     }
-    
+
     return true;
   }
 
   static getLockoutTimeRemaining(identifier: string): number {
     const attempt = this.failedAttempts.get(identifier);
-    
+
     if (!attempt || !attempt.lockedUntil) {
       return 0;
     }
-    
+
     const remaining = attempt.lockedUntil.getTime() - Date.now();
     return Math.max(0, Math.ceil(remaining / 1000)); // Return seconds
   }
@@ -250,7 +255,7 @@ export class SecurityService {
       threatLevel,
       reasons,
       shouldBlock,
-      additionalVerificationRequired
+      additionalVerificationRequired,
     };
   }
 
@@ -263,7 +268,7 @@ export class SecurityService {
       /curl/i,
       /wget/i,
       /python/i,
-      /postman/i
+      /postman/i,
     ];
 
     return suspiciousPatterns.some(pattern => pattern.test(userAgent));
@@ -277,22 +282,22 @@ export class SecurityService {
     const maxRequests = 20;
 
     let times = this.requestTimes.get(ipAddress) || [];
-    
+
     // Remove old entries
     times = times.filter(time => now - time < timeWindow);
-    
+
     // Add current request
     times.push(now);
-    
+
     // Update the map
     this.requestTimes.set(ipAddress, times);
-    
+
     return times.length > maxRequests;
   }
 
   private static hasSuspiciousPatterns(data: any): boolean {
     const dataString = JSON.stringify(data).toLowerCase();
-    
+
     const suspiciousPatterns = [
       /script/,
       /javascript/,
@@ -308,7 +313,7 @@ export class SecurityService {
       /iframe/,
       /embed/,
       /object/,
-      /applet/
+      /applet/,
     ];
 
     return suspiciousPatterns.some(pattern => pattern.test(dataString));
@@ -384,28 +389,28 @@ export class SecurityService {
   } {
     const now = new Date();
     let lockedAccounts = 0;
-    
+
     for (const attempt of this.failedAttempts.values()) {
       if (attempt.lockedUntil && now < attempt.lockedUntil) {
         lockedAccounts++;
       }
     }
-    
+
     return {
       failedLoginAttempts: this.failedAttempts.size,
       lockedAccounts,
       suspiciousIPs: this.suspiciousIPs.size,
-      blacklistedIPs: this.blacklistedIPs.size
+      blacklistedIPs: this.blacklistedIPs.size,
     };
   }
 
   static cleanupOldAttempts(): void {
     const now = new Date();
     const expiredThreshold = 24 * 60 * 60 * 1000; // 24 hours
-    
+
     for (const [identifier, attempt] of this.failedAttempts.entries()) {
       const timeSinceLastAttempt = now.getTime() - attempt.lastAttempt.getTime();
-      
+
       if (timeSinceLastAttempt > expiredThreshold) {
         this.failedAttempts.delete(identifier);
       }

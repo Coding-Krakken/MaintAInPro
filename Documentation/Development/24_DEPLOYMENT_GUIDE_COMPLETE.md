@@ -2,19 +2,22 @@
 
 ## Overview
 
-This guide provides comprehensive instructions for deploying MaintAInPro CMMS to various environments, from development to production.
+This guide provides comprehensive instructions for deploying MaintAInPro CMMS to
+various environments, from development to production.
 
 ## Prerequisites
 
 ### System Requirements
 
 **Minimum:**
+
 - Node.js 18+
 - PostgreSQL 13+ (optional - has in-memory fallback)
 - 2GB RAM
 - 10GB disk space
 
 **Recommended:**
+
 - Node.js 20+
 - PostgreSQL 15+
 - 4GB RAM
@@ -53,7 +56,8 @@ LOG_FILE=logs/app.log
 
 ### 1. Railway Deployment (Recommended)
 
-Railway provides the easiest deployment experience with automatic builds and PostgreSQL integration.
+Railway provides the easiest deployment experience with automatic builds and
+PostgreSQL integration.
 
 #### Quick Deploy to Railway
 
@@ -62,42 +66,46 @@ Railway provides the easiest deployment experience with automatic builds and Pos
 #### Manual Railway Deployment
 
 1. **Connect Repository**
+
    ```bash
    # Install Railway CLI
    npm install -g @railway/cli
-   
+
    # Login to Railway
    railway login
-   
+
    # Initialize project
    railway init
    ```
 
 2. **Configure Environment Variables**
+
    ```bash
    # Set production environment
    railway variables set NODE_ENV=production
-   
+
    # Optional: Add PostgreSQL database
    railway add postgresql
-   
+
    # The DATABASE_URL will be automatically set
    ```
 
 3. **Deploy**
+
    ```bash
    # Deploy current branch
    railway up
-   
+
    # Deploy with custom settings
    railway up --detach
    ```
 
 4. **Monitor Deployment**
+
    ```bash
    # View logs
    railway logs
-   
+
    # Check service status
    railway status
    ```
@@ -133,9 +141,9 @@ docker run -d \
   maintainpro:latest
 ```
 
-For complete deployment instructions, see the full guide in the project documentation.
+For complete deployment instructions, see the full guide in the project
+documentation.
 
 ---
 
-*Last updated: August 2025*
-*Deployment Guide Version: v1.3.0*
+_Last updated: August 2025_ _Deployment Guide Version: v1.3.0_

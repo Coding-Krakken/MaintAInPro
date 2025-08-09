@@ -27,7 +27,7 @@ export default function PartFormModal({ isOpen, onClose }: PartFormModalProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
       await createPart.mutateAsync({
         name,
@@ -56,7 +56,7 @@ export default function PartFormModal({ isOpen, onClose }: PartFormModalProps) {
       setReorderPoint('');
       setVendor('');
       setLocation('');
-      
+
       onClose();
     } catch (error) {
       toast({
@@ -69,56 +69,54 @@ export default function PartFormModal({ isOpen, onClose }: PartFormModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-md">
+      <DialogContent className='max-w-md'>
         <DialogHeader>
           <DialogTitle>Add New Part</DialogTitle>
-          <DialogDescription>
-            Create a new part entry for inventory management.
-          </DialogDescription>
+          <DialogDescription>Create a new part entry for inventory management.</DialogDescription>
         </DialogHeader>
-        
-        <form onSubmit={handleSubmit} className="space-y-4">
+
+        <form onSubmit={handleSubmit} className='space-y-4'>
           <div>
-            <label htmlFor="name" className="block text-sm font-medium mb-1">
+            <label htmlFor='name' className='block text-sm font-medium mb-1'>
               Name *
             </label>
             <Input
-              id="name"
+              id='name'
               value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Enter part name"
+              onChange={e => setName(e.target.value)}
+              placeholder='Enter part name'
               required
             />
           </div>
 
           <div>
-            <label htmlFor="partNumber" className="block text-sm font-medium mb-1">
+            <label htmlFor='partNumber' className='block text-sm font-medium mb-1'>
               Part Number *
             </label>
             <Input
-              id="partNumber"
+              id='partNumber'
               value={partNumber}
-              onChange={(e) => setPartNumber(e.target.value)}
-              placeholder="Enter part number"
+              onChange={e => setPartNumber(e.target.value)}
+              placeholder='Enter part number'
               required
             />
           </div>
 
           <div>
-            <label htmlFor="description" className="block text-sm font-medium mb-1">
+            <label htmlFor='description' className='block text-sm font-medium mb-1'>
               Description
             </label>
             <Textarea
-              id="description"
+              id='description'
               value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Enter part description"
+              onChange={e => setDescription(e.target.value)}
+              placeholder='Enter part description'
               rows={3}
             />
           </div>
 
           <div>
-            <label htmlFor="category" className="block text-sm font-medium mb-1">
+            <label htmlFor='category' className='block text-sm font-medium mb-1'>
               Category
             </label>
             <Select value={category} onValueChange={setCategory}>
@@ -126,92 +124,92 @@ export default function PartFormModal({ isOpen, onClose }: PartFormModalProps) {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="general">General</SelectItem>
-                <SelectItem value="electrical">Electrical</SelectItem>
-                <SelectItem value="mechanical">Mechanical</SelectItem>
-                <SelectItem value="hydraulic">Hydraulic</SelectItem>
-                <SelectItem value="pneumatic">Pneumatic</SelectItem>
-                <SelectItem value="consumable">Consumable</SelectItem>
+                <SelectItem value='general'>General</SelectItem>
+                <SelectItem value='electrical'>Electrical</SelectItem>
+                <SelectItem value='mechanical'>Mechanical</SelectItem>
+                <SelectItem value='hydraulic'>Hydraulic</SelectItem>
+                <SelectItem value='pneumatic'>Pneumatic</SelectItem>
+                <SelectItem value='consumable'>Consumable</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className='grid grid-cols-2 gap-4'>
             <div>
-              <label htmlFor="unitCost" className="block text-sm font-medium mb-1">
+              <label htmlFor='unitCost' className='block text-sm font-medium mb-1'>
                 Unit Cost ($)
               </label>
               <Input
-                id="unitCost"
-                type="number"
-                step="0.01"
-                min="0"
+                id='unitCost'
+                type='number'
+                step='0.01'
+                min='0'
                 value={unitCost}
-                onChange={(e) => setUnitCost(e.target.value)}
-                placeholder="0.00"
+                onChange={e => setUnitCost(e.target.value)}
+                placeholder='0.00'
               />
             </div>
 
             <div>
-              <label htmlFor="stockLevel" className="block text-sm font-medium mb-1">
+              <label htmlFor='stockLevel' className='block text-sm font-medium mb-1'>
                 Stock Level
               </label>
               <Input
-                id="stockLevel"
-                type="number"
-                min="0"
+                id='stockLevel'
+                type='number'
+                min='0'
                 value={stockLevel}
-                onChange={(e) => setStockLevel(e.target.value)}
-                placeholder="0"
+                onChange={e => setStockLevel(e.target.value)}
+                placeholder='0'
               />
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className='grid grid-cols-2 gap-4'>
             <div>
-              <label htmlFor="reorderPoint" className="block text-sm font-medium mb-1">
+              <label htmlFor='reorderPoint' className='block text-sm font-medium mb-1'>
                 Reorder Point
               </label>
               <Input
-                id="reorderPoint"
-                type="number"
-                min="0"
+                id='reorderPoint'
+                type='number'
+                min='0'
                 value={reorderPoint}
-                onChange={(e) => setReorderPoint(e.target.value)}
-                placeholder="0"
+                onChange={e => setReorderPoint(e.target.value)}
+                placeholder='0'
               />
             </div>
 
             <div>
-              <label htmlFor="vendor" className="block text-sm font-medium mb-1">
+              <label htmlFor='vendor' className='block text-sm font-medium mb-1'>
                 Vendor
               </label>
               <Input
-                id="vendor"
+                id='vendor'
                 value={vendor}
-                onChange={(e) => setVendor(e.target.value)}
-                placeholder="Enter vendor name"
+                onChange={e => setVendor(e.target.value)}
+                placeholder='Enter vendor name'
               />
             </div>
           </div>
 
           <div>
-            <label htmlFor="location" className="block text-sm font-medium mb-1">
+            <label htmlFor='location' className='block text-sm font-medium mb-1'>
               Location
             </label>
             <Input
-              id="location"
+              id='location'
               value={location}
-              onChange={(e) => setLocation(e.target.value)}
-              placeholder="e.g., Warehouse A, Shelf 3"
+              onChange={e => setLocation(e.target.value)}
+              placeholder='e.g., Warehouse A, Shelf 3'
             />
           </div>
 
-          <div className="flex justify-end space-x-2 pt-4">
-            <Button type="button" variant="outline" onClick={onClose}>
+          <div className='flex justify-end space-x-2 pt-4'>
+            <Button type='button' variant='outline' onClick={onClose}>
               Cancel
             </Button>
-            <Button type="submit" disabled={createPart.isPending}>
+            <Button type='submit' disabled={createPart.isPending}>
               {createPart.isPending ? 'Creating...' : 'Create Part'}
             </Button>
           </div>

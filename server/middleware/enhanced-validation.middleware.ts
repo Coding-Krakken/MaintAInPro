@@ -3,11 +3,11 @@ import { z } from 'zod';
 import { rateLimit } from 'express-rate-limit';
 import helmet from 'helmet';
 import { v4 as uuidv4 } from 'uuid';
-import { 
-  validateAndTransform, 
-  camelToSnake, 
+import {
+  validateAndTransform,
+  camelToSnake,
   snakeToCamel,
-  fieldValidators 
+  fieldValidators,
 } from '@shared/validation-utils';
 import { EnhancedRequest, AuthenticatedUser, AuthenticatedRequest } from '../../shared/types/auth';
 
@@ -20,7 +20,12 @@ export interface ValidationOptions {
   source?: 'body' | 'query' | 'params' | 'headers';
   transformFields?: boolean;
   stripUnknown?: boolean;
-  errorHandler?: (error: any, req: Request | EnhancedRequest, res: Response, next: NextFunction) => void;
+  errorHandler?: (
+    error: any,
+    req: Request | EnhancedRequest,
+    res: Response,
+    next: NextFunction
+  ) => void;
   // Enhanced options
   auditValidation?: boolean;
   requireOrganization?: boolean;
@@ -44,9 +49,9 @@ export const requestCorrelationMiddleware = (
   res: Response,
   next: NextFunction
 ) => {
-  const requestId = req.headers['x-request-id'] as string || uuidv4();
-  const correlationId = req.headers['x-correlation-id'] as string || uuidv4();
-  
+  const requestId = (req.headers['x-request-id'] as string) || uuidv4();
+  const correlationId = (req.headers['x-correlation-id'] as string) || uuidv4();
+
   req.auditContext = {
     requestId,
     correlationId,
@@ -99,7 +104,7 @@ export const organizationContextMiddleware = (
   }
 
   req.organizationId = organizationId;
-  
+
   // Validate organization access if required
   if (req.user && organizationId && req.user.organizationId !== organizationId) {
     return res.status(403).json({
@@ -115,10 +120,7 @@ export const organizationContextMiddleware = (
 /**
  * Create enhanced validation middleware for schema validation with field mapping
  */
-export function validateSchema<T extends z.ZodSchema>(
-  schema: T, 
-  options: ValidationOptions = {}
-) {
+export function validateSchema<T extends z.ZodSchema>(schema: T, options: ValidationOptions = {}) {
   const {
     source = 'body',
     transformFields = true,
@@ -126,7 +128,7 @@ export function validateSchema<T extends z.ZodSchema>(
     errorHandler,
     auditValidation = false,
     requireOrganization = false,
-    fieldMapping = 'snakeToCamel'
+    fieldMapping = 'snakeToCamel',
   } = options;
 
   return async (req: Request, res: Response, next: NextFunction) => {
@@ -144,7 +146,7 @@ export function validateSchema<T extends z.ZodSchema>(
 
       // Get data from the specified source
       let data = req[source];
-      
+
       if (!data) {
         return res.status(400).json({
           success: false,
@@ -170,14 +172,14 @@ export function validateSchema<T extends z.ZodSchema>(
         validatedData = validateAndTransform(schema)(data);
       } catch (validationError) {
         let errorDetails;
-        
+
         try {
           errorDetails = JSON.parse(validationError.message);
         } catch {
           errorDetails = {
             type: 'VALIDATION_ERROR',
             message: validationError.message,
-            errors: [{ field: 'unknown', message: validationError.message, code: 'invalid' }]
+            errors: [{ field: 'unknown', message: validationError.message, code: 'invalid' }],
           };
         }
 
@@ -232,13 +234,13 @@ export function validateSchema<T extends z.ZodSchema>(
       next();
     } catch (error) {
       console.error(`[${enhancedReq.auditContext?.requestId}] Validation middleware error:`, error);
-      
+
       const serverError = {
         success: false,
         error: 'VALIDATION_SERVER_ERROR',
         message: 'Internal validation error',
         requestId: enhancedReq.auditContext?.requestId,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
 
       if (errorHandler) {
@@ -261,7 +263,7 @@ export const enhancedErrorHandler = (
 ) => {
   const requestId = req.auditContext?.requestId || 'unknown';
   const correlationId = req.auditContext?.correlationId || 'unknown';
-  
+
   // Log error with full context
   console.error(`[${requestId}] Unhandled error:`, {
     error: error.message,
@@ -277,9 +279,8 @@ export const enhancedErrorHandler = (
   // Send structured error response
   res.status(500).json({
     error: 'INTERNAL_SERVER_ERROR',
-    message: process.env.NODE_ENV === 'production' 
-      ? 'An internal server error occurred' 
-      : error.message,
+    message:
+      process.env.NODE_ENV === 'production' ? 'An internal server error occurred' : error.message,
     requestId,
     correlationId,
     timestamp: new Date().toISOString(),
@@ -329,7 +330,7 @@ export const securityHeadersMiddleware = helmet({
       defaultSrc: ["'self'"],
       styleSrc: ["'self'", "'unsafe-inline'"],
       scriptSrc: ["'self'"],
-      imgSrc: ["'self'", "data:", "https:"],
+      imgSrc: ["'self'", 'data:', 'https:'],
       connectSrc: ["'self'"],
       fontSrc: ["'self'"],
       objectSrc: ["'none'"],
@@ -349,11 +350,11 @@ export const performanceMonitoringMiddleware = (
   next: NextFunction
 ) => {
   const startTime = process.hrtime.bigint();
-  
+
   res.on('finish', () => {
     const endTime = process.hrtime.bigint();
     const duration = Number(endTime - startTime) / 1000000; // Convert to milliseconds
-    
+
     // Log slow requests
     if (duration > 1000) {
       console.warn(`[SLOW REQUEST] ${req.method} ${req.url} took ${duration.toFixed(2)}ms`, {
@@ -371,59 +372,71 @@ export const performanceMonitoringMiddleware = (
 /**
  * Validate query parameters with automatic type coercion
  */
-export function validateQuery<T extends z.ZodSchema>(schema: T, options?: Omit<ValidationOptions, 'source'>) {
-  return validateSchema(schema, { 
+export function validateQuery<T extends z.ZodSchema>(
+  schema: T,
+  options?: Omit<ValidationOptions, 'source'>
+) {
+  return validateSchema(schema, {
     source: 'query',
     fieldMapping: 'snakeToCamel',
-    ...options
+    ...options,
   });
 }
 
 /**
  * Validate URL parameters
  */
-export function validateParams<T extends z.ZodSchema>(schema: T, options?: Omit<ValidationOptions, 'source'>) {
-  return validateSchema(schema, { 
+export function validateParams<T extends z.ZodSchema>(
+  schema: T,
+  options?: Omit<ValidationOptions, 'source'>
+) {
+  return validateSchema(schema, {
     source: 'params',
     fieldMapping: 'none',
-    ...options
+    ...options,
   });
 }
 
 /**
  * Validate request headers
  */
-export function validateHeaders<T extends z.ZodSchema>(schema: T, options?: Omit<ValidationOptions, 'source'>) {
-  return validateSchema(schema, { 
+export function validateHeaders<T extends z.ZodSchema>(
+  schema: T,
+  options?: Omit<ValidationOptions, 'source'>
+) {
+  return validateSchema(schema, {
     source: 'headers',
     fieldMapping: 'none',
-    ...options
+    ...options,
   });
 }
 
 /**
  * Create a comprehensive validation chain for complex endpoints
  */
-export function validationChain(validations: {
-  body?: z.ZodSchema;
-  query?: z.ZodSchema;
-  params?: z.ZodSchema;
-  headers?: z.ZodSchema;
-}, options?: ValidationOptions) {
+export function validationChain(
+  validations: {
+    body?: z.ZodSchema;
+    query?: z.ZodSchema;
+    params?: z.ZodSchema;
+    headers?: z.ZodSchema;
+  },
+  options?: ValidationOptions
+) {
   const middlewares: any[] = [];
 
   if (validations.params) {
     middlewares.push(validateParams(validations.params, options));
   }
-  
+
   if (validations.query) {
     middlewares.push(validateQuery(validations.query, options));
   }
-  
+
   if (validations.headers) {
     middlewares.push(validateHeaders(validations.headers, options));
   }
-  
+
   if (validations.body) {
     middlewares.push(validateSchema(validations.body, { source: 'body', ...options }));
   }
@@ -437,24 +450,22 @@ export function validationChain(validations: {
 export function sanitizeInput(req: Request, res: Response, next: NextFunction) {
   const sanitizeObject = (obj: any): any => {
     if (!obj || typeof obj !== 'object') return obj;
-    
+
     const sanitized: any = {};
-    
+
     for (const [key, value] of Object.entries(obj)) {
       if (typeof value === 'string') {
         // Trim whitespace and normalize empty strings to null
         sanitized[key] = value.trim() || null;
       } else if (Array.isArray(value)) {
-        sanitized[key] = value.map(item => 
-          typeof item === 'string' ? item.trim() : item
-        );
+        sanitized[key] = value.map(item => (typeof item === 'string' ? item.trim() : item));
       } else if (value && typeof value === 'object') {
         sanitized[key] = sanitizeObject(value);
       } else {
         sanitized[key] = value;
       }
     }
-    
+
     return sanitized;
   };
 
@@ -478,47 +489,55 @@ export function sanitizeInput(req: Request, res: Response, next: NextFunction) {
 export const commonSchemas = {
   // UUID parameter validation
   uuidParam: z.object({
-    id: fieldValidators.requiredUuid('ID')
+    id: fieldValidators.requiredUuid('ID'),
   }),
-  
+
   // Enhanced pagination query validation
   pagination: z.object({
     page: z.coerce.number().min(1).default(1),
     limit: z.coerce.number().min(1).max(100).default(20),
     sortBy: z.string().optional(),
-    sortOrder: z.enum(['asc', 'desc']).default('desc')
+    sortOrder: z.enum(['asc', 'desc']).default('desc'),
   }),
-  
+
   // Enhanced search query validation
   search: z.object({
     q: z.string().optional(),
-    filters: z.string().optional().transform(val => {
-      try {
-        return val ? JSON.parse(val) : {};
-      } catch {
-        return {};
-      }
-    }),
-    tags: z.string().optional().transform(val => {
-      try {
-        return val ? val.split(',') : [];
-      } catch {
-        return [];
-      }
-    }),
+    filters: z
+      .string()
+      .optional()
+      .transform(val => {
+        try {
+          return val ? JSON.parse(val) : {};
+        } catch {
+          return {};
+        }
+      }),
+    tags: z
+      .string()
+      .optional()
+      .transform(val => {
+        try {
+          return val ? val.split(',') : [];
+        } catch {
+          return [];
+        }
+      }),
   }),
-  
+
   // Date range validation
-  dateRange: z.object({
-    startDate: z.coerce.date(),
-    endDate: z.coerce.date()
-  }).refine(data => data.startDate <= data.endDate, {
-    message: 'Start date must be before or equal to end date'
-  }),
+  dateRange: z
+    .object({
+      startDate: z.coerce.date(),
+      endDate: z.coerce.date(),
+    })
+    .refine(data => data.startDate <= data.endDate, {
+      message: 'Start date must be before or equal to end date',
+    }),
 
   // Organization context validation
   organizationContext: z.object({
-    organizationId: fieldValidators.requiredUuid('Organization ID')
+    organizationId: fieldValidators.requiredUuid('Organization ID'),
   }),
 };
 

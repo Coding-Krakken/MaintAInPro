@@ -7,16 +7,16 @@ import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
-import { 
-  CheckCircle, 
-  XCircle, 
-  AlertTriangle, 
-  Clock, 
-  Mic, 
-  Camera, 
+import {
+  CheckCircle,
+  XCircle,
+  AlertTriangle,
+  Clock,
+  Mic,
+  Camera,
   Save,
   ChevronUp,
-  ChevronDown 
+  ChevronDown,
 } from 'lucide-react';
 import { WorkOrderChecklistItem } from '@/types';
 import { FileUpload } from '@/components/FileUpload';
@@ -31,13 +31,13 @@ interface ChecklistItemWithActions extends WorkOrderChecklistItem {
   hasPhotoRequired?: boolean;
   hasSignoffRequired?: boolean;
   acceptableValues?: string[];
-  warningThresholds?: { min?: number; max?: number; };
+  warningThresholds?: { min?: number; max?: number };
 }
 
 const ChecklistExecution: React.FC<ChecklistExecutionProps> = ({
   workOrderId,
   isReadOnly = false,
-  onProgress
+  onProgress,
 }) => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -57,7 +57,13 @@ const ChecklistExecution: React.FC<ChecklistExecutionProps> = ({
 
   // Update checklist item mutation
   const updateChecklistItem = useMutation({
-    mutationFn: async ({ itemId, updates }: { itemId: string; updates: Partial<ChecklistItemWithActions> }) => {
+    mutationFn: async ({
+      itemId,
+      updates,
+    }: {
+      itemId: string;
+      updates: Partial<ChecklistItemWithActions>;
+    }) => {
       const response = await fetch(`/api/work-orders/${workOrderId}/checklist/${itemId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
@@ -73,7 +79,7 @@ const ChecklistExecution: React.FC<ChecklistExecutionProps> = ({
         description: 'Item status updated successfully',
       });
     },
-    onError: (error) => {
+    onError: error => {
       toast({
         title: 'Update Failed',
         description: error.message,
@@ -85,9 +91,10 @@ const ChecklistExecution: React.FC<ChecklistExecutionProps> = ({
   // Voice-to-text functionality (Web Speech API)
   const startVoiceRecognition = (itemId: string) => {
     if ('speechRecognition' in window || 'webkitSpeechRecognition' in window) {
-      const SpeechRecognition = (window as any).speechRecognition || (window as any).webkitSpeechRecognition;
+      const SpeechRecognition =
+        (window as any).speechRecognition || (window as any).webkitSpeechRecognition;
       const recognition = new SpeechRecognition();
-      
+
       recognition.continuous = true;
       recognition.interimResults = true;
       recognition.lang = 'en-US';
@@ -97,7 +104,7 @@ const ChecklistExecution: React.FC<ChecklistExecutionProps> = ({
         setActiveItemId(itemId);
       };
 
-      recognition.onresult = (event) => {
+      recognition.onresult = event => {
         const transcript = Array.from(event.results)
           .map(result => result[0])
           .map(result => result.transcript)
@@ -108,12 +115,12 @@ const ChecklistExecution: React.FC<ChecklistExecutionProps> = ({
         if (currentItem) {
           updateChecklistItem.mutate({
             itemId,
-            updates: { notes: transcript }
+            updates: { notes: transcript },
           });
         }
       };
 
-      recognition.onerror = (event) => {
+      recognition.onerror = event => {
         toast({
           title: 'Voice Recognition Error',
           description: 'Please try again or type manually',
@@ -140,26 +147,34 @@ const ChecklistExecution: React.FC<ChecklistExecutionProps> = ({
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'done': return <CheckCircle className="w-5 h-5 text-green-600" />;
-      case 'skipped': return <XCircle className="w-5 h-5 text-gray-500" />;
-      case 'issue': return <AlertTriangle className="w-5 h-5 text-red-600" />;
-      default: return <Clock className="w-5 h-5 text-yellow-600" />;
+      case 'done':
+        return <CheckCircle className='w-5 h-5 text-green-600' />;
+      case 'skipped':
+        return <XCircle className='w-5 h-5 text-gray-500' />;
+      case 'issue':
+        return <AlertTriangle className='w-5 h-5 text-red-600' />;
+      default:
+        return <Clock className='w-5 h-5 text-yellow-600' />;
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'done': return 'text-green-600 bg-green-50 border-green-200';
-      case 'skipped': return 'text-gray-600 bg-gray-50 border-gray-200';
-      case 'issue': return 'text-red-600 bg-red-50 border-red-200';
-      default: return 'text-yellow-600 bg-yellow-50 border-yellow-200';
+      case 'done':
+        return 'text-green-600 bg-green-50 border-green-200';
+      case 'skipped':
+        return 'text-gray-600 bg-gray-50 border-gray-200';
+      case 'issue':
+        return 'text-red-600 bg-red-50 border-red-200';
+      default:
+        return 'text-yellow-600 bg-yellow-50 border-yellow-200';
     }
   };
 
   const handleStatusChange = (itemId: string, status: 'done' | 'skipped' | 'issue') => {
     updateChecklistItem.mutate({
       itemId,
-      updates: { status }
+      updates: { status },
     });
   };
 
@@ -167,7 +182,7 @@ const ChecklistExecution: React.FC<ChecklistExecutionProps> = ({
     // Debounced update - you might want to implement proper debouncing
     updateChecklistItem.mutate({
       itemId,
-      updates: { notes }
+      updates: { notes },
     });
   };
 
@@ -191,8 +206,8 @@ const ChecklistExecution: React.FC<ChecklistExecutionProps> = ({
   if (isLoading) {
     return (
       <Card>
-        <CardContent className="p-6">
-          <div className="text-center">Loading checklist...</div>
+        <CardContent className='p-6'>
+          <div className='text-center'>Loading checklist...</div>
         </CardContent>
       </Card>
     );
@@ -201,8 +216,8 @@ const ChecklistExecution: React.FC<ChecklistExecutionProps> = ({
   if (checklistItems.length === 0) {
     return (
       <Card>
-        <CardContent className="p-6">
-          <div className="text-center text-gray-500">
+        <CardContent className='p-6'>
+          <div className='text-center text-gray-500'>
             No checklist items found for this work order
           </div>
         </CardContent>
@@ -215,19 +230,19 @@ const ChecklistExecution: React.FC<ChecklistExecutionProps> = ({
   const progressPercentage = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
 
   return (
-    <div className="space-y-4">
+    <div className='space-y-4'>
       {/* Progress Header */}
       <Card>
-        <CardHeader className="pb-3">
-          <div className="flex justify-between items-center">
-            <CardTitle className="text-lg">Checklist Progress</CardTitle>
-            <Badge variant="outline">
+        <CardHeader className='pb-3'>
+          <div className='flex justify-between items-center'>
+            <CardTitle className='text-lg'>Checklist Progress</CardTitle>
+            <Badge variant='outline'>
               {completedCount} / {totalCount} Complete
             </Badge>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
-            <div 
-              className="bg-green-600 h-2 rounded-full transition-all duration-300"
+          <div className='w-full bg-gray-200 rounded-full h-2'>
+            <div
+              className='bg-green-600 h-2 rounded-full transition-all duration-300'
               style={{ width: `${progressPercentage}%` }}
             />
           </div>
@@ -235,122 +250,113 @@ const ChecklistExecution: React.FC<ChecklistExecutionProps> = ({
       </Card>
 
       {/* Checklist Items */}
-      <div className="space-y-3">
+      <div className='space-y-3'>
         {checklistItems.map((item, index) => {
           const isExpanded = expandedItems.has(item.id);
-          
+
           return (
             <Card key={item.id} className={`border ${getStatusColor(item.status)}`}>
-              <CardHeader className="pb-3">
-                <div className="flex items-start justify-between">
-                  <div className="flex items-start space-x-3 flex-1">
-                    <div className="flex-shrink-0 mt-1">
-                      {getStatusIcon(item.status)}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center space-x-2">
-                        <span className="text-sm font-medium text-gray-500">
-                          {index + 1}.
-                        </span>
-                        <h3 className="font-medium text-gray-900 truncate">
-                          {item.component}
-                        </h3>
+              <CardHeader className='pb-3'>
+                <div className='flex items-start justify-between'>
+                  <div className='flex items-start space-x-3 flex-1'>
+                    <div className='flex-shrink-0 mt-1'>{getStatusIcon(item.status)}</div>
+                    <div className='flex-1 min-w-0'>
+                      <div className='flex items-center space-x-2'>
+                        <span className='text-sm font-medium text-gray-500'>{index + 1}.</span>
+                        <h3 className='font-medium text-gray-900 truncate'>{item.component}</h3>
                       </div>
-                      <p className="text-sm text-gray-700 mt-1">
-                        {item.action}
-                      </p>
+                      <p className='text-sm text-gray-700 mt-1'>{item.action}</p>
                     </div>
                   </div>
-                  
-                  <div className="flex items-center space-x-2">
-                    <Badge variant="outline" className="text-xs">
+
+                  <div className='flex items-center space-x-2'>
+                    <Badge variant='outline' className='text-xs'>
                       {item.status.replace('_', ' ').toUpperCase()}
                     </Badge>
                     <Button
-                      variant="ghost"
-                      size="sm"
+                      variant='ghost'
+                      size='sm'
                       onClick={() => toggleExpanded(item.id)}
-                      className="p-1"
+                      className='p-1'
                     >
-                      {isExpanded ? 
-                        <ChevronUp className="w-4 h-4" /> : 
-                        <ChevronDown className="w-4 h-4" />
-                      }
+                      {isExpanded ? (
+                        <ChevronUp className='w-4 h-4' />
+                      ) : (
+                        <ChevronDown className='w-4 h-4' />
+                      )}
                     </Button>
                   </div>
                 </div>
               </CardHeader>
 
               {isExpanded && (
-                <CardContent className="pt-0">
+                <CardContent className='pt-0'>
                   {!isReadOnly && (
-                    <div className="space-y-4">
+                    <div className='space-y-4'>
                       {/* Status Controls */}
-                      <div className="flex flex-wrap gap-2">
+                      <div className='flex flex-wrap gap-2'>
                         <Button
-                          size="sm"
+                          size='sm'
                           variant={item.status === 'done' ? 'default' : 'outline'}
                           onClick={() => handleStatusChange(item.id, 'done')}
-                          className="text-xs"
+                          className='text-xs'
                         >
-                          <CheckCircle className="w-3 h-3 mr-1" />
+                          <CheckCircle className='w-3 h-3 mr-1' />
                           Complete
                         </Button>
                         <Button
-                          size="sm"
+                          size='sm'
                           variant={item.status === 'skipped' ? 'default' : 'outline'}
                           onClick={() => handleStatusChange(item.id, 'skipped')}
-                          className="text-xs"
+                          className='text-xs'
                         >
-                          <XCircle className="w-3 h-3 mr-1" />
+                          <XCircle className='w-3 h-3 mr-1' />
                           Skip
                         </Button>
                         <Button
-                          size="sm"
+                          size='sm'
                           variant={item.status === 'issue' ? 'default' : 'outline'}
                           onClick={() => handleStatusChange(item.id, 'issue')}
-                          className="text-xs"
+                          className='text-xs'
                         >
-                          <AlertTriangle className="w-3 h-3 mr-1" />
+                          <AlertTriangle className='w-3 h-3 mr-1' />
                           Issue
                         </Button>
                       </div>
 
                       {/* Notes Section */}
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between">
-                          <label className="text-sm font-medium text-gray-700">
-                            Notes
-                          </label>
-                          <div className="flex space-x-2">
+                      <div className='space-y-2'>
+                        <div className='flex items-center justify-between'>
+                          <label className='text-sm font-medium text-gray-700'>Notes</label>
+                          <div className='flex space-x-2'>
                             <Button
-                              size="sm"
-                              variant="outline"
+                              size='sm'
+                              variant='outline'
                               onClick={() => startVoiceRecognition(item.id)}
                               disabled={isListening && activeItemId !== item.id}
-                              className="text-xs"
+                              className='text-xs'
                             >
-                              <Mic className={`w-3 h-3 mr-1 ${
-                                isListening && activeItemId === item.id ? 'text-red-500' : ''
-                              }`} />
+                              <Mic
+                                className={`w-3 h-3 mr-1 ${
+                                  isListening && activeItemId === item.id ? 'text-red-500' : ''
+                                }`}
+                              />
                               {isListening && activeItemId === item.id ? 'Listening...' : 'Voice'}
                             </Button>
                           </div>
                         </div>
                         <Textarea
-                          placeholder="Add notes, measurements, or observations..."
+                          placeholder='Add notes, measurements, or observations...'
                           value={item.notes || ''}
-                          onChange={(e) => handleNotesChange(item.id, e.target.value)}
-                          className="text-sm"
+                          onChange={e => handleNotesChange(item.id, e.target.value)}
+                          className='text-sm'
                           rows={3}
                         />
                       </div>
 
                       {/* Photo Attachment */}
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium text-gray-700">
-                          Attachments
-                        </label>
+                      <div className='space-y-2'>
+                        <label className='text-sm font-medium text-gray-700'>Attachments</label>
                         <FileUpload
                           workOrderId={workOrderId}
                           onUploadSuccess={(url, fileName) => {
@@ -359,7 +365,7 @@ const ChecklistExecution: React.FC<ChecklistExecutionProps> = ({
                               description: `${fileName} uploaded successfully`,
                             });
                           }}
-                          onUploadError={(error) => {
+                          onUploadError={error => {
                             toast({
                               title: 'Upload Failed',
                               description: error,
@@ -373,8 +379,8 @@ const ChecklistExecution: React.FC<ChecklistExecutionProps> = ({
 
                   {/* Read-only mode - show notes only */}
                   {isReadOnly && item.notes && (
-                    <div className="mt-3 p-3 bg-gray-50 rounded-md">
-                      <p className="text-sm text-gray-700">{item.notes}</p>
+                    <div className='mt-3 p-3 bg-gray-50 rounded-md'>
+                      <p className='text-sm text-gray-700'>{item.notes}</p>
                     </div>
                   )}
                 </CardContent>
@@ -386,29 +392,29 @@ const ChecklistExecution: React.FC<ChecklistExecutionProps> = ({
 
       {/* Quick Summary */}
       <Card>
-        <CardContent className="p-4">
-          <div className="grid grid-cols-4 gap-4 text-center">
+        <CardContent className='p-4'>
+          <div className='grid grid-cols-4 gap-4 text-center'>
             <div>
-              <div className="text-2xl font-bold text-green-600">{completedCount}</div>
-              <div className="text-sm text-gray-500">Completed</div>
+              <div className='text-2xl font-bold text-green-600'>{completedCount}</div>
+              <div className='text-sm text-gray-500'>Completed</div>
             </div>
             <div>
-              <div className="text-2xl font-bold text-gray-500">
+              <div className='text-2xl font-bold text-gray-500'>
                 {checklistItems.filter(i => i.status === 'skipped').length}
               </div>
-              <div className="text-sm text-gray-500">Skipped</div>
+              <div className='text-sm text-gray-500'>Skipped</div>
             </div>
             <div>
-              <div className="text-2xl font-bold text-red-600">
+              <div className='text-2xl font-bold text-red-600'>
                 {checklistItems.filter(i => i.status === 'issue').length}
               </div>
-              <div className="text-sm text-gray-500">Issues</div>
+              <div className='text-sm text-gray-500'>Issues</div>
             </div>
             <div>
-              <div className="text-2xl font-bold text-yellow-600">
+              <div className='text-2xl font-bold text-yellow-600'>
                 {checklistItems.filter(i => i.status === 'pending').length}
               </div>
-              <div className="text-sm text-gray-500">Pending</div>
+              <div className='text-sm text-gray-500'>Pending</div>
             </div>
           </div>
         </CardContent>

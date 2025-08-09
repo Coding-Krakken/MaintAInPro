@@ -66,9 +66,11 @@ export function isAuthenticated(req: Request): req is AuthenticatedRequest {
  * Type guard to check if user has required fields
  */
 export function hasCompleteUser(user: any): user is AuthenticatedUser {
-  return user && 
-         typeof user.id === 'string' &&
-         typeof user.email === 'string' &&
-         typeof user.role === 'string' &&
-         typeof user.organizationId === 'string';
+  return (
+    user &&
+    typeof user.id === 'string' &&
+    typeof user.email === 'string' &&
+    typeof user.role === 'string' &&
+    typeof user.organizationId === 'string'
+  );
 }

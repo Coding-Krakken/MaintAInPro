@@ -7,7 +7,9 @@
 ### 🏗️ ARCHITECTURE PRINCIPLES
 
 **Apply these architectural patterns consistently:**
-- **Domain-Driven Design (DDD)**: Organize code by business domains, not technical layers
+
+- **Domain-Driven Design (DDD)**: Organize code by business domains, not
+  technical layers
 - **CQRS Pattern**: Separate read/write operations for optimal performance
 - **Event Sourcing**: Track all state changes for audit and debugging
 - **Hexagonal Architecture**: Decouple business logic from external dependencies
@@ -17,6 +19,7 @@
 - **Progressive Enhancement**: Mobile-first with graceful degradation
 
 ### 🎨 Frontend Architecture:
+
 - **React 18+** with TypeScript (Strict mode enabled)
 - **Vite 5+** for lightning-fast development and optimized builds
 - **Tailwind CSS 3+** with custom design system and component tokens
@@ -29,6 +32,7 @@
 - **Storybook 7** for component development and documentation
 
 ### 🔧 Advanced Frontend Tools:
+
 - **MSW (Mock Service Worker)** for API mocking during development
 - **Chromatic** for visual regression testing
 - **React DevTools Profiler** for performance optimization
@@ -39,6 +43,7 @@
 - **React Suspense** for progressive loading states
 
 ### 🗄️ Backend & Database:
+
 - **Supabase** (Latest version) for backend-as-a-service
 - **PostgreSQL 15+** with advanced indexing and query optimization
 - **Row Level Security (RLS)** for fine-grained access control
@@ -48,6 +53,7 @@
 - **Supabase Storage** with CDN and image transformations
 
 ### 📱 Mobile & PWA Features:
+
 - **Progressive Web App (PWA)** with full offline support
 - **IndexedDB** via Dexie.js for client-side database
 - **Service Worker** for background sync and caching
@@ -57,6 +63,7 @@
 - **Device Orientation** for mobile-optimized interactions
 
 ### 🔧 Development Tools:
+
 - **TypeScript 5+** with strict configuration
 - **ESLint** with custom rules and auto-fixing
 - **Prettier** for consistent code formatting
@@ -66,6 +73,7 @@
 - **Release-it** for automated versioning and releases
 
 ### 📊 Monitoring & Analytics:
+
 - **Sentry** for error tracking and performance monitoring
 - **LogRocket** for session replay and debugging
 - **Mixpanel** for user behavior analytics
@@ -74,6 +82,7 @@
 - **Supabase Analytics** for database performance monitoring
 
 ### 📈 Performance Optimization:
+
 - **Database indexing strategy** for optimal query performance
 - **Query optimization** with EXPLAIN ANALYZE monitoring
 - **Connection pooling** for efficient resource utilization

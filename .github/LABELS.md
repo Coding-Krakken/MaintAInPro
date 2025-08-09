@@ -43,12 +43,14 @@ gh label create "needs-human" --color "fbca04" --description "Requires human rev
 ## Usage Patterns
 
 ### Automated Flow
+
 1. Planner creates issue with `autoplan` + `agent-ok`
 2. Copilot agent creates PR for `agent-ok` issues
 3. Human adds `automerge` to approved PRs
 4. CI automatically merges PRs with `automerge` after checks pass
 
 ### Manual Intervention
+
 - Add `blocked` to pause automatic processing
 - Add `needs-human` when Copilot needs guidance
 - Remove `agent-ok` to exclude from automated processing

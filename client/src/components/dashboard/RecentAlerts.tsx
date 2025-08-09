@@ -62,16 +62,16 @@ export default function RecentAlerts() {
 
   if (isLoading) {
     return (
-      <Card className="shadow-sm border border-gray-200">
+      <Card className='shadow-sm border border-gray-200'>
         <CardHeader>
-          <CardTitle className="text-lg font-semibold text-gray-900">Recent Alerts</CardTitle>
+          <CardTitle className='text-lg font-semibold text-gray-900'>Recent Alerts</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-3">
+          <div className='space-y-3'>
             {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="animate-pulse p-3 border rounded-lg">
-                <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-                <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+              <div key={i} className='animate-pulse p-3 border rounded-lg'>
+                <div className='h-4 bg-gray-200 rounded w-3/4 mb-2'></div>
+                <div className='h-3 bg-gray-200 rounded w-1/2'></div>
               </div>
             ))}
           </div>
@@ -81,32 +81,28 @@ export default function RecentAlerts() {
   }
 
   return (
-    <Card className="shadow-sm border border-gray-200">
+    <Card className='shadow-sm border border-gray-200'>
       <CardHeader>
-        <CardTitle className="text-lg font-semibold text-gray-900">Recent Alerts</CardTitle>
+        <CardTitle className='text-lg font-semibold text-gray-900'>Recent Alerts</CardTitle>
       </CardHeader>
       <CardContent>
         {recentAlerts.length === 0 ? (
-          <p className="text-gray-500 text-sm">No recent alerts</p>
+          <p className='text-gray-500 text-sm'>No recent alerts</p>
         ) : (
-          <div className="space-y-3">
-            {recentAlerts.map((alert) => {
+          <div className='space-y-3'>
+            {recentAlerts.map(alert => {
               const Icon = getAlertIcon(alert.type);
               const styles = getAlertStyle(alert.type);
-              
+
               return (
                 <div
                   key={alert.id}
                   className={`flex items-start space-x-3 p-3 ${styles.bg} border ${styles.border} rounded-lg`}
                 >
                   <Icon className={`w-5 h-5 ${styles.icon} mt-0.5 flex-shrink-0`} />
-                  <div className="flex-1 min-w-0">
-                    <p className={`text-sm font-medium ${styles.text}`}>
-                      {alert.title}
-                    </p>
-                    <p className={`text-xs ${styles.text} opacity-80 mt-1`}>
-                      {alert.message}
-                    </p>
+                  <div className='flex-1 min-w-0'>
+                    <p className={`text-sm font-medium ${styles.text}`}>{alert.title}</p>
+                    <p className={`text-xs ${styles.text} opacity-80 mt-1`}>{alert.message}</p>
                     <p className={`text-xs ${styles.text} opacity-60 mt-1`}>
                       {formatDistanceToNow(new Date(alert.createdAt), { addSuffix: true })}
                     </p>

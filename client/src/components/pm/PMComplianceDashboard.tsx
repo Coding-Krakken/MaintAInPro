@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { 
-  CheckCircle, 
-  AlertTriangle, 
-  Clock, 
-  TrendingUp, 
+import {
+  CheckCircle,
+  AlertTriangle,
+  Clock,
+  TrendingUp,
   Calendar,
   Filter,
-  Download
+  Download,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Badge } from '../ui/badge';
@@ -80,17 +80,18 @@ export default function PMComplianceDashboard() {
     return 'bg-red-100 text-red-800';
   };
 
-  const filteredEquipment = complianceData?.equipmentCompliance?.filter(eq => {
-    if (equipmentFilter === 'all') return true;
-    if (equipmentFilter === 'overdue') return eq.overdueCount > 0;
-    if (equipmentFilter === 'compliant') return eq.complianceRate >= 95;
-    if (equipmentFilter === 'at-risk') return eq.complianceRate < 85;
-    return true;
-  }) || [];
+  const filteredEquipment =
+    complianceData?.equipmentCompliance?.filter(eq => {
+      if (equipmentFilter === 'all') return true;
+      if (equipmentFilter === 'overdue') return eq.overdueCount > 0;
+      if (equipmentFilter === 'compliant') return eq.complianceRate >= 95;
+      if (equipmentFilter === 'at-risk') return eq.complianceRate < 85;
+      return true;
+    }) || [];
 
   const exportComplianceReport = () => {
     if (!complianceData) return;
-    
+
     const csvContent = [
       ['Asset Tag', 'Model', 'Compliance Rate', 'Last PM Date', 'Next PM Date', 'Overdue Count'],
       ...complianceData.equipmentCompliance.map(eq => [
@@ -99,9 +100,11 @@ export default function PMComplianceDashboard() {
         `${eq.complianceRate}%`,
         eq.lastPMDate ? format(new Date(eq.lastPMDate), 'yyyy-MM-dd') : 'Never',
         eq.nextPMDate ? format(new Date(eq.nextPMDate), 'yyyy-MM-dd') : 'TBD',
-        eq.overdueCount.toString()
-      ])
-    ].map(row => row.join(',')).join('\n');
+        eq.overdueCount.toString(),
+      ]),
+    ]
+      .map(row => row.join(','))
+      .join('\n');
 
     const blob = new Blob([csvContent], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
@@ -114,105 +117,95 @@ export default function PMComplianceDashboard() {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      <div className='flex justify-center items-center h-64'>
+        <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600'></div>
       </div>
     );
   }
 
   if (!complianceData) {
     return (
-      <div className="text-center py-12">
-        <Calendar className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-        <h3 className="text-lg font-medium mb-2">No PM Data Available</h3>
-        <p className="text-sm text-gray-600">Set up PM templates to start tracking compliance.</p>
+      <div className='text-center py-12'>
+        <Calendar className='w-12 h-12 mx-auto mb-4 text-gray-400' />
+        <h3 className='text-lg font-medium mb-2'>No PM Data Available</h3>
+        <p className='text-sm text-gray-600'>Set up PM templates to start tracking compliance.</p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
+    <div className='space-y-6'>
       {/* Header */}
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-900">PM Compliance Dashboard</h1>
-        <div className="flex space-x-2">
+      <div className='flex justify-between items-center'>
+        <h1 className='text-2xl font-bold text-gray-900'>PM Compliance Dashboard</h1>
+        <div className='flex space-x-2'>
           <Select value={timeRange} onValueChange={setTimeRange}>
-            <SelectTrigger className="w-32">
+            <SelectTrigger className='w-32'>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="7">Last 7 days</SelectItem>
-              <SelectItem value="30">Last 30 days</SelectItem>
-              <SelectItem value="90">Last 90 days</SelectItem>
-              <SelectItem value="365">Last year</SelectItem>
+              <SelectItem value='7'>Last 7 days</SelectItem>
+              <SelectItem value='30'>Last 30 days</SelectItem>
+              <SelectItem value='90'>Last 90 days</SelectItem>
+              <SelectItem value='365'>Last year</SelectItem>
             </SelectContent>
           </Select>
-          <Button variant="outline" onClick={exportComplianceReport}>
-            <Download className="w-4 h-4 mr-2" />
+          <Button variant='outline' onClick={exportComplianceReport}>
+            <Download className='w-4 h-4 mr-2' />
             Export Report
           </Button>
         </div>
       </div>
 
       {/* Key Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className='grid grid-cols-1 md:grid-cols-4 gap-4'>
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Overall Compliance</CardTitle>
-            <CheckCircle className="h-4 w-4 text-green-600" />
+          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+            <CardTitle className='text-sm font-medium'>Overall Compliance</CardTitle>
+            <CheckCircle className='h-4 w-4 text-green-600' />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-600">
+            <div className='text-2xl font-bold text-green-600'>
               {complianceData.overallComplianceRate.toFixed(1)}%
             </div>
-            <p className="text-xs text-muted-foreground">
-              Target: 95%
-            </p>
+            <p className='text-xs text-muted-foreground'>Target: 95%</p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">PMs Completed</CardTitle>
-            <TrendingUp className="h-4 w-4 text-blue-600" />
+          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+            <CardTitle className='text-sm font-medium'>PMs Completed</CardTitle>
+            <TrendingUp className='h-4 w-4 text-blue-600' />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              {complianceData.totalPMsCompleted}
-            </div>
-            <p className="text-xs text-muted-foreground">
+            <div className='text-2xl font-bold'>{complianceData.totalPMsCompleted}</div>
+            <p className='text-xs text-muted-foreground'>
               of {complianceData.totalPMsScheduled} scheduled
             </p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Overdue PMs</CardTitle>
-            <AlertTriangle className="h-4 w-4 text-red-600" />
+          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+            <CardTitle className='text-sm font-medium'>Overdue PMs</CardTitle>
+            <AlertTriangle className='h-4 w-4 text-red-600' />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-red-600">
-              {complianceData.overdueCount}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Requiring immediate attention
-            </p>
+            <div className='text-2xl font-bold text-red-600'>{complianceData.overdueCount}</div>
+            <p className='text-xs text-muted-foreground'>Requiring immediate attention</p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">On Schedule</CardTitle>
-            <Clock className="h-4 w-4 text-yellow-600" />
+          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+            <CardTitle className='text-sm font-medium'>On Schedule</CardTitle>
+            <Clock className='h-4 w-4 text-yellow-600' />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
+            <div className='text-2xl font-bold'>
               {complianceData.totalPMsScheduled - complianceData.overdueCount}
             </div>
-            <p className="text-xs text-muted-foreground">
-              PMs on track
-            </p>
+            <p className='text-xs text-muted-foreground'>PMs on track</p>
           </CardContent>
         </Card>
       </div>
@@ -224,18 +217,18 @@ export default function PMComplianceDashboard() {
             <CardTitle>Monthly Compliance Trends</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
+            <div className='space-y-4'>
               {complianceData.monthlyTrends.map((trend, index) => (
-                <div key={index} className="flex items-center justify-between">
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-sm font-medium">{trend.month}</span>
+                <div key={index} className='flex items-center justify-between'>
+                  <div className='min-w-0 flex-1'>
+                    <div className='flex items-center justify-between mb-1'>
+                      <span className='text-sm font-medium'>{trend.month}</span>
                       <span className={`text-sm ${getComplianceColor(trend.complianceRate)}`}>
                         {trend.complianceRate.toFixed(1)}%
                       </span>
                     </div>
-                    <Progress value={trend.complianceRate} className="h-2" />
-                    <p className="text-xs text-gray-500 mt-1">
+                    <Progress value={trend.complianceRate} className='h-2' />
+                    <p className='text-xs text-gray-500 mt-1'>
                       {trend.completed} of {trend.scheduled} completed
                     </p>
                   </div>
@@ -249,75 +242,73 @@ export default function PMComplianceDashboard() {
       {/* Equipment Compliance */}
       <Card>
         <CardHeader>
-          <div className="flex justify-between items-center">
+          <div className='flex justify-between items-center'>
             <CardTitle>Equipment Compliance</CardTitle>
-            <div className="flex items-center space-x-2">
-              <Filter className="w-4 h-4 text-gray-500" />
+            <div className='flex items-center space-x-2'>
+              <Filter className='w-4 h-4 text-gray-500' />
               <Select value={equipmentFilter} onValueChange={setEquipmentFilter}>
-                <SelectTrigger className="w-32">
+                <SelectTrigger className='w-32'>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Equipment</SelectItem>
-                  <SelectItem value="compliant">Compliant (≥95%)</SelectItem>
-                  <SelectItem value="at-risk">At Risk (&lt;85%)</SelectItem>
-                  <SelectItem value="overdue">Overdue</SelectItem>
+                  <SelectItem value='all'>All Equipment</SelectItem>
+                  <SelectItem value='compliant'>Compliant (≥95%)</SelectItem>
+                  <SelectItem value='at-risk'>At Risk (&lt;85%)</SelectItem>
+                  <SelectItem value='overdue'>Overdue</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </div>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
+          <div className='space-y-4'>
             {filteredEquipment.length === 0 ? (
-              <div className="text-center py-8">
-                <CheckCircle className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-                <h3 className="text-lg font-medium mb-2">No equipment found</h3>
-                <p className="text-sm text-gray-600">No equipment matches the selected filter criteria.</p>
+              <div className='text-center py-8'>
+                <CheckCircle className='w-12 h-12 mx-auto mb-4 text-gray-400' />
+                <h3 className='text-lg font-medium mb-2'>No equipment found</h3>
+                <p className='text-sm text-gray-600'>
+                  No equipment matches the selected filter criteria.
+                </p>
               </div>
             ) : (
-              filteredEquipment.map((equipment) => (
-                <div key={equipment.equipmentId} className="border rounded-lg p-4">
-                  <div className="flex justify-between items-start mb-2">
+              filteredEquipment.map(equipment => (
+                <div key={equipment.equipmentId} className='border rounded-lg p-4'>
+                  <div className='flex justify-between items-start mb-2'>
                     <div>
-                      <h3 className="font-medium">{equipment.assetTag}</h3>
-                      <p className="text-sm text-gray-600">{equipment.model}</p>
+                      <h3 className='font-medium'>{equipment.assetTag}</h3>
+                      <p className='text-sm text-gray-600'>{equipment.model}</p>
                     </div>
-                    <div className="flex items-center space-x-2">
+                    <div className='flex items-center space-x-2'>
                       <Badge className={getComplianceBadge(equipment.complianceRate)}>
                         {equipment.complianceRate.toFixed(1)}%
                       </Badge>
                       {equipment.overdueCount > 0 && (
-                        <Badge variant="destructive">
-                          {equipment.overdueCount} overdue
-                        </Badge>
+                        <Badge variant='destructive'>{equipment.overdueCount} overdue</Badge>
                       )}
                     </div>
                   </div>
-                  
-                  <div className="grid grid-cols-2 gap-4 text-sm">
+
+                  <div className='grid grid-cols-2 gap-4 text-sm'>
                     <div>
-                      <span className="text-gray-500">Last PM:</span>
-                      <span className="ml-2">
-                        {equipment.lastPMDate 
+                      <span className='text-gray-500'>Last PM:</span>
+                      <span className='ml-2'>
+                        {equipment.lastPMDate
                           ? format(new Date(equipment.lastPMDate), 'MMM d, yyyy')
-                          : 'Never'
-                        }
+                          : 'Never'}
                       </span>
                     </div>
                     <div>
-                      <span className="text-gray-500">Next PM:</span>
-                      <span className="ml-2">
-                        {equipment.nextPMDate 
+                      <span className='text-gray-500'>Next PM:</span>
+                      <span className='ml-2'>
+                        {equipment.nextPMDate
                           ? format(new Date(equipment.nextPMDate), 'MMM d, yyyy')
-                          : 'TBD'
-                        }
+                          : 'TBD'}
                       </span>
                     </div>
                   </div>
-                  
-                  <div className="mt-3">
-                    <Progress value={equipment.complianceRate} className="h-2" />
+
+                  <div className='mt-3'>
+                    <Progress value={equipment.complianceRate} className='h-2' />
                   </div>
                 </div>
               ))

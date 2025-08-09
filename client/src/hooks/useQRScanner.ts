@@ -44,7 +44,6 @@ export function useQRScanner({ onScan, onError }: UseQRScannerOptions) {
       // In a real implementation, you would use a QR code library like @zxing/library
       // For this demo, we'll simulate QR code detection
       simulateQRDetection();
-
     } catch (error) {
       setHasPermission(false);
       const errorMessage = error instanceof Error ? error.message : 'Failed to access camera';
@@ -82,11 +81,11 @@ export function useQRScanner({ onScan, onError }: UseQRScannerOptions) {
   // Real QR code detection would look something like this:
   // const detectQRCode = useCallback(async () => {
   //   if (!videoRef.current || !isScanning) return;
-  //   
+  //
   //   try {
   //     const codeReader = new BrowserQRCodeReader();
   //     const result = await codeReader.decodeFromVideoDevice(undefined, videoRef.current);
-  //     
+  //
   //     if (result) {
   //       onScan({
   //         text: result.getText(),
@@ -122,10 +121,13 @@ export function useQRInput() {
     return assetTagPattern.test(value);
   }, []);
 
-  const handleInputChange = useCallback((value: string) => {
-    setInput(value);
-    setIsValid(validateInput(value));
-  }, [validateInput]);
+  const handleInputChange = useCallback(
+    (value: string) => {
+      setInput(value);
+      setIsValid(validateInput(value));
+    },
+    [validateInput]
+  );
 
   const clear = useCallback(() => {
     setInput('');

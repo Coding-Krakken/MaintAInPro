@@ -2,7 +2,9 @@
 
 ## Overview
 
-Production-grade database service providing connection management, health monitoring, performance optimization, and comprehensive data access layer for the MaintAInPro CMMS system.
+Production-grade database service providing connection management, health
+monitoring, performance optimization, and comprehensive data access layer for
+the MaintAInPro CMMS system.
 
 ## Features
 
@@ -53,22 +55,24 @@ const result = await databaseService.executeQuery(
 ## Work Order Operations
 
 ### Search Work Orders
+
 ```typescript
 const searchOptions = {
-  query: 'hydraulic pump',          // Search term
-  status: 'in_progress',            // Filter by status
-  priority: 'high',                 // Filter by priority
-  organizationId: 'org-uuid',       // Required for multi-tenancy
-  limit: 25,                        // Page size (default: 10)
-  offset: 0,                        // Pagination offset
-  sortBy: 'created_at',             // Sort field
-  sortOrder: 'desc'                 // Sort direction
+  query: 'hydraulic pump', // Search term
+  status: 'in_progress', // Filter by status
+  priority: 'high', // Filter by priority
+  organizationId: 'org-uuid', // Required for multi-tenancy
+  limit: 25, // Page size (default: 10)
+  offset: 0, // Pagination offset
+  sortBy: 'created_at', // Sort field
+  sortOrder: 'desc', // Sort direction
 };
 
 const workOrders = await databaseService.searchWorkOrders(searchOptions);
 ```
 
 ### Create Work Order
+
 ```typescript
 const workOrderData = {
   foNumber: 'WO-001-PUMP',
@@ -78,7 +82,7 @@ const workOrderData = {
   status: 'new',
   organizationId: 'org-uuid',
   requestedBy: 'user-uuid',
-  equipmentId: 'equipment-uuid'
+  equipmentId: 'equipment-uuid',
 };
 
 const newWorkOrder = await databaseService.createWorkOrder(
@@ -88,12 +92,13 @@ const newWorkOrder = await databaseService.createWorkOrder(
 ```
 
 ### Update Work Order
+
 ```typescript
 const updateData = {
   status: 'in_progress',
   assignedTo: 'technician-uuid',
   actualHours: 2.5,
-  notes: 'Replaced hydraulic seals'
+  notes: 'Replaced hydraulic seals',
 };
 
 const updatedWorkOrder = await databaseService.updateWorkOrder(
@@ -105,6 +110,7 @@ const updatedWorkOrder = await databaseService.updateWorkOrder(
 ```
 
 ### Delete Work Order (Soft Delete)
+
 ```typescript
 const result = await databaseService.deleteWorkOrder(
   workOrderId,
@@ -114,6 +120,7 @@ const result = await databaseService.deleteWorkOrder(
 ```
 
 ### Get Work Order by ID
+
 ```typescript
 const workOrder = await databaseService.getWorkOrderById(
   workOrderId,
@@ -124,16 +131,17 @@ const workOrder = await databaseService.getWorkOrderById(
 ## Health Monitoring
 
 ### Health Check Results
+
 ```typescript
 interface DatabaseHealthStatus {
   healthy: boolean;
-  responseTime?: number;         // Query response time in ms
-  activeConnections?: number;    // Active database connections
-  tableCount?: number;           // Number of tables in schema
-  longRunningQueries?: number;   // Queries running >30 seconds
-  timestamp: Date;               // Health check timestamp
-  error?: string;                // Error message if unhealthy
-  metrics?: PerformanceMetrics;  // Performance statistics
+  responseTime?: number; // Query response time in ms
+  activeConnections?: number; // Active database connections
+  tableCount?: number; // Number of tables in schema
+  longRunningQueries?: number; // Queries running >30 seconds
+  timestamp: Date; // Health check timestamp
+  error?: string; // Error message if unhealthy
+  metrics?: PerformanceMetrics; // Performance statistics
 }
 
 // Example health check
@@ -146,15 +154,16 @@ if (health.healthy) {
 ```
 
 ### Performance Metrics
+
 ```typescript
 interface PerformanceMetrics {
-  connectionCount: number;       // Total connections made
-  queryCount: number;            // Total queries executed
-  totalQueryTime: number;        // Total time spent on queries
-  errorCount: number;            // Number of query errors
-  slowQueryCount: number;        // Queries taking >1 second
-  connectionRetries: number;     // Connection retry attempts
-  averageQueryTime: number;      // Average query execution time
+  connectionCount: number; // Total connections made
+  queryCount: number; // Total queries executed
+  totalQueryTime: number; // Total time spent on queries
+  errorCount: number; // Number of query errors
+  slowQueryCount: number; // Queries taking >1 second
+  connectionRetries: number; // Connection retry attempts
+  averageQueryTime: number; // Average query execution time
 }
 
 // Get performance metrics
@@ -166,21 +175,24 @@ console.log(`Slow queries: ${metrics.slowQueryCount}`);
 ## Search and Filtering
 
 ### Available Search Options
+
 ```typescript
 interface SearchOptions {
-  query?: string;              // Full-text search term
-  status?: string;             // Work order status filter
-  priority?: string;           // Priority level filter
-  organizationId: string;      // Required organization context
-  limit?: number;              // Results per page (default: 10, max: 100)
-  offset?: number;             // Pagination offset
-  sortBy?: string;             // Sort field name
-  sortOrder?: 'asc' | 'desc';  // Sort direction
+  query?: string; // Full-text search term
+  status?: string; // Work order status filter
+  priority?: string; // Priority level filter
+  organizationId: string; // Required organization context
+  limit?: number; // Results per page (default: 10, max: 100)
+  offset?: number; // Pagination offset
+  sortBy?: string; // Sort field name
+  sortOrder?: 'asc' | 'desc'; // Sort direction
 }
 ```
 
 ### Search Implementation
+
 The service automatically:
+
 - Filters by organization for multi-tenancy
 - Excludes soft-deleted records
 - Applies full-text search across multiple fields
@@ -190,23 +202,26 @@ The service automatically:
 ## Multi-Tenant Security
 
 ### Organization Isolation
+
 All operations require organizationId and automatically filter data:
 
 ```typescript
 // ✅ Correct - includes organization context
 const workOrders = await databaseService.searchWorkOrders({
   organizationId: 'user-org-uuid',
-  query: 'pump repair'
+  query: 'pump repair',
 });
 
 // ❌ Wrong - missing organization context will throw error
 const workOrders = await databaseService.searchWorkOrders({
-  query: 'pump repair'  // Missing organizationId
+  query: 'pump repair', // Missing organizationId
 });
 ```
 
 ### Audit Trail
+
 All operations automatically include audit information:
+
 - `created_by` / `updated_by` - User performing the action
 - `created_at` / `updated_at` - Timestamp of the action
 - Organization context for all operations
@@ -214,6 +229,7 @@ All operations automatically include audit information:
 ## Performance Optimization
 
 ### Query Monitoring
+
 ```typescript
 // Queries are automatically monitored
 // Slow queries (>1 second) are logged and counted
@@ -222,12 +238,13 @@ const result = await databaseService.executeQuery(
     // Your database operation
     return complexQuery();
   },
-  'complex report generation',  // Context for logging
+  'complex report generation', // Context for logging
   organizationId
 );
 ```
 
 ### Database Optimization
+
 ```typescript
 // Run database maintenance
 await databaseService.optimizePerformance();
@@ -235,6 +252,7 @@ await databaseService.optimizePerformance();
 ```
 
 ### Performance Monitoring
+
 ```typescript
 // Reset metrics for monitoring period
 databaseService.resetMetrics();
@@ -253,12 +271,13 @@ if (metrics.averageQueryTime > 500) {
 The database service automatically handles field transformations:
 
 ### API Input Processing
+
 ```typescript
 // Frontend sends camelCase
 const apiData = {
   foNumber: 'WO-001',
   equipmentId: 'uuid-here',
-  organizationId: 'org-uuid'
+  organizationId: 'org-uuid',
 };
 
 // Database service transforms to snake_case for storage
@@ -266,12 +285,13 @@ const apiData = {
 ```
 
 ### Database Output Processing
+
 ```typescript
 // Database returns snake_case
 const dbResult = {
   fo_number: 'WO-001',
   equipment_id: 'uuid-here',
-  created_at: '2025-08-07T12:00:00Z'
+  created_at: '2025-08-07T12:00:00Z',
 };
 
 // Database service transforms to camelCase for API
@@ -281,6 +301,7 @@ const dbResult = {
 ## Error Handling
 
 ### Query Errors
+
 ```typescript
 try {
   const result = await databaseService.getWorkOrderById(id, orgId);
@@ -293,7 +314,9 @@ try {
 ```
 
 ### Connection Errors
+
 The service automatically:
+
 - Retries failed connections
 - Logs connection issues
 - Provides health status via monitoring
@@ -301,6 +324,7 @@ The service automatically:
 ## Health Monitoring Setup
 
 ### Automatic Monitoring
+
 ```typescript
 // Service automatically starts health monitoring
 // Checks every 30 seconds in background
@@ -308,6 +332,7 @@ The service automatically:
 ```
 
 ### Manual Health Checks
+
 ```typescript
 // Get current health status
 const health = await databaseService.performHealthCheck();
@@ -319,6 +344,7 @@ databaseService.stopHealthMonitoring();
 ## Configuration
 
 ### Environment Variables
+
 ```env
 # Database connection
 DATABASE_URL=postgres://user:pass@host:port/database
@@ -334,6 +360,7 @@ DB_SLOW_QUERY_THRESHOLD=1000
 ```
 
 ### Service Configuration
+
 ```typescript
 // Service initializes automatically in production
 // Manual initialization for development:
@@ -349,13 +376,15 @@ databaseService.stopHealthMonitoring();
 
 ## Best Practices
 
-1. **Organization Context**: Always include organizationId for multi-tenant operations
+1. **Organization Context**: Always include organizationId for multi-tenant
+   operations
 2. **Error Handling**: Wrap database calls in try-catch blocks
 3. **Performance**: Monitor slow queries and optimize as needed
 4. **Health Checks**: Use health monitoring for production deployments
 5. **Audit Trails**: Include userId for all write operations
 6. **Pagination**: Use appropriate limits for list operations
-7. **Field Mapping**: Trust the service to handle camelCase ↔ snake_case conversion
+7. **Field Mapping**: Trust the service to handle camelCase ↔ snake_case
+   conversion
 
 ## Integration Example
 
@@ -367,19 +396,19 @@ export class WorkOrderController {
     try {
       // Service handles field mapping automatically
       const workOrder = await databaseService.createWorkOrder(
-        req.validatedBody,    // camelCase input
-        req.user.id,
+        req.validatedBody, // camelCase input
+        req.user.id
       );
-      
+
       // Returns camelCase output
       res.status(201).json({
         success: true,
-        data: workOrder
+        data: workOrder,
       });
     } catch (error) {
       res.status(500).json({
         success: false,
-        message: error.message
+        message: error.message,
       });
     }
   }
@@ -388,17 +417,17 @@ export class WorkOrderController {
     try {
       const results = await databaseService.searchWorkOrders({
         ...req.validatedQuery,
-        organizationId: req.organizationId
+        organizationId: req.organizationId,
       });
-      
+
       res.json({
         success: true,
-        data: results
+        data: results,
       });
     } catch (error) {
       res.status(500).json({
         success: false,
-        message: error.message
+        message: error.message,
       });
     }
   }

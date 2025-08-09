@@ -2,7 +2,8 @@
 
 ## Overview
 
-MaintainPro CMMS provides a comprehensive RESTful API for managing maintenance operations, equipment, work orders, and preventive maintenance schedules.
+MaintainPro CMMS provides a comprehensive RESTful API for managing maintenance
+operations, equipment, work orders, and preventive maintenance schedules.
 
 ## Base URL
 
@@ -20,21 +21,23 @@ x-warehouse-id: your-warehouse-id
 
 ## Headers
 
-| Header | Required | Description |
-|--------|----------|-------------|
-| `x-warehouse-id` | Yes | Warehouse identifier for multi-tenant support |
-| `Content-Type` | Yes* | `application/json` for POST/PUT requests |
+| Header           | Required | Description                                   |
+| ---------------- | -------- | --------------------------------------------- |
+| `x-warehouse-id` | Yes      | Warehouse identifier for multi-tenant support |
+| `Content-Type`   | Yes\*    | `application/json` for POST/PUT requests      |
 
 ## Preventive Maintenance API
 
 ### PM Templates
 
 #### Get All PM Templates
+
 ```http
 GET /api/pm-templates
 ```
 
 **Response:**
+
 ```json
 [
   {
@@ -55,6 +58,7 @@ GET /api/pm-templates
 ```
 
 #### Create PM Template
+
 ```http
 POST /api/pm-templates
 Content-Type: application/json
@@ -71,6 +75,7 @@ Content-Type: application/json
 ```
 
 **Response:**
+
 ```json
 {
   "id": "new-uuid",
@@ -87,6 +92,7 @@ Content-Type: application/json
 ```
 
 #### Update PM Template
+
 ```http
 PUT /api/pm-templates/:id
 Content-Type: application/json
@@ -100,6 +106,7 @@ Content-Type: application/json
 ```
 
 #### Delete PM Template
+
 ```http
 DELETE /api/pm-templates/:id
 ```
@@ -107,11 +114,13 @@ DELETE /api/pm-templates/:id
 ### PM Compliance
 
 #### Get Compliance Data
+
 ```http
 GET /api/pm-compliance?days=30
 ```
 
 **Response:**
+
 ```json
 {
   "overallComplianceRate": 95.5,
@@ -143,11 +152,13 @@ GET /api/pm-compliance?days=30
 ### PM Scheduler
 
 #### Get Scheduler Status
+
 ```http
 GET /api/pm-scheduler/status
 ```
 
 **Response:**
+
 ```json
 {
   "isRunning": true,
@@ -158,21 +169,25 @@ GET /api/pm-scheduler/status
 ```
 
 #### Start Scheduler
+
 ```http
 POST /api/pm-scheduler/start
 ```
 
 #### Stop Scheduler
+
 ```http
 POST /api/pm-scheduler/stop
 ```
 
 #### Manual Scheduler Run
+
 ```http
 POST /api/pm-scheduler/run
 ```
 
 **Response:**
+
 ```json
 {
   "message": "PM scheduler run completed successfully",
@@ -184,11 +199,13 @@ POST /api/pm-scheduler/run
 ## Equipment API
 
 ### Get All Equipment
+
 ```http
 GET /api/equipment
 ```
 
 **Response:**
+
 ```json
 [
   {
@@ -206,11 +223,13 @@ GET /api/equipment
 ## Work Orders API
 
 ### Get All Work Orders
+
 ```http
 GET /api/work-orders
 ```
 
 ### Create Work Order
+
 ```http
 POST /api/work-orders
 Content-Type: application/json
@@ -236,6 +255,7 @@ All API endpoints return appropriate HTTP status codes:
 - `500 Internal Server Error` - Server error
 
 **Error Response Format:**
+
 ```json
 {
   "error": "Error message",
@@ -245,7 +265,8 @@ All API endpoints return appropriate HTTP status codes:
 
 ## Rate Limiting
 
-Currently no rate limiting is implemented. Consider implementing rate limiting for production deployment.
+Currently no rate limiting is implemented. Consider implementing rate limiting
+for production deployment.
 
 ## Data Validation
 
@@ -259,6 +280,7 @@ All API endpoints validate input data using Zod schemas:
 ## Frequency Options
 
 PM Template frequency field accepts:
+
 - `daily`
 - `weekly`
 - `monthly`
@@ -268,6 +290,7 @@ PM Template frequency field accepts:
 ## Priority Levels
 
 Work order priority levels:
+
 - `low`
 - `medium`
 - `high`
@@ -276,6 +299,7 @@ Work order priority levels:
 ## Status Values
 
 Work order status values:
+
 - `new`
 - `assigned`
 - `in_progress`
@@ -319,6 +343,7 @@ curl -X POST http://localhost:5000/api/pm-scheduler/run \
 ## SDK and Integration
 
 Future versions will include:
+
 - JavaScript/TypeScript SDK
 - Python SDK
 - Webhook support for real-time notifications
@@ -328,6 +353,7 @@ Future versions will include:
 ## Security Considerations
 
 For production deployment, implement:
+
 - API key authentication
 - JWT token validation
 - Rate limiting

@@ -63,7 +63,7 @@ export class PerformanceService {
       name,
       value,
       timestamp: Date.now(),
-      tags
+      tags,
     };
 
     this.metrics.push(metric);
@@ -76,16 +76,16 @@ export class PerformanceService {
   recordRequest(metrics: RequestMetrics): void {
     this.requestMetrics.push({
       ...metrics,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     } as any);
-    
+
     this.trimRequestMetrics();
 
     // Record as general metric for aggregation
     this.recordMetric('http_request_duration', metrics.responseTime, {
       method: metrics.method,
       path: this.sanitizePath(metrics.path),
-      status_code: metrics.statusCode.toString()
+      status_code: metrics.statusCode.toString(),
     });
   }
 
@@ -95,7 +95,7 @@ export class PerformanceService {
   recordDatabaseQuery(metrics: DatabaseMetrics): void {
     this.databaseMetrics.push({
       ...metrics,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     } as any);
 
     this.trimDatabaseMetrics();
@@ -103,7 +103,7 @@ export class PerformanceService {
     // Record as general metric
     this.recordMetric('database_query_duration', metrics.queryTime, {
       query_type: metrics.queryType,
-      table_name: metrics.tableName || 'unknown'
+      table_name: metrics.tableName || 'unknown',
     });
   }
 
@@ -134,7 +134,7 @@ export class PerformanceService {
       requests: requestsSummary,
       database: databaseSummary,
       system: systemMetrics,
-      cache: this.getCacheMetrics()
+      cache: this.getCacheMetrics(),
     };
   }
 
@@ -167,27 +167,37 @@ export class PerformanceService {
 
     // Check request performance
     if (summary.requests.averageResponseTime > 500) {
-      recommendations.push('High average response time detected. Consider implementing response caching or optimizing slow endpoints.');
+      recommendations.push(
+        'High average response time detected. Consider implementing response caching or optimizing slow endpoints.'
+      );
     }
 
-    // Check database performance  
+    // Check database performance
     if (summary.database.averageQueryTime > 50) {
-      recommendations.push('Database queries are slow. Review indexes and optimize frequently used queries.');
+      recommendations.push(
+        'Database queries are slow. Review indexes and optimize frequently used queries.'
+      );
     }
 
     // Check memory usage
     if (summary.system.memoryUsage > 0.8) {
-      recommendations.push('High memory usage detected. Consider implementing garbage collection tuning or memory optimization.');
+      recommendations.push(
+        'High memory usage detected. Consider implementing garbage collection tuning or memory optimization.'
+      );
     }
 
     // Check error rates
     if (summary.requests.errorRate > 0.05) {
-      recommendations.push('High error rate detected. Review application logs and fix error-prone endpoints.');
+      recommendations.push(
+        'High error rate detected. Review application logs and fix error-prone endpoints.'
+      );
     }
 
     // Check cache performance
     if (summary.cache.hitRate < 0.7) {
-      recommendations.push('Low cache hit rate. Review caching strategies and increase TTL for frequently accessed data.');
+      recommendations.push(
+        'Low cache hit rate. Review caching strategies and increase TTL for frequently accessed data.'
+      );
     }
 
     return recommendations;
@@ -202,7 +212,7 @@ export class PerformanceService {
 
       res.on('finish', () => {
         const responseTime = Date.now() - startTime;
-        
+
         this.recordRequest({
           method: req.method,
           path: req.route?.path || req.path,
@@ -210,7 +220,7 @@ export class PerformanceService {
           responseTime,
           contentLength: res.get('Content-Length'),
           userAgent: req.get('User-Agent'),
-          ip: req.ip
+          ip: req.ip,
         });
       });
 
@@ -227,29 +237,29 @@ export class PerformanceService {
     queryFunction: () => Promise<T>
   ): Promise<T> {
     const startTime = Date.now();
-    
+
     try {
       const result = await queryFunction();
       const queryTime = Date.now() - startTime;
-      
+
       this.recordDatabaseQuery({
         queryTime,
         queryType,
         tableName,
-        affectedRows: Array.isArray(result) ? result.length : 1
+        affectedRows: Array.isArray(result) ? result.length : 1,
       });
-      
+
       return result;
     } catch (error) {
       const queryTime = Date.now() - startTime;
-      
+
       this.recordDatabaseQuery({
         queryTime,
         queryType,
         tableName,
-        affectedRows: 0
+        affectedRows: 0,
       });
-      
+
       throw error;
     }
   }
@@ -260,12 +270,11 @@ export class PerformanceService {
   private startSystemMetricsCollection(): void {
     this.metricsInterval = setInterval(() => {
       const metrics = this.getCurrentSystemMetrics();
-      
+
       this.recordMetric('cpu_usage', metrics.cpuUsage);
       this.recordMetric('memory_usage', metrics.memoryUsage);
       this.recordMetric('heap_used', metrics.heapUsed);
       this.recordMetric('event_loop_lag', metrics.eventLoopLag);
-      
     }, 30000); // Every 30 seconds
   }
 
@@ -275,14 +284,14 @@ export class PerformanceService {
   private getCurrentSystemMetrics(): SystemMetrics {
     const memUsage = process.memoryUsage();
     const cpuUsage = process.cpuUsage();
-    
+
     return {
       cpuUsage: (cpuUsage.user + cpuUsage.system) / 1000000, // Convert to seconds
       memoryUsage: memUsage.rss / (1024 * 1024 * 1024), // Convert to GB
       heapUsed: memUsage.heapUsed / (1024 * 1024), // Convert to MB
       heapTotal: memUsage.heapTotal / (1024 * 1024), // Convert to MB
       uptime: process.uptime(),
-      eventLoopLag: this.measureEventLoopLag()
+      eventLoopLag: this.measureEventLoopLag(),
     };
   }
 
@@ -307,7 +316,7 @@ export class PerformanceService {
         totalRequests: 0,
         averageResponseTime: 0,
         errorRate: 0,
-        throughput: 0
+        throughput: 0,
       };
     }
 
@@ -320,8 +329,14 @@ export class PerformanceService {
       averageResponseTime: totalResponseTime / requests.length,
       errorRate: errorCount / requests.length,
       throughput: requests.length / (timespan / 1000), // requests per second
-      p95ResponseTime: this.calculatePercentile(requests.map(r => r.responseTime), 95),
-      p99ResponseTime: this.calculatePercentile(requests.map(r => r.responseTime), 99)
+      p95ResponseTime: this.calculatePercentile(
+        requests.map(r => r.responseTime),
+        95
+      ),
+      p99ResponseTime: this.calculatePercentile(
+        requests.map(r => r.responseTime),
+        99
+      ),
     };
   }
 
@@ -332,7 +347,7 @@ export class PerformanceService {
     if (queries.length === 0) {
       return {
         totalQueries: 0,
-        averageQueryTime: 0
+        averageQueryTime: 0,
       };
     }
 
@@ -341,9 +356,15 @@ export class PerformanceService {
     return {
       totalQueries: queries.length,
       averageQueryTime: totalQueryTime / queries.length,
-      p95QueryTime: this.calculatePercentile(queries.map(q => q.queryTime), 95),
-      p99QueryTime: this.calculatePercentile(queries.map(q => q.queryTime), 99),
-      queryTypeBreakdown: this.getQueryTypeBreakdown(queries)
+      p95QueryTime: this.calculatePercentile(
+        queries.map(q => q.queryTime),
+        95
+      ),
+      p99QueryTime: this.calculatePercentile(
+        queries.map(q => q.queryTime),
+        99
+      ),
+      queryTypeBreakdown: this.getQueryTypeBreakdown(queries),
     };
   }
 
@@ -356,7 +377,7 @@ export class PerformanceService {
       hitRate: 0.85,
       missRate: 0.15,
       totalHits: 1000,
-      totalMisses: 150
+      totalMisses: 150,
     };
   }
 
@@ -365,7 +386,7 @@ export class PerformanceService {
    */
   private calculatePercentile(values: number[], percentile: number): number {
     if (values.length === 0) return 0;
-    
+
     const sorted = values.sort((a, b) => a - b);
     const index = Math.ceil((percentile / 100) * sorted.length) - 1;
     return sorted[index];
@@ -376,11 +397,11 @@ export class PerformanceService {
    */
   private getQueryTypeBreakdown(queries: DatabaseMetrics[]): Record<string, number> {
     const breakdown: Record<string, number> = {};
-    
+
     queries.forEach(query => {
       breakdown[query.queryType] = (breakdown[query.queryType] || 0) + 1;
     });
-    
+
     return breakdown;
   }
 

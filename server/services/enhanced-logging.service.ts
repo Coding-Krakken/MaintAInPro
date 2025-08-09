@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 
 /**
  * Enhanced Structured Logging Service for MaintAInPro CMMS
- * 
+ *
  * Provides comprehensive logging with:
  * - Structured format (JSON)
  * - Request tracing
@@ -18,17 +18,17 @@ export interface LogContext {
   userId?: string;
   organizationId?: string;
   sessionId?: string;
-  
+
   // Operation context
   operation?: string;
   resource?: string;
   resourceId?: string;
   service?: string;
-  
+
   // Performance context
   duration?: number;
   timestamp?: string;
-  
+
   // Additional metadata
   metadata?: Record<string, any>;
   [key: string]: any; // Allow additional properties
@@ -67,7 +67,7 @@ class EnhancedLoggingService {
   private readonly serviceName = 'MaintAInPro-CMMS';
   private readonly version = process.env.APP_VERSION || '1.0.0';
   private readonly environment = process.env.NODE_ENV || 'development';
-  
+
   /**
    * Generate unique request ID for tracing
    */
@@ -89,8 +89,8 @@ class EnhancedLoggingService {
       metadata: {
         ip: req.ip || req.connection.remoteAddress,
         userAgent: req.headers['user-agent'],
-        referer: req.headers.referer
-      }
+        referer: req.headers.referer,
+      },
     };
   }
 
@@ -108,7 +108,7 @@ class EnhancedLoggingService {
       ...entry.context,
       ...(entry.error && { error: entry.error }),
       ...(entry.performance && { performance: entry.performance }),
-      ...(entry.audit && { audit: entry.audit })
+      ...(entry.audit && { audit: entry.audit }),
     };
 
     return JSON.stringify(logData);
@@ -119,37 +119,37 @@ class EnhancedLoggingService {
    */
   private output(entry: LogEntry): void {
     const formatted = this.formatLogEntry(entry);
-    
+
     // In development, use pretty printing
     if (this.environment === 'development') {
       const colors = {
-        debug: '\x1b[36m',    // Cyan
-        info: '\x1b[32m',     // Green
-        warn: '\x1b[33m',     // Yellow
-        error: '\x1b[31m',    // Red
-        fatal: '\x1b[35m'     // Magenta
+        debug: '\x1b[36m', // Cyan
+        info: '\x1b[32m', // Green
+        warn: '\x1b[33m', // Yellow
+        error: '\x1b[31m', // Red
+        fatal: '\x1b[35m', // Magenta
       };
       const reset = '\x1b[0m';
       const color = colors[entry.level] || reset;
-      
+
       console.log(`${color}[${entry.level.toUpperCase()}]${reset} ${entry.message}`);
-      
+
       if (entry.context.requestId) {
         console.log(`  Request ID: ${entry.context.requestId}`);
       }
-      
+
       if (entry.context.userId) {
         console.log(`  User ID: ${entry.context.userId}`);
       }
-      
+
       if (entry.context.operation) {
         console.log(`  Operation: ${entry.context.operation}`);
       }
-      
+
       if (entry.context.duration) {
         console.log(`  Duration: ${entry.context.duration}ms`);
       }
-      
+
       if (entry.error) {
         console.log(`  Error: ${entry.error.name} - ${entry.error.message}`);
         if (entry.error.stack) {
@@ -171,8 +171,8 @@ class EnhancedLoggingService {
       message,
       context: {
         timestamp: new Date().toISOString(),
-        ...context
-      }
+        ...context,
+      },
     });
   }
 
@@ -185,8 +185,8 @@ class EnhancedLoggingService {
       message,
       context: {
         timestamp: new Date().toISOString(),
-        ...context
-      }
+        ...context,
+      },
     });
   }
 
@@ -199,8 +199,8 @@ class EnhancedLoggingService {
       message,
       context: {
         timestamp: new Date().toISOString(),
-        ...context
-      }
+        ...context,
+      },
     });
   }
 
@@ -209,13 +209,13 @@ class EnhancedLoggingService {
    */
   error(message: string, error?: Error | any, context: LogContext = {}): void {
     const errorContext: any = {};
-    
+
     if (error) {
       errorContext.error = {
         name: error.name || 'Error',
         message: error.message || String(error),
         stack: error.stack,
-        code: error.code
+        code: error.code,
       };
     }
 
@@ -224,9 +224,9 @@ class EnhancedLoggingService {
       message,
       context: {
         timestamp: new Date().toISOString(),
-        ...context
+        ...context,
       },
-      ...errorContext
+      ...errorContext,
     });
   }
 
@@ -235,13 +235,13 @@ class EnhancedLoggingService {
    */
   fatal(message: string, error?: Error | any, context: LogContext = {}): void {
     const errorContext: any = {};
-    
+
     if (error) {
       errorContext.error = {
         name: error.name || 'FatalError',
         message: error.message || String(error),
         stack: error.stack,
-        code: error.code
+        code: error.code,
       };
     }
 
@@ -250,9 +250,9 @@ class EnhancedLoggingService {
       message,
       context: {
         timestamp: new Date().toISOString(),
-        ...context
+        ...context,
       },
-      ...errorContext
+      ...errorContext,
     });
   }
 
@@ -261,7 +261,7 @@ class EnhancedLoggingService {
    */
   logApiRequest(req: RequestWithId, res: Response, duration: number): void {
     const context = this.createContextFromRequest(req);
-    
+
     this.info('API Request', {
       ...context,
       duration,
@@ -270,23 +270,28 @@ class EnhancedLoggingService {
         statusCode: res.statusCode,
         method: req.method,
         url: req.originalUrl || req.url,
-        body: req.method !== 'GET' ? this.sanitizeRequestBody(req.body) : undefined
-      }
+        body: req.method !== 'GET' ? this.sanitizeRequestBody(req.body) : undefined,
+      },
     });
   }
 
   /**
    * Log database operations
    */
-  logDatabaseOperation(operation: string, table: string, duration: number, context: LogContext = {}): void {
+  logDatabaseOperation(
+    operation: string,
+    table: string,
+    duration: number,
+    context: LogContext = {}
+  ): void {
     this.debug('Database Operation', {
       ...context,
       operation: `DB_${operation.toUpperCase()}`,
       resource: table,
       duration,
       metadata: {
-        type: 'database'
-      }
+        type: 'database',
+      },
     });
   }
 
@@ -299,38 +304,49 @@ class EnhancedLoggingService {
       operation: `SECURITY_${event.toUpperCase()}`,
       metadata: {
         type: 'security',
-        details: this.sanitizeSecurityDetails(details)
-      }
+        details: this.sanitizeSecurityDetails(details),
+      },
     });
   }
 
   /**
    * Log audit events for compliance
    */
-  logAuditEvent(action: string, entity: string, entityId: string | undefined, changes: any, context: LogContext = {}): void {
+  logAuditEvent(
+    action: string,
+    entity: string,
+    entityId: string | undefined,
+    changes: any,
+    context: LogContext = {}
+  ): void {
     const auditInfo = {
       action,
       entity,
       entityId,
-      changes: this.sanitizeAuditChanges(changes)
+      changes: this.sanitizeAuditChanges(changes),
     };
 
     this.info('Audit Event', {
       ...context,
       metadata: {
         type: 'audit',
-        audit: auditInfo
-      }
+        audit: auditInfo,
+      },
     });
   }
 
   /**
    * Log performance metrics
    */
-  logPerformanceMetric(metric: string, value: number, unit: string, context: LogContext = {}): void {
+  logPerformanceMetric(
+    metric: string,
+    value: number,
+    unit: string,
+    context: LogContext = {}
+  ): void {
     const performanceInfo = {
       duration: value,
-      memory: process.memoryUsage().heapUsed / 1024 / 1024 // MB
+      memory: process.memoryUsage().heapUsed / 1024 / 1024, // MB
     };
 
     this.info('Performance Metric', {
@@ -340,8 +356,8 @@ class EnhancedLoggingService {
         metric,
         value,
         unit,
-        performance: performanceInfo
-      }
+        performance: performanceInfo,
+      },
     });
   }
 
@@ -350,16 +366,16 @@ class EnhancedLoggingService {
    */
   private sanitizeRequestBody(body: any): any {
     if (!body || typeof body !== 'object') return body;
-    
+
     const sensitiveFields = ['password', 'token', 'secret', 'key', 'authorization'];
     const sanitized = { ...body };
-    
+
     for (const field of sensitiveFields) {
       if (field in sanitized) {
         sanitized[field] = '[REDACTED]';
       }
     }
-    
+
     return sanitized;
   }
 
@@ -368,16 +384,16 @@ class EnhancedLoggingService {
    */
   private sanitizeSecurityDetails(details: any): any {
     if (!details || typeof details !== 'object') return details;
-    
+
     const sensitiveFields = ['password', 'token', 'hash', 'secret'];
     const sanitized = { ...details };
-    
+
     for (const field of sensitiveFields) {
       if (field in sanitized) {
         sanitized[field] = '[REDACTED]';
       }
     }
-    
+
     return sanitized;
   }
 
@@ -386,16 +402,16 @@ class EnhancedLoggingService {
    */
   private sanitizeAuditChanges(changes: any): any {
     if (!changes || typeof changes !== 'object') return changes;
-    
+
     const sensitiveFields = ['password', 'password_hash', 'secret', 'token'];
     const sanitized = { ...changes };
-    
+
     for (const field of sensitiveFields) {
       if (field in sanitized) {
         sanitized[field] = '[REDACTED]';
       }
     }
-    
+
     return sanitized;
   }
 
@@ -404,16 +420,16 @@ class EnhancedLoggingService {
    */
   child(baseContext: LogContext) {
     return {
-      debug: (message: string, context: LogContext = {}) => 
+      debug: (message: string, context: LogContext = {}) =>
         this.debug(message, { ...baseContext, ...context }),
-      info: (message: string, context: LogContext = {}) => 
+      info: (message: string, context: LogContext = {}) =>
         this.info(message, { ...baseContext, ...context }),
-      warn: (message: string, context: LogContext = {}) => 
+      warn: (message: string, context: LogContext = {}) =>
         this.warn(message, { ...baseContext, ...context }),
-      error: (message: string, error?: Error, context: LogContext = {}) => 
+      error: (message: string, error?: Error, context: LogContext = {}) =>
         this.error(message, error, { ...baseContext, ...context }),
-      fatal: (message: string, error?: Error, context: LogContext = {}) => 
-        this.fatal(message, error, { ...baseContext, ...context })
+      fatal: (message: string, error?: Error, context: LogContext = {}) =>
+        this.fatal(message, error, { ...baseContext, ...context }),
     };
   }
 }
@@ -426,7 +442,7 @@ export const logger = new EnhancedLoggingService();
  */
 export function requestLoggingMiddleware(req: RequestWithId, res: Response, next: any): void {
   const startTime = Date.now();
-  
+
   // Generate request ID if not present
   if (!req.requestId) {
     req.requestId = logger.generateRequestId();
@@ -441,12 +457,12 @@ export function requestLoggingMiddleware(req: RequestWithId, res: Response, next
 
   // Store original end method
   const originalEnd = res.end.bind(res);
-  
+
   // Override res.end to log when request completes
-  res.end = function(chunk?: any, encoding?: any, cb?: () => void): Response {
+  res.end = function (chunk?: any, encoding?: any, cb?: () => void): Response {
     const duration = Date.now() - startTime;
     logger.logApiRequest(req, res, duration);
-    
+
     // Call original end method with proper arguments
     if (typeof chunk === 'function') {
       return originalEnd(chunk);
@@ -463,15 +479,20 @@ export function requestLoggingMiddleware(req: RequestWithId, res: Response, next
 /**
  * Error logging middleware
  */
-export function errorLoggingMiddleware(error: Error, req: RequestWithId, res: Response, next: any): void {
+export function errorLoggingMiddleware(
+  error: Error,
+  req: RequestWithId,
+  res: Response,
+  next: any
+): void {
   const context = logger.createContextFromRequest(req);
-  
+
   logger.error('Request error', error, {
     ...context,
     metadata: {
       ...context.metadata,
-      statusCode: res.statusCode || 500
-    }
+      statusCode: res.statusCode || 500,
+    },
   });
 
   next(error);

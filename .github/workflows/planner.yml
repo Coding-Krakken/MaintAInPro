@@ -8,14 +8,14 @@ on:
         required: false
         default: 'false'
         type: boolean
-  
+
   push:
     paths:
       - 'Documentation/Blueprint/**'
     branches:
       - main
       - Replit
-  
+
   schedule:
     # Run every 6 hours
     - cron: '0 */6 * * *'
@@ -28,29 +28,29 @@ permissions:
 jobs:
   plan:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
           cache: 'npm'
-      
+
       - name: Install dependencies
         run: npm ci
-      
+
       - name: Create planner script
         run: |
           cat > planner.js << 'EOF'
           import fs from 'fs';
           import path from 'path';
           import { execSync } from 'child_process';
-          
+
           // GitHub API helper
           async function githubApi(endpoint, method = 'GET', data = null) {
             const url = `https://api.github.com/repos/${process.env.GITHUB_REPOSITORY}${endpoint}`;
@@ -80,7 +80,7 @@ jobs:
               return null;
             }
           }
-          
+
           // Parse Blueprint files for Task blocks
           function parseTasksFromFile(filePath) {
             if (!fs.existsSync(filePath)) return [];
@@ -157,7 +157,7 @@ jobs:
             
             return tasks;
           }
-          
+
           // Generate issue body from task
           function generateIssueBody(task) {
             let body = `## Task Description\n\n${task.content}\n\n`;
@@ -201,7 +201,7 @@ jobs:
             
             return body;
           }
-          
+
           // Create unique issue identifier
           function createIssueId(task) {
             const filePart = path.basename(task.file, '.md').toLowerCase();
@@ -211,7 +211,7 @@ jobs:
               .substring(0, 30);
             return `autoplan-${filePart}-${titlePart}`;
           }
-          
+
           // Main execution
           async function main() {
             console.log('🤖 Blueprint Planner Starting...');
@@ -321,20 +321,20 @@ jobs:
             execSync(`echo "created_issues=${createdCount}" >> $GITHUB_OUTPUT`);
             execSync(`echo "total_tasks=${allTasks.length}" >> $GITHUB_OUTPUT`);
           }
-          
+
           main().catch(error => {
             console.error('Planner failed:', error);
             process.exit(1);
           });
           EOF
-      
+
       - name: Run Blueprint Planner
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
           FORCE_UPDATE: ${{ github.event.inputs.force_update || 'false' }}
         run: node planner.js
-      
+
       - name: Summary
         run: |
           echo "## 🤖 Blueprint Planner Results" >> $GITHUB_STEP_SUMMARY

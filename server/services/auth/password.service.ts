@@ -37,7 +37,7 @@ export class PasswordService {
     forbidCommonPasswords: true,
     forbidUserInfo: true,
     maxRepeatedChars: 3,
-    preventPreviousPasswords: 5
+    preventPreviousPasswords: 5,
   };
 
   private static readonly SALT_ROUNDS = 12;
@@ -46,13 +46,13 @@ export class PasswordService {
   static async hashPassword(password: string): Promise<{ hash: string; salt: string }> {
     // Generate a unique salt for each password
     const salt = await bcrypt.genSalt(this.SALT_ROUNDS);
-    
+
     // Add pepper for additional security
     const pepperedPassword = password + this.PEPPER;
-    
+
     // Hash the password with salt
     const hash = await bcrypt.hash(pepperedPassword, salt);
-    
+
     return { hash, salt };
   }
 
@@ -60,7 +60,7 @@ export class PasswordService {
     try {
       // Add pepper for verification
       const pepperedPassword = password + this.PEPPER;
-      
+
       // Verify password
       return await bcrypt.compare(pepperedPassword, hash);
     } catch (error) {
@@ -70,7 +70,7 @@ export class PasswordService {
   }
 
   static validatePassword(
-    password: string, 
+    password: string,
     userInfo?: { email?: string; firstName?: string; lastName?: string },
     previousPasswords: string[] = [],
     policy: Partial<PasswordPolicy> = {}
@@ -96,23 +96,26 @@ export class PasswordService {
     if (activePolicy.requireNumbers && !/\d/.test(password)) {
       errors.push('Password must contain at least one number');
     }
-    if (activePolicy.requireSpecialChars && !/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
+    if (
+      activePolicy.requireSpecialChars &&
+      !/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)
+    ) {
       errors.push('Password must contain at least one special character');
     }
 
     // Check for repeated characters
     const repeatedCharsRegex = new RegExp(`(.)\\1{${activePolicy.maxRepeatedChars},}`, 'i');
     if (repeatedCharsRegex.test(password)) {
-      errors.push(`Password cannot have more than ${activePolicy.maxRepeatedChars} repeated characters in a row`);
+      errors.push(
+        `Password cannot have more than ${activePolicy.maxRepeatedChars} repeated characters in a row`
+      );
     }
 
     // Check against user information
     if (activePolicy.forbidUserInfo && userInfo) {
-      const userInfoValues = [
-        userInfo.email?.split('@')[0],
-        userInfo.firstName,
-        userInfo.lastName
-      ].filter(Boolean).map(v => v!.toLowerCase());
+      const userInfoValues = [userInfo.email?.split('@')[0], userInfo.firstName, userInfo.lastName]
+        .filter(Boolean)
+        .map(v => v!.toLowerCase());
 
       const passwordLower = password.toLowerCase();
       for (const info of userInfoValues) {
@@ -124,7 +127,10 @@ export class PasswordService {
     }
 
     // Use zxcvbn for password strength analysis
-    const strengthResult = zxcvbn(password, userInfo ? Object.values(userInfo).filter(Boolean) : []);
+    const strengthResult = zxcvbn(
+      password,
+      userInfo ? Object.values(userInfo).filter(Boolean) : []
+    );
 
     // Check if password was used before
     if (activePolicy.preventPreviousPasswords > 0) {
@@ -140,35 +146,39 @@ export class PasswordService {
       score: strengthResult.score,
       feedback: {
         warning: strengthResult.feedback.warning,
-        suggestions: strengthResult.feedback.suggestions
+        suggestions: strengthResult.feedback.suggestions,
       },
       meetsPolicy,
-      errors
+      errors,
     };
   }
 
   static generateSecurePassword(length: number = 16): string {
-    const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?';
+    const charset =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?';
     let password = '';
-    
+
     // Ensure password contains at least one character from each required set
     const upperCase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     const lowerCase = 'abcdefghijklmnopqrstuvwxyz';
     const numbers = '0123456789';
     const special = '!@#$%^&*()_+-=[]{}|;:,.<>?';
-    
+
     password += upperCase[randomInt(upperCase.length)];
     password += lowerCase[randomInt(lowerCase.length)];
     password += numbers[randomInt(numbers.length)];
     password += special[randomInt(special.length)];
-    
+
     // Fill remaining length with random characters
     for (let i = 4; i < length; i++) {
       password += charset[randomInt(charset.length)];
     }
-    
+
     // Shuffle the password
-    return password.split('').sort(() => randomInt(3) - 1).join('');
+    return password
+      .split('')
+      .sort(() => randomInt(3) - 1)
+      .join('');
   }
 
   static generateResetToken(): string {
@@ -181,7 +191,7 @@ export class PasswordService {
   }
 
   static async checkPreviousPasswords(
-    newPassword: string, 
+    newPassword: string,
     previousPasswordHashes: string[]
   ): Promise<boolean> {
     for (const hash of previousPasswordHashes) {
@@ -199,15 +209,14 @@ export class PasswordService {
     feedback: string[];
   } {
     const result = zxcvbn(password);
-    
+
     return {
       score: result.score,
       entropy: result.guesses_log10,
-      crackTime: String(result.crack_times_display.offline_slow_hashing_1e4_per_second || 'Unknown'),
-      feedback: [
-        result.feedback.warning,
-        ...result.feedback.suggestions
-      ].filter(Boolean)
+      crackTime: String(
+        result.crack_times_display.offline_slow_hashing_1e4_per_second || 'Unknown'
+      ),
+      feedback: [result.feedback.warning, ...result.feedback.suggestions].filter(Boolean),
     };
   }
 }

@@ -2,8 +2,8 @@
 
 ---
 
-**Purpose:**
-Define the complete directory structure, file organization, and architectural patterns for the CMMS application.
+**Purpose:** Define the complete directory structure, file organization, and
+architectural patterns for the CMMS application.
 
 ---
 
@@ -78,6 +78,7 @@ maintainpro-cmms/
 **2. Source Code Organization:**
 
 **2.1. Components Structure:**
+
 ```
 src/components/
 ├── ui/                    # Basic UI components
@@ -110,6 +111,7 @@ src/components/
 ```
 
 **2.2. Feature Modules Structure:**
+
 ```
 src/modules/
 ├── work-orders/
@@ -141,6 +143,7 @@ src/modules/
 ```
 
 **2.3. Hooks Structure:**
+
 ```
 src/hooks/
 ├── api/                   # API-related hooks
@@ -175,6 +178,7 @@ src/hooks/
 **3. Database Schema Structure:**
 
 **3.1. Migration Files:**
+
 ```
 supabase/migrations/
 ├── 20240101000001_initial_schema.sql
@@ -193,6 +197,7 @@ supabase/migrations/
 ```
 
 **3.2. Edge Functions:**
+
 ```
 supabase/functions/
 ├── escalation-checker/
@@ -214,6 +219,7 @@ supabase/functions/
 **4. Type Definitions:**
 
 **4.1. Database Types:**
+
 ```typescript
 // src/types/database.types.ts
 export interface Database {
@@ -243,7 +249,13 @@ export interface Database {
     };
     Enums: {
       user_role: 'technician' | 'supervisor' | 'manager' | 'admin';
-      wo_status: 'new' | 'assigned' | 'in_progress' | 'completed' | 'verified' | 'closed';
+      wo_status:
+        | 'new'
+        | 'assigned'
+        | 'in_progress'
+        | 'completed'
+        | 'verified'
+        | 'closed';
       priority: 'low' | 'medium' | 'high' | 'critical';
     };
   };
@@ -251,6 +263,7 @@ export interface Database {
 ```
 
 **4.2. Application Types:**
+
 ```typescript
 // src/types/app.types.ts
 export interface User {
@@ -289,6 +302,7 @@ export interface OfflineAction {
 **5. Configuration Files:**
 
 **5.1. Vite Configuration:**
+
 ```typescript
 // vite.config.ts
 import { defineConfig } from 'vite';
@@ -310,11 +324,11 @@ export default defineConfig({
           {
             src: 'pwa-192x192.png',
             sizes: '192x192',
-            type: 'image/png'
-          }
-        ]
-      }
-    })
+            type: 'image/png',
+          },
+        ],
+      },
+    }),
   ],
   resolve: {
     alias: {
@@ -324,15 +338,16 @@ export default defineConfig({
       '@/hooks': path.resolve(__dirname, './src/hooks'),
       '@/utils': path.resolve(__dirname, './src/utils'),
       '@/types': path.resolve(__dirname, './src/types'),
-    }
+    },
   },
   optimizeDeps: {
-    include: ['react', 'react-dom', '@supabase/supabase-js']
-  }
+    include: ['react', 'react-dom', '@supabase/supabase-js'],
+  },
 });
 ```
 
 **5.2. ESLint Configuration:**
+
 ```javascript
 // .eslintrc.js
 module.exports = {
@@ -340,19 +355,19 @@ module.exports = {
     '@typescript-eslint/recommended',
     'plugin:react/recommended',
     'plugin:react-hooks/recommended',
-    'plugin:jsx-a11y/recommended'
+    'plugin:jsx-a11y/recommended',
   ],
   rules: {
     'react/react-in-jsx-scope': 'off',
     '@typescript-eslint/no-unused-vars': 'error',
     'jsx-a11y/click-events-have-key-events': 'warn',
-    'jsx-a11y/no-noninteractive-element-interactions': 'warn'
+    'jsx-a11y/no-noninteractive-element-interactions': 'warn',
   },
   settings: {
     react: {
-      version: 'detect'
-    }
-  }
+      version: 'detect',
+    },
+  },
 };
 ```
 
@@ -361,6 +376,7 @@ module.exports = {
 **6. Build & Deployment Scripts:**
 
 **6.1. Package.json Scripts:**
+
 ```json
 {
   "scripts": {
@@ -411,4 +427,5 @@ docs/
     └── security-model.md
 ```
 
-This project structure provides a comprehensive foundation for building a maintainable, scalable, and well-organized CMMS application.
+This project structure provides a comprehensive foundation for building a
+maintainable, scalable, and well-organized CMMS application.

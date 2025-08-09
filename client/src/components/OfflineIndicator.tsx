@@ -38,7 +38,7 @@ const OfflineIndicator: React.FC = () => {
 
   const handleSync = async () => {
     if (!networkStatus.isOnline) return;
-    
+
     setIsSync(true);
     try {
       await forceSync();
@@ -54,35 +54,39 @@ const OfflineIndicator: React.FC = () => {
   }
 
   return (
-    <div className="fixed bottom-4 right-4 z-50">
-      <Card className={`p-3 shadow-lg border-l-4 ${
-        networkStatus.isOnline ? 'border-l-blue-500 bg-blue-50' : 'border-l-orange-500 bg-orange-50'
-      }`}>
-        <div className="flex items-center space-x-3">
-          <div className="flex items-center space-x-2">
+    <div className='fixed bottom-4 right-4 z-50'>
+      <Card
+        className={`p-3 shadow-lg border-l-4 ${
+          networkStatus.isOnline
+            ? 'border-l-blue-500 bg-blue-50'
+            : 'border-l-orange-500 bg-orange-50'
+        }`}
+      >
+        <div className='flex items-center space-x-3'>
+          <div className='flex items-center space-x-2'>
             {networkStatus.isOnline ? (
-              <Wifi className="w-5 h-5 text-blue-600" />
+              <Wifi className='w-5 h-5 text-blue-600' />
             ) : (
-              <WifiOff className="w-5 h-5 text-orange-600" />
+              <WifiOff className='w-5 h-5 text-orange-600' />
             )}
-            <span className="text-sm font-medium">
+            <span className='text-sm font-medium'>
               {networkStatus.isOnline ? 'Online' : 'Offline'}
             </span>
           </div>
 
           {pendingCount > 0 && (
             <>
-              <Badge variant="outline" className="text-xs">
+              <Badge variant='outline' className='text-xs'>
                 {pendingCount} pending
               </Badge>
-              
+
               {networkStatus.isOnline && (
                 <Button
-                  size="sm"
-                  variant="ghost"
+                  size='sm'
+                  variant='ghost'
                   onClick={handleSync}
                   disabled={isSync}
-                  className="h-6 px-2"
+                  className='h-6 px-2'
                 >
                   <RefreshCw className={`w-3 h-3 ${isSync ? 'animate-spin' : ''}`} />
                 </Button>
@@ -91,9 +95,9 @@ const OfflineIndicator: React.FC = () => {
           )}
 
           {!networkStatus.isOnline && pendingCount > 0 && (
-            <div className="flex items-center space-x-1 text-orange-600">
-              <AlertCircle className="w-4 h-4" />
-              <span className="text-xs">Changes will sync when online</span>
+            <div className='flex items-center space-x-1 text-orange-600'>
+              <AlertCircle className='w-4 h-4' />
+              <span className='text-xs'>Changes will sync when online</span>
             </div>
           )}
         </div>

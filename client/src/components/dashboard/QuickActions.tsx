@@ -19,36 +19,36 @@ export default function QuickActions() {
 
   return (
     <>
-      <Card className="shadow-sm border border-gray-200">
+      <Card className='shadow-sm border border-gray-200'>
         <CardHeader>
-          <CardTitle className="text-lg font-semibold text-gray-900">Quick Actions</CardTitle>
+          <CardTitle className='text-lg font-semibold text-gray-900'>Quick Actions</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-3">
+        <CardContent className='space-y-3'>
           <Button
             onClick={() => setShowQRScanner(true)}
-            className="w-full flex items-center justify-center space-x-3 bg-primary-50 text-primary-700 hover:bg-primary-100 border-0"
-            variant="outline"
+            className='w-full flex items-center justify-center space-x-3 bg-primary-50 text-primary-700 hover:bg-primary-100 border-0'
+            variant='outline'
           >
-            <QrCode className="w-5 h-5" />
-            <span className="font-medium">Scan QR Code</span>
+            <QrCode className='w-5 h-5' />
+            <span className='font-medium'>Scan QR Code</span>
           </Button>
-          
+
           <Button
             onClick={() => setShowWorkOrderModal(true)}
-            className="w-full flex items-center justify-center space-x-3"
-            variant="outline"
+            className='w-full flex items-center justify-center space-x-3'
+            variant='outline'
           >
-            <ClipboardList className="w-5 h-5" />
-            <span className="font-medium">Create Work Order</span>
+            <ClipboardList className='w-5 h-5' />
+            <span className='font-medium'>Create Work Order</span>
           </Button>
-          
+
           <Button
             onClick={() => setLocation('/inventory')}
-            className="w-full flex items-center justify-center space-x-3"
-            variant="outline"
+            className='w-full flex items-center justify-center space-x-3'
+            variant='outline'
           >
-            <Package className="w-5 h-5" />
-            <span className="font-medium">Check Inventory</span>
+            <Package className='w-5 h-5' />
+            <span className='font-medium'>Check Inventory</span>
           </Button>
         </CardContent>
       </Card>
@@ -64,10 +64,7 @@ export default function QuickActions() {
 
       {/* Work Order Creation Modal */}
       {showWorkOrderModal && (
-        <WorkOrderModal
-          isOpen={showWorkOrderModal}
-          onClose={() => setShowWorkOrderModal(false)}
-        />
+        <WorkOrderModal isOpen={showWorkOrderModal} onClose={() => setShowWorkOrderModal(false)} />
       )}
     </>
   );

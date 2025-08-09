@@ -2,8 +2,8 @@
 
 ---
 
-**Purpose:**
-Define the complete API surface, data flow patterns, and integration points for the CMMS system using Supabase.
+**Purpose:** Define the complete API surface, data flow patterns, and
+integration points for the CMMS system using Supabase.
 
 ---
 
@@ -181,7 +181,7 @@ system_logs
 CREATE POLICY "Users can only see their warehouse data" ON work_orders
   FOR ALL USING (
     warehouse_id = (
-      SELECT warehouse_id FROM profiles 
+      SELECT warehouse_id FROM profiles
       WHERE id = auth.uid()
     )
   );
@@ -189,8 +189,8 @@ CREATE POLICY "Users can only see their warehouse data" ON work_orders
 CREATE POLICY "Managers can see cross-warehouse data" ON work_orders
   FOR ALL USING (
     EXISTS (
-      SELECT 1 FROM profiles 
-      WHERE id = auth.uid() 
+      SELECT 1 FROM profiles
+      WHERE id = auth.uid()
       AND role IN ('manager', 'admin')
     )
   );
@@ -275,9 +275,9 @@ CREATE POLICY "Managers can see cross-warehouse data" ON work_orders
 
 **8. Performance Considerations:**
 
-* Use Supabase views for complex reporting queries
-* Implement pagination for large datasets
-* Cache static data (equipment models, vendors) locally
-* Use database indexes on frequently queried columns
-* Implement lazy loading for attachments and images
-* Use Supabase connection pooling for high concurrency
+- Use Supabase views for complex reporting queries
+- Implement pagination for large datasets
+- Cache static data (equipment models, vendors) locally
+- Use database indexes on frequently queried columns
+- Implement lazy loading for attachments and images
+- Use Supabase connection pooling for high concurrency

@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 test.describe('Health Dashboard E2E', () => {
   test.beforeEach(async ({ page }) => {
     // Mock the health API endpoint to return consistent data
-    await page.route('/api/health', async (route) => {
+    await page.route('/api/health', async route => {
       const healthData = {
         status: 'ok',
         timestamp: new Date().toISOString(),
@@ -140,7 +140,7 @@ test.describe('Health Dashboard E2E', () => {
 
   test('should handle error state correctly', async ({ page }) => {
     // Mock API to return an error
-    await page.route('/api/health', async (route) => {
+    await page.route('/api/health', async route => {
       await route.fulfill({
         status: 500,
         contentType: 'application/json',
@@ -159,7 +159,7 @@ test.describe('Health Dashboard E2E', () => {
 
   test('should handle unhealthy status', async ({ page }) => {
     // Mock API to return unhealthy status
-    await page.route('/api/health', async (route) => {
+    await page.route('/api/health', async route => {
       const unhealthyData = {
         status: 'error',
         timestamp: new Date().toISOString(),
@@ -224,7 +224,7 @@ test.describe('Health Dashboard E2E', () => {
     await page.waitForLoadState('networkidle');
 
     // Mock slow API response
-    await page.route('/api/health', async (route) => {
+    await page.route('/api/health', async route => {
       await new Promise(resolve => setTimeout(resolve, 1000)); // 1 second delay
       await route.fulfill({
         status: 200,

@@ -54,16 +54,19 @@ export class DatabaseStorage implements IStorage {
     }
 
     // Create sample warehouse
-    const [warehouse] = await db.insert(warehouses).values({
-      id: this.generateId(),
-      name: 'Main Warehouse',
-      address: '123 Industrial Way, Manufacturing City, MC 12345',
-      timezone: 'America/New_York',
-      operatingHoursStart: '07:00',
-      operatingHoursEnd: '19:00',
-      emergencyContact: '+1-555-0199',
-      active: true,
-    } as any).returning();
+    const [warehouse] = await db
+      .insert(warehouses)
+      .values({
+        id: this.generateId(),
+        name: 'Main Warehouse',
+        address: '123 Industrial Way, Manufacturing City, MC 12345',
+        timezone: 'America/New_York',
+        operatingHoursStart: '07:00',
+        operatingHoursEnd: '19:00',
+        emergencyContact: '+1-555-0199',
+        active: true,
+      } as any)
+      .returning();
 
     // Create sample users
     const users = [
@@ -279,7 +282,10 @@ export class DatabaseStorage implements IStorage {
       },
     ];
 
-    await db.insert(workOrders).values(workOrdersList as any).returning();
+    await db
+      .insert(workOrders)
+      .values(workOrdersList as any)
+      .returning();
 
     console.log('Database initialized with sample data');
   }
@@ -306,10 +312,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateProfile(id: string, profile: Partial<InsertProfile>): Promise<Profile> {
-    const [updated] = await db.update(profiles)
-      .set(profile)
-      .where(eq(profiles.id, id))
-      .returning();
+    const [updated] = await db.update(profiles).set(profile).where(eq(profiles.id, id)).returning();
     return updated;
   }
 
@@ -348,7 +351,11 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getEquipmentByAssetTag(assetTag: string): Promise<Equipment | undefined> {
-    const result = await db.select().from(equipment).where(eq(equipment.assetTag, assetTag)).limit(1);
+    const result = await db
+      .select()
+      .from(equipment)
+      .where(eq(equipment.assetTag, assetTag))
+      .limit(1);
     return result[0];
   }
 
@@ -363,7 +370,8 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateEquipment(id: string, equipmentData: Partial<InsertEquipment>): Promise<Equipment> {
-    const [updated] = await db.update(equipment)
+    const [updated] = await db
+      .update(equipment)
       .set(equipmentData)
       .where(eq(equipment.id, id))
       .returning();
@@ -396,7 +404,8 @@ export class DatabaseStorage implements IStorage {
       ...(workOrder as any),
       updatedAt: new Date(),
     };
-    const [updated] = await db.update(workOrders)
+    const [updated] = await db
+      .update(workOrders)
       .set(updateData)
       .where(eq(workOrders.id, id))
       .returning();
@@ -413,11 +422,15 @@ export class DatabaseStorage implements IStorage {
 
   // Work Order Checklist Items
   async getChecklistItems(workOrderId: string): Promise<WorkOrderChecklistItem[]> {
-    return await db.select().from(workOrderChecklistItems)
+    return await db
+      .select()
+      .from(workOrderChecklistItems)
       .where(eq(workOrderChecklistItems.workOrderId, workOrderId));
   }
 
-  async createChecklistItem(item: Omit<WorkOrderChecklistItem, 'id' | 'createdAt'>): Promise<WorkOrderChecklistItem> {
+  async createChecklistItem(
+    item: Omit<WorkOrderChecklistItem, 'id' | 'createdAt'>
+  ): Promise<WorkOrderChecklistItem> {
     const newItem = {
       ...item,
       id: this.generateId(),
@@ -427,15 +440,21 @@ export class DatabaseStorage implements IStorage {
     return created;
   }
 
-  async updateChecklistItem(id: string, item: Partial<WorkOrderChecklistItem>): Promise<WorkOrderChecklistItem> {
-    const [updated] = await db.update(workOrderChecklistItems)
+  async updateChecklistItem(
+    id: string,
+    item: Partial<WorkOrderChecklistItem>
+  ): Promise<WorkOrderChecklistItem> {
+    const [updated] = await db
+      .update(workOrderChecklistItems)
       .set(item)
       .where(eq(workOrderChecklistItems.id, id))
       .returning();
     return updated;
   }
 
-  async createWorkOrderChecklistItem(item: Omit<WorkOrderChecklistItem, 'id' | 'createdAt'>): Promise<WorkOrderChecklistItem> {
+  async createWorkOrderChecklistItem(
+    item: Omit<WorkOrderChecklistItem, 'id' | 'createdAt'>
+  ): Promise<WorkOrderChecklistItem> {
     return this.createChecklistItem(item);
   }
 
@@ -465,10 +484,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updatePart(id: string, part: Partial<InsertPart>): Promise<Part> {
-    const [updated] = await db.update(parts)
-      .set(part)
-      .where(eq(parts.id, id))
-      .returning();
+    const [updated] = await db.update(parts).set(part).where(eq(parts.id, id)).returning();
     return updated;
   }
 
@@ -496,26 +512,31 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updatePartsUsage(id: string, usage: Partial<PartsUsage>): Promise<PartsUsage> {
-    const [updated] = await db.update(partsUsage)
+    const [updated] = await db
+      .update(partsUsage)
       .set(usage as any)
       .where(eq(partsUsage.id, id))
       .returning();
     return updated;
   }
 
-  async getPartsUsageAnalytics(filters: { startDate?: Date; equipmentId?: string }): Promise<(PartsUsage & { part?: Part })[]> {
-    let query = db.select({
-      id: partsUsage.id,
-      workOrderId: partsUsage.workOrderId,
-      partId: partsUsage.partId,
-      quantityUsed: partsUsage.quantityUsed,
-      notes: partsUsage.notes,
-      createdAt: partsUsage.createdAt,
-      partName: parts.name,
-      partNumber: parts.partNumber,
-    })
-    .from(partsUsage)
-    .leftJoin(parts, eq(partsUsage.partId, parts.id));
+  async getPartsUsageAnalytics(filters: {
+    startDate?: Date;
+    equipmentId?: string;
+  }): Promise<(PartsUsage & { part?: Part })[]> {
+    let query = db
+      .select({
+        id: partsUsage.id,
+        workOrderId: partsUsage.workOrderId,
+        partId: partsUsage.partId,
+        quantityUsed: partsUsage.quantityUsed,
+        notes: partsUsage.notes,
+        createdAt: partsUsage.createdAt,
+        partName: parts.name,
+        partNumber: parts.partNumber,
+      })
+      .from(partsUsage)
+      .leftJoin(parts, eq(partsUsage.partId, parts.id));
 
     const conditions = [];
     if (filters.startDate) {
@@ -539,11 +560,13 @@ export class DatabaseStorage implements IStorage {
       quantityUsed: row.quantityUsed,
       notes: row.notes,
       createdAt: row.createdAt,
-      part: row.partName ? {
-        id: row.partId,
-        name: row.partName,
-        partNumber: row.partNumber
-      } as Partial<Part> : undefined,
+      part: row.partName
+        ? ({
+            id: row.partId,
+            name: row.partName,
+            partNumber: row.partNumber,
+          } as Partial<Part>)
+        : undefined,
     })) as (PartsUsage & { part?: Part })[];
   }
 
@@ -568,7 +591,8 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateVendor(id: string, vendor: Partial<InsertVendor>): Promise<Vendor> {
-    const [updated] = await db.update(vendors)
+    const [updated] = await db
+      .update(vendors)
       .set(vendor as any)
       .where(eq(vendors.id, id))
       .returning();
@@ -599,7 +623,10 @@ export class DatabaseStorage implements IStorage {
     return created;
   }
 
-  async updatePmTemplate(id: string, updates: Partial<InsertPmTemplate>): Promise<PmTemplate | null> {
+  async updatePmTemplate(
+    id: string,
+    updates: Partial<InsertPmTemplate>
+  ): Promise<PmTemplate | null> {
     const [updated] = await db
       .update(pmTemplates)
       .set(updates)
@@ -628,15 +655,21 @@ export class DatabaseStorage implements IStorage {
   }
 
   async markNotificationRead(id: string): Promise<void> {
-    await db.update(notifications)
+    await db
+      .update(notifications)
       .set({ read: true } as any)
       .where(eq(notifications.id, id));
   }
 
   // Attachments
-  async getAttachments(workOrderId?: string, equipmentId?: string, pmTemplateId?: string, vendorId?: string): Promise<Attachment[]> {
+  async getAttachments(
+    workOrderId?: string,
+    equipmentId?: string,
+    pmTemplateId?: string,
+    vendorId?: string
+  ): Promise<Attachment[]> {
     let query = db.select().from(attachments);
-    
+
     const conditions = [];
     if (workOrderId) {
       conditions.push(eq(attachments.workOrderId, workOrderId));
@@ -650,11 +683,11 @@ export class DatabaseStorage implements IStorage {
     if (vendorId) {
       conditions.push(eq(attachments.vendorId, vendorId));
     }
-    
+
     if (conditions.length > 0) {
       query = query.where(or(...conditions)) as any;
     }
-    
+
     return await query;
   }
 
@@ -673,10 +706,12 @@ export class DatabaseStorage implements IStorage {
     averageSize: number;
     fileTypes: Record<string, number>;
   }> {
-    const allAttachments = await db.select({
-      fileSize: attachments.fileSize,
-      fileType: attachments.fileType
-    }).from(attachments);
+    const allAttachments = await db
+      .select({
+        fileSize: attachments.fileSize,
+        fileType: attachments.fileType,
+      })
+      .from(attachments);
 
     const totalFiles = allAttachments.length;
     const totalSize = allAttachments.reduce((sum, file) => sum + (file.fileSize || 0), 0);
@@ -693,7 +728,7 @@ export class DatabaseStorage implements IStorage {
       totalFiles,
       totalSize,
       averageSize,
-      fileTypes
+      fileTypes,
     };
   }
 
@@ -718,16 +753,20 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createLaborTime(insertLaborTime: InsertLaborTime): Promise<LaborTime> {
-    const [laborTimeEntry] = await db.insert(laborTime).values({
-      id: this.generateId(),
-      ...insertLaborTime,
-      createdAt: new Date(),
-    } as any).returning();
+    const [laborTimeEntry] = await db
+      .insert(laborTime)
+      .values({
+        id: this.generateId(),
+        ...insertLaborTime,
+        createdAt: new Date(),
+      } as any)
+      .returning();
     return laborTimeEntry;
   }
 
   async updateLaborTime(id: string, updateData: Partial<InsertLaborTime>): Promise<LaborTime> {
-    const [updated] = await db.update(laborTime)
+    const [updated] = await db
+      .update(laborTime)
       .set(updateData as any)
       .where(eq(laborTime.id, id))
       .returning();
@@ -739,11 +778,10 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getActiveLaborTime(userId: string): Promise<LaborTime | undefined> {
-    const [result] = await db.select().from(laborTime)
-      .where(and(
-        eq(laborTime.userId, userId),
-        eq(laborTime.isActive, true)
-      ));
+    const [result] = await db
+      .select()
+      .from(laborTime)
+      .where(and(eq(laborTime.userId, userId), eq(laborTime.isActive, true)));
     return result;
   }
 

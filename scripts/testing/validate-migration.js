@@ -15,11 +15,11 @@ async function runMigrationTest() {
   try {
     // Set production environment
     process.env.NODE_ENV = 'production';
-    
+
     console.log('🔧 Environment Configuration:');
     console.log(`   NODE_ENV: ${process.env.NODE_ENV}`);
     console.log(`   DATABASE_URL: ${process.env.DATABASE_URL ? 'CONFIGURED' : 'NOT_SET'}`);
-    
+
     // Test TypeScript compilation
     console.log('\n🔨 Testing TypeScript compilation...');
     try {
@@ -28,15 +28,15 @@ async function runMigrationTest() {
     } catch (error) {
       console.log('⚠️  TypeScript compilation has warnings (proceeding...)');
     }
-    
+
     // Test application startup (basic validation)
     console.log('\n🚀 Testing storage initialization...');
-    
+
     // Import and test storage
     console.log('📦 Importing storage module...');
     const storageModule = await import('./server/storage.js');
     console.log('✅ Storage module imported successfully');
-    
+
     // Check storage type
     setTimeout(() => {
       console.log('📊 Storage type check will be performed by the application');
@@ -47,7 +47,6 @@ async function runMigrationTest() {
       console.log('   3. Test API endpoints to confirm functionality');
       process.exit(0);
     }, 2000);
-    
   } catch (error) {
     console.error('❌ Migration validation failed:', error.message);
     process.exit(1);

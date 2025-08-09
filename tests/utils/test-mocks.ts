@@ -1,4 +1,4 @@
-import { vi } from 'vitest'
+import { vi } from 'vitest';
 
 // Mock user data
 export const mockUser = {
@@ -7,7 +7,7 @@ export const mockUser = {
   name: 'Test User',
   role: 'technician' as const,
   warehouseId: '1',
-}
+};
 
 export const mockSupervisor = {
   id: '2',
@@ -15,7 +15,7 @@ export const mockSupervisor = {
   name: 'Test Supervisor',
   role: 'supervisor' as const,
   warehouseId: '1',
-}
+};
 
 export const mockManager = {
   id: '3',
@@ -23,7 +23,7 @@ export const mockManager = {
   name: 'Test Manager',
   role: 'manager' as const,
   warehouseId: '1',
-}
+};
 
 // Mock work order data
 export const mockWorkOrder = {
@@ -36,7 +36,7 @@ export const mockWorkOrder = {
   assignedTo: null,
   equipmentId: '1',
   warehouseId: '1',
-}
+};
 
 // Mock equipment data
 export const mockEquipment = {
@@ -47,7 +47,7 @@ export const mockEquipment = {
   location: 'Plant 1',
   status: 'active' as const,
   warehouseId: '1',
-}
+};
 
 // Mock parts data
 export const mockPart = {
@@ -56,9 +56,9 @@ export const mockPart = {
   partNumber: 'PN-001',
   stockLevel: 10,
   reorderPoint: 5,
-  unitCost: 25.50,
+  unitCost: 25.5,
   warehouseId: '1',
-}
+};
 
 // Mock authentication hook
 export const mockUseAuth = vi.fn(() => ({
@@ -67,21 +67,21 @@ export const mockUseAuth = vi.fn(() => ({
   logout: vi.fn(),
   isLoading: false,
   isAuthenticated: true,
-}))
+}));
 
 // Mock API responses
 export const mockApiResponse = <T>(data: T, delay = 0) => {
-  return new Promise<T>((resolve) => {
-    setTimeout(() => resolve(data), delay)
-  })
-}
+  return new Promise<T>(resolve => {
+    setTimeout(() => resolve(data), delay);
+  });
+};
 
 // Mock API error
 export const mockApiError = (message: string, status = 500) => {
-  const error = new Error(message)
-  ;(error as any).status = status
-  return Promise.reject(error)
-}
+  const error = new Error(message);
+  (error as any).status = status;
+  return Promise.reject(error);
+};
 
 // Mock localStorage
 export const mockLocalStorage = {
@@ -89,7 +89,7 @@ export const mockLocalStorage = {
   setItem: vi.fn(),
   removeItem: vi.fn(),
   clear: vi.fn(),
-}
+};
 
 // Mock sessionStorage
 export const mockSessionStorage = {
@@ -97,10 +97,10 @@ export const mockSessionStorage = {
   setItem: vi.fn(),
   removeItem: vi.fn(),
   clear: vi.fn(),
-}
+};
 
 // Mock fetch
-export const mockFetch = vi.fn()
+export const mockFetch = vi.fn();
 
 // Mock WebSocket
 export const mockWebSocket = {
@@ -109,35 +109,35 @@ export const mockWebSocket = {
   addEventListener: vi.fn(),
   removeEventListener: vi.fn(),
   readyState: 1,
-}
+};
 
 // Mock file for file upload tests
 export const mockFile = new File(['test content'], 'test.txt', {
   type: 'text/plain',
-})
+});
 
 // Mock image file
 export const mockImageFile = new File(['test image'], 'test.jpg', {
   type: 'image/jpeg',
-})
+});
 
 // Mock geolocation
 export const mockGeolocation = {
   getCurrentPosition: vi.fn(),
   watchPosition: vi.fn(),
   clearWatch: vi.fn(),
-}
+};
 
 // Mock camera/media devices
 export const mockMediaDevices = {
   getUserMedia: vi.fn(),
   enumerateDevices: vi.fn(),
-}
+};
 
 // Helper function to wait for async operations
-export const waitFor = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
+export const waitFor = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 // Helper function to create mock promises
 export const createMockPromise = <T>(value: T, shouldReject = false) => {
-  return shouldReject ? Promise.reject(value) : Promise.resolve(value)
-}
+  return shouldReject ? Promise.reject(value) : Promise.resolve(value);
+};

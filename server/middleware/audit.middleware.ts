@@ -8,10 +8,12 @@ export function auditMiddleware() {
     req.startTime = startTime;
 
     // Skip audit for health checks and static files
-    if (req.path === '/api/health' || 
-        req.path.startsWith('/api/files/') || 
-        req.path.startsWith('/api/thumbnails/') ||
-        req.method === 'OPTIONS') {
+    if (
+      req.path === '/api/health' ||
+      req.path.startsWith('/api/files/') ||
+      req.path.startsWith('/api/thumbnails/') ||
+      req.method === 'OPTIONS'
+    ) {
       return next();
     }
 
@@ -20,12 +22,12 @@ export function auditMiddleware() {
     let responseBody: any;
 
     // Capture response data
-    res.send = function(body: any) {
+    res.send = function (body: any) {
       responseBody = body;
       return originalSend.call(this, body);
     };
 
-    res.json = function(body: any) {
+    res.json = function (body: any) {
       responseBody = body;
       return originalJson.call(this, body);
     };
@@ -41,7 +43,7 @@ export function auditMiddleware() {
           ipAddress: req.ip || req.connection?.remoteAddress || 'Unknown',
           userAgent: req.headers['user-agent'] || 'Unknown',
           requestId: req.headers['x-request-id'] as string,
-          duration
+          duration,
         };
 
         // Determine event details based on request
@@ -60,7 +62,7 @@ export function auditMiddleware() {
             severity: auditDetails.severity,
             category: auditDetails.category,
             success,
-            errorMessage: success ? undefined : extractErrorMessage(responseBody)
+            errorMessage: success ? undefined : extractErrorMessage(responseBody),
           });
         }
       } catch (error) {
@@ -73,13 +75,25 @@ export function auditMiddleware() {
   };
 }
 
-function extractAuditDetails(req: AuditRequest, res: Response, success: boolean, responseBody: any): {
+function extractAuditDetails(
+  req: AuditRequest,
+  res: Response,
+  success: boolean,
+  responseBody: any
+): {
   action: string;
   entityType: string;
   entityId?: string;
   details: Record<string, any>;
   severity: 'low' | 'medium' | 'high' | 'critical';
-  category: 'authentication' | 'authorization' | 'data_access' | 'data_modification' | 'system' | 'security' | 'compliance';
+  category:
+    | 'authentication'
+    | 'authorization'
+    | 'data_access'
+    | 'data_modification'
+    | 'system'
+    | 'security'
+    | 'compliance';
 } | null {
   const method = req.method;
   const path = req.path;
@@ -95,7 +109,7 @@ function extractAuditDetails(req: AuditRequest, res: Response, success: boolean,
       entityId: body?.email,
       details: { email: body?.email, mfaProvided: !!body?.mfaToken },
       severity: success ? 'low' : 'medium',
-      category: 'authentication'
+      category: 'authentication',
     };
   }
 
@@ -106,7 +120,7 @@ function extractAuditDetails(req: AuditRequest, res: Response, success: boolean,
       entityId: req.user?.id,
       details: { sessionEnded: true },
       severity: 'low',
-      category: 'authentication'
+      category: 'authentication',
     };
   }
 
@@ -117,14 +131,14 @@ function extractAuditDetails(req: AuditRequest, res: Response, success: boolean,
       entityId: req.user?.id || body?.email,
       details: { method, path, success },
       severity: 'medium',
-      category: 'authentication'
+      category: 'authentication',
     };
   }
 
   // Work Order events
   if (path.includes('/api/work-orders')) {
     const entityId = params?.id || body?.id || extractIdFromResponse(responseBody);
-    
+
     if (method === 'POST') {
       return {
         action: 'work_order_created',
@@ -132,10 +146,10 @@ function extractAuditDetails(req: AuditRequest, res: Response, success: boolean,
         entityId,
         details: { title: body?.title, priority: body?.priority, assignedTo: body?.assignedTo },
         severity: 'medium',
-        category: 'data_modification'
+        category: 'data_modification',
       };
     }
-    
+
     if (method === 'PATCH' || method === 'PUT') {
       return {
         action: 'work_order_updated',
@@ -143,10 +157,10 @@ function extractAuditDetails(req: AuditRequest, res: Response, success: boolean,
         entityId,
         details: { changes: body, statusChanged: !!body?.status },
         severity: body?.status === 'completed' ? 'medium' : 'low',
-        category: 'data_modification'
+        category: 'data_modification',
       };
     }
-    
+
     if (method === 'DELETE') {
       return {
         action: 'work_order_deleted',
@@ -154,10 +168,10 @@ function extractAuditDetails(req: AuditRequest, res: Response, success: boolean,
         entityId,
         details: { deletedByUser: req.user?.id },
         severity: 'high',
-        category: 'data_modification'
+        category: 'data_modification',
       };
     }
-    
+
     if (method === 'GET') {
       return {
         action: 'work_order_accessed',
@@ -165,7 +179,7 @@ function extractAuditDetails(req: AuditRequest, res: Response, success: boolean,
         entityId,
         details: { filters: query },
         severity: 'low',
-        category: 'data_access'
+        category: 'data_access',
       };
     }
   }
@@ -173,7 +187,7 @@ function extractAuditDetails(req: AuditRequest, res: Response, success: boolean,
   // Equipment events
   if (path.includes('/api/equipment')) {
     const entityId = params?.id || body?.id || extractIdFromResponse(responseBody);
-    
+
     if (method === 'POST') {
       return {
         action: 'equipment_created',
@@ -181,10 +195,10 @@ function extractAuditDetails(req: AuditRequest, res: Response, success: boolean,
         entityId,
         details: { assetTag: body?.assetTag, model: body?.model },
         severity: 'medium',
-        category: 'data_modification'
+        category: 'data_modification',
       };
     }
-    
+
     if (method === 'PATCH' || method === 'PUT') {
       return {
         action: 'equipment_updated',
@@ -192,10 +206,10 @@ function extractAuditDetails(req: AuditRequest, res: Response, success: boolean,
         entityId,
         details: { changes: body },
         severity: 'low',
-        category: 'data_modification'
+        category: 'data_modification',
       };
     }
-    
+
     if (method === 'GET') {
       return {
         action: 'equipment_accessed',
@@ -203,7 +217,7 @@ function extractAuditDetails(req: AuditRequest, res: Response, success: boolean,
         entityId,
         details: { filters: query },
         severity: 'low',
-        category: 'data_access'
+        category: 'data_access',
       };
     }
   }
@@ -211,7 +225,7 @@ function extractAuditDetails(req: AuditRequest, res: Response, success: boolean,
   // Parts/Inventory events
   if (path.includes('/api/parts')) {
     const entityId = params?.id || body?.id || extractIdFromResponse(responseBody);
-    
+
     if (path.includes('/consume')) {
       return {
         action: 'parts_consumed',
@@ -219,10 +233,10 @@ function extractAuditDetails(req: AuditRequest, res: Response, success: boolean,
         entityId: body?.workOrderId,
         details: { partsUsage: body?.partsUsage, workOrderId: body?.workOrderId },
         severity: 'medium',
-        category: 'data_modification'
+        category: 'data_modification',
       };
     }
-    
+
     if (method === 'POST') {
       return {
         action: 'part_created',
@@ -230,17 +244,17 @@ function extractAuditDetails(req: AuditRequest, res: Response, success: boolean,
         entityId,
         details: { partNumber: body?.partNumber, description: body?.description },
         severity: 'low',
-        category: 'data_modification'
+        category: 'data_modification',
       };
     }
-    
+
     if (method === 'GET') {
       return {
         action: 'inventory_accessed',
         entityType: 'inventory',
         details: { filters: query },
         severity: 'low',
-        category: 'data_access'
+        category: 'data_access',
       };
     }
   }
@@ -248,7 +262,7 @@ function extractAuditDetails(req: AuditRequest, res: Response, success: boolean,
   // User management events
   if (path.includes('/api/users')) {
     const entityId = params?.id || body?.id || extractIdFromResponse(responseBody);
-    
+
     if (method === 'POST') {
       return {
         action: 'user_created',
@@ -256,10 +270,10 @@ function extractAuditDetails(req: AuditRequest, res: Response, success: boolean,
         entityId,
         details: { email: body?.email, role: body?.role },
         severity: 'medium',
-        category: 'data_modification'
+        category: 'data_modification',
       };
     }
-    
+
     if (method === 'PATCH' || method === 'PUT') {
       return {
         action: 'user_updated',
@@ -267,7 +281,7 @@ function extractAuditDetails(req: AuditRequest, res: Response, success: boolean,
         entityId,
         details: { changes: body, roleChanged: !!body?.role },
         severity: body?.role ? 'high' : 'medium',
-        category: 'data_modification'
+        category: 'data_modification',
       };
     }
   }
@@ -275,7 +289,7 @@ function extractAuditDetails(req: AuditRequest, res: Response, success: boolean,
   // Webhook events
   if (path.includes('/api/webhooks')) {
     const entityId = params?.id || body?.id || extractIdFromResponse(responseBody);
-    
+
     if (method === 'POST') {
       return {
         action: 'webhook_created',
@@ -283,10 +297,10 @@ function extractAuditDetails(req: AuditRequest, res: Response, success: boolean,
         entityId,
         details: { url: body?.url, events: body?.events },
         severity: 'medium',
-        category: 'system'
+        category: 'system',
       };
     }
-    
+
     if (method === 'DELETE') {
       return {
         action: 'webhook_deleted',
@@ -294,7 +308,7 @@ function extractAuditDetails(req: AuditRequest, res: Response, success: boolean,
         entityId,
         details: {},
         severity: 'medium',
-        category: 'system'
+        category: 'system',
       };
     }
   }
@@ -307,7 +321,7 @@ function extractAuditDetails(req: AuditRequest, res: Response, success: boolean,
       entityId: params?.id,
       details: { aiFunction: path.split('/').pop(), parameters: query },
       severity: 'low',
-      category: 'data_access'
+      category: 'data_access',
     };
   }
 
@@ -318,7 +332,7 @@ function extractAuditDetails(req: AuditRequest, res: Response, success: boolean,
       entityType: 'system',
       details: { adminAction: path, parameters: query },
       severity: 'medium',
-      category: 'system'
+      category: 'system',
     };
   }
 
@@ -329,7 +343,7 @@ function extractAuditDetails(req: AuditRequest, res: Response, success: boolean,
       entityType: 'file',
       details: { fileCount: Array.isArray(body) ? body.length : 1 },
       severity: 'low',
-      category: 'data_modification'
+      category: 'data_modification',
     };
   }
 
@@ -340,7 +354,7 @@ function extractAuditDetails(req: AuditRequest, res: Response, success: boolean,
       entityType: 'security',
       details: { path, method, statusCode: res.statusCode },
       severity: 'high',
-      category: 'security'
+      category: 'security',
     };
   }
 
@@ -350,7 +364,7 @@ function extractAuditDetails(req: AuditRequest, res: Response, success: boolean,
       entityType: 'security',
       details: { path, method, statusCode: res.statusCode, userId: req.user?.id },
       severity: 'high',
-      category: 'security'
+      category: 'security',
     };
   }
 
@@ -361,7 +375,7 @@ function extractAuditDetails(req: AuditRequest, res: Response, success: boolean,
       entityType: 'api',
       details: { path, method, statusCode: res.statusCode },
       severity: success ? 'low' : 'medium',
-      category: success ? 'data_access' : 'system'
+      category: success ? 'data_access' : 'system',
     };
   }
 

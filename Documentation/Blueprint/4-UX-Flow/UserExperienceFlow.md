@@ -366,6 +366,6 @@ Body:
 - **Time to Interactive**: <3 seconds
 - **Offline Capability**: 100% for critical functions
 
-This comprehensive UX flow documentation ensures a consistent, efficient, and user-friendly
-experience across all platforms and user roles, supporting the successful implementation of the
-MaintAInPro CMMS system.
+This comprehensive UX flow documentation ensures a consistent, efficient, and
+user-friendly experience across all platforms and user roles, supporting the
+successful implementation of the MaintAInPro CMMS system.

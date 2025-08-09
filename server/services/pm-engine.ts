@@ -1,5 +1,11 @@
-import { PmTemplate, Equipment, WorkOrder, InsertWorkOrder, WorkOrderChecklistItem } from "@shared/schema";
-import { storage } from "../storage";
+import {
+  PmTemplate,
+  Equipment,
+  WorkOrder,
+  InsertWorkOrder,
+  WorkOrderChecklistItem,
+} from '@shared/schema';
+import { storage } from '../storage';
 
 export interface PMSchedule {
   equipmentId: string;
@@ -22,9 +28,9 @@ export interface ComplianceStatus {
 
 export class PMEngine {
   private static instance: PMEngine;
-  
+
   private constructor() {}
-  
+
   public static getInstance(): PMEngine {
     if (!PMEngine.instance) {
       PMEngine.instance = new PMEngine();
@@ -38,7 +44,7 @@ export class PMEngine {
   private calculateNextDueDate(frequency: string, lastCompletedDate?: Date): Date {
     const baseDate = lastCompletedDate || new Date();
     const nextDate = new Date(baseDate);
-    
+
     switch (frequency) {
       case 'daily':
         nextDate.setDate(nextDate.getDate() + 1);
@@ -58,7 +64,7 @@ export class PMEngine {
       default:
         nextDate.setMonth(nextDate.getMonth() + 1); // Default to monthly
     }
-    
+
     return nextDate;
   }
 
@@ -70,28 +76,28 @@ export class PMEngine {
       const templates = await storage.getPmTemplates(warehouseId);
       const equipment = await storage.getEquipment(warehouseId);
       const existingWorkOrders = await storage.getWorkOrders(warehouseId);
-      
+
       const generatedWorkOrders: WorkOrder[] = [];
-      
+
       for (const template of templates) {
         // Find equipment matching this template's model
-        const matchingEquipment = equipment.filter(eq => 
-          eq.model === template.model && 
-          eq.status === 'active'
+        const matchingEquipment = equipment.filter(
+          eq => eq.model === template.model && eq.status === 'active'
         );
-        
+
         for (const equip of matchingEquipment) {
           const schedule = await this.getPMSchedule(equip.id, template.id);
-          
+
           // Check if PM is due and no existing PM work order exists
           if (schedule.complianceStatus === 'due' || schedule.complianceStatus === 'overdue') {
-            const hasExistingPM = existingWorkOrders.some(wo => 
-              wo.type === 'preventive' && 
-              wo.equipmentId === equip.id &&
-              wo.status !== 'completed' &&
-              wo.status !== 'closed'
+            const hasExistingPM = existingWorkOrders.some(
+              wo =>
+                wo.type === 'preventive' &&
+                wo.equipmentId === equip.id &&
+                wo.status !== 'completed' &&
+                wo.status !== 'closed'
             );
-            
+
             if (!hasExistingPM) {
               const workOrder = await this.createPMWorkOrder(equip, template, warehouseId);
               generatedWorkOrders.push(workOrder);
@@ -99,7 +105,7 @@ export class PMEngine {
           }
         }
       }
-      
+
       return generatedWorkOrders;
     } catch (error) {
       // Don't log errors here - let the calling method handle them
@@ -110,9 +116,13 @@ export class PMEngine {
   /**
    * Create a PM work order for specific equipment and template
    */
-  private async createPMWorkOrder(equipment: Equipment, template: PmTemplate, warehouseId: string): Promise<WorkOrder> {
+  private async createPMWorkOrder(
+    equipment: Equipment,
+    template: PmTemplate,
+    warehouseId: string
+  ): Promise<WorkOrder> {
     const foNumber = `PM-${Date.now()}-${equipment.assetTag}`;
-    
+
     const workOrderData: InsertWorkOrder = {
       foNumber,
       type: 'preventive',
@@ -123,19 +133,19 @@ export class PMEngine {
       priority: 'medium',
       equipmentId: equipment.id,
       dueDate: this.calculateNextDueDate(template.frequency),
-      estimatedHours: 2.00, // Default estimate
+      estimatedHours: 2.0, // Default estimate
       warehouseId,
       notes: `Auto-generated PM based on ${template.frequency} maintenance schedule`,
     };
-    
+
     const workOrder = await storage.createWorkOrder(workOrderData);
-    
+
     // Create checklist items from template
     await this.createPMChecklistItems(workOrder.id, template);
-    
+
     // Create notification for PM due
     await this.createPMNotification(workOrder);
-    
+
     return workOrder;
   }
 
@@ -151,7 +161,7 @@ export class PMEngine {
       notes: '',
       sortOrder: 0,
     };
-    
+
     await storage.createWorkOrderChecklistItem(checklistItem);
   }
 
@@ -165,12 +175,12 @@ export class PMEngine {
       console.warn('No profiles returned from storage for PM notification');
       return;
     }
-    
-    const supervisors = profiles.filter(p => 
-      p.warehouseId === workOrder.warehouseId &&
-      (p.role === 'supervisor' || p.role === 'manager')
+
+    const supervisors = profiles.filter(
+      p =>
+        p.warehouseId === workOrder.warehouseId && (p.role === 'supervisor' || p.role === 'manager')
     );
-    
+
     for (const supervisor of supervisors) {
       await storage.createNotification({
         userId: supervisor.id,
@@ -191,32 +201,38 @@ export class PMEngine {
     if (!template) {
       throw new Error(`PM template ${templateId} not found`);
     }
-    
+
     // Get completed PM work orders for this equipment
     const workOrders = await storage.getWorkOrders(template.warehouseId);
-    const completedPMOrders = workOrders.filter(wo => 
-      wo.type === 'preventive' &&
-      wo.equipmentId === equipmentId &&
-      wo.status === 'completed'
-    ).sort((a, b) => new Date(b.completedAt || b.createdAt).getTime() - new Date(a.completedAt || a.createdAt).getTime());
-    
-    const lastCompletedDate = completedPMOrders.length > 0 
-      ? new Date(completedPMOrders[0].completedAt || completedPMOrders[0].createdAt)
-      : undefined;
-    
+    const completedPMOrders = workOrders
+      .filter(
+        wo =>
+          wo.type === 'preventive' && wo.equipmentId === equipmentId && wo.status === 'completed'
+      )
+      .sort(
+        (a, b) =>
+          new Date(b.completedAt || b.createdAt).getTime() -
+          new Date(a.completedAt || a.createdAt).getTime()
+      );
+
+    const lastCompletedDate =
+      completedPMOrders.length > 0
+        ? new Date(completedPMOrders[0].completedAt || completedPMOrders[0].createdAt)
+        : undefined;
+
     const nextDueDate = this.calculateNextDueDate(template.frequency, lastCompletedDate);
     const now = new Date();
-    
+
     const isOverdue = nextDueDate < now;
     const isDue = nextDueDate <= new Date(now.getTime() + 24 * 60 * 60 * 1000); // Due within 24 hours
-    
+
     let complianceStatus: 'compliant' | 'due' | 'overdue' = 'compliant';
     if (isOverdue) {
       complianceStatus = 'overdue';
     } else if (isDue) {
       complianceStatus = 'due';
     }
-    
+
     return {
       equipmentId,
       templateId,
@@ -231,18 +247,21 @@ export class PMEngine {
   /**
    * Check compliance status for equipment
    */
-  public async checkComplianceStatus(equipmentId: string, warehouseId: string): Promise<ComplianceStatus> {
+  public async checkComplianceStatus(
+    equipmentId: string,
+    warehouseId: string
+  ): Promise<ComplianceStatus> {
     const templates = await storage.getPmTemplates(warehouseId);
     const equipment = await storage.getEquipment(warehouseId);
     const targetEquipment = equipment.find(e => e.id === equipmentId);
-    
+
     if (!targetEquipment) {
       throw new Error(`Equipment ${equipmentId} not found`);
     }
-    
+
     // Get relevant templates for this equipment model
     const relevantTemplates = templates.filter(t => t.model === targetEquipment.model);
-    
+
     if (relevantTemplates.length === 0) {
       return {
         equipmentId,
@@ -251,32 +270,31 @@ export class PMEngine {
         totalPMCount: 0,
       };
     }
-    
+
     let missedPMCount = 0;
     const totalPMCount = relevantTemplates.length;
     let lastPMDate: Date | undefined;
     let nextPMDate: Date | undefined;
-    
+
     for (const template of relevantTemplates) {
       const schedule = await this.getPMSchedule(equipmentId, template.id);
-      
+
       if (schedule.complianceStatus === 'overdue') {
         missedPMCount++;
       }
-      
+
       if (schedule.lastCompletedDate && (!lastPMDate || schedule.lastCompletedDate > lastPMDate)) {
         lastPMDate = schedule.lastCompletedDate;
       }
-      
+
       if (!nextPMDate || schedule.nextDueDate < nextPMDate) {
         nextPMDate = schedule.nextDueDate;
       }
     }
-    
-    const compliancePercentage = totalPMCount > 0 
-      ? Math.round(((totalPMCount - missedPMCount) / totalPMCount) * 100)
-      : 100;
-    
+
+    const compliancePercentage =
+      totalPMCount > 0 ? Math.round(((totalPMCount - missedPMCount) / totalPMCount) * 100) : 100;
+
     return {
       equipmentId,
       compliancePercentage,
@@ -295,7 +313,7 @@ export class PMEngine {
     if (!workOrder || workOrder.type !== 'preventive') {
       return;
     }
-    
+
     // The schedule is automatically updated when we query for next due date
     // since we look at the most recent completed PM work order
     console.log(`PM schedule updated for work order ${workOrderId}`);
@@ -304,12 +322,16 @@ export class PMEngine {
   /**
    * Run PM automation process (called by scheduled job)
    */
-  public async runPMAutomation(warehouseId: string): Promise<{ generated: number; errors: string[] }> {
+  public async runPMAutomation(
+    warehouseId: string
+  ): Promise<{ generated: number; errors: string[] }> {
     try {
       const generatedWorkOrders = await this.generatePMWorkOrders(warehouseId);
-      
-      console.log(`Generated ${generatedWorkOrders.length} PM work orders for warehouse ${warehouseId}`);
-      
+
+      console.log(
+        `Generated ${generatedWorkOrders.length} PM work orders for warehouse ${warehouseId}`
+      );
+
       return {
         generated: generatedWorkOrders.length,
         errors: [],
@@ -317,7 +339,7 @@ export class PMEngine {
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       console.error('PM automation error:', errorMessage);
-      
+
       return {
         generated: 0,
         errors: [errorMessage],
