@@ -1,5 +1,5 @@
 import { storage } from '../storage';
-import { randomUUID } from 'crypto';
+import * as crypto from 'crypto';
 
 export interface AuditEvent {
   id: string;
