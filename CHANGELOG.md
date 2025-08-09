@@ -46,6 +46,14 @@ Co-authored-by: Copilot Autofix powered by AI <62310815+github-advanced-security
 
 
 
+
+- configure main branch as production deployment
+
+- update vercel.json to only enable deployment for main branch
+- add ci-friendly husky setup with is-ci package
+- add lint-staged for pre-commit hooks
+- ensure main branch is properly configured for production deployments ([d29d2cb3](https://github.com/Coding-Krakken/MaintAInPro/commit/d29d2cb30bdbe45f9377e4efbe6b2de62dec6f64))
+
 ## [1.0.0] - 2025-01-08
 
 ### Added
