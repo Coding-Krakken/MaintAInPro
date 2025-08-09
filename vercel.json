@@ -1,0 +1,35 @@
+{
+  "version": 2,
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist/public",
+  
+  "routes": [
+    {
+      "src": "/health",
+      "dest": "/api/health"
+    },
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
+    },
+    {
+      "src": "/assets/(.*)",
+      "dest": "/assets/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ],
+  
+  "env": {
+    "NODE_ENV": "production"
+  },
+  
+  "git": {
+    "deploymentEnabled": {
+      "main": true,
+      "stable": true
+    }
+  }
+}
