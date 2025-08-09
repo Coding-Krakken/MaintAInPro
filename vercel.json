@@ -28,8 +28,7 @@
   
   "git": {
     "deploymentEnabled": {
-      "main": true,
-      "stable": true
+      "main": true
     }
   }
 }

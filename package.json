@@ -51,7 +51,9 @@
     "migration:deploy": "./scripts/production-deploy.sh",
     "migration:status": "echo 'Phase 1: ✅ COMPLETE - PostgreSQL Storage Active'",
     "migration:report": "./scripts/migration-final-report.sh",
-    "production:start": "./scripts/production-start.sh"
+    "production:start": "./scripts/production-start.sh",
+    "prepare": "is-ci || husky install",
+    "lint-staged": "lint-staged"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
@@ -189,10 +191,13 @@
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-testing-library": "^7.6.3",
+    "husky": "^9.1.7",
+    "is-ci": "^4.1.0",
     "jest": "^29.7.0",
     "jest-axe": "^8.0.0",
     "jest-environment-jsdom": "^29.7.0",
     "jsdom": "^23.2.0",
+    "lint-staged": "^16.1.5",
     "msw": "^2.0.11",
     "postcss": "^8.4.47",
     "prettier": "^3.6.2",
