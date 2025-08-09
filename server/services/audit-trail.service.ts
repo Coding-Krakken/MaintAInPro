@@ -1,5 +1,5 @@
-import { storage } from '../storage';
-import * as crypto from 'crypto';
+// import { storage } from '../storage'; // Removed unused import
+import { randomUUID } from 'crypto';
 
 export interface AuditEvent {
   id: string;
@@ -10,7 +10,7 @@ export interface AuditEvent {
   action: string;
   entityType: string;
   entityId?: string;
-  details: Record<string, any>;
+  details: Record<string, unknown>;
   metadata: {
     ipAddress: string;
     userAgent: string;
@@ -91,7 +91,7 @@ class AuditTrailService {
   async logEvent(event: Omit<AuditEvent, 'id' | 'timestamp'>): Promise<void> {
     const auditEvent: AuditEvent = {
       ...event,
-      id: randomUUID(),
+  id: randomUUID(),
       timestamp: new Date()
 
     };
@@ -112,7 +112,7 @@ class AuditTrailService {
     action: 'login' | 'logout' | 'login_failed' | 'password_reset' | 'mfa_setup',
     success: boolean,
     metadata: AuditEvent['metadata'],
-    details: Record<string, any> = {}
+  details: Record<string, unknown> = {}
   ): Promise<void> {
     await this.logEvent({
       userId,
@@ -138,7 +138,7 @@ class AuditTrailService {
     action: 'view' | 'search' | 'export' | 'download',
     metadata: AuditEvent['metadata'],
     warehouseId?: string,
-    details: Record<string, any> = {}
+  details: Record<string, unknown> = {}
   ): Promise<void> {
     await this.logEvent({
       userId,
@@ -160,7 +160,7 @@ class AuditTrailService {
     entityType: string,
     entityId: string,
     action: 'create' | 'update' | 'delete',
-    changes: Record<string, any>,
+  changes: Record<string, unknown>,
     metadata: AuditEvent['metadata'],
     warehouseId?: string,
     success = true
@@ -186,7 +186,7 @@ class AuditTrailService {
   async logSystemEvent(
     userId: string,
     action: string,
-    details: Record<string, any>,
+  details: Record<string, unknown>,
     metadata: AuditEvent['metadata'],
     severity: AuditEvent['severity'] = 'medium',
     success = true
@@ -207,7 +207,7 @@ class AuditTrailService {
   async logSecurityEvent(
     userId: string,
     action: string,
-    details: Record<string, any>,
+  details: Record<string, unknown>,
     metadata: AuditEvent['metadata'],
     severity: AuditEvent['severity'] = 'high',
     success = false
@@ -221,7 +221,7 @@ class AuditTrailService {
       severity,
       category: 'security',
       success,
-      errorMessage: success ? undefined : details.error,
+  errorMessage: success ? undefined : (typeof details.error === 'string' ? details.error : undefined),
     });
   }
 
@@ -232,10 +232,14 @@ class AuditTrailService {
 
       // Apply filters
       if (query.startDate) {
-        events = events.filter(e => e.timestamp >= query.startDate!);
+        if (query.startDate) {
+          events = events.filter(e => e.timestamp >= query.startDate);
+        }
       }
       if (query.endDate) {
-        events = events.filter(e => e.timestamp <= query.endDate!);
+        if (query.endDate) {
+          events = events.filter(e => e.timestamp <= query.endDate);
+        }
       }
       if (query.userId) {
         events = events.filter(e => e.userId === query.userId);
@@ -244,7 +248,9 @@ class AuditTrailService {
         events = events.filter(e => e.warehouseId === query.warehouseId);
       }
       if (query.action) {
-        events = events.filter(e => e.action.includes(query.action!));
+        if (query.action) {
+          events = events.filter(e => e.action.includes(query.action));
+        }
       }
       if (query.entityType) {
         events = events.filter(e => e.entityType === query.entityType);
@@ -299,16 +305,16 @@ class AuditTrailService {
       const dataAccessEvents = events.filter(e => e.category === 'data_access').length;
 
       // Calculate compliance score
-      const complianceScore = this.calculateComplianceScore(events, reportType);
+  const complianceScore = this.calculateComplianceScore(events);
 
       // Generate findings
-      const findings = this.generateComplianceFindings(events, reportType);
+  const findings = this.generateComplianceFindings(events);
 
       // Generate recommendations
       const recommendations = this.generateComplianceRecommendations(findings, reportType);
 
       return {
-        id: randomUUID(),
+  id: randomUUID(),
         reportType,
         generatedAt: new Date(),
         period: { start: startDate, end: endDate },
@@ -421,7 +427,7 @@ class AuditTrailService {
     }
   }
 
-  private calculateComplianceScore(events: AuditEvent[], reportType: string): number {
+  private calculateComplianceScore(events: AuditEvent[]): number {
     // Simplified compliance scoring - in production this would be more sophisticated
     let score = 100;
 
@@ -442,7 +448,7 @@ class AuditTrailService {
 
   private generateComplianceFindings(
     events: AuditEvent[],
-    reportType: string
+  // ...existing code...
   ): ComplianceFinding[] {
     const findings: ComplianceFinding[] = [];
 
@@ -451,7 +457,7 @@ class AuditTrailService {
 
     if (failedAuth.length > 0) {
       findings.push({
-        id: randomUUID(),
+  id: randomUUID(),
         severity: failedAuth.length > 10 ? 'high' : 'medium',
         category: 'Authentication Security',
         description: `${failedAuth.length} failed authentication attempts detected`,
@@ -470,7 +476,7 @@ class AuditTrailService {
 
     if (criticalSecurity.length > 0) {
       findings.push({
-        id: randomUUID(),
+  id: randomUUID(),
         severity: 'critical',
         category: 'Security Incidents',
         description: `${criticalSecurity.length} critical security events recorded`,
@@ -488,7 +494,7 @@ class AuditTrailService {
 
     if (privilegedAccess.length > 100) {
       findings.push({
-        id: randomUUID(),
+  id: randomUUID(),
         severity: 'medium',
         category: 'Access Control',
         description: `${privilegedAccess.length} privileged access events`,

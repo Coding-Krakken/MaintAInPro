@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Bar } from 'recharts';
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -76,7 +77,7 @@ const COLORS = {
 };
 
 export function EnterprisePerformanceMonitor() {
-  const [selectedTimeRange, _setSelectedTimeRange] = useState<'1h' | '24h' | '7d' | '30d'>('24h');
+  const [selectedTimeRange] = useState<'1h' | '24h' | '7d' | '30d'>('24h');
   const [autoRefresh, setAutoRefresh] = useState(true);
 
   // Fetch system metrics

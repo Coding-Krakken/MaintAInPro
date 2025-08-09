@@ -7,6 +7,9 @@ and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]### Added
+### Changed
+- Refactored server/services/audit-trail.service.ts to remove unused variables, forbidden non-null assertions, and any types; improved type safety and code quality.
+- Fixed missing import for Bar in client/src/components/admin/EnterprisePerformanceMonitor.tsx and removed unused state setter.
 
 - Autonomous systems engineering loop with GitHub Actions workflows
 - Blueprint planner that converts documentation tasks into GitHub Issues
