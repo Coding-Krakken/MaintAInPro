@@ -1,5 +1,5 @@
 import { storage } from '../storage';
-import crypto from 'crypto';
+import { randomUUID } from 'crypto';
 
 export interface AuditEvent {
   id: string;
@@ -84,7 +84,7 @@ class AuditTrailService {
   async logEvent(event: Omit<AuditEvent, 'id' | 'timestamp'>): Promise<void> {
     const auditEvent: AuditEvent = {
       ...event,
-      id: crypto.randomUUID(),
+      id: randomUUID(),
       timestamp: new Date()
     };
 
@@ -301,7 +301,7 @@ class AuditTrailService {
       const recommendations = this.generateComplianceRecommendations(findings, reportType);
 
       return {
-        id: crypto.randomUUID(),
+        id: randomUUID(),
         reportType,
         generatedAt: new Date(),
         period: { start: startDate, end: endDate },
@@ -435,7 +435,7 @@ class AuditTrailService {
     
     if (failedAuth.length > 0) {
       findings.push({
-        id: crypto.randomUUID(),
+        id: randomUUID(),
         severity: failedAuth.length > 10 ? 'high' : 'medium',
         category: 'Authentication Security',
         description: `${failedAuth.length} failed authentication attempts detected`,
@@ -453,7 +453,7 @@ class AuditTrailService {
     
     if (criticalSecurity.length > 0) {
       findings.push({
-        id: crypto.randomUUID(),
+        id: randomUUID(),
         severity: 'critical',
         category: 'Security Incidents',
         description: `${criticalSecurity.length} critical security events recorded`,
@@ -471,7 +471,7 @@ class AuditTrailService {
     
     if (privilegedAccess.length > 100) {
       findings.push({
-        id: crypto.randomUUID(),
+        id: randomUUID(),
         severity: 'medium',
         category: 'Access Control',
         description: `${privilegedAccess.length} privileged access events`,
