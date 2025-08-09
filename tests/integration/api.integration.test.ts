@@ -187,11 +187,13 @@ describe('API Integration Tests', () => {
 
   describe('Error Handling', () => {
     it('should handle 404 for non-existent endpoints', async () => {
-      const response = await request(app).get('/api/non-existent').expect(404);
+      await request(app)
+        .get('/api/non-existent')
+        .expect(404);
     });
 
     it('should handle malformed JSON', async () => {
-      const response = await request(app)
+      await request(app)
         .post('/api/work-orders')
         .set('Content-Type', 'application/json')
         .send('{ invalid json }')

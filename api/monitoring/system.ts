@@ -5,6 +5,26 @@
 
 import { VercelRequest, VercelResponse } from '@vercel/node';
 
+interface SystemMetric {
+  timestamp: string;
+  memory: {
+    used: number;
+    free: number;
+    total: number;
+    usage: number;
+  };
+  cpu: {
+    usage: number;
+    load: number;
+  };
+  performance: {
+    avgResponseTime: number;
+    requestCount: number;
+    errorCount: number;
+    throughput: number;
+  };
+}
+
 export default function handler(req: VercelRequest, res: VercelResponse) {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -25,7 +45,7 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
 
     // Generate simulated system metrics for serverless environment
     const generateMetrics = (count: number) => {
-      const metrics: any[] = [];
+      const metrics: SystemMetric[] = [];
       const now = new Date();
 
       for (let i = count - 1; i >= 0; i--) {

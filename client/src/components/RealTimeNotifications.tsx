@@ -13,7 +13,7 @@ interface NotificationData {
   message: string;
   type: 'info' | 'warning' | 'error' | 'success';
   createdAt: Date;
-  data?: any;
+  data?: Record<string, unknown>;
 }
 
 interface ConnectionStatus {

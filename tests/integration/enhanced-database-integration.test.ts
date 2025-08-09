@@ -293,7 +293,7 @@ describe('Enhanced Database Service - Production Integration Tests', () => {
   });
 
   describe('⚙️ Equipment Management with Full-Text Search', () => {
-    let testEquipment: Equipment[] = [];
+    const testEquipment: Equipment[] = [];
 
     beforeEach(async () => {
       const equipmentData = [

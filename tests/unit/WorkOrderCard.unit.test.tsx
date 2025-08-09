@@ -1,7 +1,8 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { mockUser, mockWorkOrder, mockUseAuth } from '../utils/test-mocks';
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+import React from 'react'
+import { render, screen } from '@testing-library/react'
+import { mockUser, mockWorkOrder, mockUseAuth } from '../utils/test-mocks'
+
 
 // Mock the useAuth hook
 vi.mock('@/hooks/useAuth', () => ({

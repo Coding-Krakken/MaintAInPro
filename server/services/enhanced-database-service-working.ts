@@ -386,7 +386,7 @@ export class EnhancedDatabaseService {
     context: AuditContext
   ): Promise<void> {
     // Create or find tag
-    let tagResult = await this.pool.query(
+    const tagResult = await this.pool.query(
       'SELECT * FROM tags WHERE name = $1 AND organization_id = $2',
       [tagName, context.organizationId]
     );
