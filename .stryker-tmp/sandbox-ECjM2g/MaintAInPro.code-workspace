@@ -1,0 +1,42 @@
+{
+  "folders": [
+    {
+      "name": "MaintAInPro",
+      "path": ".",
+    },
+  ],
+  "settings": {
+    "typescript.preferences.includePackageJsonAutoImports": "on",
+    "typescript.suggest.autoImports": true,
+    "typescript.validate.enable": true,
+    "files.exclude": {
+      "**/node_modules": true,
+      "**/dist": true,
+      "**/.git": true,
+      "**/coverage": true,
+    },
+    "typescript.preferences.exclude": ["**/supabase/functions/**/*"],
+    "search.exclude": {
+      "**/node_modules": true,
+      "**/dist": true,
+      "**/coverage": true,
+    },
+    "eslint.workingDirectories": [
+      {
+        "directory": ".",
+        "changeProcessCWD": true,
+      },
+    ],
+    "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
+    "deno.enable": false,
+    "deno.enablePaths": ["./supabase/functions"],
+  },
+  "extensions": {
+    "recommendations": [
+      "bradlc.vscode-tailwindcss",
+      "esbenp.prettier-vscode",
+      "dbaeumer.vscode-eslint",
+      "ms-vscode.vscode-typescript-next",
+    ],
+  },
+}

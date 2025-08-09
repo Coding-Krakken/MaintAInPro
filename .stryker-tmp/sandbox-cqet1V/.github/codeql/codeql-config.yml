@@ -1,0 +1,18 @@
+name: 'MaintAInPro CodeQL Config'
+
+paths-ignore:
+  - 'node_modules'
+  - 'dist'
+  - '**/*.test.ts'
+  - '**/*.test.tsx'
+  - '**/*.spec.ts'
+  - '**/*.spec.tsx'
+  - 'test-results'
+  - 'coverage'
+
+queries:
+  - uses: security-and-quality
+
+packs:
+  - codeql/javascript-queries:AlertSuppression.ql
+  - codeql/javascript-queries:Security.ql

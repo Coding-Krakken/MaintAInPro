@@ -1,0 +1,344 @@
+name: Blueprint Planner
+
+on:
+  workflow_dispatch:
+    inputs:
+      force_update:
+        description: 'Force update existing issues'
+        required: false
+        default: 'false'
+        type: boolean
+
+  push:
+    paths:
+      - 'Documentation/Blueprint/**'
+    branches:
+      - main
+      - Replit
+
+  schedule:
+    # Run every 6 hours
+    - cron: '0 */6 * * *'
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create planner script
+        run: |
+          cat > planner.js << 'EOF'
+          import fs from 'fs';
+          import path from 'path';
+          import { execSync } from 'child_process';
+
+          // GitHub API helper
+          async function githubApi(endpoint, method = 'GET', data = null) {
+            const url = `https://api.github.com/repos/${process.env.GITHUB_REPOSITORY}${endpoint}`;
+            const options = {
+              method,
+              headers: {
+                'Authorization': `token ${process.env.GITHUB_TOKEN}`,
+                'Accept': 'application/vnd.github.v3+json',
+                'User-Agent': 'Blueprint-Planner'
+              }
+            };
+            
+            if (data) {
+              options.headers['Content-Type'] = 'application/json';
+              options.body = JSON.stringify(data);
+            }
+            
+            try {
+              const response = await fetch(url, options);
+              if (!response.ok) {
+                console.error(`GitHub API error: ${response.status} ${response.statusText}`);
+                return null;
+              }
+              return await response.json();
+            } catch (error) {
+              console.error(`GitHub API request failed:`, error);
+              return null;
+            }
+          }
+
+          // Parse Blueprint files for Task blocks
+          function parseTasksFromFile(filePath) {
+            if (!fs.existsSync(filePath)) return [];
+            
+            const content = fs.readFileSync(filePath, 'utf8');
+            const tasks = [];
+            const lines = content.split('\n');
+            
+            let currentTask = null;
+            let inTaskBlock = false;
+            let taskContent = [];
+            
+            for (let i = 0; i < lines.length; i++) {
+              const line = lines[i];
+              
+              // Start of task block
+              if (line.match(/^##\s*Task:\s*(.+)/)) {
+                // Save previous task if exists
+                if (currentTask) {
+                  currentTask.content = taskContent.join('\n').trim();
+                  if (currentTask.content) tasks.push(currentTask);
+                }
+                
+                // Start new task
+                currentTask = {
+                  title: line.replace(/^##\s*Task:\s*/, '').trim(),
+                  file: filePath,
+                  lineNumber: i + 1,
+                  acceptanceCriteria: [],
+                  testPlan: [],
+                  files: []
+                };
+                taskContent = [];
+                inTaskBlock = true;
+              }
+              // End of task block (next heading or end of file)
+              else if (inTaskBlock && line.match(/^#/)) {
+                if (currentTask) {
+                  currentTask.content = taskContent.join('\n').trim();
+                  if (currentTask.content) tasks.push(currentTask);
+                  currentTask = null;
+                  inTaskBlock = false;
+                }
+              }
+              // Content within task block
+              else if (inTaskBlock) {
+                taskContent.push(line);
+                
+                // Extract acceptance criteria
+                if (line.match(/^-?\s*\[[\sx]\]\s*/)) {
+                  currentTask.acceptanceCriteria.push(line.trim());
+                }
+                
+                // Extract file hints
+                if (line.match(/\`[^`]*\.(ts|tsx|js|jsx|md|json)\`/g)) {
+                  const matches = line.match(/\`([^`]*\.(ts|tsx|js|jsx|md|json))\`/g);
+                  if (matches) {
+                    currentTask.files.push(...matches.map(m => m.replace(/\`/g, '')));
+                  }
+                }
+                
+                // Extract test plan items
+                if (line.toLowerCase().includes('test') && line.match(/^-?\s*\[[\sx]\]\s*/)) {
+                  currentTask.testPlan.push(line.trim());
+                }
+              }
+            }
+            
+            // Handle last task
+            if (currentTask && inTaskBlock) {
+              currentTask.content = taskContent.join('\n').trim();
+              if (currentTask.content) tasks.push(currentTask);
+            }
+            
+            return tasks;
+          }
+
+          // Generate issue body from task
+          function generateIssueBody(task) {
+            let body = `## Task Description\n\n${task.content}\n\n`;
+            
+            if (task.acceptanceCriteria.length > 0) {
+              body += `## Acceptance Criteria\n\n`;
+              task.acceptanceCriteria.forEach(ac => {
+                body += `${ac}\n`;
+              });
+              body += '\n';
+            }
+            
+            if (task.testPlan.length > 0) {
+              body += `## Test Plan\n\n`;
+              task.testPlan.forEach(tp => {
+                body += `${tp}\n`;
+              });
+              body += '\n';
+            }
+            
+            if (task.files.length > 0) {
+              body += `## Suggested Files\n\n`;
+              task.files.forEach(file => {
+                body += `- \`${file}\`\n`;
+              });
+              body += '\n';
+            }
+            
+            body += `## Source\n\n`;
+            body += `- **File**: \`${task.file}\`\n`;
+            body += `- **Line**: ${task.lineNumber}\n\n`;
+            
+            body += `## Instructions for Copilot\n\n`;
+            body += `This issue was auto-generated from Blueprint documentation. Please:\n\n`;
+            body += `1. Review the acceptance criteria carefully\n`;
+            body += `2. Implement the feature following the project guidelines\n`;
+            body += `3. Add comprehensive tests matching the test plan\n`;
+            body += `4. Update relevant documentation\n`;
+            body += `5. Keep the PR under 300 lines of changes\n\n`;
+            body += `If requirements are unclear, open a PR with the \`needs-human\` label and ask questions.`;
+            
+            return body;
+          }
+
+          // Create unique issue identifier
+          function createIssueId(task) {
+            const filePart = path.basename(task.file, '.md').toLowerCase();
+            const titlePart = task.title.toLowerCase()
+              .replace(/[^a-z0-9\s]/g, '')
+              .replace(/\s+/g, '-')
+              .substring(0, 30);
+            return `autoplan-${filePart}-${titlePart}`;
+          }
+
+          // Main execution
+          async function main() {
+            console.log('🤖 Blueprint Planner Starting...');
+            
+            // Find all Blueprint files
+            const blueprintDir = 'Documentation/Blueprint';
+            if (!fs.existsSync(blueprintDir)) {
+              console.log('No Blueprint directory found');
+              return;
+            }
+            
+            const allTasks = [];
+            
+            // Recursively find all markdown files in Blueprint
+            function findMarkdownFiles(dir) {
+              const files = [];
+              const items = fs.readdirSync(dir);
+              
+              for (const item of items) {
+                const fullPath = path.join(dir, item);
+                const stat = fs.statSync(fullPath);
+                
+                if (stat.isDirectory()) {
+                  files.push(...findMarkdownFiles(fullPath));
+                } else if (item.endsWith('.md')) {
+                  files.push(fullPath);
+                }
+              }
+              
+              return files;
+            }
+            
+            const markdownFiles = findMarkdownFiles(blueprintDir);
+            console.log(`Found ${markdownFiles.length} Blueprint files to scan`);
+            
+            // Parse tasks from all files
+            for (const file of markdownFiles) {
+              const tasks = parseTasksFromFile(file);
+              allTasks.push(...tasks);
+              console.log(`Found ${tasks.length} tasks in ${file}`);
+            }
+            
+            console.log(`Total tasks found: ${allTasks.length}`);
+            
+            if (allTasks.length === 0) {
+              console.log('No tasks found in Blueprint files');
+              return;
+            }
+            
+            // Get existing issues to avoid duplicates
+            const existingIssues = await githubApi('/issues?state=open&labels=autoplan&per_page=100');
+            const existingIssueIds = new Set();
+            
+            if (existingIssues) {
+              existingIssues.forEach(issue => {
+                const match = issue.body.match(/<!-- issue-id: (.+) -->/);
+                if (match) {
+                  existingIssueIds.add(match[1]);
+                }
+              });
+            }
+            
+            const forceUpdate = process.env.FORCE_UPDATE === 'true';
+            let createdCount = 0;
+            let updatedCount = 0;
+            let skippedCount = 0;
+            
+            // Process each task
+            for (const task of allTasks) {
+              const issueId = createIssueId(task);
+              const body = generateIssueBody(task);
+              const fullBody = `${body}\n\n<!-- issue-id: ${issueId} -->`;
+              
+              if (existingIssueIds.has(issueId) && !forceUpdate) {
+                console.log(`Skipping existing issue: ${task.title}`);
+                skippedCount++;
+                continue;
+              }
+              
+              // Create new issue
+              const issueData = {
+                title: task.title,
+                body: fullBody,
+                labels: ['autoplan', 'agent-ok']
+              };
+              
+              const issue = await githubApi('/issues', 'POST', issueData);
+              
+              if (issue) {
+                console.log(`✅ Created issue #${issue.number}: ${task.title}`);
+                createdCount++;
+                
+                // Wait a bit to avoid rate limiting
+                await new Promise(resolve => setTimeout(resolve, 1000));
+              } else {
+                console.error(`❌ Failed to create issue: ${task.title}`);
+              }
+            }
+            
+            console.log(`\n📊 Planner Summary:`);
+            console.log(`   - Created: ${createdCount} issues`);
+            console.log(`   - Updated: ${updatedCount} issues`);
+            console.log(`   - Skipped: ${skippedCount} issues`);
+            console.log(`   - Total: ${allTasks.length} tasks found`);
+            
+            // Output for GitHub Actions
+            execSync(`echo "created_issues=${createdCount}" >> $GITHUB_OUTPUT`);
+            execSync(`echo "total_tasks=${allTasks.length}" >> $GITHUB_OUTPUT`);
+          }
+
+          main().catch(error => {
+            console.error('Planner failed:', error);
+            process.exit(1);
+          });
+          EOF
+
+      - name: Run Blueprint Planner
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          FORCE_UPDATE: ${{ github.event.inputs.force_update || 'false' }}
+        run: node planner.js
+
+      - name: Summary
+        run: |
+          echo "## 🤖 Blueprint Planner Results" >> $GITHUB_STEP_SUMMARY
+          echo "- **Created Issues**: ${{ steps.plan.outputs.created_issues || 0 }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Total Tasks Found**: ${{ steps.plan.outputs.total_tasks || 0 }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Trigger**: ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Time**: $(date -u +"%Y-%m-%d %H:%M:%S UTC")" >> $GITHUB_STEP_SUMMARY
