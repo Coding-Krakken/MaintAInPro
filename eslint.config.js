@@ -193,13 +193,4 @@ export default [
       '@typescript-eslint/no-var-requires': 'off',
     },
   },
-
-  // Configuration files
-  {
-    files: ['**/*.config.{js,ts,mjs}', '**/.*rc.{js,ts}'],
-    rules: {
-      '@typescript-eslint/no-var-requires': 'off',
-      'no-console': 'off',
-    },
-  },
 ];
