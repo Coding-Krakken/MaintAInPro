@@ -37,7 +37,7 @@ export function useHealthData(enabled = true) {
     queryFn: async () => {
       const response = await fetch('/api/health', {
         headers: {
-          'Authorization': 'Bearer demo-token',
+          Authorization: 'Bearer demo-token',
           'x-user-id': localStorage.getItem('userId') || 'default-user-id',
           'x-warehouse-id': localStorage.getItem('warehouseId') || 'default-warehouse-id',
         },
@@ -55,7 +55,7 @@ export const healthService = {
   getHealth: async (): Promise<HealthData> => {
     const response = await fetch('/api/health', {
       headers: {
-        'Authorization': 'Bearer demo-token',
+        Authorization: 'Bearer demo-token',
         'x-user-id': localStorage.getItem('userId') || 'default-user-id',
         'x-warehouse-id': localStorage.getItem('warehouseId') || 'default-warehouse-id',
       },

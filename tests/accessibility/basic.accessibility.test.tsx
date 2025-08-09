@@ -1,11 +1,13 @@
 import React from 'react';
-import { axe } from 'jest-axe';
+import { axe, toHaveNoViolations } from 'jest-axe';
 import { render } from '@testing-library/react';
+
+expect.extend(toHaveNoViolations);
 
 describe('Basic Accessibility Tests', () => {
   it('should pass accessibility tests for basic HTML', async () => {
     const { container } = render(
-      <div role="button" aria-label="Test button" tabIndex={0}>
+      <div role='button' aria-label='Test button' tabIndex={0}>
         Click me
       </div>
     );
@@ -15,7 +17,7 @@ describe('Basic Accessibility Tests', () => {
 
   it('should pass accessibility tests for proper button', async () => {
     const { container } = render(
-      <button type="button" aria-label="Test button">
+      <button type='button' aria-label='Test button'>
         Click me
       </button>
     );

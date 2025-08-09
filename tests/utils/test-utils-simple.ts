@@ -13,11 +13,7 @@ export const createWrapper = ({ children }: { children: React.ReactNode }) => {
     },
   });
 
-  return React.createElement(
-    QueryClientProvider,
-    { client: queryClient },
-    children
-  );
+  return React.createElement(QueryClientProvider, { client: queryClient }, children);
 };
 
 // Mock data factories
@@ -78,7 +74,7 @@ export const createMockPart = (overrides = {}) => ({
   category: 'Mechanical',
   stockLevel: 100,
   reorderPoint: 20,
-  unitCost: 25.50,
+  unitCost: 25.5,
   supplier: 'Test Supplier',
   warehouseId: 'wh-123',
   location: 'Bin A1',
@@ -210,12 +206,12 @@ export const createMockFile = (name: string, size: number, type: string) => {
 export const simulateFileUpload = (input: HTMLInputElement, files: File[]) => {
   const dataTransfer = new DataTransfer();
   files.forEach(file => dataTransfer.items.add(file));
-  
+
   Object.defineProperty(input, 'files', {
     value: dataTransfer.files,
     writable: false,
   });
-  
+
   fireEvent.change(input);
 };
 

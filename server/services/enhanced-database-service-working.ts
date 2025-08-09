@@ -1,6 +1,6 @@
 /**
  * Enhanced Database Service - Simplified Working Version
- * 
+ *
  * This service implements the core DatabaseImplementation.md functionality
  * needed for tests while avoiding complex Drizzle ORM type issues.
  */
@@ -41,7 +41,7 @@ export class EnhancedDatabaseService {
   private pool: Pool;
 
   constructor(config: { connectionString: string }) {
-    this.pool = new Pool({ 
+    this.pool = new Pool({
       connectionString: config.connectionString,
       max: 20,
       idleTimeoutMillis: 30000,
@@ -62,7 +62,7 @@ export class EnhancedDatabaseService {
     context: AuditContext
   ): Promise<Organization> {
     const organizationId = uuidv4();
-    
+
     // Use raw SQL to avoid type issues
     const result = await this.pool.query(
       `INSERT INTO organizations (
@@ -81,7 +81,7 @@ export class EnhancedDatabaseService {
         orgData.maxAssets || 100,
         orgData.active ?? true,
         context.userId,
-        context.userId
+        context.userId,
       ]
     );
 
@@ -98,8 +98,11 @@ export class EnhancedDatabaseService {
       createdBy: row.created_by,
       updatedBy: row.updated_by,
     };
-    
-    await this.logActivity('CREATE', 'organization', organization.id, undefined, organization, { ...context, organizationId: organization.id });
+
+    await this.logActivity('CREATE', 'organization', organization.id, undefined, organization, {
+      ...context,
+      organizationId: organization.id,
+    });
     return organization;
   }
 
@@ -108,10 +111,10 @@ export class EnhancedDatabaseService {
       'SELECT * FROM organizations WHERE id = $1 AND deleted_at IS NULL',
       [id]
     );
-    
+
     const row = result.rows[0];
     if (!row) return null;
-    
+
     // Transform snake_case to camelCase for TypeScript compatibility
     return {
       ...row,
@@ -153,12 +156,9 @@ export class EnhancedDatabaseService {
   }
 
   // Work Order Management
-  async createWorkOrder(
-    woData: InsertWorkOrder,
-    context: AuditContext
-  ): Promise<WorkOrder> {
+  async createWorkOrder(woData: InsertWorkOrder, context: AuditContext): Promise<WorkOrder> {
     const workOrderId = uuidv4();
-    
+
     const result = await this.pool.query(
       `INSERT INTO work_orders (
         id, fo_number, type, description, area, asset_model, status, priority,
@@ -192,7 +192,7 @@ export class EnhancedDatabaseService {
         woData.organizationId || context.organizationId,
         woData.warehouseId,
         context.userId,
-        context.userId
+        context.userId,
       ]
     );
 
@@ -243,7 +243,7 @@ export class EnhancedDatabaseService {
     const query = `SELECT * FROM work_orders ${whereClause} ORDER BY created_at DESC LIMIT $${paramCount + 1} OFFSET $${paramCount + 2}`;
     console.log('Search query:', query);
     console.log('Search params:', [...params, limit, offset]);
-    
+
     const workOrdersResult = await this.pool.query(query, [...params, limit, offset]);
 
     // Get total count
@@ -263,7 +263,7 @@ export class EnhancedDatabaseService {
 
     return {
       workOrders: workOrdersResult.rows.map(row => this.transformWorkOrder(row)),
-      total: parseInt(countResult.rows[0].count)
+      total: parseInt(countResult.rows[0].count),
     };
   }
 
@@ -324,7 +324,14 @@ export class EnhancedDatabaseService {
     const updatedWO = this.transformWorkOrder(result.rows[0]);
 
     if (updatedWO) {
-      await this.logActivity('UPDATE', 'work_order', updatedWO.id, currentWO.rows[0], updatedWO, context);
+      await this.logActivity(
+        'UPDATE',
+        'work_order',
+        updatedWO.id,
+        currentWO.rows[0],
+        updatedWO,
+        context
+      );
     }
 
     return updatedWO;
@@ -367,7 +374,7 @@ export class EnhancedDatabaseService {
 
     return {
       equipment: equipmentResult.rows,
-      total: parseInt(countResult.rows[0].count)
+      total: parseInt(countResult.rows[0].count),
     };
   }
 
@@ -414,7 +421,14 @@ export class EnhancedDatabaseService {
     );
 
     if (result.rows.length > 0) {
-      await this.logActivity('SOFT_DELETE', 'work_order', id, undefined, { deletedAt: new Date() }, context);
+      await this.logActivity(
+        'SOFT_DELETE',
+        'work_order',
+        id,
+        undefined,
+        { deletedAt: new Date() },
+        context
+      );
       return true;
     }
 
@@ -441,7 +455,12 @@ export class EnhancedDatabaseService {
   }
 
   // Test helper method for creating test users
-  async createTestUser(userId: string, email: string, firstName: string, lastName: string): Promise<void> {
+  async createTestUser(
+    userId: string,
+    email: string,
+    firstName: string,
+    lastName: string
+  ): Promise<void> {
     await this.pool.query(
       `INSERT INTO profiles (id, email, first_name, last_name, role, active, created_at, updated_at)
        VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW())
@@ -462,8 +481,8 @@ export class EnhancedDatabaseService {
         },
         performance: {
           totalQueries: 0, // Would track in production
-        }
-      }
+        },
+      },
     };
   }
 
@@ -503,7 +522,7 @@ export class EnhancedDatabaseService {
           context.requestId,
           context.correlationId,
           'info',
-          JSON.stringify({})
+          JSON.stringify({}),
         ]
       );
     } catch (error) {

@@ -1,8 +1,17 @@
-import { WorkOrder, Profile, Notification, InsertNotification, EscalationRule, InsertEscalationRule, EscalationHistory, InsertEscalationHistory } from "@shared/schema";
-import { storage } from "../storage";
-import { db } from "../db";
-import { escalationRules, escalationHistory } from "@shared/schema";
-import { eq, and } from "drizzle-orm";
+import {
+  WorkOrder,
+  Profile,
+  Notification,
+  InsertNotification,
+  EscalationRule,
+  InsertEscalationRule,
+  EscalationHistory,
+  InsertEscalationHistory,
+} from '@shared/schema';
+import { storage } from '../storage';
+import { db } from '../db';
+import { escalationRules, escalationHistory } from '@shared/schema';
+import { eq, and } from 'drizzle-orm';
 
 export interface EscalationAction {
   workOrderId: string;
@@ -16,9 +25,9 @@ export interface EscalationAction {
 
 export class EscalationEngine {
   private static instance: EscalationEngine;
-  
+
   private constructor() {}
-  
+
   public static getInstance(): EscalationEngine {
     if (!EscalationEngine.instance) {
       EscalationEngine.instance = new EscalationEngine();
@@ -32,14 +41,16 @@ export class EscalationEngine {
   async initializeDefaultRules(warehouseId: string): Promise<void> {
     try {
       // Check if rules already exist for this warehouse
-      const existingRules = await db.select().from(escalationRules)
+      const existingRules = await db
+        .select()
+        .from(escalationRules)
         .where(eq(escalationRules.warehouseId, warehouseId));
-      
+
       if (existingRules.length > 0) {
         return; // Rules already exist
       }
 
-      // Create default escalation rules  
+      // Create default escalation rules
       const defaultRules = [
         {
           id: crypto.randomUUID(),
@@ -76,11 +87,13 @@ export class EscalationEngine {
           escalationAction: 'notify_supervisor' as const,
           warehouseId,
           active: true,
-        }
+        },
       ];
 
       await db.insert(escalationRules).values(defaultRules);
-      console.log(`Initialized ${defaultRules.length} default escalation rules for warehouse ${warehouseId}`);
+      console.log(
+        `Initialized ${defaultRules.length} default escalation rules for warehouse ${warehouseId}`
+      );
     } catch (error) {
       console.error('Error initializing default escalation rules:', error);
     }
@@ -91,29 +104,33 @@ export class EscalationEngine {
    */
   async checkForEscalations(): Promise<EscalationAction[]> {
     const actions: EscalationAction[] = [];
-    
+
     try {
       // Get all warehouses to process each one
       const warehouses = await storage.getWarehouses();
-      
+
       for (const warehouse of warehouses) {
         // Initialize default rules if needed
         await this.initializeDefaultRules(warehouse.id);
-        
+
         const workOrders = await storage.getWorkOrders(warehouse.id);
         const overdueWorkOrders = await this.findOverdueWorkOrders(workOrders, warehouse.id);
-        
+
         for (const workOrder of overdueWorkOrders) {
-          const rule = await this.getEscalationRule(workOrder.type, workOrder.priority, warehouse.id);
+          const rule = await this.getEscalationRule(
+            workOrder.type,
+            workOrder.priority,
+            warehouse.id
+          );
           if (!rule) continue;
-          
+
           const action = await this.escalateWorkOrder(workOrder, rule);
           if (action) {
             actions.push(action);
           }
         }
       }
-      
+
       return actions;
     } catch (error) {
       console.error('Error checking for escalations:', error);
@@ -124,35 +141,38 @@ export class EscalationEngine {
   /**
    * Find work orders that are overdue for escalation
    */
-  private async findOverdueWorkOrders(workOrders: WorkOrder[], warehouseId: string): Promise<WorkOrder[]> {
+  private async findOverdueWorkOrders(
+    workOrders: WorkOrder[],
+    warehouseId: string
+  ): Promise<WorkOrder[]> {
     const now = new Date();
     const overdueWorkOrders: WorkOrder[] = [];
-    
+
     for (const wo of workOrders) {
       // Only escalate work orders that are new or assigned
       if (!['new', 'assigned'].includes(wo.status)) {
         continue;
       }
-      
+
       // Skip already escalated work orders at max level
       if (wo.escalationLevel >= 3) {
         continue;
       }
-      
+
       // Get escalation rule for this work order
       const rule = await this.getEscalationRule(wo.type, wo.priority, warehouseId);
       if (!rule) continue;
-      
+
       // Calculate hours since creation or last escalation
       const createdAt = new Date(wo.createdAt);
       const hoursSinceCreated = (now.getTime() - createdAt.getTime()) / (1000 * 60 * 60);
-      
+
       // Check if threshold has been exceeded
       if (hoursSinceCreated >= rule.timeoutHours) {
         overdueWorkOrders.push(wo);
       }
     }
-    
+
     return overdueWorkOrders;
   }
 
@@ -165,14 +185,18 @@ export class EscalationEngine {
     warehouseId: string
   ): Promise<EscalationRule | null> {
     try {
-      const rules = await db.select().from(escalationRules)
-        .where(and(
-          eq(escalationRules.workOrderType, workOrderType),
-          eq(escalationRules.priority, priority),
-          eq(escalationRules.warehouseId, warehouseId),
-          eq(escalationRules.active, true)
-        ));
-      
+      const rules = await db
+        .select()
+        .from(escalationRules)
+        .where(
+          and(
+            eq(escalationRules.workOrderType, workOrderType),
+            eq(escalationRules.priority, priority),
+            eq(escalationRules.warehouseId, warehouseId),
+            eq(escalationRules.active, true)
+          )
+        );
+
       return rules[0] || null;
     } catch (error) {
       console.error('Error getting escalation rule:', error);
@@ -183,10 +207,13 @@ export class EscalationEngine {
   /**
    * Escalate a specific work order
    */
-  private async escalateWorkOrder(workOrder: WorkOrder, rule: EscalationRule): Promise<EscalationAction | null> {
+  private async escalateWorkOrder(
+    workOrder: WorkOrder,
+    rule: EscalationRule
+  ): Promise<EscalationAction | null> {
     try {
       let escalationTarget: Profile | null = null;
-      
+
       // Find escalation target based on rule configuration
       if (rule.escalateTo) {
         // Direct assignment to specific user
@@ -199,7 +226,7 @@ export class EscalationEngine {
         // Find users based on escalation action
         const profiles = await storage.getProfiles();
         let targetRole: string | null = null;
-        
+
         switch (rule.escalationAction) {
           case 'notify_supervisor':
             targetRole = 'supervisor';
@@ -211,22 +238,25 @@ export class EscalationEngine {
             console.warn(`Unsupported escalation action: ${rule.escalationAction}`);
             return null;
         }
-        
-        const escalationTargets = profiles.filter(profile => 
-          profile.role === targetRole && 
-          profile.warehouseId === workOrder.warehouseId &&
-          profile.active
+
+        const escalationTargets = profiles.filter(
+          profile =>
+            profile.role === targetRole &&
+            profile.warehouseId === workOrder.warehouseId &&
+            profile.active
         );
-        
+
         if (escalationTargets.length === 0) {
-          console.warn(`No ${targetRole} found for escalation in warehouse ${workOrder.warehouseId}`);
+          console.warn(
+            `No ${targetRole} found for escalation in warehouse ${workOrder.warehouseId}`
+          );
           return null;
         }
-        
+
         // Select the first available target (could be improved with load balancing)
         escalationTarget = escalationTargets[0];
       }
-      
+
       // Update work order
       const newEscalationLevel = (workOrder.escalationLevel || 0) + 1;
       await storage.updateWorkOrder(workOrder.id, {
@@ -234,10 +264,15 @@ export class EscalationEngine {
         escalationLevel: newEscalationLevel,
         assignedTo: escalationTarget.id,
       });
-      
+
       // Create notification
-      await this.createEscalationNotification(workOrder, escalationTarget, rule, newEscalationLevel);
-      
+      await this.createEscalationNotification(
+        workOrder,
+        escalationTarget,
+        rule,
+        newEscalationLevel
+      );
+
       // Save escalation history
       const historyRecord = {
         id: crypto.randomUUID(),
@@ -250,9 +285,9 @@ export class EscalationEngine {
         reason: `Auto-escalated after ${rule.timeoutHours} hours`,
         escalatedAt: new Date(),
       };
-      
+
       await db.insert(escalationHistory).values(historyRecord);
-      
+
       // Create escalation action record
       const action: EscalationAction = {
         workOrderId: workOrder.id,
@@ -262,9 +297,11 @@ export class EscalationEngine {
         reason: `Auto-escalated after ${rule.timeoutHours} hours`,
         previousAssignee: workOrder.assignedTo || undefined,
       };
-      
-      console.log(`Escalated work order ${workOrder.foNumber} to ${escalationTarget.firstName} ${escalationTarget.lastName} (Level ${newEscalationLevel})`);
-      
+
+      console.log(
+        `Escalated work order ${workOrder.foNumber} to ${escalationTarget.firstName} ${escalationTarget.lastName} (Level ${newEscalationLevel})`
+      );
+
       return action;
     } catch (error) {
       console.error(`Error escalating work order ${workOrder.id}:`, error);
@@ -276,9 +313,9 @@ export class EscalationEngine {
    * Create notification for escalation
    */
   private async createEscalationNotification(
-    workOrder: WorkOrder, 
-    escalationTarget: Profile, 
-    rule: EscalationRule, 
+    workOrder: WorkOrder,
+    escalationTarget: Profile,
+    rule: EscalationRule,
     escalationLevel: number
   ): Promise<void> {
     const notification: InsertNotification = {
@@ -289,7 +326,7 @@ export class EscalationEngine {
       read: false,
       workOrderId: workOrder.id,
     };
-    
+
     await storage.createNotification(notification);
   }
 
@@ -305,24 +342,24 @@ export class EscalationEngine {
     try {
       const workOrders = await storage.getWorkOrders(warehouseId);
       const escalated = workOrders.filter(wo => wo.escalated);
-      
+
       const today = new Date();
       today.setHours(0, 0, 0, 0);
-      
+
       const escalatedToday = escalated.filter(wo => {
         const updatedAt = new Date(wo.updatedAt);
         return updatedAt >= today;
       });
-      
+
       const byLevel: Record<number, number> = {};
       const byPriority: Record<string, number> = {};
-      
+
       escalated.forEach(wo => {
         const level = wo.escalationLevel || 1;
         byLevel[level] = (byLevel[level] || 0) + 1;
         byPriority[wo.priority] = (byPriority[wo.priority] || 0) + 1;
       });
-      
+
       return {
         totalEscalated: escalated.length,
         escalatedToday: escalatedToday.length,
@@ -344,8 +381,8 @@ export class EscalationEngine {
    * Manual escalation (for supervisors/managers)
    */
   async manuallyEscalateWorkOrder(
-    workOrderId: string, 
-    escalateToUserId: string, 
+    workOrderId: string,
+    escalateToUserId: string,
     reason: string,
     escalatedByUserId: string
   ): Promise<EscalationAction | null> {
@@ -354,21 +391,21 @@ export class EscalationEngine {
       if (!workOrder) {
         throw new Error('Work order not found');
       }
-      
+
       const escalationTarget = await storage.getProfile(escalateToUserId);
       if (!escalationTarget) {
         throw new Error('Escalation target user not found');
       }
-      
+
       const newEscalationLevel = (workOrder.escalationLevel || 0) + 1;
-      
+
       // Update work order
       await storage.updateWorkOrder(workOrderId, {
         escalated: true,
         escalationLevel: newEscalationLevel,
         assignedTo: escalateToUserId,
       });
-      
+
       // Create notification
       const notification: InsertNotification = {
         userId: escalateToUserId,
@@ -378,9 +415,9 @@ export class EscalationEngine {
         read: false,
         workOrderId: workOrderId,
       };
-      
+
       await storage.createNotification(notification);
-      
+
       // Save escalation history
       const historyRecord = {
         id: crypto.randomUUID(),
@@ -393,9 +430,9 @@ export class EscalationEngine {
         reason: `Manual escalation by user: ${reason}`,
         escalatedAt: new Date(),
       };
-      
+
       await db.insert(escalationHistory).values(historyRecord);
-      
+
       return {
         workOrderId,
         escalationLevel: newEscalationLevel,
@@ -416,7 +453,9 @@ export class EscalationEngine {
   async getEscalationRules(warehouseId: string): Promise<EscalationRule[]> {
     try {
       await this.initializeDefaultRules(warehouseId);
-      return await db.select().from(escalationRules)
+      return await db
+        .select()
+        .from(escalationRules)
         .where(eq(escalationRules.warehouseId, warehouseId));
     } catch (error) {
       console.error('Error getting escalation rules:', error);
@@ -427,11 +466,12 @@ export class EscalationEngine {
   /**
    * Update escalation rules (for configuration)
    */
-  async updateEscalationRule(ruleId: string, updates: Partial<InsertEscalationRule>): Promise<void> {
+  async updateEscalationRule(
+    ruleId: string,
+    updates: Partial<InsertEscalationRule>
+  ): Promise<void> {
     try {
-      await db.update(escalationRules)
-        .set(updates)
-        .where(eq(escalationRules.id, ruleId));
+      await db.update(escalationRules).set(updates).where(eq(escalationRules.id, ruleId));
       console.log(`Updated escalation rule ${ruleId}`);
     } catch (error) {
       console.error('Error updating escalation rule:', error);
@@ -469,7 +509,9 @@ export class EscalationEngine {
    */
   async getEscalationHistory(workOrderId: string): Promise<EscalationHistory[]> {
     try {
-      return await db.select().from(escalationHistory)
+      return await db
+        .select()
+        .from(escalationHistory)
         .where(eq(escalationHistory.workOrderId, workOrderId));
     } catch (error) {
       console.error('Error getting escalation history:', error);

@@ -15,12 +15,12 @@ export class BackgroundJobScheduler {
   private jobs: Map<string, ScheduledJob> = new Map();
   private intervals: Map<string, NodeJS.Timeout> = new Map();
   private pmEngine: PMEngine;
-  
+
   private constructor() {
     this.pmEngine = PMEngine.getInstance();
     this.initializeJobs();
   }
-  
+
   public static getInstance(): BackgroundJobScheduler {
     if (!BackgroundJobScheduler.instance) {
       BackgroundJobScheduler.instance = new BackgroundJobScheduler();
@@ -33,28 +33,40 @@ export class BackgroundJobScheduler {
    */
   private initializeJobs(): void {
     // Escalation check every 30 minutes
-    this.addJob('escalation-check', {
-      name: 'Work Order Escalation Check',
-      interval: 30 * 60 * 1000, // 30 minutes
-      running: false,
-      enabled: true,
-    }, this.runEscalationCheck.bind(this));
+    this.addJob(
+      'escalation-check',
+      {
+        name: 'Work Order Escalation Check',
+        interval: 30 * 60 * 1000, // 30 minutes
+        running: false,
+        enabled: true,
+      },
+      this.runEscalationCheck.bind(this)
+    );
 
     // PM generation check every hour
-    this.addJob('pm-generation', {
-      name: 'Preventive Maintenance Generation',
-      interval: 60 * 60 * 1000, // 1 hour
-      running: false,
-      enabled: true,
-    }, this.runPMGeneration.bind(this));
+    this.addJob(
+      'pm-generation',
+      {
+        name: 'Preventive Maintenance Generation',
+        interval: 60 * 60 * 1000, // 1 hour
+        running: false,
+        enabled: true,
+      },
+      this.runPMGeneration.bind(this)
+    );
 
     // Notification cleanup every 24 hours
-    this.addJob('notification-cleanup', {
-      name: 'Notification Cleanup',
-      interval: 24 * 60 * 60 * 1000, // 24 hours
-      running: false,
-      enabled: true,
-    }, this.runNotificationCleanup.bind(this));
+    this.addJob(
+      'notification-cleanup',
+      {
+        name: 'Notification Cleanup',
+        interval: 24 * 60 * 60 * 1000, // 24 hours
+        running: false,
+        enabled: true,
+      },
+      this.runNotificationCleanup.bind(this)
+    );
 
     console.log('Background job scheduler initialized with', this.jobs.size, 'jobs');
   }
@@ -64,7 +76,7 @@ export class BackgroundJobScheduler {
    */
   private addJob(jobId: string, job: ScheduledJob, handler: () => Promise<void>): void {
     this.jobs.set(jobId, job);
-    
+
     if (job.enabled) {
       this.startJob(jobId, handler);
     }
@@ -94,7 +106,7 @@ export class BackgroundJobScheduler {
         job.running = true;
         job.lastRun = new Date();
         job.nextRun = new Date(Date.now() + job.interval);
-        
+
         console.log(`Starting background job: ${job.name}`);
         await handler();
         console.log(`Completed background job: ${job.name}`);
@@ -106,10 +118,10 @@ export class BackgroundJobScheduler {
     }, job.interval);
 
     this.intervals.set(jobId, interval);
-    
+
     // Set next run time
     job.nextRun = new Date(Date.now() + job.interval);
-    
+
     console.log(`Started job: ${job.name} (runs every ${job.interval / 1000}s)`);
   }
 
@@ -122,13 +134,13 @@ export class BackgroundJobScheduler {
       clearInterval(interval);
       this.intervals.delete(jobId);
     }
-    
+
     const job = this.jobs.get(jobId);
     if (job) {
       job.running = false;
       job.enabled = false;
     }
-    
+
     console.log(`Stopped job: ${jobId}`);
   }
 
@@ -195,13 +207,13 @@ export class BackgroundJobScheduler {
       // Get all warehouses and generate PMs for each
       const { storage } = await import('../storage');
       const warehouses = await storage.getWarehouses();
-      
+
       let totalGenerated = 0;
       for (const warehouse of warehouses) {
         const generatedWOs = await this.pmEngine.generatePMWorkOrders(warehouse.id);
         totalGenerated += generatedWOs.length;
       }
-      
+
       if (totalGenerated > 0) {
         console.log(`Generated ${totalGenerated} preventive maintenance work orders`);
       }
@@ -238,7 +250,7 @@ export class BackgroundJobScheduler {
     if (!job) return;
 
     job.enabled = enabled;
-    
+
     if (enabled && !this.intervals.has(jobId)) {
       const handler = this.getJobHandler(jobId);
       if (handler) {
@@ -247,7 +259,7 @@ export class BackgroundJobScheduler {
     } else if (!enabled) {
       this.stopJob(jobId);
     }
-    
+
     console.log(`Job ${jobId} ${enabled ? 'enabled' : 'disabled'}`);
   }
 
@@ -259,7 +271,7 @@ export class BackgroundJobScheduler {
     if (!job) return;
 
     job.interval = intervalMs;
-    
+
     // Restart the job with new interval if it's running
     if (job.enabled) {
       this.stopJob(jobId);
@@ -268,7 +280,7 @@ export class BackgroundJobScheduler {
         this.startJob(jobId, handler);
       }
     }
-    
+
     console.log(`Updated job ${jobId} interval to ${intervalMs}ms`);
   }
 

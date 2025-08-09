@@ -1,10 +1,12 @@
 # Vercel Deployment Configuration
 
-This document outlines the Vercel deployment setup for MaintAInPro CMMS, including required secrets, environment variables, and deployment strategies.
+This document outlines the Vercel deployment setup for MaintAInPro CMMS,
+including required secrets, environment variables, and deployment strategies.
 
 ## Overview
 
 MaintAInPro is configured for deployment on Vercel with:
+
 - **Frontend**: Static build served via Vercel's CDN
 - **Backend**: Express.js API running as serverless functions
 - **Database**: PostgreSQL (external provider)
@@ -13,6 +15,7 @@ MaintAInPro is configured for deployment on Vercel with:
 ## Required Secrets
 
 ### Core Vercel Secrets
+
 These secrets must be configured in your Vercel project dashboard:
 
 ```bash
@@ -25,6 +28,7 @@ VERCEL_PROJECT_ID="project_id_here"        # Your Vercel project ID
 ### Application Secrets
 
 #### Authentication & Security
+
 ```bash
 JWT_SECRET="your-super-secret-jwt-key-here"              # 256-bit secret for JWT tokens
 JWT_REFRESH_SECRET="your-refresh-secret-here"            # Separate secret for refresh tokens
@@ -32,12 +36,14 @@ ENCRYPTION_KEY="32-character-encryption-key"             # For sensitive data en
 ```
 
 #### Database
+
 ```bash
 DATABASE_URL="postgresql://user:pass@host:port/db"       # Primary PostgreSQL connection
 POSTGRES_URL="postgresql://user:pass@host:port/db"       # Alternative PostgreSQL URL
 ```
 
 #### Email & Communications
+
 ```bash
 SMTP_HOST="smtp.provider.com"                            # SMTP server hostname
 SMTP_PORT="587"                                          # SMTP port (587 for TLS)
@@ -47,6 +53,7 @@ SMTP_FROM="noreply@maintainpro.com"                      # From email address
 ```
 
 #### External APIs (Optional)
+
 ```bash
 OPENAI_API_KEY="sk-your-openai-key"                      # For AI features
 STRIPE_SECRET_KEY="sk_live_your-stripe-key"              # For billing
@@ -83,6 +90,7 @@ FEATURE_NEW_WORKFLOW_ENGINE="false"                      # New workflow system
 ## Environment Setup
 
 ### 1. Local Development
+
 ```bash
 # Copy environment template
 cp .env.example .env.local
@@ -95,6 +103,7 @@ npm run scripts/print_env.sh
 ```
 
 ### 2. Vercel Project Setup
+
 ```bash
 # Install Vercel CLI
 npm i -g vercel
@@ -110,11 +119,12 @@ vercel env add VARIABLE_NAME
 ```
 
 ### 3. GitHub Secrets (for CI/CD)
+
 Add these secrets to your GitHub repository settings:
 
 ```
 VERCEL_TOKEN          # Vercel API token
-VERCEL_ORG_ID         # Organization ID  
+VERCEL_ORG_ID         # Organization ID
 VERCEL_PROJECT_ID     # Project ID
 CODECOV_TOKEN         # Code coverage reporting (optional)
 ```
@@ -122,18 +132,21 @@ CODECOV_TOKEN         # Code coverage reporting (optional)
 ## Deployment Configuration
 
 ### Build Settings
+
 - **Framework Preset**: Other
 - **Build Command**: `npm run build`
 - **Output Directory**: `dist/public`
 - **Install Command**: `npm ci`
 
 ### Function Settings
+
 - **Runtime**: Node.js 18.x
 - **Timeout**: 10 seconds (API), 5 seconds (health)
 - **Memory**: 1024 MB
 - **Region**: Auto (global distribution)
 
 ### Domain Setup
+
 - **Production**: `app.maintainpro.com`
 - **Preview**: `preview-{branch}.maintainpro.com`
 - **Development**: `localhost:3000`
@@ -166,11 +179,13 @@ The application includes a comprehensive health check at `/health`:
 ## Monitoring & Alerts
 
 ### Vercel Analytics
+
 - **Core Web Vitals**: Automatically tracked
 - **Function Metrics**: Execution time, memory usage
 - **Error Rate**: 4xx/5xx response monitoring
 
 ### Custom Monitoring
+
 ```bash
 # Health check monitoring (external)
 curl -f https://app.maintainpro.com/health || exit 1
@@ -187,6 +202,7 @@ curl -s https://app.maintainpro.com/health | jq .features
 ### Common Issues
 
 #### 1. Build Failures
+
 ```bash
 # Check build logs
 vercel logs --follow
@@ -197,11 +213,13 @@ npm run start
 ```
 
 #### 2. Function Timeouts
+
 - Review function execution time in Vercel dashboard
 - Optimize database queries
 - Implement caching for slow operations
 
 #### 3. Environment Variable Issues
+
 ```bash
 # Verify all variables are set
 npm run scripts/print_env.sh
@@ -211,6 +229,7 @@ vercel env ls
 ```
 
 #### 4. Database Connection Issues
+
 - Verify DATABASE_URL format
 - Check connection pooling limits
 - Review PostgreSQL logs
@@ -218,6 +237,7 @@ vercel env ls
 ### Emergency Procedures
 
 #### Quick Rollback
+
 ```bash
 # Promote previous deployment
 vercel promote DEPLOYMENT_URL --scope=team
@@ -227,12 +247,14 @@ vercel promote DEPLOYMENT_URL --scope=team
 ```
 
 #### Feature Flag Emergency Disable
+
 ```bash
 # Disable problematic feature immediately
 vercel env add FEATURE_PROBLEMATIC_FEATURE false
 ```
 
 #### Manual Health Check
+
 ```bash
 # Test all endpoints
 curl -f https://app.maintainpro.com/health
@@ -243,18 +265,21 @@ curl -f https://app.maintainpro.com/api/auth/status
 ## Security Considerations
 
 ### Secret Management
+
 - Use Vercel's encrypted environment variables
 - Rotate secrets regularly (quarterly)
 - Never commit secrets to git
 - Use different secrets for production/preview/development
 
 ### Network Security
+
 - Enable Vercel's DDoS protection
 - Configure rate limiting in application
 - Use HTTPS everywhere (automatic with Vercel)
 - Implement proper CORS policies
 
 ### Access Control
+
 - Limit Vercel team access
 - Use GitHub branch protection rules
 - Require reviews for production deployments
@@ -263,17 +288,20 @@ curl -f https://app.maintainpro.com/api/auth/status
 ## Performance Optimization
 
 ### CDN & Caching
+
 - Static assets cached at edge locations
 - API responses cached with appropriate headers
 - Database query caching in application layer
 
 ### Bundle Optimization
+
 - Code splitting for large applications
 - Tree shaking for unused code
 - Compression and minification
 - Image optimization with Vercel's Image API
 
 ### Function Performance
+
 - Cold start optimization
 - Memory allocation tuning
 - Connection pooling
@@ -282,12 +310,14 @@ curl -f https://app.maintainpro.com/api/auth/status
 ## Cost Management
 
 ### Resource Usage
+
 - Monitor function execution time
 - Track bandwidth usage
 - Review build minutes
 - Optimize for cost efficiency
 
 ### Scaling Considerations
+
 - Auto-scaling with Vercel Pro/Enterprise
 - Database connection limits
 - External service rate limits
@@ -296,11 +326,13 @@ curl -f https://app.maintainpro.com/api/auth/status
 ## Support & Resources
 
 ### Documentation Links
+
 - [Vercel Documentation](https://vercel.com/docs)
 - [Node.js Functions](https://vercel.com/docs/functions/serverless-functions/runtimes/node-js)
 - [Environment Variables](https://vercel.com/docs/concepts/projects/environment-variables)
 
 ### Contact Information
+
 - **Technical Issues**: Create GitHub issue with `deployment` label
 - **Security Issues**: Email security@maintainpro.com
 - **Vercel Support**: Use Vercel dashboard support chat

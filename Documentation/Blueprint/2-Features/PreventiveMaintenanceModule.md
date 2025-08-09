@@ -5,27 +5,29 @@
 **Feature Name**: Preventive Maintenance Automation System  
 **Priority**: P1 (High)  
 **Module ID**: PM  
-**Dependencies**: Equipment Management, Work Order Management, User Authentication
+**Dependencies**: Equipment Management, Work Order Management, User
+Authentication
 
 ## 🎯 Description
 
-Automated scheduling, tracking, and execution of standardized preventive maintenance tasks for all
-equipment based on pre-defined frequencies and templates, with AI-driven optimization and compliance
-tracking.
+Automated scheduling, tracking, and execution of standardized preventive
+maintenance tasks for all equipment based on pre-defined frequencies and
+templates, with AI-driven optimization and compliance tracking.
 
 ## ✅ Acceptance Criteria
 
 ### PM-001: PM Template Creation & Management
 
 **Feature**: Preventive Maintenance Templates  
-**User Story**: As a maintenance planner, I can create standardized PM templates for equipment
-models to ensure consistent maintenance procedures.
+**User Story**: As a maintenance planner, I can create standardized PM templates
+for equipment models to ensure consistent maintenance procedures.
 
 **Acceptance Criteria**:
 
 - Must support template creation for specific equipment models
 - Must define component-action pairs for each template
-- Must support configurable maintenance frequencies (daily, weekly, monthly, etc.)
+- Must support configurable maintenance frequencies (daily, weekly, monthly,
+  etc.)
 - Must include custom field definitions for data collection
 - Must support template versioning and change management
 - Must enable template copying and modification
@@ -37,8 +39,8 @@ models to ensure consistent maintenance procedures.
 ### PM-002: Automated Work Order Generation
 
 **Feature**: Automatic PM Work Order Creation  
-**User Story**: As a maintenance scheduler, I want PM work orders generated automatically based on
-equipment schedules and templates.
+**User Story**: As a maintenance scheduler, I want PM work orders generated
+automatically based on equipment schedules and templates.
 
 **Acceptance Criteria**:
 
@@ -56,13 +58,14 @@ equipment schedules and templates.
 ### PM-003: PM Scheduling & Calendar Management
 
 **Feature**: PM Schedule Management  
-**User Story**: As a maintenance planner, I can manage PM schedules and calendars to optimize
-maintenance timing.
+**User Story**: As a maintenance planner, I can manage PM schedules and
+calendars to optimize maintenance timing.
 
 **Acceptance Criteria**:
 
 - Must provide visual calendar interface for PM scheduling
-- Must support multiple scheduling methods (time-based, usage-based, condition-based)
+- Must support multiple scheduling methods (time-based, usage-based,
+  condition-based)
 - Must enable schedule adjustments and rescheduling
 - Must respect equipment operating schedules and downtime windows
 - Must support seasonal and environmental scheduling considerations
@@ -75,8 +78,8 @@ maintenance timing.
 ### PM-004: PM Execution & Checklist Management
 
 **Feature**: PM Task Execution Interface  
-**User Story**: As a technician, I can execute PM tasks using standardized checklists with
-mobile-friendly interfaces.
+**User Story**: As a technician, I can execute PM tasks using standardized
+checklists with mobile-friendly interfaces.
 
 **Acceptance Criteria**:
 
@@ -94,12 +97,13 @@ mobile-friendly interfaces.
 ### PM-005: Custom Field Configuration
 
 **Feature**: Configurable PM Data Collection  
-**User Story**: As a maintenance manager, I can configure custom fields for PM templates to collect
-specific data points.
+**User Story**: As a maintenance manager, I can configure custom fields for PM
+templates to collect specific data points.
 
 **Acceptance Criteria**:
 
-- Must support multiple custom field types (text, number, date, boolean, dropdown)
+- Must support multiple custom field types (text, number, date, boolean,
+  dropdown)
 - Must enable field-specific validation rules and constraints
 - Must provide conditional field display based on other field values
 - Must support field grouping and categorization
@@ -113,8 +117,8 @@ specific data points.
 ### PM-006: PM Compliance Tracking
 
 **Feature**: PM Compliance Monitoring  
-**User Story**: As a compliance officer, I need to track PM completion rates and compliance metrics
-for regulatory reporting.
+**User Story**: As a compliance officer, I need to track PM completion rates and
+compliance metrics for regulatory reporting.
 
 **Acceptance Criteria**:
 
@@ -132,8 +136,8 @@ for regulatory reporting.
 ### PM-007: AI-Driven Schedule Optimization
 
 **Feature**: Intelligent PM Scheduling  
-**User Story**: As a maintenance manager, I want AI-driven optimization of PM schedules to maximize
-efficiency and minimize disruption.
+**User Story**: As a maintenance manager, I want AI-driven optimization of PM
+schedules to maximize efficiency and minimize disruption.
 
 **Acceptance Criteria**:
 
@@ -151,8 +155,8 @@ efficiency and minimize disruption.
 ### PM-008: PM Performance Analytics
 
 **Feature**: PM Performance Reporting  
-**User Story**: As a maintenance manager, I need comprehensive analytics on PM performance and
-effectiveness.
+**User Story**: As a maintenance manager, I need comprehensive analytics on PM
+performance and effectiveness.
 
 **Acceptance Criteria**:
 
@@ -170,8 +174,8 @@ effectiveness.
 ### PM-009: Equipment Integration & Synchronization
 
 **Feature**: Equipment-PM Integration  
-**User Story**: As a maintenance planner, I need seamless integration between equipment records and
-PM scheduling.
+**User Story**: As a maintenance planner, I need seamless integration between
+equipment records and PM scheduling.
 
 **Acceptance Criteria**:
 
@@ -189,8 +193,8 @@ PM scheduling.
 ### PM-010: Mobile PM Execution
 
 **Feature**: Mobile PM Task Management  
-**User Story**: As a field technician, I can access and complete PM tasks from my mobile device with
-full offline capability.
+**User Story**: As a field technician, I can access and complete PM tasks from
+my mobile device with full offline capability.
 
 **Acceptance Criteria**:
 

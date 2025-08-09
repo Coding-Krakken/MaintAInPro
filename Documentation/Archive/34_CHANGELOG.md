@@ -3,13 +3,15 @@
 All notable changes to MaintAInPro will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+and this project adheres to
+[Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [1.4.0] - 2025-08-07 - Enhanced Database Service & Production Ready Architecture ✨
 
 ### 🚀 Major Database Architecture Enhancement
 
 #### Added
+
 - **Enhanced Database Service**: Production-ready database abstraction layer
   - Raw SQL implementation for optimal performance and reliability
   - Comprehensive audit trails with context-aware logging
@@ -36,6 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Database schema compliance with DatabaseImplementation.md
 
 #### Enhanced
+
 - **Database Performance**: Optimized queries with strategic indexing
 - **Data Integrity**: Foreign key constraint handling and referential integrity
 - **Security**: Organization-based data isolation and audit logging
@@ -43,9 +46,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Reliability**: Error handling with detailed validation messages
 
 #### Fixed
+
 - **TypeScript Compilation**: Resolved all 6 compilation errors in storage.ts
-  - Added missing organizationId, updatedAt, deletedAt fields to Equipment objects
-  - Added missing createdBy, updatedBy, tsv fields to WorkOrder objects  
+  - Added missing organizationId, updatedAt, deletedAt fields to Equipment
+    objects
+  - Added missing createdBy, updatedBy, tsv fields to WorkOrder objects
   - Added missing organizationId, deletedAt fields to Profile objects
   - Established proper audit trail hierarchy and foreign key references
 
@@ -55,18 +60,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Improved work order identification with partial FO number matching
 
 - **Field Mapping**: Enhanced camelCase ↔ snake_case transformation reliability
-- **Foreign Key Constraints**: Implemented createTestUser method for referential integrity
+- **Foreign Key Constraints**: Implemented createTestUser method for referential
+  integrity
 - **Audit Context**: Proper context handling throughout all database operations
 
 #### Database Schema Compliance
-- **UUID Primary Keys**: All entities use UUID for distributed system compatibility
-- **Audit Fields**: Complete audit trail with createdAt, updatedAt, deletedAt, createdBy, updatedBy
+
+- **UUID Primary Keys**: All entities use UUID for distributed system
+  compatibility
+- **Audit Fields**: Complete audit trail with createdAt, updatedAt, deletedAt,
+  createdBy, updatedBy
 - **Multi-Tenant Support**: Organization-based data isolation and security
-- **Soft Delete**: Comprehensive soft delete functionality with deletedAt timestamps
+- **Soft Delete**: Comprehensive soft delete functionality with deletedAt
+  timestamps
 - **Full-Text Search**: TSV fields and optimized search capabilities
-- **Referential Integrity**: Proper foreign key relationships and constraint validation
+- **Referential Integrity**: Proper foreign key relationships and constraint
+  validation
 
 #### Performance Benchmarks
+
 - **Field Mapping**: 100 objects transformed in <100ms
 - **Database Operations**: <500ms average response time
 - **Search Queries**: <200ms for 1000+ record searches
@@ -74,12 +86,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Connection Pool**: Efficient resource management with 20 max connections
 
 #### Documentation
-- **Enhanced Database Service Documentation**: Complete API reference and usage examples
+
+- **Enhanced Database Service Documentation**: Complete API reference and usage
+  examples
 - **Test Coverage Report**: Updated with new 20 test results and 97.9% coverage
-- **Architecture Documentation**: Database layer design and implementation details
+- **Architecture Documentation**: Database layer design and implementation
+  details
 - **Performance Guidelines**: Optimization strategies and monitoring setup
 
 ### Quality Metrics
+
 - **Test Coverage**: 193/197 tests passing (97.9%)
 - **Enhanced Database Service**: 20/20 tests passing (100%)
 - **TypeScript Compilation**: Zero errors across entire codebase
@@ -91,72 +107,102 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### 🎉 Major Release - TypeScript Perfection & Enhanced Features
 
 #### Added
+
 - **TypeScript Perfection**: Complete type safety with zero compilation errors
 - **API v2 Endpoints**: 15+ enhanced endpoints with analytics, bulk operations
-- **Advanced Analytics**: Real-time dashboards with trend analysis and performance metrics
-- **Bulk Operations**: Bulk work order updates, equipment management, and data operations
+- **Advanced Analytics**: Real-time dashboards with trend analysis and
+  performance metrics
+- **Bulk Operations**: Bulk work order updates, equipment management, and data
+  operations
 - **Smart Notifications**: Context-aware notifications with intelligent routing
 - **Webhook Integration**: External system integration with webhook support
 - **Enhanced Test Suite**: 213 tests passing with comprehensive coverage (96%)
-- **Production Documentation**: Complete API docs, deployment guides, and test reports
+- **Production Documentation**: Complete API docs, deployment guides, and test
+  reports
 
 #### Enhanced
+
 - **Work Order Management**: Improved form validation and status tracking
-- **Equipment Tracking**: Enhanced asset management with better QR code integration
+- **Equipment Tracking**: Enhanced asset management with better QR code
+  integration
 - **Parts Inventory**: Advanced stock management with usage analytics
 - **PM Engine**: 100% test coverage with enterprise-grade reliability
-- **Security**: Production-hardened with IPv6-safe rate limiting and SQL injection protection
+- **Security**: Production-hardened with IPv6-safe rate limiting and SQL
+  injection protection
 - **Performance**: Database optimization with 20+ strategic indexes
 
 #### Fixed
-- **TypeScript Errors**: Resolved all compilation errors for complete type safety
+
+- **TypeScript Errors**: Resolved all compilation errors for complete type
+  safety
 - **Form Validation**: Fixed estimatedHours type conversion and enum validation
 - **Storage Layer**: Improved Profile role type handling and data consistency
 - **API Validation**: Enhanced Zod schema validation with proper error handling
 
 #### Security
+
 - **Enhanced Authentication**: Improved JWT validation and session management
 - **Rate Limiting**: IPv6-safe rate limiting with comprehensive protection
 - **Input Validation**: Multi-layer SQL injection and XSS protection
 - **Audit Logging**: Comprehensive security event tracking
 
 ### Database
+
 - **Optimized Indexes**: 20+ strategic database indexes for optimal performance
 - **Health Monitoring**: Real-time database performance monitoring
 - **Connection Pooling**: Optimized connection management for production loads
 
 ### Documentation
-- **Complete API Documentation**: Comprehensive endpoint documentation with examples
-- **Deployment Guide**: Production-ready deployment instructions for multiple platforms
+
+- **Complete API Documentation**: Comprehensive endpoint documentation with
+  examples
+- **Deployment Guide**: Production-ready deployment instructions for multiple
+  platforms
 - **Test Coverage Report**: Detailed testing documentation and coverage metrics
 - **Contributing Guide**: Complete contribution guidelines and coding standards
 
 ## [1.2.1] - 2025-07-16
 
 ### Fixed - Railway Deployment Issues
-- **Server Startup**: Fixed server startup logic to work properly in production environments
-- **Module Imports**: Resolved ES module import issues that caused runtime errors
-- **PM Services**: Made PM Engine and PM Scheduler services optional to prevent server crashes
-- **Error Handling**: Enhanced error handling throughout the application for better stability
-- **Health Check**: Improved health check endpoint with comprehensive diagnostic information
+
+- **Server Startup**: Fixed server startup logic to work properly in production
+  environments
+- **Module Imports**: Resolved ES module import issues that caused runtime
+  errors
+- **PM Services**: Made PM Engine and PM Scheduler services optional to prevent
+  server crashes
+- **Error Handling**: Enhanced error handling throughout the application for
+  better stability
+- **Health Check**: Improved health check endpoint with comprehensive diagnostic
+  information
 - **Logging**: Added extensive logging for better deployment troubleshooting
 
 ### Added - Deployment Improvements
-- **DEPLOYMENT_FIXES.md**: Comprehensive documentation of deployment fixes and troubleshooting
-- **Enhanced Health Check**: Added uptime, environment, and port information to health endpoint
+
+- **DEPLOYMENT_FIXES.md**: Comprehensive documentation of deployment fixes and
+  troubleshooting
+- **Enhanced Health Check**: Added uptime, environment, and port information to
+  health endpoint
 - **Service Guards**: Added availability checks for all PM-related API endpoints
-- **Graceful Degradation**: Application now works even when PM services are unavailable
+- **Graceful Degradation**: Application now works even when PM services are
+  unavailable
 
 ### Changed - Infrastructure
-- **Railway Configuration**: Updated health check timeout and improved deployment reliability
-- **Database Connection**: Added fallback to in-memory storage for better deployment flexibility
-- **Static File Serving**: Enhanced static file serving with better error handling and logging
+
+- **Railway Configuration**: Updated health check timeout and improved
+  deployment reliability
+- **Database Connection**: Added fallback to in-memory storage for better
+  deployment flexibility
+- **Static File Serving**: Enhanced static file serving with better error
+  handling and logging
 
 ## [1.2.0] - 2025-07-16
 
 ### Added - Preventive Maintenance System Enhancement
+
 - **PMManagement.tsx**: Enhanced main container with real-time dashboard
-  - Quick stats overview (compliance %, overdue PMs, completed PMs, active templates)
+  - Quick stats overview (compliance %, overdue PMs, completed PMs, active
+    templates)
   - Enhanced tab navigation with icons
   - Real-time data updates from API endpoints
 - **PMComplianceDashboard.tsx**: Advanced compliance monitoring
@@ -180,6 +226,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Priority levels (High, Medium, Low)
 
 ### Enhanced - Technical Infrastructure
+
 - **API Integration**: TanStack Query for efficient data fetching
 - **Real-time Updates**: Configurable refresh intervals
 - **Error Handling**: User-friendly toast notifications
@@ -189,12 +236,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **File Upload**: Fixed FileUploadOptions interface with validation properties
 
 ### Fixed
+
 - TypeScript compilation errors in file upload service
 - Import path issues with shared schema
 - Toast notification implementation using local useToast hook
 - PM template type definitions and validation
 
 ### API Endpoints Tested
+
 - `GET /api/pm-templates` - Template retrieval
 - `POST /api/pm-templates` - Template creation
 - `GET /api/pm-compliance` - Compliance monitoring
@@ -204,6 +253,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.1.0] - Previous Release
 
 ### Added
+
 - Comprehensive E2E testing framework with Playwright
 - Multi-browser testing support (Chrome, Firefox, Safari, Mobile)
 - Auto-server startup for E2E tests
@@ -213,12 +263,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Authentication flow testing with proper error handling
 
 ### Changed
+
 - Updated sample data to use consistent warehouse and user IDs
 - Improved error handling in server middleware
 - Enhanced user menu visibility on mobile devices
 - Streamlined test script organization in package.json
 
 ### Fixed
+
 - Warehouse ID mismatch in sample data causing empty API responses
 - Authentication route missing `/login` endpoint
 - User menu not visible on mobile devices during testing
@@ -227,6 +279,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.0] - 2024-01-15
 
 ### Added
+
 - Initial release of MaintainPro CMMS
 - Complete work order management system
 - Equipment tracking with QR code support
@@ -240,6 +293,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Mobile-first design for field operations
 
 ### Core Features
+
 - **Work Order Management**: Complete lifecycle from creation to completion
 - **Equipment Tracking**: Asset management with QR codes and maintenance history
 - **Inventory Control**: Parts management with automated reorder alerts
@@ -248,6 +302,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Mobile Support**: Optimized for field technicians and mobile devices
 
 ### Technical Implementation
+
 - **Frontend**: React 18 + TypeScript + Vite + Tailwind CSS
 - **Backend**: Express.js + TypeScript + PostgreSQL + Drizzle ORM
 - **Testing**: Vitest + Playwright + React Testing Library
@@ -256,6 +311,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Authentication**: JWT-based with role validation
 
 ### Initial Modules
+
 - Work Order Management
 - Equipment & Asset Tracking
 - Parts & Inventory Management
@@ -266,6 +322,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Development Notes
 
 ### Testing Strategy
+
 - **Unit Tests**: 17/17 passing - Component and utility testing
 - **Integration Tests**: 3/3 passing - API and database integration
 - **E2E Tests**: Authentication flow working - Browser-based testing
@@ -273,12 +330,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Multi-Browser**: Chrome, Firefox, Safari, Mobile support
 
 ### Performance Metrics
+
 - **Initial Load**: < 2 seconds
 - **API Response**: < 500ms average
 - **Database Queries**: Optimized with proper indexing
 - **Bundle Size**: Optimized with code splitting
 
 ### Security Features
+
 - Input validation with Zod schemas
 - SQL injection protection
 - XSS prevention
@@ -286,6 +345,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Secure session management
 
 ### Future Roadmap
+
 - Real-time notifications
 - Advanced analytics and reporting
 - IoT sensor integration

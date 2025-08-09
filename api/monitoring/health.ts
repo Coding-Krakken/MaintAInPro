@@ -10,7 +10,7 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  
+
   // Handle preflight requests
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
@@ -27,14 +27,16 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
       timestamp: new Date().toISOString(),
       uptime: process.uptime(),
       metrics: {
-        memoryUsage: Math.round((process.memoryUsage().heapUsed / process.memoryUsage().heapTotal) * 100),
+        memoryUsage: Math.round(
+          (process.memoryUsage().heapUsed / process.memoryUsage().heapTotal) * 100
+        ),
         avgResponseTime: Math.floor(Math.random() * 100) + 50, // Simulated
         requestCount: Math.floor(Math.random() * 1000) + 100, // Simulated
         errorCount: Math.floor(Math.random() * 5), // Simulated
       },
       activeAlerts: 0,
       environment: 'serverless',
-      deployment: process.env.VERCEL_URL || 'local'
+      deployment: process.env.VERCEL_URL || 'local',
     };
 
     res.status(200).json(health);
@@ -43,7 +45,7 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
     res.status(500).json({
       status: 'error',
       timestamp: new Date().toISOString(),
-      error: error instanceof Error ? error.message : 'Unknown error'
+      error: error instanceof Error ? error.message : 'Unknown error',
     });
   }
 }

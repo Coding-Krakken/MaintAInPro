@@ -9,17 +9,18 @@
 
 ## 🎯 Description
 
-Centralized tracking and management of all equipment and assets across warehouses, providing the
-foundation for work orders, preventive maintenance scheduling, and asset lifecycle management with
-QR code integration and predictive analytics.
+Centralized tracking and management of all equipment and assets across
+warehouses, providing the foundation for work orders, preventive maintenance
+scheduling, and asset lifecycle management with QR code integration and
+predictive analytics.
 
 ## ✅ Acceptance Criteria
 
 ### EQ-001: Equipment Registration & Classification
 
 **Feature**: Equipment Asset Registration  
-**User Story**: As a maintenance manager, I can register and classify equipment so that all assets
-are properly tracked and managed.
+**User Story**: As a maintenance manager, I can register and classify equipment
+so that all assets are properly tracked and managed.
 
 **Acceptance Criteria**:
 
@@ -37,8 +38,8 @@ are properly tracked and managed.
 ### EQ-002: QR Code Generation & Integration
 
 **Feature**: QR Code Asset Identification  
-**User Story**: As a technician, I can scan QR codes to instantly identify equipment and access
-relevant information.
+**User Story**: As a technician, I can scan QR codes to instantly identify
+equipment and access relevant information.
 
 **Acceptance Criteria**:
 
@@ -56,8 +57,8 @@ relevant information.
 ### EQ-003: Asset Hierarchy & Location Tracking
 
 **Feature**: Equipment Hierarchy Management  
-**User Story**: As a maintenance planner, I can organize equipment in hierarchical structures to
-better manage complex systems.
+**User Story**: As a maintenance planner, I can organize equipment in
+hierarchical structures to better manage complex systems.
 
 **Acceptance Criteria**:
 
@@ -75,12 +76,13 @@ better manage complex systems.
 ### EQ-004: Equipment Status & Lifecycle Management
 
 **Feature**: Equipment Status Tracking  
-**User Story**: As a maintenance team, I need to track equipment status and lifecycle states to
-optimize maintenance activities.
+**User Story**: As a maintenance team, I need to track equipment status and
+lifecycle states to optimize maintenance activities.
 
 **Acceptance Criteria**:
 
-- Must track equipment operational status (Active, Inactive, Maintenance, Retired)
+- Must track equipment operational status (Active, Inactive, Maintenance,
+  Retired)
 - Must support equipment lifecycle state management
 - Must track equipment criticality levels
 - Must monitor equipment availability and downtime
@@ -94,8 +96,8 @@ optimize maintenance activities.
 ### EQ-005: Maintenance History Integration
 
 **Feature**: Equipment Maintenance History  
-**User Story**: As a technician, I can view complete maintenance history for equipment to make
-informed decisions.
+**User Story**: As a technician, I can view complete maintenance history for
+equipment to make informed decisions.
 
 **Acceptance Criteria**:
 
@@ -113,12 +115,13 @@ informed decisions.
 ### EQ-006: Asset Criticality & Priority Management
 
 **Feature**: Equipment Criticality Assessment  
-**User Story**: As a maintenance manager, I can prioritize equipment based on criticality to
-optimize resource allocation.
+**User Story**: As a maintenance manager, I can prioritize equipment based on
+criticality to optimize resource allocation.
 
 **Acceptance Criteria**:
 
-- Must support equipment criticality classification (Low, Medium, High, Critical)
+- Must support equipment criticality classification (Low, Medium, High,
+  Critical)
 - Must enable priority-based maintenance scheduling
 - Must provide criticality-based reporting and dashboards
 - Must support risk assessment and impact analysis
@@ -132,8 +135,8 @@ optimize resource allocation.
 ### EQ-007: Mobile Equipment Management
 
 **Feature**: Mobile Equipment Access  
-**User Story**: As a field technician, I can access equipment information and update status from my
-mobile device.
+**User Story**: As a field technician, I can access equipment information and
+update status from my mobile device.
 
 **Acceptance Criteria**:
 
@@ -151,8 +154,8 @@ mobile device.
 ### EQ-008: Asset Performance Analytics
 
 **Feature**: Equipment Performance Tracking  
-**User Story**: As a maintenance manager, I need comprehensive analytics on equipment performance
-and reliability.
+**User Story**: As a maintenance manager, I need comprehensive analytics on
+equipment performance and reliability.
 
 **Acceptance Criteria**:
 
@@ -170,8 +173,8 @@ and reliability.
 ### EQ-009: Equipment Documentation Management
 
 **Feature**: Equipment Documentation System  
-**User Story**: As a maintenance team, I need centralized access to all equipment documentation and
-manuals.
+**User Story**: As a maintenance team, I need centralized access to all
+equipment documentation and manuals.
 
 **Acceptance Criteria**:
 
@@ -189,8 +192,8 @@ manuals.
 ### EQ-010: Asset Warranty & Contract Management
 
 **Feature**: Equipment Warranty Tracking  
-**User Story**: As a maintenance manager, I need to track equipment warranties and service
-contracts.
+**User Story**: As a maintenance manager, I need to track equipment warranties
+and service contracts.
 
 **Acceptance Criteria**:
 

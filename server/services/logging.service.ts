@@ -14,7 +14,7 @@ enum LogLevel {
   WARN = 1,
   INFO = 2,
   HTTP = 3,
-  DEBUG = 4
+  DEBUG = 4,
 }
 
 interface LogEntry {
@@ -39,7 +39,7 @@ export class LoggingService {
     const env = process.env.NODE_ENV || 'development';
     this.logLevel = env === 'production' ? LogLevel.INFO : LogLevel.DEBUG;
     this.logDir = path.join(process.cwd(), 'logs');
-    
+
     // Ensure log directory exists
     if (!fs.existsSync(this.logDir)) {
       try {
@@ -71,7 +71,7 @@ export class LoggingService {
       service: 'MaintAInPro-CMMS',
       environment: process.env.NODE_ENV || 'development',
       version: process.env.APP_VERSION || '1.0.0',
-      meta
+      meta,
     };
   }
 
@@ -95,25 +95,25 @@ export class LoggingService {
     if (level > this.logLevel) return;
 
     const logEntry = this.createLogEntry(levelName, message, meta);
-    
+
     // Console output with color coding
     const colorMap: Record<string, string> = {
       ERROR: '\x1b[31m', // Red
-      WARN: '\x1b[33m',  // Yellow
-      INFO: '\x1b[36m',  // Cyan
-      HTTP: '\x1b[35m',  // Magenta
-      DEBUG: '\x1b[37m'  // White
+      WARN: '\x1b[33m', // Yellow
+      INFO: '\x1b[36m', // Cyan
+      HTTP: '\x1b[35m', // Magenta
+      DEBUG: '\x1b[37m', // White
     };
-    
+
     const color = colorMap[levelName] || '\x1b[37m';
     const reset = '\x1b[0m';
-    
+
     console.log(`${color}[${logEntry.timestamp}] ${levelName}: ${message}${reset}`, meta || '');
 
     // Write to file in production
     if (process.env.NODE_ENV === 'production') {
       this.writeToFile('combined.log', logEntry);
-      
+
       if (level <= LogLevel.ERROR) {
         this.writeToFile('error.log', logEntry);
       }
@@ -140,11 +140,14 @@ export class LoggingService {
   error(message: string, error?: Error | any, meta?: any): void {
     const errorMeta = {
       ...meta,
-      error: error instanceof Error ? {
-        name: error.name,
-        message: error.message,
-        stack: error.stack
-      } : error
+      error:
+        error instanceof Error
+          ? {
+              name: error.name,
+              message: error.message,
+              stack: error.stack,
+            }
+          : error,
     };
     this.log(LogLevel.ERROR, 'ERROR', message, errorMeta);
   }
@@ -178,7 +181,7 @@ export class LoggingService {
       details,
       ip: req?.ip,
       userAgent: req?.get('User-Agent'),
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
 
     // Log to console/file
@@ -187,19 +190,22 @@ export class LoggingService {
     // Log to database if available
     if (db) {
       try {
-        await db.execute(`
+        await db.execute(
+          `
           INSERT INTO system_logs (user_id, action, table_name, record_id, old_values, new_values, ip_address, user_agent)
           VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        `, [
-          userId,
-          action,
-          'user_activity',
-          null,
-          null,
-          JSON.stringify(details),
-          req?.ip || null,
-          req?.get('User-Agent') || null
-        ]);
+        `,
+          [
+            userId,
+            action,
+            'user_activity',
+            null,
+            null,
+            JSON.stringify(details),
+            req?.ip || null,
+            req?.get('User-Agent') || null,
+          ]
+        );
       } catch (error) {
         this.error('Failed to log user activity to database', error);
       }
@@ -210,7 +216,12 @@ export class LoggingService {
    * Log security event
    */
   async logSecurityEvent(
-    type: 'login_attempt' | 'login_success' | 'login_failure' | 'permission_denied' | 'suspicious_activity',
+    type:
+      | 'login_attempt'
+      | 'login_success'
+      | 'login_failure'
+      | 'permission_denied'
+      | 'suspicious_activity',
     details: any,
     req?: Request
   ): Promise<void> {
@@ -220,7 +231,7 @@ export class LoggingService {
       ip: req?.ip,
       userAgent: req?.get('User-Agent'),
       timestamp: new Date().toISOString(),
-      severity: this.getSecuritySeverity(type)
+      severity: this.getSecuritySeverity(type),
     };
 
     // Log with appropriate level
@@ -235,19 +246,22 @@ export class LoggingService {
     // Log to database if available
     if (db) {
       try {
-        await db.execute(`
+        await db.execute(
+          `
           INSERT INTO system_logs (user_id, action, table_name, record_id, old_values, new_values, ip_address, user_agent)
           VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        `, [
-          details.userId || null,
-          `security_event_${type}`,
-          'security_log',
-          null,
-          null,
-          JSON.stringify(securityData),
-          req?.ip || null,
-          req?.get('User-Agent') || null
-        ]);
+        `,
+          [
+            details.userId || null,
+            `security_event_${type}`,
+            'security_log',
+            null,
+            null,
+            JSON.stringify(securityData),
+            req?.ip || null,
+            req?.get('User-Agent') || null,
+          ]
+        );
       } catch (error) {
         this.error('Failed to log security event to database', error);
       }
@@ -272,7 +286,7 @@ export class LoggingService {
       oldValues,
       newValues,
       userId,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
 
     // Log to console/file
@@ -281,19 +295,22 @@ export class LoggingService {
     // Log to database if available and not a SELECT operation
     if (db && operation !== 'SELECT') {
       try {
-        await db.execute(`
+        await db.execute(
+          `
           INSERT INTO system_logs (user_id, action, table_name, record_id, old_values, new_values, ip_address, user_agent)
           VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        `, [
-          userId || null,
-          operation.toLowerCase(),
-          tableName,
-          recordId || null,
-          oldValues ? JSON.stringify(oldValues) : null,
-          newValues ? JSON.stringify(newValues) : null,
-          null,
-          null
-        ]);
+        `,
+          [
+            userId || null,
+            operation.toLowerCase(),
+            tableName,
+            recordId || null,
+            oldValues ? JSON.stringify(oldValues) : null,
+            newValues ? JSON.stringify(newValues) : null,
+            null,
+            null,
+          ]
+        );
       } catch (error) {
         this.error('Failed to log database operation', error);
       }
@@ -303,19 +320,16 @@ export class LoggingService {
   /**
    * Log performance metrics
    */
-  logPerformance(
-    operation: string,
-    duration: number,
-    metadata?: any
-  ): void {
+  logPerformance(operation: string, duration: number, metadata?: any): void {
     const perfData = {
       operation,
       duration,
       metadata,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
 
-    if (duration > 1000) { // Log slow operations as warnings
+    if (duration > 1000) {
+      // Log slow operations as warnings
       this.warn(`Slow Operation: ${operation} took ${duration}ms`, perfData);
     } else {
       this.debug(`Performance: ${operation} took ${duration}ms`, perfData);
@@ -325,12 +339,7 @@ export class LoggingService {
   /**
    * Log API request/response
    */
-  logApiRequest(
-    req: Request,
-    res: Response,
-    duration: number,
-    error?: Error
-  ): void {
+  logApiRequest(req: Request, res: Response, duration: number, error?: Error): void {
     const apiData = {
       method: req.method,
       url: req.url,
@@ -339,12 +348,14 @@ export class LoggingService {
       ip: req.ip,
       userAgent: req.get('User-Agent'),
       userId: (req as any).user?.id,
-      error: error ? {
-        name: error.name,
-        message: error.message,
-        stack: error.stack
-      } : undefined,
-      timestamp: new Date().toISOString()
+      error: error
+        ? {
+            name: error.name,
+            message: error.message,
+            stack: error.stack,
+          }
+        : undefined,
+      timestamp: new Date().toISOString(),
     };
 
     if (error || res.statusCode >= 400) {
@@ -361,11 +372,11 @@ export class LoggingService {
    */
   private getSecuritySeverity(type: string): 'low' | 'medium' | 'high' {
     const severityMap: Record<string, 'low' | 'medium' | 'high'> = {
-      'login_attempt': 'low',
-      'login_success': 'low',
-      'login_failure': 'medium',
-      'permission_denied': 'medium',
-      'suspicious_activity': 'high'
+      login_attempt: 'low',
+      login_success: 'low',
+      login_failure: 'medium',
+      permission_denied: 'medium',
+      suspicious_activity: 'high',
     };
     return severityMap[type] || 'medium';
   }
@@ -380,7 +391,7 @@ export class LoggingService {
       { level: 'ERROR', count: 0 },
       { level: 'WARN', count: 0 },
       { level: 'INFO', count: 0 },
-      { level: 'DEBUG', count: 0 }
+      { level: 'DEBUG', count: 0 },
     ];
   }
 }
@@ -397,7 +408,7 @@ export function httpLoggingMiddleware(req: Request, res: Response, next: Functio
 
   // Override res.end to capture response time
   const originalEnd = res.end;
-  res.end = function(...args: any[]) {
+  res.end = function (...args: any[]) {
     const duration = Date.now() - startTime;
     loggingService.logApiRequest(req, res, duration);
     return originalEnd.apply(this, args);
@@ -409,12 +420,17 @@ export function httpLoggingMiddleware(req: Request, res: Response, next: Functio
 /**
  * Error logging middleware
  */
-export function errorLoggingMiddleware(error: Error, req: Request, res: Response, next: Function): void {
+export function errorLoggingMiddleware(
+  error: Error,
+  req: Request,
+  res: Response,
+  next: Function
+): void {
   const loggingService = LoggingService.getInstance();
   const duration = Date.now() - ((req as any).startTime || 0);
-  
+
   loggingService.logApiRequest(req, res, duration, error);
-  
+
   // Continue with error handling
   next(error);
 }

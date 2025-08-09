@@ -40,9 +40,10 @@ export class WebSocketService {
         return;
       }
 
-      const wsUrl = process.env.NODE_ENV === 'production'
-        ? `${window.location.protocol}//${window.location.host}`
-        : 'http://localhost:5000';
+      const wsUrl =
+        process.env.NODE_ENV === 'production'
+          ? `${window.location.protocol}//${window.location.host}`
+          : 'http://localhost:5000';
 
       this.socket = io(wsUrl, {
         transports: ['websocket', 'polling'],
@@ -50,7 +51,7 @@ export class WebSocketService {
         reconnection: true,
         reconnectionAttempts: this.maxReconnectAttempts,
         reconnectionDelay: this.reconnectDelay,
-        timeout: 10000
+        timeout: 10000,
       });
 
       this.setupEventListeners();
@@ -67,28 +68,28 @@ export class WebSocketService {
       console.log('WebSocket connected:', this.socket?.id);
       this.isConnected = true;
       this.reconnectAttempts = 0;
-      
+
       // Authenticate with current user data
       this.authenticate();
     });
 
-    this.socket.on('disconnect', (reason) => {
+    this.socket.on('disconnect', reason => {
       console.log('WebSocket disconnected:', reason);
       this.isConnected = false;
-      
+
       if (reason === 'io server disconnect') {
         // Reconnection will be handled automatically
         console.log('Server initiated disconnect, will retry...');
       }
     });
 
-    this.socket.on('authenticated', (data) => {
+    this.socket.on('authenticated', data => {
       console.log('WebSocket authentication successful:', data);
       // Subscribe to relevant channels
       this.subscribeToDefaultChannels();
     });
 
-    this.socket.on('authentication_error', (error) => {
+    this.socket.on('authentication_error', error => {
       console.error('WebSocket authentication failed:', error);
     });
 
@@ -113,32 +114,32 @@ export class WebSocketService {
     });
 
     // Specific update handlers
-    this.socket.on('work_order_update', (data) => {
+    this.socket.on('work_order_update', data => {
       this.notifySubscribers('work_order_update', data);
     });
 
-    this.socket.on('equipment_update', (data) => {
+    this.socket.on('equipment_update', data => {
       this.notifySubscribers('equipment_update', data);
     });
 
-    this.socket.on('inventory_update', (data) => {
+    this.socket.on('inventory_update', data => {
       this.notifySubscribers('inventory_update', data);
     });
 
-    this.socket.on('pm_update', (data) => {
+    this.socket.on('pm_update', data => {
       this.notifySubscribers('pm_update', data);
     });
 
-    this.socket.on('connect_error', (error) => {
+    this.socket.on('connect_error', error => {
       console.error('WebSocket connection error:', error);
       this.isConnected = false;
     });
 
-    this.socket.on('reconnect', (attemptNumber) => {
+    this.socket.on('reconnect', attemptNumber => {
       console.log(`WebSocket reconnected after ${attemptNumber} attempts`);
     });
 
-    this.socket.on('reconnect_error', (error) => {
+    this.socket.on('reconnect_error', error => {
       console.error('WebSocket reconnection failed:', error);
     });
   }
@@ -166,12 +167,12 @@ export class WebSocketService {
 
   private handleNotification(notification: NotificationData): void {
     console.log('Received notification:', notification);
-    
+
     // Show toast notification
     toast({
       title: notification.title,
       description: notification.message,
-      variant: notification.type === 'error' ? 'destructive' : 'default'
+      variant: notification.type === 'error' ? 'destructive' : 'default',
     });
 
     // Notify subscribers
@@ -195,12 +196,12 @@ export class WebSocketService {
 
   private handleSystemAlert(data: WebSocketNotification): void {
     console.log('System alert received:', data);
-    
+
     // Show important system alerts as persistent toasts
     toast({
       title: 'System Alert',
       description: data.data?.message || 'System notification received',
-      variant: 'destructive'
+      variant: 'destructive',
     });
 
     this.notifySubscribers('system_alert', data);
@@ -220,7 +221,7 @@ export class WebSocketService {
 
   public subscribe(event: string, callback: (data: any) => void): () => void {
     this.subscriptions.set(event, callback);
-    
+
     // Return unsubscribe function
     return () => {
       this.subscriptions.delete(event);
@@ -229,14 +230,14 @@ export class WebSocketService {
 
   public sendTestNotification(): void {
     if (!this.socket) return;
-    
+
     fetch('/api/notifications/test', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'x-user-id': localStorage.getItem('userId') || '',
         'x-warehouse-id': localStorage.getItem('warehouseId') || '',
-      }
+      },
     }).catch(error => {
       console.error('Failed to send test notification:', error);
     });
@@ -270,7 +271,7 @@ export class WebSocketService {
     return {
       connected: this.isConnected,
       socketId: this.socket?.id || null,
-      reconnectAttempts: this.reconnectAttempts
+      reconnectAttempts: this.reconnectAttempts,
     };
   }
 

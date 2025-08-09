@@ -71,31 +71,33 @@ describe('PMEngine', () => {
         createdAt: new Date(),
       };
 
-      const mockWorkOrders: WorkOrder[] = [{
-        id: 'wo-1',
-        foNumber: 'WO-001',
-        warehouseId: mockWarehouseId,
-        type: 'preventive',
-        description: 'PM Work Order',
-        area: 'Test Area',
-        assetModel: 'Test Model',
-        status: 'completed',
-        priority: 'medium',
-        requestedBy: 'user-1',
-        assignedTo: 'user-2',
-        equipmentId: mockEquipmentId,
-        dueDate: pastDate,
-        completedAt: pastDate,
-        verifiedBy: null,
-        estimatedHours: '2.0',
-        actualHours: '2.0',
-        notes: null,
-        followUp: false,
-        escalated: false,
-        escalationLevel: 0,
-        createdAt: pastDate,
-        updatedAt: pastDate,
-      }];
+      const mockWorkOrders: WorkOrder[] = [
+        {
+          id: 'wo-1',
+          foNumber: 'WO-001',
+          warehouseId: mockWarehouseId,
+          type: 'preventive',
+          description: 'PM Work Order',
+          area: 'Test Area',
+          assetModel: 'Test Model',
+          status: 'completed',
+          priority: 'medium',
+          requestedBy: 'user-1',
+          assignedTo: 'user-2',
+          equipmentId: mockEquipmentId,
+          dueDate: pastDate,
+          completedAt: pastDate,
+          verifiedBy: null,
+          estimatedHours: '2.0',
+          actualHours: '2.0',
+          notes: null,
+          followUp: false,
+          escalated: false,
+          escalationLevel: 0,
+          createdAt: pastDate,
+          updatedAt: pastDate,
+        },
+      ];
 
       vi.mocked(storage.getPmTemplate).mockResolvedValue(mockTemplate);
       vi.mocked(storage.getWorkOrders).mockResolvedValue(mockWorkOrders);
@@ -164,49 +166,53 @@ describe('PMEngine', () => {
         createdAt: pastDate,
       };
 
-      const mockEquipment: Equipment[] = [{
-        id: mockEquipmentId,
-        assetTag: 'FO-001',
-        model: 'Test Model',
-        description: 'Test equipment',
-        area: 'Test Area',
-        status: 'active',
-        criticality: 'high',
-        installDate: pastDate,
-        warrantyExpiry: null,
-        manufacturer: 'Test Manufacturer',
-        serialNumber: 'SN-001',
-        specifications: {},
-        warehouseId: mockWarehouseId,
-        createdAt: pastDate,
-      }];
+      const mockEquipment: Equipment[] = [
+        {
+          id: mockEquipmentId,
+          assetTag: 'FO-001',
+          model: 'Test Model',
+          description: 'Test equipment',
+          area: 'Test Area',
+          status: 'active',
+          criticality: 'high',
+          installDate: pastDate,
+          warrantyExpiry: null,
+          manufacturer: 'Test Manufacturer',
+          serialNumber: 'SN-001',
+          specifications: {},
+          warehouseId: mockWarehouseId,
+          createdAt: pastDate,
+        },
+      ];
 
       // Mock a completed PM work order from over a month ago to make the next PM due
-      const mockWorkOrders: WorkOrder[] = [{
-        id: 'past-wo-1',
-        foNumber: 'WO-PAST-001',
-        warehouseId: mockWarehouseId,
-        type: 'preventive',
-        description: 'Past PM Work Order',
-        area: 'Test Area',
-        assetModel: 'Test Model',
-        status: 'completed',
-        priority: 'medium',
-        requestedBy: 'system',
-        assignedTo: 'user-1',
-        equipmentId: mockEquipmentId,
-        dueDate: pastDate,
-        completedAt: pastDate,
-        verifiedBy: null,
-        estimatedHours: '2.0',
-        actualHours: '2.0',
-        notes: null,
-        followUp: false,
-        escalated: false,
-        escalationLevel: 0,
-        createdAt: pastDate,
-        updatedAt: pastDate,
-      }];
+      const mockWorkOrders: WorkOrder[] = [
+        {
+          id: 'past-wo-1',
+          foNumber: 'WO-PAST-001',
+          warehouseId: mockWarehouseId,
+          type: 'preventive',
+          description: 'Past PM Work Order',
+          area: 'Test Area',
+          assetModel: 'Test Model',
+          status: 'completed',
+          priority: 'medium',
+          requestedBy: 'system',
+          assignedTo: 'user-1',
+          equipmentId: mockEquipmentId,
+          dueDate: pastDate,
+          completedAt: pastDate,
+          verifiedBy: null,
+          estimatedHours: '2.0',
+          actualHours: '2.0',
+          notes: null,
+          followUp: false,
+          escalated: false,
+          escalationLevel: 0,
+          createdAt: pastDate,
+          updatedAt: pastDate,
+        },
+      ];
 
       vi.mocked(storage.getPmTemplates).mockResolvedValue([mockTemplate]);
       vi.mocked(storage.getPmTemplate).mockResolvedValue(mockTemplate);
@@ -258,48 +264,52 @@ describe('PMEngine', () => {
         createdAt: new Date(),
       };
 
-      const mockEquipment: Equipment[] = [{
-        id: mockEquipmentId,
-        assetTag: 'FO-001',
-        model: 'Test Model',
-        description: 'Test equipment',
-        area: 'Test Area',
-        status: 'active',
-        criticality: 'high',
-        installDate: new Date(),
-        warrantyExpiry: null,
-        manufacturer: 'Test Manufacturer',
-        serialNumber: 'SN-001',
-        specifications: {},
-        warehouseId: mockWarehouseId,
-        createdAt: new Date(),
-      }];
+      const mockEquipment: Equipment[] = [
+        {
+          id: mockEquipmentId,
+          assetTag: 'FO-001',
+          model: 'Test Model',
+          description: 'Test equipment',
+          area: 'Test Area',
+          status: 'active',
+          criticality: 'high',
+          installDate: new Date(),
+          warrantyExpiry: null,
+          manufacturer: 'Test Manufacturer',
+          serialNumber: 'SN-001',
+          specifications: {},
+          warehouseId: mockWarehouseId,
+          createdAt: new Date(),
+        },
+      ];
 
-      const mockWorkOrders: WorkOrder[] = [{
-        id: 'wo-1',
-        foNumber: 'WO-001',
-        warehouseId: mockWarehouseId,
-        type: 'preventive',
-        description: 'Existing PM Work Order',
-        area: 'Test Area',
-        assetModel: 'Test Model',
-        status: 'new',
-        priority: 'medium',
-        requestedBy: 'system',
-        assignedTo: null,
-        equipmentId: mockEquipmentId,
-        dueDate: new Date(),
-        completedAt: null,
-        verifiedBy: null,
-        estimatedHours: '2.0',
-        actualHours: null,
-        notes: null,
-        followUp: false,
-        escalated: false,
-        escalationLevel: 0,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      }];
+      const mockWorkOrders: WorkOrder[] = [
+        {
+          id: 'wo-1',
+          foNumber: 'WO-001',
+          warehouseId: mockWarehouseId,
+          type: 'preventive',
+          description: 'Existing PM Work Order',
+          area: 'Test Area',
+          assetModel: 'Test Model',
+          status: 'new',
+          priority: 'medium',
+          requestedBy: 'system',
+          assignedTo: null,
+          equipmentId: mockEquipmentId,
+          dueDate: new Date(),
+          completedAt: null,
+          verifiedBy: null,
+          estimatedHours: '2.0',
+          actualHours: null,
+          notes: null,
+          followUp: false,
+          escalated: false,
+          escalationLevel: 0,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ];
 
       vi.mocked(storage.getPmTemplates).mockResolvedValue([mockTemplate]);
       vi.mocked(storage.getPmTemplate).mockResolvedValue(mockTemplate);
@@ -347,22 +357,24 @@ describe('PMEngine', () => {
         createdAt: new Date(),
       };
 
-      const mockEquipment: Equipment[] = [{
-        id: mockEquipmentId,
-        assetTag: 'FO-001',
-        model: 'Test Model',
-        description: 'Test equipment',
-        area: 'Test Area',
-        status: 'active',
-        criticality: 'high',
-        installDate: new Date(),
-        warrantyExpiry: null,
-        manufacturer: 'Test Manufacturer',
-        serialNumber: 'SN-001',
-        specifications: {},
-        warehouseId: mockWarehouseId,
-        createdAt: new Date(),
-      }];
+      const mockEquipment: Equipment[] = [
+        {
+          id: mockEquipmentId,
+          assetTag: 'FO-001',
+          model: 'Test Model',
+          description: 'Test equipment',
+          area: 'Test Area',
+          status: 'active',
+          criticality: 'high',
+          installDate: new Date(),
+          warrantyExpiry: null,
+          manufacturer: 'Test Manufacturer',
+          serialNumber: 'SN-001',
+          specifications: {},
+          warehouseId: mockWarehouseId,
+          createdAt: new Date(),
+        },
+      ];
 
       vi.mocked(storage.getPmTemplates).mockResolvedValue([mockTemplate]);
       vi.mocked(storage.getPmTemplate).mockResolvedValue(mockTemplate);

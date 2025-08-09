@@ -2,18 +2,24 @@
 
 ## Overview
 
-MaintainPro CMMS now features a comprehensive, enterprise-grade authentication and authorization system designed for maximum security and user experience. This system implements industry best practices and provides multiple layers of security.
+MaintainPro CMMS now features a comprehensive, enterprise-grade authentication
+and authorization system designed for maximum security and user experience. This
+system implements industry best practices and provides multiple layers of
+security.
 
 ## Features
 
 ### 🔐 Core Authentication
+
 - **JWT Token Management**: Secure token generation, validation, and refresh
 - **Session Management**: Advanced session handling with device tracking
-- **Password Security**: Bcrypt hashing with salt, password policies, and history
+- **Password Security**: Bcrypt hashing with salt, password policies, and
+  history
 - **Multi-Factor Authentication (MFA)**: TOTP-based 2FA support
 - **Role-Based Access Control (RBAC)**: Granular permissions system
 
 ### 🛡️ Security Features
+
 - **Rate Limiting**: Brute force protection on auth endpoints
 - **Account Lockout**: Automatic lockout after failed attempts
 - **Device Fingerprinting**: Track and identify user devices
@@ -22,6 +28,7 @@ MaintainPro CMMS now features a comprehensive, enterprise-grade authentication a
 - **Input Validation**: Comprehensive data sanitization
 
 ### 🔑 User Management
+
 - **User Registration**: Secure account creation with email verification
 - **Password Reset**: Secure password recovery via email
 - **Profile Management**: User profile updates and settings
@@ -32,6 +39,7 @@ MaintainPro CMMS now features a comprehensive, enterprise-grade authentication a
 ### Authentication
 
 #### Login
+
 ```http
 POST /api/auth/login
 Content-Type: application/json
@@ -46,6 +54,7 @@ Content-Type: application/json
 ```
 
 **Response:**
+
 ```json
 {
   "user": {
@@ -65,12 +74,14 @@ Content-Type: application/json
 ```
 
 #### Logout
+
 ```http
 POST /api/auth/logout
 Authorization: Bearer <token>
 ```
 
 #### Token Refresh
+
 ```http
 POST /api/auth/refresh
 Content-Type: application/json
@@ -83,6 +94,7 @@ Content-Type: application/json
 ### Multi-Factor Authentication
 
 #### Setup MFA
+
 ```http
 POST /api/auth/mfa/setup
 Authorization: Bearer <token>
@@ -95,6 +107,7 @@ Content-Type: application/json
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -107,6 +120,7 @@ Content-Type: application/json
 ```
 
 #### Enable MFA
+
 ```http
 POST /api/auth/mfa/enable
 Authorization: Bearer <token>
@@ -136,6 +150,7 @@ Content-Type: application/json
 ### Password Management
 
 #### Request Password Reset
+
 ```http
 POST /api/auth/password-reset
 Content-Type: application/json
@@ -146,6 +161,7 @@ Content-Type: application/json
 ```
 
 #### Confirm Password Reset
+
 ```http
 POST /api/auth/password-reset/confirm
 Content-Type: application/json
@@ -159,18 +175,21 @@ Content-Type: application/json
 ### Session Management
 
 #### Get User Sessions
+
 ```http
 GET /api/auth/sessions
 Authorization: Bearer <token>
 ```
 
 #### End Specific Session
+
 ```http
 DELETE /api/auth/sessions/:sessionId
 Authorization: Bearer <token>
 ```
 
 #### End All Sessions
+
 ```http
 DELETE /api/auth/sessions
 Authorization: Bearer <token>
@@ -212,6 +231,7 @@ Authorization: Bearer <token>
 Permissions follow the format: `resource:action`
 
 Examples:
+
 - `work_order:read`
 - `work_order:create`
 - `work_order:update`
@@ -236,7 +256,7 @@ const {
   changePassword,
   refreshToken,
   isAuthenticated,
-  mfaRequired
+  mfaRequired,
 } = useAuth();
 ```
 
@@ -245,7 +265,7 @@ const {
 ```typescript
 const handleLogin = async () => {
   const result = await login(email, password, mfaToken);
-  
+
   if (result.requiresMFA) {
     // Show MFA input form
     setShowMfaInput(true);
@@ -262,20 +282,20 @@ const handleLogin = async () => {
 ### Protected Routes
 
 ```typescript
-function ProtectedRoute({ children, requiredRole }: { 
+function ProtectedRoute({ children, requiredRole }: {
   children: React.ReactNode;
   requiredRole?: string;
 }) {
   const { isAuthenticated, user } = useAuth();
-  
+
   if (!isAuthenticated) {
     return <Navigate to="/login" />;
   }
-  
+
   if (requiredRole && user?.role !== requiredRole) {
     return <Navigate to="/unauthorized" />;
   }
-  
+
   return <>{children}</>;
 }
 ```
@@ -333,6 +353,7 @@ Permissions-Policy: geolocation=(), microphone=(), camera=()
 ## Database Schema
 
 ### Users Table
+
 ```sql
 CREATE TABLE users (
   id UUID PRIMARY KEY,
@@ -350,6 +371,7 @@ CREATE TABLE users (
 ```
 
 ### User Credentials Table
+
 ```sql
 CREATE TABLE user_credentials (
   id UUID PRIMARY KEY,
@@ -366,6 +388,7 @@ CREATE TABLE user_credentials (
 ```
 
 ### Sessions Table
+
 ```sql
 CREATE TABLE user_sessions (
   id UUID PRIMARY KEY,
@@ -381,6 +404,7 @@ CREATE TABLE user_sessions (
 ```
 
 ### MFA Configuration Table
+
 ```sql
 CREATE TABLE user_mfa (
   id UUID PRIMARY KEY,
@@ -395,6 +419,7 @@ CREATE TABLE user_mfa (
 ```
 
 ### Audit Log Table
+
 ```sql
 CREATE TABLE audit_logs (
   id UUID PRIMARY KEY,
@@ -421,20 +446,20 @@ const demoUsers = [
     email: 'supervisor@maintainpro.com',
     password: 'demo123',
     role: 'supervisor',
-    name: 'John Smith'
+    name: 'John Smith',
   },
   {
     email: 'technician@maintainpro.com',
     password: 'demo123',
     role: 'technician',
-    name: 'Sarah Wilson'
+    name: 'Sarah Wilson',
   },
   {
     email: 'manager@maintainpro.com',
     password: 'demo123',
     role: 'manager',
-    name: 'Mike Johnson'
-  }
+    name: 'Mike Johnson',
+  },
 ];
 ```
 
@@ -448,6 +473,7 @@ const demoUsers = [
 ## Security Best Practices
 
 ### Development
+
 - Never commit secrets to version control
 - Use environment variables for all configuration
 - Regularly update dependencies
@@ -455,6 +481,7 @@ const demoUsers = [
 - Implement proper error handling
 
 ### Production
+
 - Use HTTPS everywhere
 - Implement proper logging and monitoring
 - Regular security audits
@@ -463,6 +490,7 @@ const demoUsers = [
 - Implement proper backup strategies
 
 ### Deployment
+
 - Use secure environment variable management
 - Implement proper secrets rotation
 - Monitor authentication metrics
@@ -472,6 +500,7 @@ const demoUsers = [
 ## Monitoring and Alerts
 
 ### Key Metrics to Monitor
+
 - Failed login attempts
 - Account lockouts
 - MFA bypass attempts
@@ -480,6 +509,7 @@ const demoUsers = [
 - Password reset requests
 
 ### Recommended Alerts
+
 - Multiple failed logins from same IP
 - Account lockout events
 - MFA setup/disable events
@@ -490,6 +520,7 @@ const demoUsers = [
 ## Compliance
 
 This authentication system is designed to meet:
+
 - OWASP Top 10 security guidelines
 - NIST authentication standards
 - GDPR privacy requirements
@@ -499,6 +530,7 @@ This authentication system is designed to meet:
 ## Support
 
 For technical support or security concerns, please contact:
+
 - Development Team: dev@maintainpro.com
 - Security Team: security@maintainpro.com
 - Documentation: docs@maintainpro.com
@@ -506,6 +538,7 @@ For technical support or security concerns, please contact:
 ## Contributing
 
 When contributing to the authentication system:
+
 1. Follow security coding guidelines
 2. Add appropriate tests
 3. Update documentation

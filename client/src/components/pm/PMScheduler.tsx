@@ -43,7 +43,7 @@ export default function PMScheduler() {
         description: 'PM scheduler started successfully',
       });
     },
-    onError: (error) => {
+    onError: error => {
       toast({
         title: 'Error',
         description: `Failed to start scheduler: ${error.message}`,
@@ -67,7 +67,7 @@ export default function PMScheduler() {
         description: 'PM scheduler stopped successfully',
       });
     },
-    onError: (error) => {
+    onError: error => {
       toast({
         title: 'Error',
         description: `Failed to stop scheduler: ${error.message}`,
@@ -94,7 +94,7 @@ export default function PMScheduler() {
         description: 'PM scheduler run completed',
       });
     },
-    onError: (error) => {
+    onError: error => {
       toast({
         title: 'Error',
         description: `Failed to run scheduler: ${error.message}`,
@@ -117,22 +117,24 @@ export default function PMScheduler() {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      <div className='flex justify-center items-center h-64'>
+        <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600'></div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-900">PM Scheduler</h1>
+    <div className='space-y-6'>
+      <div className='flex justify-between items-center'>
+        <h1 className='text-2xl font-bold text-gray-900'>PM Scheduler</h1>
         <Button
           onClick={handleManualRun}
           disabled={runSchedulerMutation.isPending}
-          variant="outline"
+          variant='outline'
         >
-          <RefreshCw className={`w-4 h-4 mr-2 ${runSchedulerMutation.isPending ? 'animate-spin' : ''}`} />
+          <RefreshCw
+            className={`w-4 h-4 mr-2 ${runSchedulerMutation.isPending ? 'animate-spin' : ''}`}
+          />
           Run Now
         </Button>
       </div>
@@ -140,42 +142,45 @@ export default function PMScheduler() {
       {/* Scheduler Status */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <Settings className="w-5 h-5" />
+          <CardTitle className='flex items-center space-x-2'>
+            <Settings className='w-5 h-5' />
             <span>Scheduler Status</span>
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <Label htmlFor="scheduler-toggle" className="text-sm font-medium">
+          <div className='space-y-4'>
+            <div className='flex items-center justify-between'>
+              <div className='flex items-center space-x-3'>
+                <Label htmlFor='scheduler-toggle' className='text-sm font-medium'>
                   Automatic PM Generation
                 </Label>
                 <Badge variant={schedulerStatus?.isRunning ? 'default' : 'secondary'}>
                   {schedulerStatus?.isRunning ? 'Running' : 'Stopped'}
                 </Badge>
               </div>
-              <div className="flex items-center space-x-2">
+              <div className='flex items-center space-x-2'>
                 <Switch
-                  id="scheduler-toggle"
+                  id='scheduler-toggle'
                   checked={schedulerStatus?.isRunning}
                   onCheckedChange={handleToggleScheduler}
                   disabled={startSchedulerMutation.isPending || stopSchedulerMutation.isPending}
                 />
                 {schedulerStatus?.isRunning ? (
-                  <Pause className="w-4 h-4 text-gray-500" />
+                  <Pause className='w-4 h-4 text-gray-500' />
                 ) : (
-                  <Play className="w-4 h-4 text-gray-500" />
+                  <Play className='w-4 h-4 text-gray-500' />
                 )}
               </div>
             </div>
-            
-            <div className="text-sm text-gray-600">
-              <p>The PM scheduler automatically generates preventive maintenance work orders based on your templates and equipment schedules.</p>
+
+            <div className='text-sm text-gray-600'>
+              <p>
+                The PM scheduler automatically generates preventive maintenance work orders based on
+                your templates and equipment schedules.
+              </p>
               {schedulerStatus?.isRunning && (
-                <p className="mt-2 flex items-center text-green-600">
-                  <Clock className="w-4 h-4 mr-1" />
+                <p className='mt-2 flex items-center text-green-600'>
+                  <Clock className='w-4 h-4 mr-1' />
                   Runs every hour to check for due PMs
                 </p>
               )}
@@ -190,26 +195,28 @@ export default function PMScheduler() {
           <CardTitle>Schedule Information</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-4 bg-gray-50 rounded-lg">
-                <h3 className="font-medium text-gray-900 mb-2">Frequency</h3>
-                <p className="text-sm text-gray-600">
-                  The scheduler runs every hour to check for equipment that needs preventive maintenance
+          <div className='space-y-4'>
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+              <div className='p-4 bg-gray-50 rounded-lg'>
+                <h3 className='font-medium text-gray-900 mb-2'>Frequency</h3>
+                <p className='text-sm text-gray-600'>
+                  The scheduler runs every hour to check for equipment that needs preventive
+                  maintenance
                 </p>
               </div>
-              
-              <div className="p-4 bg-gray-50 rounded-lg">
-                <h3 className="font-medium text-gray-900 mb-2">Work Order Generation</h3>
-                <p className="text-sm text-gray-600">
-                  PM work orders are automatically created when equipment becomes due for maintenance
+
+              <div className='p-4 bg-gray-50 rounded-lg'>
+                <h3 className='font-medium text-gray-900 mb-2'>Work Order Generation</h3>
+                <p className='text-sm text-gray-600'>
+                  PM work orders are automatically created when equipment becomes due for
+                  maintenance
                 </p>
               </div>
             </div>
 
-            <div className="p-4 bg-blue-50 rounded-lg">
-              <h3 className="font-medium text-blue-900 mb-2">How it works</h3>
-              <ul className="text-sm text-blue-800 space-y-1">
+            <div className='p-4 bg-blue-50 rounded-lg'>
+              <h3 className='font-medium text-blue-900 mb-2'>How it works</h3>
+              <ul className='text-sm text-blue-800 space-y-1'>
                 <li>• Checks all active equipment against PM templates</li>
                 <li>• Calculates next due dates based on frequency and last completion</li>
                 <li>• Creates work orders for overdue or due equipment</li>
@@ -227,29 +234,31 @@ export default function PMScheduler() {
           <CardTitle>Manual Actions</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            <div className="flex items-center justify-between p-4 border rounded-lg">
+          <div className='space-y-4'>
+            <div className='flex items-center justify-between p-4 border rounded-lg'>
               <div>
-                <h3 className="font-medium">Run PM Generation Now</h3>
-                <p className="text-sm text-gray-600">
+                <h3 className='font-medium'>Run PM Generation Now</h3>
+                <p className='text-sm text-gray-600'>
                   Manually trigger PM work order generation for all equipment
                 </p>
               </div>
               <Button
                 onClick={handleManualRun}
                 disabled={runSchedulerMutation.isPending}
-                variant="outline"
+                variant='outline'
               >
-                <RefreshCw className={`w-4 h-4 mr-2 ${runSchedulerMutation.isPending ? 'animate-spin' : ''}`} />
+                <RefreshCw
+                  className={`w-4 h-4 mr-2 ${runSchedulerMutation.isPending ? 'animate-spin' : ''}`}
+                />
                 {runSchedulerMutation.isPending ? 'Running...' : 'Run Now'}
               </Button>
             </div>
 
-            <div className="text-sm text-gray-600 bg-yellow-50 p-4 rounded-lg">
-              <p className="font-medium text-yellow-800 mb-1">Note:</p>
-              <p className="text-yellow-700">
-                Manual runs will only generate work orders for equipment that doesn't already have active PM work orders.
-                This prevents duplicate work orders from being created.
+            <div className='text-sm text-gray-600 bg-yellow-50 p-4 rounded-lg'>
+              <p className='font-medium text-yellow-800 mb-1'>Note:</p>
+              <p className='text-yellow-700'>
+                Manual runs will only generate work orders for equipment that doesn't already have
+                active PM work orders. This prevents duplicate work orders from being created.
               </p>
             </div>
           </div>

@@ -18,7 +18,7 @@ const mockHealthData = {
   uptime: 3600, // 1 hour in seconds
   memory: {
     rss: 104857600, // 100MB
-    heapTotal: 67108864, // 64MB 
+    heapTotal: 67108864, // 64MB
     heapUsed: 33554432, // 32MB
     external: 8388608, // 8MB
     arrayBuffers: 1048576, // 1MB
@@ -51,11 +51,7 @@ function renderWithQueryClient(component: React.ReactElement) {
     },
   });
 
-  return render(
-    <QueryClientProvider client={queryClient}>
-      {component}
-    </QueryClientProvider>
-  );
+  return render(<QueryClientProvider client={queryClient}>{component}</QueryClientProvider>);
 }
 
 describe('HealthDashboard', () => {

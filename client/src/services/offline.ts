@@ -63,8 +63,11 @@ class OfflineService {
   }
 
   private getConnectionType(): string {
-    // @ts-ignore - experimental API
-    const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    // @ts-ignore - experimental API - navigator.connection is not in TypeScript types
+    const connection =
+      (navigator as any).connection ||
+      (navigator as any).mozConnection ||
+      (navigator as any).webkitConnection;
     return connection?.effectiveType || 'unknown';
   }
 
@@ -90,14 +93,14 @@ class OfflineService {
 
   private broadcastNetworkStatus() {
     const event = new CustomEvent('networkStatusChange', {
-      detail: this.networkStatus
+      detail: this.networkStatus,
     });
     window.dispatchEvent(event);
   }
 
   private async broadcastSyncComplete() {
     const event = new CustomEvent('offlineSyncComplete', {
-      detail: { syncedActions: this.actions.length }
+      detail: { syncedActions: this.actions.length },
     });
     window.dispatchEvent(event);
   }

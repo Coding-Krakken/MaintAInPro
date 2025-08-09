@@ -11,11 +11,18 @@ interface AuthUser {
 interface AuthContextType {
   user: AuthUser | null;
   loading: boolean;
-  login: (email: string, password: string, mfaToken?: string) => Promise<{ success: boolean; requiresMFA?: boolean; error?: string }>;
+  login: (
+    email: string,
+    password: string,
+    mfaToken?: string
+  ) => Promise<{ success: boolean; requiresMFA?: boolean; error?: string }>;
   logout: () => Promise<void>;
   setupMFA: () => Promise<{ success: boolean; qrCode?: string; secret?: string; error?: string }>;
   enableMFA: (token: string) => Promise<{ success: boolean; error?: string }>;
-  changePassword: (currentPassword: string, newPassword: string) => Promise<{ success: boolean; error?: string }>;
+  changePassword: (
+    currentPassword: string,
+    newPassword: string
+  ) => Promise<{ success: boolean; error?: string }>;
   refreshToken: () => Promise<boolean>;
   isAuthenticated: boolean;
   mfaRequired: boolean;
@@ -31,13 +38,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     // Check for existing session
     checkAuth();
-    
+
     // Set up token refresh interval
-    const refreshInterval = setInterval(() => {
-      if (localStorage.getItem('authToken')) {
-        refreshToken();
-      }
-    }, 14 * 60 * 1000); // Refresh every 14 minutes (before 15-minute expiry)
+    const refreshInterval = setInterval(
+      () => {
+        if (localStorage.getItem('authToken')) {
+          refreshToken();
+        }
+      },
+      14 * 60 * 1000
+    ); // Refresh every 14 minutes (before 15-minute expiry)
 
     return () => clearInterval(refreshInterval);
   }, []);
@@ -56,7 +66,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       const response = await fetch('/api/profiles/me', {
         headers: {
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
           'x-user-id': localStorage.getItem('userId') || 'default-supervisor-id',
           'x-warehouse-id': localStorage.getItem('warehouseId') || 'default-warehouse-id',
         },
@@ -97,8 +107,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const login = async (
-    email: string, 
-    password: string, 
+    email: string,
+    password: string,
     mfaToken?: string
   ): Promise<{ success: boolean; requiresMFA?: boolean; error?: string }> => {
     setLoading(true);
@@ -109,11 +119,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ 
-          email, 
-          password, 
+        body: JSON.stringify({
+          email,
+          password,
           mfaToken,
-          deviceFingerprint: generateDeviceFingerprint()
+          deviceFingerprint: generateDeviceFingerprint(),
         }),
       });
 
@@ -135,7 +145,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       localStorage.setItem('userId', user.id);
       localStorage.setItem('warehouseId', user.warehouseId);
       localStorage.setItem('sessionId', sessionId);
-      
+
       // Create full user object with proper structure
       const fullUser = {
         id: user.id,
@@ -146,10 +156,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         warehouseId: user.warehouseId,
         active: true,
       };
-      
+
       setUser(fullUser);
       setMfaRequired(false);
-      
+
       return { success: true };
     } catch (error) {
       return { success: false, error: 'Login failed' };
@@ -165,7 +175,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         await fetch('/api/auth/logout', {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',
           },
         });
@@ -216,25 +226,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const setupMFA = async (): Promise<{ success: boolean; qrCode?: string; secret?: string; error?: string }> => {
+  const setupMFA = async (): Promise<{
+    success: boolean;
+    qrCode?: string;
+    secret?: string;
+    error?: string;
+  }> => {
     try {
       const token = localStorage.getItem('authToken');
       const response = await fetch('/api/auth/mfa/setup', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ type: 'totp' }),
       });
 
       const data = await response.json();
-      
+
       if (response.ok) {
-        return { 
-          success: true, 
-          qrCode: data.setup?.qrCode, 
-          secret: data.setup?.secret 
+        return {
+          success: true,
+          qrCode: data.setup?.qrCode,
+          secret: data.setup?.secret,
         };
       } else {
         return { success: false, error: data.message || 'MFA setup failed' };
@@ -250,14 +265,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const response = await fetch('/api/auth/mfa/enable', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${authToken}`,
+          Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ token }),
       });
 
       const data = await response.json();
-      
+
       if (response.ok) {
         return { success: true };
       } else {
@@ -269,7 +284,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const changePassword = async (
-    currentPassword: string, 
+    currentPassword: string,
     newPassword: string
   ): Promise<{ success: boolean; error?: string }> => {
     try {
@@ -277,14 +292,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const response = await fetch('/api/auth/change-password', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ currentPassword, newPassword }),
       });
 
       const data = await response.json();
-      
+
       if (response.ok) {
         return { success: true };
       } else {
@@ -302,18 +317,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (typeof process !== 'undefined' && process.env?.NODE_ENV === 'test') {
         return 'test-fingerprint';
       }
-      
+
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
       let canvasData = 'fallback';
-      
+
       if (ctx) {
         ctx.textBaseline = 'top';
         ctx.font = '14px Arial';
         ctx.fillText('Device fingerprint', 2, 2);
         canvasData = canvas.toDataURL();
       }
-      
+
       const fingerprint = {
         userAgent: navigator.userAgent,
         language: navigator.language,
@@ -322,7 +337,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         canvas: canvasData,
       };
-      
+
       return btoa(JSON.stringify(fingerprint));
     } catch (error) {
       console.warn('Device fingerprinting failed:', error);
@@ -343,11 +358,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     mfaRequired,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {

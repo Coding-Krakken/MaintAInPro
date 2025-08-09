@@ -24,7 +24,14 @@ export interface FileValidationResult {
 export class FileUploadService {
   private static readonly DEFAULT_OPTIONS: FileUploadOptions = {
     maxSize: 5 * 1024 * 1024, // 5MB
-    allowedTypes: ['image/jpeg', 'image/png', 'image/gif', 'application/pdf', 'audio/mpeg', 'video/mp4'],
+    allowedTypes: [
+      'image/jpeg',
+      'image/png',
+      'image/gif',
+      'application/pdf',
+      'audio/mpeg',
+      'video/mp4',
+    ],
     compress: true,
     quality: 0.8,
   };
@@ -108,9 +115,9 @@ export class FileUploadService {
 
           // Draw and compress
           ctx!.drawImage(img, 0, 0, width, height);
-          
+
           canvas.toBlob(
-            (blob) => {
+            blob => {
               if (blob) {
                 const compressedFile = new File([blob], file.name, {
                   type: file.type,
@@ -187,7 +194,7 @@ export class FileUploadService {
   ): Promise<FileUploadResult> {
     try {
       const config = { ...this.DEFAULT_OPTIONS, ...options };
-      
+
       // Validate file
       const validation = this.validateFile(file, config);
       if (!validation.isValid) {
@@ -270,20 +277,20 @@ export class FileUploadService {
     if (fileType.startsWith('image/')) {
       return fileUrl;
     }
-    
+
     // For other file types, return a placeholder or icon
     if (fileType === 'application/pdf') {
       return '/icons/pdf-icon.png';
     }
-    
+
     if (fileType.startsWith('audio/')) {
       return '/icons/audio-icon.png';
     }
-    
+
     if (fileType.startsWith('video/')) {
       return '/icons/video-icon.png';
     }
-    
+
     return '/icons/file-icon.png';
   }
 
@@ -292,11 +299,11 @@ export class FileUploadService {
    */
   static formatFileSize(bytes: number): string {
     if (bytes === 0) return '0 Bytes';
-    
+
     const k = 1024;
     const sizes = ['Bytes', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    
+
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   }
 
@@ -311,7 +318,7 @@ export class FileUploadService {
       'application/pdf',
       'text/plain',
     ];
-    
+
     return previewableTypes.includes(fileType);
   }
 

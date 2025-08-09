@@ -3,7 +3,7 @@ import { logger } from './enhanced-logging.service';
 
 /**
  * Enhanced Database Performance and Optimization Service
- * 
+ *
  * Provides:
  * - Index optimization and monitoring
  * - Query performance analysis
@@ -52,7 +52,7 @@ class DatabasePerformanceService {
    */
   async applyOptimizations(): Promise<{ applied: number; errors: string[] }> {
     logger.info('Starting database optimizations', { service: this.serviceName });
-    
+
     const optimizations = this.getOptimizationStrategies();
     let applied = 0;
     const errors: string[] = [];
@@ -61,31 +61,31 @@ class DatabasePerformanceService {
       try {
         logger.debug(`Applying optimization: ${optimization.indexName}`, {
           service: this.serviceName,
-          table: optimization.tableName
+          table: optimization.tableName,
         });
 
         await db.execute(optimization.sql);
         applied++;
-        
+
         logger.info(`Successfully applied optimization: ${optimization.indexName}`, {
           service: this.serviceName,
           table: optimization.tableName,
-          purpose: optimization.purpose
+          purpose: optimization.purpose,
         });
       } catch (error: any) {
         // Index might already exist, that's okay
         if (error.message?.includes('already exists')) {
           logger.debug(`Optimization already exists: ${optimization.indexName}`, {
-            service: this.serviceName
+            service: this.serviceName,
           });
           applied++;
         } else {
           const errorMsg = `Failed to apply ${optimization.indexName}: ${error.message}`;
           errors.push(errorMsg);
-          logger.warn('Optimization failed', { 
+          logger.warn('Optimization failed', {
             service: this.serviceName,
             error: errorMsg,
-            indexName: optimization.indexName
+            indexName: optimization.indexName,
           });
         }
       }
@@ -94,7 +94,7 @@ class DatabasePerformanceService {
     logger.info('Database optimizations completed', {
       service: this.serviceName,
       applied,
-      errors: errors.length
+      errors: errors.length,
     });
 
     return { applied, errors };
@@ -113,7 +113,7 @@ class DatabasePerformanceService {
         indexType: 'composite',
         purpose: 'Optimize work order filtering by warehouse and status',
         sql: 'CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_work_orders_warehouse_status ON work_orders (warehouse_id, status);',
-        estimated_improvement: '40-60% faster status-based queries'
+        estimated_improvement: '40-60% faster status-based queries',
       },
       {
         tableName: 'work_orders',
@@ -122,7 +122,7 @@ class DatabasePerformanceService {
         indexType: 'composite',
         purpose: 'Optimize priority-based scheduling queries',
         sql: 'CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_work_orders_priority_due_date ON work_orders (priority, due_date);',
-        estimated_improvement: '50-70% faster scheduling queries'
+        estimated_improvement: '50-70% faster scheduling queries',
       },
       {
         tableName: 'work_orders',
@@ -131,7 +131,7 @@ class DatabasePerformanceService {
         indexType: 'composite',
         purpose: 'Optimize user workload queries',
         sql: 'CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_work_orders_assigned_to_status ON work_orders (assigned_to, status);',
-        estimated_improvement: '60-80% faster user workload queries'
+        estimated_improvement: '60-80% faster user workload queries',
       },
       {
         tableName: 'work_orders',
@@ -140,7 +140,7 @@ class DatabasePerformanceService {
         indexType: 'composite',
         purpose: 'Optimize equipment maintenance history',
         sql: 'CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_work_orders_equipment_created_at ON work_orders (equipment_id, created_at DESC);',
-        estimated_improvement: '70-90% faster maintenance history queries'
+        estimated_improvement: '70-90% faster maintenance history queries',
       },
 
       // Equipment optimizations
@@ -151,7 +151,7 @@ class DatabasePerformanceService {
         indexType: 'composite',
         purpose: 'Optimize equipment dashboard queries',
         sql: 'CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_equipment_warehouse_status_criticality ON equipment (warehouse_id, status, criticality);',
-        estimated_improvement: '50-70% faster dashboard loading'
+        estimated_improvement: '50-70% faster dashboard loading',
       },
       {
         tableName: 'equipment',
@@ -159,8 +159,8 @@ class DatabasePerformanceService {
         columns: ['asset_tag'],
         indexType: 'gin',
         purpose: 'Fast text search on asset tags',
-        sql: 'CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_equipment_asset_tag_gin ON equipment USING gin (to_tsvector(\'english\', asset_tag));',
-        estimated_improvement: '80-95% faster asset tag searches'
+        sql: "CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_equipment_asset_tag_gin ON equipment USING gin (to_tsvector('english', asset_tag));",
+        estimated_improvement: '80-95% faster asset tag searches',
       },
 
       // Parts optimizations
@@ -171,7 +171,7 @@ class DatabasePerformanceService {
         indexType: 'composite',
         purpose: 'Optimize parts inventory filtering',
         sql: 'CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_parts_warehouse_category_active ON parts (warehouse_id, category, active);',
-        estimated_improvement: '40-60% faster inventory queries'
+        estimated_improvement: '40-60% faster inventory queries',
       },
       {
         tableName: 'parts',
@@ -180,7 +180,7 @@ class DatabasePerformanceService {
         indexType: 'composite',
         purpose: 'Optimize low stock alerts',
         sql: 'CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_parts_stock_reorder ON parts (stock_level, reorder_point) WHERE stock_level <= reorder_point;',
-        estimated_improvement: '90% faster low stock detection'
+        estimated_improvement: '90% faster low stock detection',
       },
 
       // User and profile optimizations
@@ -191,7 +191,7 @@ class DatabasePerformanceService {
         indexType: 'composite',
         purpose: 'Optimize user management queries',
         sql: 'CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_profiles_warehouse_role_active ON profiles (warehouse_id, role, active);',
-        estimated_improvement: '50-70% faster user lookups'
+        estimated_improvement: '50-70% faster user lookups',
       },
 
       // Notification optimizations
@@ -202,7 +202,7 @@ class DatabasePerformanceService {
         indexType: 'composite',
         purpose: 'Optimize notification delivery and marking as read',
         sql: 'CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_notifications_user_read_created ON notifications (user_id, read, created_at DESC);',
-        estimated_improvement: '70-90% faster notification queries'
+        estimated_improvement: '70-90% faster notification queries',
       },
 
       // System logs optimizations
@@ -213,7 +213,7 @@ class DatabasePerformanceService {
         indexType: 'composite',
         purpose: 'Optimize audit log queries',
         sql: 'CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_system_logs_created_user_action ON system_logs (created_at DESC, user_id, action);',
-        estimated_improvement: '60-80% faster audit queries'
+        estimated_improvement: '60-80% faster audit queries',
       },
 
       // Session and security optimizations
@@ -224,8 +224,8 @@ class DatabasePerformanceService {
         indexType: 'composite',
         purpose: 'Optimize session validation',
         sql: 'CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_user_sessions_user_active_expires ON user_sessions (user_id, is_active, expires_at);',
-        estimated_improvement: '80-95% faster session validation'
-      }
+        estimated_improvement: '80-95% faster session validation',
+      },
     ];
   }
 
@@ -242,21 +242,24 @@ class DatabasePerformanceService {
         indexHitResult,
         databaseSizeResult,
         slowQueriesResult,
-        lockStatsResult
+        lockStatsResult,
       ] = await Promise.allSettled([
         this.getConnectionStats(),
         this.getCacheHitRatio(),
         this.getIndexHitRatio(),
         this.getDatabaseSize(),
         this.getSlowQueriesCount(),
-        this.getLockStats()
+        this.getLockStats(),
       ]);
 
-      const connectionStats = connectionResult.status === 'fulfilled' ? connectionResult.value : null;
+      const connectionStats =
+        connectionResult.status === 'fulfilled' ? connectionResult.value : null;
       const cacheHitRatio = cacheHitResult.status === 'fulfilled' ? cacheHitResult.value : 0;
       const indexHitRatio = indexHitResult.status === 'fulfilled' ? indexHitResult.value : 0;
-      const databaseSize = databaseSizeResult.status === 'fulfilled' ? databaseSizeResult.value : 'Unknown';
-      const slowQueriesCount = slowQueriesResult.status === 'fulfilled' ? slowQueriesResult.value : 0;
+      const databaseSize =
+        databaseSizeResult.status === 'fulfilled' ? databaseSizeResult.value : 'Unknown';
+      const slowQueriesCount =
+        slowQueriesResult.status === 'fulfilled' ? slowQueriesResult.value : 0;
       const lockStats = lockStatsResult.status === 'fulfilled' ? lockStatsResult.value : null;
 
       const metrics: DatabaseHealthMetrics = {
@@ -268,12 +271,12 @@ class DatabasePerformanceService {
         index_hit_ratio: indexHitRatio,
         slow_queries_count: slowQueriesCount,
         lock_waits: lockStats?.lock_waits || 0,
-        deadlocks: lockStats?.deadlocks || 0
+        deadlocks: lockStats?.deadlocks || 0,
       };
 
       logger.debug('Database health metrics retrieved', {
         service: this.serviceName,
-        metrics
+        metrics,
       });
 
       return metrics;
@@ -305,15 +308,17 @@ class DatabasePerformanceService {
       `);
 
       const stats = result.rows as QueryPerformanceStats[];
-      
+
       logger.debug('Query performance stats retrieved', {
         service: this.serviceName,
-        count: stats.length
+        count: stats.length,
       });
 
       return stats;
     } catch (error) {
-      logger.warn('pg_stat_statements not available, using fallback', { service: this.serviceName });
+      logger.warn('pg_stat_statements not available, using fallback', {
+        service: this.serviceName,
+      });
       return [];
     }
   }
@@ -405,7 +410,7 @@ class DatabasePerformanceService {
       WHERE datname = current_database();
     `);
 
-    return result.rows[0] as any || { lock_waits: 0, deadlocks: 0 };
+    return (result.rows[0] as any) || { lock_waits: 0, deadlocks: 0 };
   }
 
   /**
@@ -425,9 +430,13 @@ class DatabasePerformanceService {
     // Analyze cache hit ratio
     if (health.cache_hit_ratio < 95) {
       if (health.cache_hit_ratio < 85) {
-        criticalIssues.push(`Critical: Cache hit ratio is ${health.cache_hit_ratio}% (should be >95%)`);
+        criticalIssues.push(
+          `Critical: Cache hit ratio is ${health.cache_hit_ratio}% (should be >95%)`
+        );
       } else {
-        recommendations.push(`Consider increasing shared_buffers. Cache hit ratio: ${health.cache_hit_ratio}%`);
+        recommendations.push(
+          `Consider increasing shared_buffers. Cache hit ratio: ${health.cache_hit_ratio}%`
+        );
       }
     }
 
@@ -440,12 +449,16 @@ class DatabasePerformanceService {
     if (health.active_connections > 80) {
       criticalIssues.push(`High connection count: ${health.active_connections} active connections`);
     } else if (health.active_connections > 50) {
-      recommendations.push(`Monitor connection pool usage: ${health.active_connections} active connections`);
+      recommendations.push(
+        `Monitor connection pool usage: ${health.active_connections} active connections`
+      );
     }
 
     // Analyze slow queries
     if (health.slow_queries_count > 10) {
-      criticalIssues.push(`${health.slow_queries_count} slow queries detected (>1s execution time)`);
+      criticalIssues.push(
+        `${health.slow_queries_count} slow queries detected (>1s execution time)`
+      );
     } else if (health.slow_queries_count > 5) {
       recommendations.push(`${health.slow_queries_count} slow queries need optimization`);
     }
@@ -462,7 +475,7 @@ class DatabasePerformanceService {
     logger.info('Performance analysis completed', {
       service: this.serviceName,
       recommendations: recommendations.length,
-      criticalIssues: criticalIssues.length
+      criticalIssues: criticalIssues.length,
     });
 
     return { health, recommendations, criticalIssues };
@@ -474,25 +487,32 @@ class DatabasePerformanceService {
   async maintenanceCleanup(): Promise<{ completed: string[]; errors: string[] }> {
     logger.info('Starting database maintenance cleanup', { service: this.serviceName });
 
-    const tables = ['work_orders', 'equipment', 'parts', 'profiles', 'notifications', 'system_logs'];
+    const tables = [
+      'work_orders',
+      'equipment',
+      'parts',
+      'profiles',
+      'notifications',
+      'system_logs',
+    ];
     const completed: string[] = [];
     const errors: string[] = [];
 
     for (const table of tables) {
       try {
         logger.debug(`Running VACUUM ANALYZE on table: ${table}`, { service: this.serviceName });
-        
+
         await db.execute(`VACUUM ANALYZE ${table};`);
         completed.push(table);
-        
+
         logger.debug(`Completed VACUUM ANALYZE on table: ${table}`, { service: this.serviceName });
       } catch (error: any) {
         const errorMsg = `Failed to vacuum table ${table}: ${error.message}`;
         errors.push(errorMsg);
-        logger.warn('Table vacuum failed', { 
+        logger.warn('Table vacuum failed', {
           service: this.serviceName,
           table,
-          error: errorMsg
+          error: errorMsg,
         });
       }
     }
@@ -500,7 +520,7 @@ class DatabasePerformanceService {
     logger.info('Database maintenance cleanup completed', {
       service: this.serviceName,
       completed: completed.length,
-      errors: errors.length
+      errors: errors.length,
     });
 
     return { completed, errors };

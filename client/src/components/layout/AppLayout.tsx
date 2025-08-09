@@ -14,30 +14,23 @@ export default function AppLayout({ children }: AppLayoutProps) {
   const isMobile = useIsMobile();
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className='min-h-screen bg-gray-50'>
       {/* Mobile Menu Overlay */}
-      {isMobile && (
-        <MobileMenu 
-          isOpen={mobileMenuOpen} 
-          onClose={() => setMobileMenuOpen(false)} 
-        />
-      )}
+      {isMobile && <MobileMenu isOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />}
 
       {/* Desktop Sidebar */}
       {!isMobile && <Sidebar />}
 
       {/* Main Content Area */}
-      <div className={!isMobile ? "lg:pl-64" : ""}>
-        <Header 
-          onMobileMenuToggle={() => setMobileMenuOpen(true)} 
+      <div className={!isMobile ? 'lg:pl-64' : ''}>
+        <Header
+          onMobileMenuToggle={() => setMobileMenuOpen(true)}
           showMobileMenuButton={isMobile}
         />
-        
-        <main className="p-4 lg:p-6">
-          {children}
-        </main>
+
+        <main className='p-4 lg:p-6'>{children}</main>
       </div>
-      
+
       {/* Offline Indicator */}
       <OfflineIndicator />
     </div>

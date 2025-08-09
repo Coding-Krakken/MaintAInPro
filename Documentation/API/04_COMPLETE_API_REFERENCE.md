@@ -2,11 +2,15 @@
 
 ## Overview
 
-Production-ready REST API for the MaintAInPro Computerized Maintenance Management System (CMMS). This API provides comprehensive functionality for work order management, equipment tracking, preventive maintenance, inventory management, and user administration.
+Production-ready REST API for the MaintAInPro Computerized Maintenance
+Management System (CMMS). This API provides comprehensive functionality for work
+order management, equipment tracking, preventive maintenance, inventory
+management, and user administration.
 
 ## Base Information
 
-- **Base URL**: `https://api.maintainpro.com` (production) / `http://localhost:3000` (development)
+- **Base URL**: `https://api.maintainpro.com` (production) /
+  `http://localhost:3000` (development)
 - **API Version**: v1
 - **Content Type**: `application/json`
 - **Authentication**: Bearer Token (JWT)
@@ -15,13 +19,17 @@ Production-ready REST API for the MaintAInPro Computerized Maintenance Managemen
 ## Authentication
 
 ### Bearer Token Authentication
+
 Include the JWT token in the Authorization header:
+
 ```http
 Authorization: Bearer <your-jwt-token>
 ```
 
 ### Organization Context
+
 All API requests require organization context via header:
+
 ```http
 X-Organization-ID: <organization-uuid>
 ```
@@ -29,25 +37,32 @@ X-Organization-ID: <organization-uuid>
 ## Work Orders API
 
 ### List Work Orders
+
 ```http
 GET /api/work-orders
 ```
 
 **Query Parameters:**
+
 - `query` (string, optional) - Search term for full-text search
-- `status` (string, optional) - Filter by status: `new`, `assigned`, `in_progress`, `completed`, `cancelled`
-- `priority` (string, optional) - Filter by priority: `low`, `medium`, `high`, `critical`
+- `status` (string, optional) - Filter by status: `new`, `assigned`,
+  `in_progress`, `completed`, `cancelled`
+- `priority` (string, optional) - Filter by priority: `low`, `medium`, `high`,
+  `critical`
 - `limit` (number, optional) - Results per page (1-100, default: 10)
 - `offset` (number, optional) - Pagination offset (default: 0)
 - `sortBy` (string, optional) - Sort field name
-- `sortOrder` (string, optional) - Sort direction: `asc`, `desc` (default: `desc`)
+- `sortOrder` (string, optional) - Sort direction: `asc`, `desc` (default:
+  `desc`)
 
 **Example Request:**
+
 ```http
 GET /api/work-orders?status=in_progress&priority=high&limit=25&offset=0
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -83,11 +98,13 @@ GET /api/work-orders?status=in_progress&priority=high&limit=25&offset=0
 ```
 
 ### Get Work Order by ID
+
 ```http
 GET /api/work-orders/{id}
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -115,11 +132,13 @@ GET /api/work-orders/{id}
 ```
 
 ### Create Work Order
+
 ```http
 POST /api/work-orders
 ```
 
 **Request Body:**
+
 ```json
 {
   "foNumber": "WO-2025-002",
@@ -138,6 +157,7 @@ POST /api/work-orders
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -164,11 +184,13 @@ POST /api/work-orders
 ```
 
 ### Update Work Order
+
 ```http
 PUT /api/work-orders/{id}
 ```
 
 **Request Body:**
+
 ```json
 {
   "status": "completed",
@@ -179,6 +201,7 @@ PUT /api/work-orders/{id}
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -206,11 +229,13 @@ PUT /api/work-orders/{id}
 ```
 
 ### Delete Work Order
+
 ```http
 DELETE /api/work-orders/{id}
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -221,19 +246,24 @@ DELETE /api/work-orders/{id}
 ## Equipment API
 
 ### List Equipment
+
 ```http
 GET /api/equipment
 ```
 
 **Query Parameters:**
+
 - `query` (string, optional) - Search term
-- `status` (string, optional) - Filter by status: `active`, `inactive`, `maintenance`
-- `criticality` (string, optional) - Filter by criticality: `low`, `medium`, `high`, `critical`
+- `status` (string, optional) - Filter by status: `active`, `inactive`,
+  `maintenance`
+- `criticality` (string, optional) - Filter by criticality: `low`, `medium`,
+  `high`, `critical`
 - `locationId` (string, optional) - Filter by location UUID
 - `limit` (number, optional) - Results per page (default: 10)
 - `offset` (number, optional) - Pagination offset (default: 0)
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -264,11 +294,13 @@ GET /api/equipment
 ```
 
 ### Create Equipment
+
 ```http
 POST /api/equipment
 ```
 
 **Request Body:**
+
 ```json
 {
   "equipmentTag": "PUMP-002",
@@ -293,18 +325,22 @@ POST /api/equipment
 ## Users API
 
 ### List Users
+
 ```http
 GET /api/users
 ```
 
 **Query Parameters:**
-- `role` (string, optional) - Filter by role: `admin`, `manager`, `technician`, `viewer`
+
+- `role` (string, optional) - Filter by role: `admin`, `manager`, `technician`,
+  `viewer`
 - `isActive` (boolean, optional) - Filter by active status
 - `department` (string, optional) - Filter by department
 - `limit` (number, optional) - Results per page (default: 10)
 - `offset` (number, optional) - Pagination offset (default: 0)
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -327,11 +363,13 @@ GET /api/users
 ```
 
 ### Create User
+
 ```http
 POST /api/users
 ```
 
 **Request Body:**
+
 ```json
 {
   "email": "jane.smith@company.com",
@@ -348,18 +386,22 @@ POST /api/users
 ## Preventive Maintenance API
 
 ### List PM Schedules
+
 ```http
 GET /api/preventive-maintenance
 ```
 
 **Query Parameters:**
+
 - `equipmentId` (string, optional) - Filter by equipment UUID
 - `isActive` (boolean, optional) - Filter by active status
-- `frequency` (string, optional) - Filter by frequency: `daily`, `weekly`, `monthly`, `quarterly`, `annually`
+- `frequency` (string, optional) - Filter by frequency: `daily`, `weekly`,
+  `monthly`, `quarterly`, `annually`
 - `limit` (number, optional) - Results per page (default: 10)
 - `offset` (number, optional) - Pagination offset (default: 0)
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -384,11 +426,13 @@ GET /api/preventive-maintenance
 ```
 
 ### Create PM Schedule
+
 ```http
 POST /api/preventive-maintenance
 ```
 
 **Request Body:**
+
 ```json
 {
   "title": "Weekly Lubrication",
@@ -407,11 +451,13 @@ POST /api/preventive-maintenance
 ## Parts Inventory API
 
 ### List Parts
+
 ```http
 GET /api/parts
 ```
 
 **Query Parameters:**
+
 - `query` (string, optional) - Search term
 - `category` (string, optional) - Filter by category
 - `lowStock` (boolean, optional) - Filter parts below minimum stock level
@@ -419,6 +465,7 @@ GET /api/parts
 - `offset` (number, optional) - Pagination offset (default: 0)
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -431,7 +478,7 @@ GET /api/parts
       "organizationId": "org-uuid-here",
       "category": "Seals & Gaskets",
       "unitOfMeasure": "each",
-      "unitCost": 45.50,
+      "unitCost": 45.5,
       "minStockLevel": 5,
       "maxStockLevel": 25,
       "currentStock": 12,
@@ -449,11 +496,13 @@ GET /api/parts
 ```
 
 ### Create Part
+
 ```http
 POST /api/parts
 ```
 
 **Request Body:**
+
 ```json
 {
   "partNumber": "BELT-CNV-001",
@@ -462,7 +511,7 @@ POST /api/parts
   "organizationId": "org-uuid-here",
   "category": "Belts",
   "unitOfMeasure": "each",
-  "unitCost": 125.00,
+  "unitCost": 125.0,
   "minStockLevel": 2,
   "maxStockLevel": 10,
   "currentStock": 5,
@@ -478,17 +527,21 @@ POST /api/parts
 ## Locations API
 
 ### List Locations
+
 ```http
 GET /api/locations
 ```
 
 **Query Parameters:**
-- `locationType` (string, optional) - Filter by type: `building`, `floor`, `room`, `area`
+
+- `locationType` (string, optional) - Filter by type: `building`, `floor`,
+  `room`, `area`
 - `parentLocationId` (string, optional) - Filter by parent location UUID
 - `limit` (number, optional) - Results per page (default: 10)
 - `offset` (number, optional) - Pagination offset (default: 0)
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -504,7 +557,7 @@ GET /api/locations
       "address": "123 Industrial Way, Manufacturing City, MC 12345",
       "coordinates": {
         "latitude": 40.7128,
-        "longitude": -74.0060
+        "longitude": -74.006
       },
       "createdAt": "2023-01-15T10:00:00Z",
       "updatedAt": "2025-01-08T12:00:00Z"
@@ -516,6 +569,7 @@ GET /api/locations
 ## Error Responses
 
 ### Standard Error Format
+
 ```json
 {
   "success": false,
@@ -528,6 +582,7 @@ GET /api/locations
 ```
 
 ### Common HTTP Status Codes
+
 - `200` - Success
 - `201` - Created
 - `400` - Bad Request (validation errors)
@@ -539,6 +594,7 @@ GET /api/locations
 - `500` - Internal Server Error
 
 ### Validation Error Example
+
 ```json
 {
   "success": false,
@@ -562,6 +618,7 @@ GET /api/locations
 ## Rate Limiting
 
 The API implements rate limiting to ensure fair usage:
+
 - **Default Rate**: 100 requests per minute per API key
 - **Burst Allowance**: Up to 10 requests per second
 - **Headers Included**:
@@ -570,6 +627,7 @@ The API implements rate limiting to ensure fair usage:
   - `X-RateLimit-Reset` - Time when rate limit resets (Unix timestamp)
 
 When rate limit is exceeded:
+
 ```json
 {
   "success": false,
@@ -586,14 +644,18 @@ When rate limit is exceeded:
 All list endpoints support pagination:
 
 **Query Parameters:**
+
 - `limit` - Number of results per page (1-100, default: 10)
 - `offset` - Number of results to skip (default: 0)
 
 **Response Format:**
+
 ```json
 {
   "success": true,
-  "data": [ /* results */ ],
+  "data": [
+    /* results */
+  ],
   "pagination": {
     "total": 156,
     "limit": 25,
@@ -606,19 +668,25 @@ All list endpoints support pagination:
 ## Sorting and Filtering
 
 ### Sorting
+
 Use `sortBy` and `sortOrder` parameters:
+
 ```http
 GET /api/work-orders?sortBy=createdAt&sortOrder=desc
 ```
 
 ### Filtering
+
 Most endpoints support filtering by relevant fields:
+
 ```http
 GET /api/work-orders?status=in_progress&priority=high&assignedTo=user-uuid
 ```
 
 ### Search
+
 Use the `query` parameter for full-text search:
+
 ```http
 GET /api/work-orders?query=hydraulic pump repair
 ```
@@ -626,21 +694,25 @@ GET /api/work-orders?query=hydraulic pump repair
 ## Field Mapping
 
 The API automatically handles field name transformations:
+
 - **API Input/Output**: camelCase (`foNumber`, `equipmentId`)
 - **Database Storage**: snake_case (`fo_number`, `equipment_id`)
 
-This mapping is transparent to API users - always use camelCase in API requests and responses.
+This mapping is transparent to API users - always use camelCase in API requests
+and responses.
 
 ## Best Practices
 
-1. **Include Organization Context**: Always include the `X-Organization-ID` header
+1. **Include Organization Context**: Always include the `X-Organization-ID`
+   header
 2. **Use Appropriate Pagination**: Set reasonable limits for list operations
 3. **Handle Rate Limits**: Implement exponential backoff for rate limit errors
 4. **Validate Data**: Client-side validation improves user experience
 5. **Use HTTPS**: Always use secure connections in production
 6. **Store Tokens Securely**: Never expose JWT tokens in client-side code
 7. **Monitor Usage**: Track API usage to optimize performance
-8. **Handle Errors Gracefully**: Implement proper error handling for all API calls
+8. **Handle Errors Gracefully**: Implement proper error handling for all API
+   calls
 
 ## Example Client Implementation
 
@@ -657,11 +729,11 @@ class MaintAInProAPI {
     const response = await fetch(url, {
       ...options,
       headers: {
-        'Authorization': `Bearer ${this.token}`,
+        Authorization: `Bearer ${this.token}`,
         'X-Organization-ID': this.organizationId,
         'Content-Type': 'application/json',
-        ...options.headers
-      }
+        ...options.headers,
+      },
     });
 
     if (!response.ok) {
@@ -680,14 +752,14 @@ class MaintAInProAPI {
   async createWorkOrder(data) {
     return this.request('/api/work-orders', {
       method: 'POST',
-      body: JSON.stringify(data)
+      body: JSON.stringify(data),
     });
   }
 
   async updateWorkOrder(id, data) {
     return this.request(`/api/work-orders/${id}`, {
       method: 'PUT',
-      body: JSON.stringify(data)
+      body: JSON.stringify(data),
     });
   }
 }
@@ -702,7 +774,7 @@ const api = new MaintAInProAPI(
 // Get work orders
 const workOrders = await api.getWorkOrders({
   status: 'in_progress',
-  limit: 25
+  limit: 25,
 });
 
 // Create work order
@@ -712,6 +784,6 @@ const newWorkOrder = await api.createWorkOrder({
   priority: 'critical',
   type: 'emergency',
   organizationId: 'your-org-uuid',
-  requestedBy: 'user-uuid'
+  requestedBy: 'user-uuid',
 });
 ```

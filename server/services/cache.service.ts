@@ -36,7 +36,7 @@ export class CacheService {
     misses: 0,
     sets: 0,
     deletes: 0,
-    errors: 0
+    errors: 0,
   };
 
   private constructor(config: CacheConfig = {}) {
@@ -44,9 +44,9 @@ export class CacheService {
       defaultTTL: 300, // 5 minutes
       enableMemoryCache: true,
       maxMemoryCacheSize: 100,
-      ...config
+      ...config,
     };
-    
+
     this.initializeRedis();
     this.setupCleanupInterval();
   }
@@ -64,7 +64,7 @@ export class CacheService {
   private async initializeRedis(): Promise<void> {
     try {
       const redisConfig = this.config.redis;
-      
+
       if (!redisConfig) {
         console.log('[Cache] Redis not configured, using memory cache only');
         return;
@@ -88,16 +88,16 @@ export class CacheService {
         database: redisConfig.db || 0,
         socket: {
           connectTimeout: 5000,
-          reconnectStrategy: (retries) => {
+          reconnectStrategy: retries => {
             if (retries < 3) {
               return Math.min(retries * 50, 1000);
             }
             return false;
-          }
-        }
+          },
+        },
       });
 
-      this.redisClient.on('error', (error) => {
+      this.redisClient.on('error', error => {
         console.error('[Cache] Redis error:', error);
         this.isRedisAvailable = false;
         this.cacheStats.errors++;
@@ -114,7 +114,6 @@ export class CacheService {
       });
 
       await this.redisClient.connect();
-      
     } catch (error) {
       console.error('[Cache] Failed to initialize Redis:', error);
       this.isRedisAvailable = false;
@@ -144,12 +143,12 @@ export class CacheService {
           const redisValue = await this.redisClient.get(key);
           if (redisValue && typeof redisValue === 'string') {
             const parsed = JSON.parse(redisValue);
-            
+
             // Store in memory cache for next time
             if (this.config.enableMemoryCache) {
               this.setMemoryCache(key, parsed, this.config.defaultTTL!);
             }
-            
+
             this.cacheStats.hits++;
             return parsed;
           }
@@ -161,7 +160,6 @@ export class CacheService {
 
       this.cacheStats.misses++;
       return null;
-      
     } catch (error) {
       console.error('[Cache] Get error:', error);
       this.cacheStats.errors++;
@@ -174,7 +172,7 @@ export class CacheService {
    */
   async set<T>(key: string, value: T, ttl?: number): Promise<void> {
     const finalTTL = ttl || this.config.defaultTTL!;
-    
+
     try {
       // Set in memory cache
       if (this.config.enableMemoryCache) {
@@ -192,7 +190,6 @@ export class CacheService {
       }
 
       this.cacheStats.sets++;
-      
     } catch (error) {
       console.error('[Cache] Set error:', error);
       this.cacheStats.errors++;
@@ -217,7 +214,6 @@ export class CacheService {
       }
 
       this.cacheStats.deletes++;
-      
     } catch (error) {
       console.error('[Cache] Delete error:', error);
       this.cacheStats.errors++;
@@ -240,7 +236,6 @@ export class CacheService {
           console.warn('[Cache] Redis clear error:', redisError);
         }
       }
-      
     } catch (error) {
       console.error('[Cache] Clear error:', error);
     }
@@ -249,13 +244,9 @@ export class CacheService {
   /**
    * Get or set pattern - fetch from cache or execute function and cache result
    */
-  async getOrSet<T>(
-    key: string, 
-    fetchFunction: () => Promise<T>, 
-    ttl?: number
-  ): Promise<T> {
+  async getOrSet<T>(key: string, fetchFunction: () => Promise<T>, ttl?: number): Promise<T> {
     const cached = await this.get<T>(key);
-    
+
     if (cached !== null) {
       return cached;
     }
@@ -270,10 +261,10 @@ export class CacheService {
    */
   async getMultiple<T>(keys: string[]): Promise<Map<string, T>> {
     const results = new Map<string, T>();
-    
+
     // Try to get all from memory first
     const missingKeys: string[] = [];
-    
+
     if (this.config.enableMemoryCache) {
       for (const key of keys) {
         const memoryEntry = this.memoryCache.get(key);
@@ -295,13 +286,13 @@ export class CacheService {
     if (missingKeys.length > 0 && this.isRedisAvailable && this.redisClient) {
       try {
         const redisValues = await this.redisClient.mGet(missingKeys);
-        
+
         for (let i = 0; i < missingKeys.length; i++) {
           const value = redisValues[i];
           if (value && typeof value === 'string') {
             const parsed = JSON.parse(value);
             results.set(missingKeys[i], parsed);
-            
+
             // Cache in memory for next time
             if (this.config.enableMemoryCache) {
               this.setMemoryCache(missingKeys[i], parsed, this.config.defaultTTL!);
@@ -321,12 +312,12 @@ export class CacheService {
    */
   async setWithTags<T>(key: string, value: T, tags: string[], ttl?: number): Promise<void> {
     await this.set(key, value, ttl);
-    
+
     // Store tag mappings
     for (const tag of tags) {
       const tagKey = `tag:${tag}`;
-      const taggedKeys = await this.get<string[]>(tagKey) || [];
-      
+      const taggedKeys = (await this.get<string[]>(tagKey)) || [];
+
       if (!taggedKeys.includes(key)) {
         taggedKeys.push(key);
         await this.set(tagKey, taggedKeys, ttl || this.config.defaultTTL!);
@@ -341,7 +332,7 @@ export class CacheService {
     for (const tag of tags) {
       const tagKey = `tag:${tag}`;
       const taggedKeys = await this.get<string[]>(tagKey);
-      
+
       if (taggedKeys) {
         // Delete all keys with this tag
         await Promise.all(taggedKeys.map(key => this.delete(key)));
@@ -359,7 +350,7 @@ export class CacheService {
       ...this.cacheStats,
       memoryCacheSize: this.memoryCache.size,
       redisAvailable: this.isRedisAvailable,
-      hitRate: this.cacheStats.hits / (this.cacheStats.hits + this.cacheStats.misses) || 0
+      hitRate: this.cacheStats.hits / (this.cacheStats.hits + this.cacheStats.misses) || 0,
     };
   }
 
@@ -379,7 +370,7 @@ export class CacheService {
       data: value,
       timestamp: Date.now(),
       ttl: ttl * 1000, // Convert to milliseconds
-      hits: 0
+      hits: 0,
     });
   }
 
@@ -423,18 +414,18 @@ export const createCacheKey = (...parts: (string | number)[]): string => {
 // Cache key patterns
 export const CACHE_KEYS = {
   WORK_ORDERS: (warehouseId: string) => createCacheKey('work_orders', warehouseId),
-  EQUIPMENT: (warehouseId: string) => createCacheKey('equipment', warehouseId), 
+  EQUIPMENT: (warehouseId: string) => createCacheKey('equipment', warehouseId),
   PARTS: (warehouseId: string) => createCacheKey('parts', warehouseId),
   DASHBOARD_STATS: (warehouseId: string) => createCacheKey('dashboard_stats', warehouseId),
   USER_PROFILE: (userId: string) => createCacheKey('user_profile', userId),
   ESCALATION_RULES: (warehouseId: string) => createCacheKey('escalation_rules', warehouseId),
-  PM_TEMPLATES: (warehouseId: string) => createCacheKey('pm_templates', warehouseId)
+  PM_TEMPLATES: (warehouseId: string) => createCacheKey('pm_templates', warehouseId),
 } as const;
 
 // Cache TTL constants (in seconds)
 export const CACHE_TTL = {
   SHORT: 60, // 1 minute
-  MEDIUM: 300, // 5 minutes  
+  MEDIUM: 300, // 5 minutes
   LONG: 1800, // 30 minutes
-  EXTENDED: 3600 // 1 hour
+  EXTENDED: 3600, // 1 hour
 } as const;

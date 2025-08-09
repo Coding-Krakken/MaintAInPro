@@ -47,7 +47,7 @@ export class FileManagementService {
   private readonly maxFileSize = parseInt(process.env.MAX_FILE_SIZE || '10485760'); // 10MB
   private readonly allowedMimeTypes = [
     'image/jpeg',
-    'image/jpg', 
+    'image/jpg',
     'image/png',
     'image/gif',
     'image/webp',
@@ -58,7 +58,7 @@ export class FileManagementService {
     'video/mp4',
     'text/plain',
     'application/msword',
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
   ];
 
   private multerStorage = multer.diskStorage({
@@ -75,14 +75,14 @@ export class FileManagementService {
       const ext = path.extname(file.originalname);
       const filename = `${uniqueId}${ext}`;
       cb(null, filename);
-    }
+    },
   });
 
   private upload = multer({
     storage: this.multerStorage,
     limits: {
       fileSize: this.maxFileSize,
-      files: 10 // Max 10 files at once
+      files: 10, // Max 10 files at once
     },
     fileFilter: (req, file, cb) => {
       if (this.allowedMimeTypes.includes(file.mimetype)) {
@@ -90,7 +90,7 @@ export class FileManagementService {
       } else {
         cb(new Error(`File type ${file.mimetype} is not allowed`));
       }
-    }
+    },
   });
 
   constructor() {
@@ -121,28 +121,28 @@ export class FileManagementService {
    */
   async handleFileUpload(req: Request, res: Response): Promise<void> {
     const uploadMiddleware = this.upload.single('file');
-    
-    uploadMiddleware(req, res, async (error) => {
+
+    uploadMiddleware(req, res, async error => {
       try {
         if (error) {
           if (error instanceof MulterError) {
             if (error.code === 'LIMIT_FILE_SIZE') {
               return res.status(400).json({
                 success: false,
-                error: `File size exceeds ${Math.round(this.maxFileSize / 1024 / 1024)}MB limit`
+                error: `File size exceeds ${Math.round(this.maxFileSize / 1024 / 1024)}MB limit`,
               });
             }
           }
           return res.status(400).json({
             success: false,
-            error: error.message || 'File upload failed'
+            error: error.message || 'File upload failed',
           });
         }
 
         if (!req.file) {
           return res.status(400).json({
             success: false,
-            error: 'No file provided'
+            error: 'No file provided',
           });
         }
 
@@ -150,12 +150,12 @@ export class FileManagementService {
         if (!context) {
           return res.status(400).json({
             success: false,
-            error: 'Invalid file context'
+            error: 'Invalid file context',
           });
         }
 
         const result = await this.processUploadedFile(req.file, context);
-        
+
         if (result.success) {
           // Send real-time notification about new file
           await notificationService.sendNotification({
@@ -170,8 +170,8 @@ export class FileManagementService {
             data: {
               fileId: result.fileId,
               fileName: result.fileName,
-              context: context.type
-            }
+              context: context.type,
+            },
           });
 
           res.status(201).json(result);
@@ -182,7 +182,7 @@ export class FileManagementService {
         console.error('File upload error:', error);
         res.status(500).json({
           success: false,
-          error: 'Internal server error during file upload'
+          error: 'Internal server error during file upload',
         });
       }
     });
@@ -193,13 +193,13 @@ export class FileManagementService {
    */
   async handleMultipleFileUpload(req: Request, res: Response): Promise<void> {
     const uploadMiddleware = this.upload.array('files', 10);
-    
-    uploadMiddleware(req, res, async (error) => {
+
+    uploadMiddleware(req, res, async error => {
       try {
         if (error) {
           return res.status(400).json({
             success: false,
-            error: error.message || 'Multiple file upload failed'
+            error: error.message || 'Multiple file upload failed',
           });
         }
 
@@ -207,7 +207,7 @@ export class FileManagementService {
         if (!files || files.length === 0) {
           return res.status(400).json({
             success: false,
-            error: 'No files provided'
+            error: 'No files provided',
           });
         }
 
@@ -215,12 +215,12 @@ export class FileManagementService {
         if (!context) {
           return res.status(400).json({
             success: false,
-            error: 'Invalid file context'
+            error: 'Invalid file context',
           });
         }
 
         const results: FileUploadResult[] = [];
-        
+
         for (const file of files) {
           const result = await this.processUploadedFile(file, context);
           results.push(result);
@@ -243,8 +243,8 @@ export class FileManagementService {
             data: {
               successful: successful.length,
               failed: failed.length,
-              context: context.type
-            }
+              context: context.type,
+            },
           });
         }
 
@@ -254,14 +254,14 @@ export class FileManagementService {
           summary: {
             total: files.length,
             successful: successful.length,
-            failed: failed.length
-          }
+            failed: failed.length,
+          },
         });
       } catch (error) {
         console.error('Multiple file upload error:', error);
         res.status(500).json({
           success: false,
-          error: 'Internal server error during multiple file upload'
+          error: 'Internal server error during multiple file upload',
         });
       }
     });
@@ -271,7 +271,7 @@ export class FileManagementService {
     try {
       const contextString = req.body.context;
       const context = typeof contextString === 'string' ? JSON.parse(contextString) : contextString;
-      
+
       const userId = req.headers['x-user-id'] as string;
       const warehouseId = req.headers['x-warehouse-id'] as string;
 
@@ -282,7 +282,7 @@ export class FileManagementService {
       return {
         ...context,
         userId,
-        warehouseId
+        warehouseId,
       };
     } catch (error) {
       console.error('Failed to parse file context:', error);
@@ -290,7 +290,10 @@ export class FileManagementService {
     }
   }
 
-  private async processUploadedFile(file: MulterFile, context: FileContext): Promise<FileUploadResult> {
+  private async processUploadedFile(
+    file: MulterFile,
+    context: FileContext
+  ): Promise<FileUploadResult> {
     try {
       let processedFilePath = file.path;
       let thumbnailPath: string | undefined;
@@ -315,7 +318,7 @@ export class FileManagementService {
         vendorId: context.vendorId || null,
         uploadedBy: context.userId,
         warehouseId: context.warehouseId,
-        createdAt: new Date()
+        createdAt: new Date(),
       };
 
       const attachment = await storage.createAttachment(attachmentData);
@@ -327,11 +330,11 @@ export class FileManagementService {
         filePath: attachment.filePath,
         fileSize: attachment.fileSize,
         fileType: attachment.fileType,
-        thumbnailPath: attachment.thumbnailPath
+        thumbnailPath: attachment.thumbnailPath,
       };
     } catch (error) {
       console.error('Error processing uploaded file:', error);
-      
+
       // Clean up file if processing failed
       try {
         await fs.unlink(file.path);
@@ -341,7 +344,7 @@ export class FileManagementService {
 
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'File processing failed'
+        error: error instanceof Error ? error.message : 'File processing failed',
       };
     }
   }
@@ -349,10 +352,10 @@ export class FileManagementService {
   private async compressImage(filePath: string, mimeType: string): Promise<string> {
     try {
       const outputPath = filePath.replace(/(\.[^.]+)$/, '_compressed$1');
-      
+
       const sharpInstance = sharp(filePath);
       const metadata = await sharpInstance.metadata();
-      
+
       // Compress based on image type and size
       let quality = 85;
       let maxWidth = 1920;
@@ -361,7 +364,8 @@ export class FileManagementService {
       // Adjust compression based on file size and dimensions
       if (metadata.width && metadata.height) {
         const totalPixels = metadata.width * metadata.height;
-        if (totalPixels > 2073600) { // > 1920x1080
+        if (totalPixels > 2073600) {
+          // > 1920x1080
           quality = 75;
           maxWidth = 1920;
           maxHeight = 1080;
@@ -369,9 +373,9 @@ export class FileManagementService {
       }
 
       await sharpInstance
-        .resize(maxWidth, maxHeight, { 
-          fit: 'inside', 
-          withoutEnlargement: true 
+        .resize(maxWidth, maxHeight, {
+          fit: 'inside',
+          withoutEnlargement: true,
         })
         .jpeg({ quality })
         .toFile(outputPath);
@@ -393,9 +397,9 @@ export class FileManagementService {
       const thumbnailPath = path.join(this.thumbnailDir, thumbnailFilename);
 
       await sharp(filePath)
-        .resize(200, 200, { 
-          fit: 'inside', 
-          withoutEnlargement: true 
+        .resize(200, 200, {
+          fit: 'inside',
+          withoutEnlargement: true,
         })
         .jpeg({ quality: 80 })
         .toFile(thumbnailPath);
@@ -438,9 +442,9 @@ export class FileManagementService {
       return { success: true };
     } catch (error) {
       console.error('Failed to delete file:', error);
-      return { 
-        success: false, 
-        error: error instanceof Error ? error.message : 'File deletion failed' 
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'File deletion failed',
       };
     }
   }
@@ -462,28 +466,28 @@ export class FileManagementService {
   /**
    * Validate file before upload (client-side validation mirror)
    */
-  validateFileBeforeUpload(file: { size: number; type: string; name: string }): { 
-    valid: boolean; 
-    error?: string; 
+  validateFileBeforeUpload(file: { size: number; type: string; name: string }): {
+    valid: boolean;
+    error?: string;
   } {
     if (file.size > this.maxFileSize) {
       return {
         valid: false,
-        error: `File size exceeds ${Math.round(this.maxFileSize / 1024 / 1024)}MB limit`
+        error: `File size exceeds ${Math.round(this.maxFileSize / 1024 / 1024)}MB limit`,
       };
     }
 
     if (!this.allowedMimeTypes.includes(file.type)) {
       return {
         valid: false,
-        error: `File type ${file.type} is not allowed`
+        error: `File type ${file.type} is not allowed`,
       };
     }
 
     if (file.name.length > 255) {
       return {
         valid: false,
-        error: 'File name is too long (max 255 characters)'
+        error: 'File name is too long (max 255 characters)',
       };
     }
 
@@ -508,7 +512,7 @@ export class FileManagementService {
         totalFiles: 0,
         totalSize: 0,
         averageSize: 0,
-        fileTypes: {}
+        fileTypes: {},
       };
     }
   }

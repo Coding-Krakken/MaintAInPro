@@ -18,40 +18,38 @@ export interface TokenPair {
 }
 
 export class JWTService {
-  private static readonly ACCESS_TOKEN_SECRET = process.env.JWT_ACCESS_SECRET || randomBytes(64).toString('hex');
-  private static readonly REFRESH_TOKEN_SECRET = process.env.JWT_REFRESH_SECRET || randomBytes(64).toString('hex');
+  private static readonly ACCESS_TOKEN_SECRET =
+    process.env.JWT_ACCESS_SECRET || randomBytes(64).toString('hex');
+  private static readonly REFRESH_TOKEN_SECRET =
+    process.env.JWT_REFRESH_SECRET || randomBytes(64).toString('hex');
   private static readonly ACCESS_TOKEN_EXPIRY: string = process.env.JWT_ACCESS_EXPIRY || '15m';
   private static readonly REFRESH_TOKEN_EXPIRY: string = process.env.JWT_REFRESH_EXPIRY || '7d';
 
   static generateTokenPair(payload: Omit<JWTPayload, 'iat' | 'exp'>): TokenPair {
     const accessTokenPayload = {
       ...payload,
-      type: 'access'
+      type: 'access',
     };
 
     const refreshTokenPayload = {
       userId: payload.userId,
       sessionId: payload.sessionId,
-      type: 'refresh'
+      type: 'refresh',
     };
 
     const signOptions: SignOptions = {
       expiresIn: '15m',
       issuer: 'maintainpro-cmms',
-      audience: 'maintainpro-app'
+      audience: 'maintainpro-app',
     };
 
     const refreshSignOptions: SignOptions = {
       expiresIn: '7d',
       issuer: 'maintainpro-cmms',
-      audience: 'maintainpro-app'
+      audience: 'maintainpro-app',
     };
 
-    const accessToken = jwt.sign(
-      accessTokenPayload,
-      this.ACCESS_TOKEN_SECRET,
-      signOptions
-    );
+    const accessToken = jwt.sign(accessTokenPayload, this.ACCESS_TOKEN_SECRET, signOptions);
 
     const refreshToken = jwt.sign(
       refreshTokenPayload,
@@ -66,7 +64,7 @@ export class JWTService {
     return {
       accessToken,
       refreshToken,
-      expiresAt
+      expiresAt,
     };
   }
 
@@ -74,7 +72,7 @@ export class JWTService {
     try {
       const decoded = jwt.verify(token, this.ACCESS_TOKEN_SECRET, {
         issuer: 'maintainpro-cmms',
-        audience: 'maintainpro-app'
+        audience: 'maintainpro-app',
       }) as JWTPayload & { type: string };
 
       if (decoded.type !== 'access') {
@@ -96,7 +94,7 @@ export class JWTService {
     try {
       const decoded = jwt.verify(token, this.REFRESH_TOKEN_SECRET, {
         issuer: 'maintainpro-cmms',
-        audience: 'maintainpro-app'
+        audience: 'maintainpro-app',
       }) as { userId: string; sessionId: string; type: string };
 
       if (decoded.type !== 'refresh') {
@@ -105,7 +103,7 @@ export class JWTService {
 
       return {
         userId: decoded.userId,
-        sessionId: decoded.sessionId
+        sessionId: decoded.sessionId,
       };
     } catch (error) {
       if (error instanceof jwt.TokenExpiredError) {

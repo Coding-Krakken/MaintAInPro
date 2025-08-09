@@ -848,6 +848,6 @@ enum ErrorCode {
 }
 ```
 
-This comprehensive API specification ensures consistent, secure, and efficient communication between
-the frontend and backend systems, supporting all the features outlined in the MaintAInPro CMMS
-blueprint.
+This comprehensive API specification ensures consistent, secure, and efficient
+communication between the frontend and backend systems, supporting all the
+features outlined in the MaintAInPro CMMS blueprint.

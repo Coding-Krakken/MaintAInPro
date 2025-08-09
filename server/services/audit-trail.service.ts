@@ -18,7 +18,14 @@ export interface AuditEvent {
     duration?: number;
   };
   severity: 'low' | 'medium' | 'high' | 'critical';
-  category: 'authentication' | 'authorization' | 'data_access' | 'data_modification' | 'system' | 'security' | 'compliance';
+  category:
+    | 'authentication'
+    | 'authorization'
+    | 'data_access'
+    | 'data_modification'
+    | 'system'
+    | 'security'
+    | 'compliance';
   success: boolean;
   errorMessage?: string;
 }
@@ -85,7 +92,7 @@ class AuditTrailService {
     const auditEvent: AuditEvent = {
       ...event,
       id: crypto.randomUUID(),
-      timestamp: new Date()
+      timestamp: new Date(),
     };
 
     // Store in memory cache
@@ -100,7 +107,7 @@ class AuditTrailService {
 
   // Authentication events
   async logAuthentication(
-    userId: string, 
+    userId: string,
     action: 'login' | 'logout' | 'login_failed' | 'password_reset' | 'mfa_setup',
     success: boolean,
     metadata: AuditEvent['metadata'],
@@ -113,12 +120,12 @@ class AuditTrailService {
       entityId: userId,
       details: {
         ...details,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       },
       metadata,
       severity: success ? 'low' : 'medium',
       category: 'authentication',
-      success
+      success,
     });
   }
 
@@ -142,7 +149,7 @@ class AuditTrailService {
       metadata,
       severity: entityType === 'sensitive_data' ? 'high' : 'low',
       category: 'data_access',
-      success: true
+      success: true,
     });
   }
 
@@ -165,12 +172,12 @@ class AuditTrailService {
       entityId,
       details: {
         changes,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       },
       metadata,
       severity: action === 'delete' ? 'high' : 'medium',
       category: 'data_modification',
-      success
+      success,
     });
   }
 
@@ -191,7 +198,7 @@ class AuditTrailService {
       metadata,
       severity,
       category: 'system',
-      success
+      success,
     });
   }
 
@@ -213,7 +220,7 @@ class AuditTrailService {
       severity,
       category: 'security',
       success,
-      errorMessage: success ? undefined : details.error
+      errorMessage: success ? undefined : details.error,
     });
   }
 
@@ -255,7 +262,7 @@ class AuditTrailService {
       events.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
 
       const total = events.length;
-      
+
       // Apply pagination
       if (query.offset) {
         events = events.slice(query.offset);
@@ -265,7 +272,6 @@ class AuditTrailService {
       }
 
       return { events, total };
-
     } catch (error) {
       console.error('Error querying audit events:', error);
       throw error;
@@ -283,7 +289,7 @@ class AuditTrailService {
       const { events } = await this.queryEvents({
         startDate,
         endDate,
-        warehouseId
+        warehouseId,
       });
 
       const totalEvents = events.length;
@@ -310,12 +316,11 @@ class AuditTrailService {
           criticalEvents,
           failedAttempts,
           dataAccessEvents,
-          complianceScore
+          complianceScore,
         },
         findings,
-        recommendations
+        recommendations,
       };
-
     } catch (error) {
       console.error('Error generating compliance report:', error);
       throw error;
@@ -323,7 +328,11 @@ class AuditTrailService {
   }
 
   // Get audit statistics
-  async getAuditStatistics(startDate?: Date, endDate?: Date, warehouseId?: string): Promise<{
+  async getAuditStatistics(
+    startDate?: Date,
+    endDate?: Date,
+    warehouseId?: string
+  ): Promise<{
     totalEvents: number;
     eventsByCategory: Record<string, number>;
     eventsBySeverity: Record<string, number>;
@@ -334,23 +343,32 @@ class AuditTrailService {
     try {
       const { events } = await this.queryEvents({ startDate, endDate, warehouseId });
 
-      const eventsByCategory = events.reduce((acc, event) => {
-        acc[event.category] = (acc[event.category] || 0) + 1;
-        return acc;
-      }, {} as Record<string, number>);
+      const eventsByCategory = events.reduce(
+        (acc, event) => {
+          acc[event.category] = (acc[event.category] || 0) + 1;
+          return acc;
+        },
+        {} as Record<string, number>
+      );
 
-      const eventsBySeverity = events.reduce((acc, event) => {
-        acc[event.severity] = (acc[event.severity] || 0) + 1;
-        return acc;
-      }, {} as Record<string, number>);
+      const eventsBySeverity = events.reduce(
+        (acc, event) => {
+          acc[event.severity] = (acc[event.severity] || 0) + 1;
+          return acc;
+        },
+        {} as Record<string, number>
+      );
 
       const failedEvents = events.filter(e => !e.success).length;
 
       // Top users by event count
-      const userEventCounts = events.reduce((acc, event) => {
-        acc[event.userId] = (acc[event.userId] || 0) + 1;
-        return acc;
-      }, {} as Record<string, number>);
+      const userEventCounts = events.reduce(
+        (acc, event) => {
+          acc[event.userId] = (acc[event.userId] || 0) + 1;
+          return acc;
+        },
+        {} as Record<string, number>
+      );
 
       const topUsers = Object.entries(userEventCounts)
         .map(([userId, eventCount]) => ({ userId, eventCount }))
@@ -365,9 +383,8 @@ class AuditTrailService {
         eventsBySeverity,
         failedEvents,
         topUsers,
-        recentEvents
+        recentEvents,
       };
-
     } catch (error) {
       console.error('Error getting audit statistics:', error);
       throw error;
@@ -385,18 +402,17 @@ class AuditTrailService {
 
     try {
       const batch = this.eventQueue.splice(0, 100); // Process in batches of 100
-      
+
       // In a production system, you would batch write to a database here
       console.log(`Processing ${batch.length} audit events`);
 
       // Simulate database write delay
       await new Promise(resolve => setTimeout(resolve, 10));
-
     } catch (error) {
       console.error('Error processing audit event queue:', error);
     } finally {
       this.processingQueue = false;
-      
+
       // Process next batch if there are more events
       if (this.eventQueue.length > 0) {
         setTimeout(() => this.processEventQueue(), 1000);
@@ -408,14 +424,12 @@ class AuditTrailService {
     // Simplified compliance scoring - in production this would be more sophisticated
     let score = 100;
 
-    const failedAuthAttempts = events.filter(e => 
-      e.category === 'authentication' && !e.success
+    const failedAuthAttempts = events.filter(
+      e => e.category === 'authentication' && !e.success
     ).length;
-    
+
     const criticalEvents = events.filter(e => e.severity === 'critical').length;
-    const unauthorizedAccess = events.filter(e => 
-      e.category === 'security' && !e.success
-    ).length;
+    const unauthorizedAccess = events.filter(e => e.category === 'security' && !e.success).length;
 
     // Deduct points for compliance issues
     score -= Math.min(30, failedAuthAttempts * 2);
@@ -425,14 +439,15 @@ class AuditTrailService {
     return Math.max(0, Math.min(100, score));
   }
 
-  private generateComplianceFindings(events: AuditEvent[], reportType: string): ComplianceFinding[] {
+  private generateComplianceFindings(
+    events: AuditEvent[],
+    reportType: string
+  ): ComplianceFinding[] {
     const findings: ComplianceFinding[] = [];
 
     // Failed authentication attempts
-    const failedAuth = events.filter(e => 
-      e.category === 'authentication' && !e.success
-    );
-    
+    const failedAuth = events.filter(e => e.category === 'authentication' && !e.success);
+
     if (failedAuth.length > 0) {
       findings.push({
         id: crypto.randomUUID(),
@@ -441,16 +456,17 @@ class AuditTrailService {
         description: `${failedAuth.length} failed authentication attempts detected`,
         count: failedAuth.length,
         impact: 'Potential unauthorized access attempts',
-        remediation: 'Review failed login attempts and consider implementing account lockout policies',
-        events: failedAuth.map(e => e.id)
+        remediation:
+          'Review failed login attempts and consider implementing account lockout policies',
+        events: failedAuth.map(e => e.id),
       });
     }
 
     // Critical security events
-    const criticalSecurity = events.filter(e => 
-      e.category === 'security' && e.severity === 'critical'
+    const criticalSecurity = events.filter(
+      e => e.category === 'security' && e.severity === 'critical'
     );
-    
+
     if (criticalSecurity.length > 0) {
       findings.push({
         id: crypto.randomUUID(),
@@ -460,15 +476,15 @@ class AuditTrailService {
         count: criticalSecurity.length,
         impact: 'High-risk security incidents that require immediate attention',
         remediation: 'Investigate all critical security events and implement corrective measures',
-        events: criticalSecurity.map(e => e.id)
+        events: criticalSecurity.map(e => e.id),
       });
     }
 
     // Excessive privileged access
-    const privilegedAccess = events.filter(e => 
-      e.category === 'data_access' && e.details?.privileged === true
+    const privilegedAccess = events.filter(
+      e => e.category === 'data_access' && e.details?.privileged === true
     );
-    
+
     if (privilegedAccess.length > 100) {
       findings.push({
         id: crypto.randomUUID(),
@@ -478,25 +494,32 @@ class AuditTrailService {
         count: privilegedAccess.length,
         impact: 'High volume of privileged access may indicate over-privileged accounts',
         remediation: 'Review privileged access patterns and implement least privilege principle',
-        events: privilegedAccess.slice(0, 10).map(e => e.id) // Sample events
+        events: privilegedAccess.slice(0, 10).map(e => e.id), // Sample events
       });
     }
 
     return findings;
   }
 
-  private generateComplianceRecommendations(findings: ComplianceFinding[], reportType: string): string[] {
+  private generateComplianceRecommendations(
+    findings: ComplianceFinding[],
+    reportType: string
+  ): string[] {
     const recommendations: string[] = [];
 
     const criticalFindings = findings.filter(f => f.severity === 'critical');
     const highFindings = findings.filter(f => f.severity === 'high');
 
     if (criticalFindings.length > 0) {
-      recommendations.push('Immediate action required: Address all critical security findings within 24 hours');
+      recommendations.push(
+        'Immediate action required: Address all critical security findings within 24 hours'
+      );
     }
 
     if (highFindings.length > 0) {
-      recommendations.push('High priority: Investigate and remediate high-severity findings within one week');
+      recommendations.push(
+        'High priority: Investigate and remediate high-severity findings within one week'
+      );
     }
 
     recommendations.push('Implement automated monitoring for failed authentication attempts');

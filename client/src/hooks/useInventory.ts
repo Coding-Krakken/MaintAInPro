@@ -54,7 +54,7 @@ export function usePartByNumber(partNumber: string) {
 
 export function useCreatePart() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async (part: InsertPart) => {
       const response = await apiRequest('POST', '/api/parts', part);
@@ -68,7 +68,7 @@ export function useCreatePart() {
 
 export function useUpdatePart() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async ({ id, data }: { id: string; data: Partial<InsertPart> }) => {
       const response = await apiRequest('PATCH', `/api/parts/${id}`, data);
@@ -100,10 +100,14 @@ export function usePartsUsage(workOrderId: string) {
 
 export function useCreatePartsUsage() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async ({ workOrderId, data }: { workOrderId: string; data: any }) => {
-      const response = await apiRequest('POST', `/api/work-orders/${workOrderId}/parts-usage`, data);
+      const response = await apiRequest(
+        'POST',
+        `/api/work-orders/${workOrderId}/parts-usage`,
+        data
+      );
       return response.json();
     },
     onSuccess: (_, { workOrderId }) => {
@@ -115,7 +119,7 @@ export function useCreatePartsUsage() {
 
 export function useLowStockParts() {
   const { data: parts } = useParts();
-  
+
   return {
     data: parts?.filter(part => part.stockLevel <= part.reorderPoint) || [],
     isLoading: !parts,

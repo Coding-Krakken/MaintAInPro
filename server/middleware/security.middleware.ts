@@ -12,7 +12,11 @@ import { db } from '../db';
 /**
  * Rate limiting configuration for different API endpoints
  */
-export const createRateLimit = (windowMs: number, max: number, message?: string): RateLimitRequestHandler => {
+export const createRateLimit = (
+  windowMs: number,
+  max: number,
+  message?: string
+): RateLimitRequestHandler => {
   return rateLimit({
     windowMs,
     max,
@@ -20,13 +24,13 @@ export const createRateLimit = (windowMs: number, max: number, message?: string)
     standardHeaders: true,
     legacyHeaders: false,
     // Use default key generator to handle IPv6 properly
-    skip: (req) => {
+    skip: req => {
       // Skip rate limiting for health checks in development
       if (process.env.NODE_ENV === 'development' && req.path === '/api/health') {
         return true;
       }
       return false;
-    }
+    },
   });
 };
 
@@ -65,18 +69,21 @@ export const exportRateLimit = createRateLimit(
 export const requestValidationSchemas = {
   uuid: z.string().uuid('Invalid UUID format'),
   email: z.string().email('Invalid email format').max(254),
-  password: z.string()
+  password: z
+    .string()
     .min(8, 'Password must be at least 8 characters')
     .max(128, 'Password too long')
-    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/, 
-           'Password must contain uppercase, lowercase, number, and special character'),
-  
+    .regex(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/,
+      'Password must contain uppercase, lowercase, number, and special character'
+    ),
+
   pagination: z.object({
     page: z.string().regex(/^\d+$/).transform(Number).optional(),
     limit: z.string().regex(/^\d+$/).transform(Number).optional(),
     sort: z.string().max(50).optional(),
-    order: z.enum(['asc', 'desc']).optional()
-  })
+    order: z.enum(['asc', 'desc']).optional(),
+  }),
 };
 
 /**
@@ -93,14 +100,15 @@ export function securityHeaders(req: Request, res: Response, next: NextFunction)
     'X-Frame-Options': 'DENY',
     'X-XSS-Protection': '1; mode=block',
     'Referrer-Policy': 'strict-origin-when-cross-origin',
-    'Permissions-Policy': 'geolocation=(), microphone=(), camera=(), payment=(), usb=(), magnetometer=(), gyroscope=(), speaker=()',
+    'Permissions-Policy':
+      'geolocation=(), microphone=(), camera=(), payment=(), usb=(), magnetometer=(), gyroscope=(), speaker=()',
     'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
-    'Pragma': 'no-cache',
-    'Expires': '0',
+    Pragma: 'no-cache',
+    Expires: '0',
     'Surrogate-Control': 'no-store',
     'X-API-Version': '1.0.0',
     'X-Powered-By': 'MaintAInPro-CMMS',
-    'Strict-Transport-Security': 'max-age=31536000; includeSubDomains; preload'
+    'Strict-Transport-Security': 'max-age=31536000; includeSubDomains; preload',
   });
 
   // Enhanced CORS headers for API endpoints
@@ -111,7 +119,7 @@ export function securityHeaders(req: Request, res: Response, next: NextFunction)
       'https://localhost:3000',
       'https://localhost:5173',
       process.env.FRONTEND_URL,
-      process.env.PRODUCTION_URL
+      process.env.PRODUCTION_URL,
     ].filter(Boolean);
 
     const origin = req.get('Origin');
@@ -119,10 +127,11 @@ export function securityHeaders(req: Request, res: Response, next: NextFunction)
       res.set({
         'Access-Control-Allow-Origin': origin,
         'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With, X-API-Key, X-Client-Version',
+        'Access-Control-Allow-Headers':
+          'Content-Type, Authorization, X-Requested-With, X-API-Key, X-Client-Version',
         'Access-Control-Allow-Credentials': 'true',
         'Access-Control-Max-Age': '86400',
-        'Access-Control-Expose-Headers': 'X-Total-Count, X-Page-Count'
+        'Access-Control-Expose-Headers': 'X-Total-Count, X-Page-Count',
       });
     }
   }
@@ -146,11 +155,11 @@ export function sanitizeInput(req: Request, res: Response, next: NextFunction): 
         .replace(/\x00/g, '') // Remove null bytes
         .trim();
     }
-    
+
     if (Array.isArray(obj)) {
       return obj.map(sanitize);
     }
-    
+
     if (obj && typeof obj === 'object') {
       const sanitized: any = {};
       for (const [key, value] of Object.entries(obj)) {
@@ -160,7 +169,7 @@ export function sanitizeInput(req: Request, res: Response, next: NextFunction): 
       }
       return sanitized;
     }
-    
+
     return obj;
   };
 
@@ -191,9 +200,9 @@ export function sqlInjectionProtection(req: Request, res: Response, next: NextFu
       /(\bunion\s+select)/i,
       /(\bdrop\s+table)/i,
       /(\bexec\s*\()/i,
-      /(script\s*>)/i
+      /(script\s*>)/i,
     ];
-    
+
     return sqlPatterns.some(pattern => pattern.test(value));
   };
 
@@ -213,7 +222,7 @@ export function sqlInjectionProtection(req: Request, res: Response, next: NextFu
     console.warn(`SQL injection attempt detected from IP: ${req.ip}`);
     res.status(400).json({
       error: 'Invalid input detected',
-      code: 'INVALID_INPUT'
+      code: 'INVALID_INPUT',
     });
     return;
   }
@@ -227,11 +236,11 @@ export function sqlInjectionProtection(req: Request, res: Response, next: NextFu
 export async function enhancedAuth(req: any, res: Response, next: NextFunction): Promise<void> {
   try {
     const token = req.headers.authorization?.replace('Bearer ', '');
-    
+
     if (!token) {
       res.status(401).json({
         error: 'Authentication required',
-        code: 'MISSING_TOKEN'
+        code: 'MISSING_TOKEN',
       });
       return;
     }
@@ -246,21 +255,20 @@ export async function enhancedAuth(req: any, res: Response, next: NextFunction):
       if (!session || session.length === 0) {
         res.status(401).json({
           error: 'Invalid or expired session',
-          code: 'INVALID_SESSION'
+          code: 'INVALID_SESSION',
         });
         return;
       }
 
       // Update last activity
-      await db.execute(
-        'UPDATE user_sessions SET last_activity = NOW() WHERE session_token = ?',
-        [token]
-      );
+      await db.execute('UPDATE user_sessions SET last_activity = NOW() WHERE session_token = ?', [
+        token,
+      ]);
 
       // Attach user info to request
       req.user = {
         id: session[0].user_id,
-        sessionId: session[0].id
+        sessionId: session[0].id,
       };
     }
 
@@ -269,7 +277,7 @@ export async function enhancedAuth(req: any, res: Response, next: NextFunction):
     console.error('Authentication error:', error);
     res.status(500).json({
       error: 'Authentication system error',
-      code: 'AUTH_ERROR'
+      code: 'AUTH_ERROR',
     });
   }
 }
@@ -283,21 +291,20 @@ export function requireRole(allowedRoles: string[]) {
       if (!req.user?.id) {
         res.status(401).json({
           error: 'Authentication required',
-          code: 'NOT_AUTHENTICATED'
+          code: 'NOT_AUTHENTICATED',
         });
         return;
       }
 
       if (db) {
-        const user = await db.execute(
-          'SELECT role FROM profiles WHERE id = ? AND active = true',
-          [req.user.id]
-        );
+        const user = await db.execute('SELECT role FROM profiles WHERE id = ? AND active = true', [
+          req.user.id,
+        ]);
 
         if (!user || user.length === 0) {
           res.status(403).json({
             error: 'User not found or inactive',
-            code: 'USER_NOT_FOUND'
+            code: 'USER_NOT_FOUND',
           });
           return;
         }
@@ -308,7 +315,7 @@ export function requireRole(allowedRoles: string[]) {
             error: 'Insufficient permissions',
             code: 'INSUFFICIENT_PERMISSIONS',
             required: allowedRoles,
-            current: userRole
+            current: userRole,
           });
           return;
         }
@@ -321,7 +328,7 @@ export function requireRole(allowedRoles: string[]) {
       console.error('Authorization error:', error);
       res.status(500).json({
         error: 'Authorization system error',
-        code: 'AUTH_ERROR'
+        code: 'AUTH_ERROR',
       });
     }
   };
@@ -336,7 +343,7 @@ export function validateRequestSchema(schema: z.ZodSchema) {
       const result = schema.safeParse({
         body: req.body,
         query: req.query,
-        params: req.params
+        params: req.params,
       });
 
       if (!result.success) {
@@ -346,8 +353,8 @@ export function validateRequestSchema(schema: z.ZodSchema) {
           details: result.error.errors.map(err => ({
             field: err.path.join('.'),
             message: err.message,
-            code: err.code
-          }))
+            code: err.code,
+          })),
         });
         return;
       }
@@ -362,7 +369,7 @@ export function validateRequestSchema(schema: z.ZodSchema) {
       console.error('Validation error:', error);
       res.status(500).json({
         error: 'Validation system error',
-        code: 'VALIDATION_SYSTEM_ERROR'
+        code: 'VALIDATION_SYSTEM_ERROR',
       });
     }
   };
@@ -373,12 +380,12 @@ export function validateRequestSchema(schema: z.ZodSchema) {
  */
 export function auditLogger(req: any, res: Response, next: NextFunction): void {
   const startTime = Date.now();
-  
+
   // Capture original res.json to log responses
   const originalJson = res.json;
   res.json = function (body) {
     const duration = Date.now() - startTime;
-    
+
     // Log audit trail
     const auditData = {
       method: req.method,
@@ -389,28 +396,31 @@ export function auditLogger(req: any, res: Response, next: NextFunction): void {
       statusCode: res.statusCode,
       duration,
       timestamp: new Date().toISOString(),
-      body: req.method !== 'GET' ? req.body : undefined
+      body: req.method !== 'GET' ? req.body : undefined,
     };
 
     // Log to system_logs table if available
     if (db && req.user?.id) {
-      db.execute(`
+      db.execute(
+        `
         INSERT INTO system_logs (user_id, action, table_name, record_id, old_values, new_values, ip_address, user_agent)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-      `, [
-        req.user.id,
-        `${req.method} ${req.url}`,
-        'api_request',
-        null,
-        null,
-        JSON.stringify(auditData),
-        req.ip,
-        req.get('User-Agent')
-      ]).catch(err => console.error('Audit logging error:', err));
+      `,
+        [
+          req.user.id,
+          `${req.method} ${req.url}`,
+          'api_request',
+          null,
+          null,
+          JSON.stringify(auditData),
+          req.ip,
+          req.get('User-Agent'),
+        ]
+      ).catch(err => console.error('Audit logging error:', err));
     }
 
     console.log('API Request:', JSON.stringify(auditData));
-    
+
     return originalJson.call(this, body);
   };
 
@@ -419,10 +429,11 @@ export function auditLogger(req: any, res: Response, next: NextFunction): void {
 export function validateRequest(req: Request, res: Response, next: NextFunction) {
   // Check for suspiciously large payloads
   const contentLength = req.get('Content-Length');
-  if (contentLength && parseInt(contentLength) > 50 * 1024 * 1024) { // 50MB limit
-    res.status(413).json({ 
+  if (contentLength && parseInt(contentLength) > 50 * 1024 * 1024) {
+    // 50MB limit
+    res.status(413).json({
       error: 'Payload too large',
-      message: 'Request payload exceeds maximum allowed size'
+      message: 'Request payload exceeds maximum allowed size',
     });
     return;
   }
@@ -430,19 +441,13 @@ export function validateRequest(req: Request, res: Response, next: NextFunction)
   // Check for suspicious user agents
   const userAgent = req.get('User-Agent');
   if (userAgent) {
-    const suspiciousPatterns = [
-      /sqlmap/i,
-      /nikto/i,
-      /nmap/i,
-      /masscan/i,
-      /nessus/i,
-    ];
-    
+    const suspiciousPatterns = [/sqlmap/i, /nikto/i, /nmap/i, /masscan/i, /nessus/i];
+
     if (suspiciousPatterns.some(pattern => pattern.test(userAgent))) {
       console.warn(`Suspicious user agent detected: ${userAgent} from IP: ${req.ip}`);
-      res.status(403).json({ 
+      res.status(403).json({
         error: 'Forbidden',
-        message: 'Request blocked by security policy'
+        message: 'Request blocked by security policy',
       });
       return;
     }
@@ -458,12 +463,12 @@ export function validateRequest(req: Request, res: Response, next: NextFunction)
     /1\s*=\s*1/,
     /1\s*'\s*or\s*'1'\s*=\s*'1/i,
   ];
-  
+
   if (sqlInjectionPatterns.some(pattern => pattern.test(queryString))) {
     console.warn(`Potential SQL injection attempt from IP: ${req.ip}, Query: ${queryString}`);
-    res.status(400).json({ 
+    res.status(400).json({
       error: 'Bad Request',
-      message: 'Invalid query parameters'
+      message: 'Invalid query parameters',
     });
     return;
   }
@@ -477,7 +482,7 @@ export function validateRequest(req: Request, res: Response, next: NextFunction)
 export function createIPWhitelist(allowedIPs: string[]) {
   return (req: Request, res: Response, next: NextFunction): void => {
     const clientIP = req.ip || req.connection.remoteAddress || 'unknown';
-    
+
     // Always allow localhost in development
     if (process.env.NODE_ENV === 'development') {
       const localhostIPs = ['127.0.0.1', '::1', '::ffff:127.0.0.1'];
@@ -485,16 +490,16 @@ export function createIPWhitelist(allowedIPs: string[]) {
         return next();
       }
     }
-    
+
     if (!allowedIPs.includes(clientIP)) {
       console.warn(`Access denied for IP: ${clientIP}`);
-      res.status(403).json({ 
+      res.status(403).json({
         error: 'Forbidden',
-        message: 'Access denied from this IP address'
+        message: 'Access denied from this IP address',
       });
       return;
     }
-    
+
     next();
   };
 }
@@ -512,9 +517,9 @@ export async function validateSession(req: any, res: Response, next: NextFunctio
 
     const sessionId = req.headers['x-session-id'] || req.user?.sessionId;
     if (!sessionId) {
-      res.status(401).json({ 
+      res.status(401).json({
         error: 'Unauthorized',
-        message: 'Session ID required'
+        message: 'Session ID required',
       });
       return;
     }
@@ -522,12 +527,12 @@ export async function validateSession(req: any, res: Response, next: NextFunctio
     // Import AuthService dynamically to avoid circular dependencies
     const { AuthService } = await import('../services/auth');
     const authService = new AuthService();
-    
+
     const isValid = await authService.validateSession(sessionId);
     if (!isValid) {
-      res.status(401).json({ 
+      res.status(401).json({
         error: 'Unauthorized',
-        message: 'Invalid or expired session'
+        message: 'Invalid or expired session',
       });
       return;
     }
@@ -535,9 +540,9 @@ export async function validateSession(req: any, res: Response, next: NextFunctio
     next();
   } catch (error) {
     console.error('Session validation error:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Internal Server Error',
-      message: 'Session validation failed'
+      message: 'Session validation failed',
     });
   }
 }
@@ -546,9 +551,4 @@ export async function validateSession(req: any, res: Response, next: NextFunctio
  * Complete security middleware stack
  * Apply all security measures in the correct order
  */
-export const securityStack = [
-  securityHeaders,
-  sanitizeInput,
-  sqlInjectionProtection,
-  auditLogger
-];
+export const securityStack = [securityHeaders, sanitizeInput, sqlInjectionProtection, auditLogger];

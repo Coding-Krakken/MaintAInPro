@@ -30,7 +30,7 @@ export class PWAService {
     isInstalled: false,
     hasUpdate: false,
     isOnline: navigator.onLine,
-    serviceWorkerReady: false
+    serviceWorkerReady: false,
   };
 
   private constructor() {
@@ -54,11 +54,11 @@ export class PWAService {
       if ('serviceWorker' in navigator) {
         await this.registerServiceWorker();
       }
-      
+
       await this.setupInstallPrompt();
       this.setupBackgroundSync();
       this.setupPushNotifications();
-      
+
       console.log('PWA service initialized successfully');
     } catch (error) {
       console.error('Failed to initialize PWA service:', error);
@@ -72,7 +72,7 @@ export class PWAService {
     try {
       this.registration = await navigator.serviceWorker.register('/sw.js', {
         scope: '/',
-        updateViaCache: 'none'
+        updateViaCache: 'none',
       });
 
       console.log('Service worker registered:', this.registration);
@@ -101,7 +101,6 @@ export class PWAService {
       // Notify when service worker is ready
       await navigator.serviceWorker.ready;
       console.log('Service worker is ready');
-      
     } catch (error) {
       console.error('Service worker registration failed:', error);
     }
@@ -112,7 +111,7 @@ export class PWAService {
    */
   private async setupInstallPrompt(): Promise<void> {
     // Listen for install prompt
-    window.addEventListener('beforeinstallprompt', (event) => {
+    window.addEventListener('beforeinstallprompt', event => {
       event.preventDefault();
       this.installPromptEvent = event as InstallPromptEvent;
       this.status.isInstallable = true;
@@ -149,7 +148,7 @@ export class PWAService {
       // Check current permission status
       const permission = await Notification.permission;
       console.log('Notification permission:', permission);
-      
+
       if (permission === 'granted' && this.registration) {
         // Subscribe to push notifications
         try {
@@ -158,9 +157,9 @@ export class PWAService {
             applicationServerKey: this.urlBase64ToUint8Array(
               // VAPID public key would go here in production
               'YOUR_VAPID_PUBLIC_KEY'
-            )
+            ),
           });
-          
+
           // Send subscription to server
           await this.sendSubscriptionToServer(subscription);
         } catch (error) {
@@ -182,10 +181,10 @@ export class PWAService {
     try {
       await this.installPromptEvent.prompt();
       const result = await this.installPromptEvent.userChoice;
-      
+
       this.installPromptEvent = null;
       this.status.isInstallable = false;
-      
+
       if (result.outcome === 'accepted') {
         console.log('User accepted install prompt');
         return true;
@@ -209,11 +208,11 @@ export class PWAService {
     }
 
     let permission = Notification.permission;
-    
+
     if (permission === 'default') {
       permission = await Notification.requestPermission();
     }
-    
+
     return permission;
   }
 
@@ -222,18 +221,18 @@ export class PWAService {
    */
   async showNotification(title: string, options: NotificationOptions = {}): Promise<void> {
     const permission = await this.requestNotificationPermission();
-    
+
     if (permission === 'granted') {
       if (this.registration) {
         await this.registration.showNotification(title, {
           icon: '/icon-192.png',
           badge: '/icon-192.png',
-          ...options
+          ...options,
         });
       } else {
         new Notification(title, {
           icon: '/icon-192.png',
-          ...options
+          ...options,
         });
       }
     }
@@ -258,9 +257,10 @@ export class PWAService {
    */
   private checkInstallStatus(): void {
     // Check if running in standalone mode (installed)
-    this.status.isInstalled = window.matchMedia('(display-mode: standalone)').matches ||
-                              (navigator as any).standalone ||
-                              document.referrer.includes('android-app://');
+    this.status.isInstalled =
+      window.matchMedia('(display-mode: standalone)').matches ||
+      (navigator as any).standalone ||
+      document.referrer.includes('android-app://');
   }
 
   /**
@@ -268,7 +268,7 @@ export class PWAService {
    */
   private handleServiceWorkerMessage(data: any): void {
     console.log('Message from service worker:', data);
-    
+
     switch (data.type) {
       case 'SYNC_STATUS':
         this.notifyListeners('syncStatus', data);
@@ -288,7 +288,7 @@ export class PWAService {
     this.showNotification('App Update Available', {
       body: 'A new version of MaintainPro is available. Tap to update.',
       tag: 'app-update',
-      requireInteraction: true
+      requireInteraction: true,
     });
   }
 
@@ -320,9 +320,9 @@ export class PWAService {
     if (!this.listeners.has(event)) {
       this.listeners.set(event, []);
     }
-    
+
     this.listeners.get(event)!.push(callback);
-    
+
     // Return unsubscribe function
     return () => {
       const callbacks = this.listeners.get(event);
@@ -353,7 +353,7 @@ export class PWAService {
       this.status.isOnline = true;
       this.notifyListeners('networkChange', { isOnline: true });
     });
-    
+
     window.addEventListener('offline', () => {
       this.status.isOnline = false;
       this.notifyListeners('networkChange', { isOnline: false });
@@ -364,10 +364,8 @@ export class PWAService {
    * Convert VAPID key to Uint8Array
    */
   private urlBase64ToUint8Array(base64String: string): Uint8Array {
-    const padding = '='.repeat((4 - base64String.length % 4) % 4);
-    const base64 = (base64String + padding)
-      .replace(/-/g, '+')
-      .replace(/_/g, '/');
+    const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+    const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
 
     const rawData = window.atob(base64);
     const outputArray = new Uint8Array(rawData.length);
@@ -375,7 +373,7 @@ export class PWAService {
     for (let i = 0; i < rawData.length; ++i) {
       outputArray[i] = rawData.charCodeAt(i);
     }
-    
+
     return outputArray;
   }
 
@@ -387,7 +385,7 @@ export class PWAService {
       await fetch('/api/push/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(subscription)
+        body: JSON.stringify(subscription),
       });
       console.log('Push subscription sent to server');
     } catch (error) {
@@ -421,8 +419,6 @@ export class PWAService {
       }
     }
   }
-
-
 }
 
 // Create singleton instance
