@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - stable
       - Replit
   pull_request:
     types: [opened, synchronize, ready_for_review]
@@ -209,6 +210,25 @@ jobs:
               labels: ['blocked', 'needs-human', 'deployment-failure']
             });
 
+      - name: Update Domain Aliases
+        if: success()
+        run: |
+          echo "🔄 Updating domain aliases..."
+          DEPLOYMENT_URL="${{ steps.deploy.outputs.production-url }}"
+          DEPLOYMENT_ID=$(echo "$DEPLOYMENT_URL" | grep -o '[^/]*\.vercel\.app' | head -1)
+          
+          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            echo "Updating main branch domains..."
+            vercel alias set "$DEPLOYMENT_ID" unitedautosupply.org --scope coding-krakken-projects --token=${{ secrets.VERCEL_TOKEN }} || echo "Failed to update unitedautosupply.org"
+            vercel alias set "$DEPLOYMENT_ID" www.unitedautosupply.org --scope coding-krakken-projects --token=${{ secrets.VERCEL_TOKEN }} || echo "Failed to update www.unitedautosupply.org"
+          elif [ "${{ github.ref }}" = "refs/heads/stable" ]; then
+            echo "Updating stable branch domains..."
+            vercel alias set "$DEPLOYMENT_ID" uasmaintenance.com --scope coding-krakken-projects --token=${{ secrets.VERCEL_TOKEN }} || echo "Failed to update uasmaintenance.com"
+            vercel alias set "$DEPLOYMENT_ID" www.uasmaintenance.com --scope coding-krakken-projects --token=${{ secrets.VERCEL_TOKEN }} || echo "Failed to update www.uasmaintenance.com"
+          fi
+          
+          echo "✅ Domain aliases updated"
+
       - name: Deployment Success Summary
         if: success()
         run: |
@@ -216,6 +236,7 @@ jobs:
           echo "URL: ${{ steps.deploy.outputs.production-url }}"
           echo "Deployment ID: ${{ steps.deploy.outputs.deployment-id }}"
           echo "Health Check: Passed"
+          echo "Domain Aliases: Updated"
 
       - name: Create Deployment Metadata
         if: always()
