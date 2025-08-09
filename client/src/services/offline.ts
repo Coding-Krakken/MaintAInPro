@@ -64,7 +64,10 @@ class OfflineService {
 
   private getConnectionType(): string {
     // @ts-ignore - experimental API - navigator.connection is not in TypeScript types
-    const connection = (navigator as any).connection || (navigator as any).mozConnection || (navigator as any).webkitConnection;
+    const connection =
+      (navigator as any).connection ||
+      (navigator as any).mozConnection ||
+      (navigator as any).webkitConnection;
     return connection?.effectiveType || 'unknown';
   }
 
