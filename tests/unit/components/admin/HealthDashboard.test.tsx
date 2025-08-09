@@ -3,6 +3,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { HealthDashboard } from '@/components/admin/HealthDashboard';
+import * as healthService from '@/services/healthService';
 
 // Mock the healthService
 vi.mock('@/services/healthService', () => ({
@@ -64,8 +65,8 @@ describe('HealthDashboard', () => {
   });
 
   it('displays loading state initially', () => {
-    const { useHealthData } = require('@/services/healthService');
-    useHealthData.mockReturnValue({
+    const useHealthDataMock = vi.mocked(healthService.useHealthData);
+    useHealthDataMock.mockReturnValue({
       data: undefined,
       isLoading: true,
       error: null,
@@ -79,9 +80,9 @@ describe('HealthDashboard', () => {
   });
 
   it('displays error state when health data fails to load', () => {
-    const { useHealthData } = require('@/services/healthService');
+    const useHealthDataMock = vi.mocked(healthService.useHealthData);
     const mockRefetch = vi.fn();
-    useHealthData.mockReturnValue({
+    useHealthDataMock.mockReturnValue({
       data: undefined,
       isLoading: false,
       error: new Error('Network error'),
@@ -97,8 +98,8 @@ describe('HealthDashboard', () => {
   });
 
   it('displays health data when loaded successfully', async () => {
-    const { useHealthData } = require('@/services/healthService');
-    useHealthData.mockReturnValue({
+    const useHealthDataMock = vi.mocked(healthService.useHealthData);
+    useHealthDataMock.mockReturnValue({
       data: mockHealthData,
       isLoading: false,
       error: null,
@@ -121,8 +122,8 @@ describe('HealthDashboard', () => {
   });
 
   it('displays memory usage correctly', () => {
-    const { useHealthData } = require('@/services/healthService');
-    useHealthData.mockReturnValue({
+    const useHealthDataMock = vi.mocked(healthService.useHealthData);
+    useHealthDataMock.mockReturnValue({
       data: mockHealthData,
       isLoading: false,
       error: null,
@@ -139,8 +140,8 @@ describe('HealthDashboard', () => {
   });
 
   it('displays feature status correctly', () => {
-    const { useHealthData } = require('@/services/healthService');
-    useHealthData.mockReturnValue({
+    const useHealthDataMock = vi.mocked(healthService.useHealthData);
+    useHealthDataMock.mockReturnValue({
       data: mockHealthData,
       isLoading: false,
       error: null,
@@ -164,8 +165,8 @@ describe('HealthDashboard', () => {
   });
 
   it('displays deployment information when available', () => {
-    const { useHealthData } = require('@/services/healthService');
-    useHealthData.mockReturnValue({
+    const useHealthDataMock = vi.mocked(healthService.useHealthData);
+    useHealthDataMock.mockReturnValue({
       data: mockHealthData,
       isLoading: false,
       error: null,
@@ -182,8 +183,8 @@ describe('HealthDashboard', () => {
   });
 
   it('displays websocket connections by warehouse', () => {
-    const { useHealthData } = require('@/services/healthService');
-    useHealthData.mockReturnValue({
+    const useHealthDataMock = vi.mocked(healthService.useHealthData);
+    useHealthDataMock.mockReturnValue({
       data: mockHealthData,
       isLoading: false,
       error: null,
@@ -201,9 +202,9 @@ describe('HealthDashboard', () => {
   });
 
   it('handles unhealthy status correctly', () => {
-    const { useHealthData } = require('@/services/healthService');
+    const useHealthDataMock = vi.mocked(healthService.useHealthData);
     const unhealthyData = { ...mockHealthData, status: 'error' };
-    useHealthData.mockReturnValue({
+    useHealthDataMock.mockReturnValue({
       data: unhealthyData,
       isLoading: false,
       error: null,
@@ -217,9 +218,9 @@ describe('HealthDashboard', () => {
   });
 
   it('calls refetch when refresh button is clicked', async () => {
-    const { useHealthData } = require('@/services/healthService');
+    const useHealthDataMock = vi.mocked(healthService.useHealthData);
     const mockRefetch = vi.fn();
-    useHealthData.mockReturnValue({
+    useHealthDataMock.mockReturnValue({
       data: mockHealthData,
       isLoading: false,
       error: null,
@@ -236,8 +237,8 @@ describe('HealthDashboard', () => {
   });
 
   it('shows loading spinner when fetching', () => {
-    const { useHealthData } = require('@/services/healthService');
-    useHealthData.mockReturnValue({
+    const useHealthDataMock = vi.mocked(healthService.useHealthData);
+    useHealthDataMock.mockReturnValue({
       data: mockHealthData,
       isLoading: false,
       error: null,
