@@ -11,21 +11,24 @@ export function useIsMobile() {
     const checkMobile = () => {
       // Check screen width
       const screenWidth = window.innerWidth <= 768;
-      
+
       // Check user agent for mobile devices
       const userAgent = navigator.userAgent.toLowerCase();
       const mobileKeywords = [
-        'android', 'webos', 'iphone', 'ipad', 'ipod', 
-        'blackberry', 'windows phone', 'mobile'
+        'android',
+        'webos',
+        'iphone',
+        'ipad',
+        'ipod',
+        'blackberry',
+        'windows phone',
+        'mobile',
       ];
-      const isMobileUserAgent = mobileKeywords.some(keyword => 
-        userAgent.includes(keyword)
-      );
-      
+      const isMobileUserAgent = mobileKeywords.some(keyword => userAgent.includes(keyword));
+
       // Check for touch capability
-      const hasTouchScreen = 'ontouchstart' in window || 
-                           navigator.maxTouchPoints > 0;
-      
+      const hasTouchScreen = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
       // Combine checks - prioritize screen width but consider other factors
       const mobile = screenWidth || (isMobileUserAgent && hasTouchScreen);
       setIsMobile(mobile);
@@ -36,7 +39,7 @@ export function useIsMobile() {
 
     // Add resize listener
     window.addEventListener('resize', checkMobile);
-    
+
     // Add orientation change listener for mobile devices
     window.addEventListener('orientationchange', () => {
       // Delay to allow orientation change to complete

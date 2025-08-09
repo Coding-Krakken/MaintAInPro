@@ -23,7 +23,7 @@
   --destructive-foreground: hsl(60, 9.1%, 97.8%);
   --ring: hsl(20, 14.3%, 4.1%);
   --radius: 0.5rem;
-  
+
   /* CMMS Specific Colors */
   --primary-50: hsl(207, 100%, 97%);
   --primary-100: hsl(207, 95%, 92%);
@@ -31,17 +31,17 @@
   --primary-600: hsl(207, 90%, 47%);
   --primary-700: hsl(207, 89%, 38%);
   --primary-900: hsl(207, 89%, 25%);
-  
+
   --success-50: hsl(142, 76%, 95%);
   --success-100: hsl(141, 84%, 87%);
   --success-500: hsl(142, 71%, 45%);
   --success-600: hsl(142, 76%, 36%);
-  
+
   --warning-50: hsl(48, 100%, 96%);
   --warning-100: hsl(48, 96%, 89%);
   --warning-500: hsl(43, 96%, 56%);
   --warning-600: hsl(32, 95%, 44%);
-  
+
   --error-50: hsl(0, 86%, 97%);
   --error-100: hsl(0, 93%, 94%);
   --error-500: hsl(0, 84%, 60%);
@@ -101,7 +101,7 @@
   .bg-primary-900 {
     background-color: var(--primary-900);
   }
-  
+
   .text-primary-50 {
     color: var(--primary-50);
   }
@@ -120,7 +120,7 @@
   .text-primary-900 {
     color: var(--primary-900);
   }
-  
+
   .bg-success-50 {
     background-color: var(--success-50);
   }
@@ -133,14 +133,14 @@
   .bg-success-600 {
     background-color: var(--success-600);
   }
-  
+
   .text-success-600 {
     color: var(--success-600);
   }
   .text-success-800 {
     color: hsl(142, 70%, 29%);
   }
-  
+
   .bg-warning-50 {
     background-color: var(--warning-50);
   }
@@ -153,14 +153,14 @@
   .bg-warning-600 {
     background-color: var(--warning-600);
   }
-  
+
   .text-warning-600 {
     color: var(--warning-600);
   }
   .text-warning-800 {
     color: hsl(25, 95%, 39%);
   }
-  
+
   .bg-error-50 {
     background-color: var(--error-50);
   }
@@ -173,14 +173,14 @@
   .bg-error-600 {
     background-color: var(--error-600);
   }
-  
+
   .text-error-600 {
     color: var(--error-600);
   }
   .text-error-800 {
     color: hsl(0, 70%, 35%);
   }
-  
+
   .border-primary-200 {
     border-color: hsl(207, 90%, 77%);
   }
@@ -200,7 +200,7 @@
   .mobile-safe {
     @apply pb-safe-area-inset-bottom;
   }
-  
+
   .touch-optimized {
     @apply min-h-[44px] min-w-[44px];
   }

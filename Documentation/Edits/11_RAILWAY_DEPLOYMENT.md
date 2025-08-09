@@ -5,7 +5,9 @@ This application is configured to deploy on Railway with the following setup:
 ## Files for Railway Deployment
 
 ### 1. `nixpacks.toml`
+
 Configures the Nixpacks build process:
+
 - Uses Node.js 18 and npm 9
 - Runs `npm ci` for installation
 - Runs `npm run build` for building
@@ -13,26 +15,34 @@ Configures the Nixpacks build process:
 - Sets NODE_ENV to production
 
 ### 2. `railway.json`
+
 Configures Railway-specific settings:
+
 - Health check endpoint: `/api/health`
 - Restart policy and timeout settings
 - Uses Nixpacks builder
 
 ### 3. Package.json Scripts
+
 - `build`: Builds the client and type-checks the server
 - `start`: Starts the server in production mode with tsx
 
 ## Key Changes Made
 
-1. **Fixed Static File Serving**: Updated `server/vite.ts` to serve static files from the correct `dist/public` directory in production.
+1. **Fixed Static File Serving**: Updated `server/vite.ts` to serve static files
+   from the correct `dist/public` directory in production.
 
-2. **Fixed Module Issues**: Resolved ES module compatibility issues in `server/index.ts` by removing CommonJS `require.main` check.
+2. **Fixed Module Issues**: Resolved ES module compatibility issues in
+   `server/index.ts` by removing CommonJS `require.main` check.
 
-3. **Added Health Check**: Added `/api/health` endpoint for Railway health monitoring.
+3. **Added Health Check**: Added `/api/health` endpoint for Railway health
+   monitoring.
 
-4. **Graceful Shutdown**: Added proper SIGTERM and SIGINT handling for Railway deployments.
+4. **Graceful Shutdown**: Added proper SIGTERM and SIGINT handling for Railway
+   deployments.
 
-5. **Production Environment**: Ensured the server runs in production mode with proper environment variables.
+5. **Production Environment**: Ensured the server runs in production mode with
+   proper environment variables.
 
 ## Deployment Process
 
@@ -45,6 +55,7 @@ Configures Railway-specific settings:
 ## Environment Variables
 
 The application expects these environment variables in Railway:
+
 - `NODE_ENV=production` (set automatically by nixpacks.toml)
 - `PORT` (set automatically by Railway)
 - Database connection strings (if using external database)

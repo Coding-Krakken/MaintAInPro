@@ -39,7 +39,8 @@
 - **Flexible Sorting**: Configurable sort fields and directions
 - **Robust Pagination**: Proper offset/limit with total counts
 - **Error Handling**: Comprehensive error responses with meaningful messages
-- **Notification Integration**: Work order assignment and status change notifications
+- **Notification Integration**: Work order assignment and status change
+  notifications
 - **Webhook Integration**: Event emission for work order lifecycle events
 - **Field Normalization**: Consistent camelCase field naming throughout
 
@@ -67,7 +68,8 @@
 
 ## 🎯 **Production Ready Status**
 
-The **api-v2.ts** routes file is now **100% TypeScript compliant** and ready for production deployment with:
+The **api-v2.ts** routes file is now **100% TypeScript compliant** and ready for
+production deployment with:
 
 - ✅ Enhanced validation and field mapping
 - ✅ Robust error handling and logging
@@ -79,4 +81,6 @@ The **api-v2.ts** routes file is now **100% TypeScript compliant** and ready for
 
 ---
 
-*Note: There are 4 remaining TypeScript errors in other files (WorkOrderForm.tsx, pm-engine.ts, storage.ts) but these are outside the scope of the api-v2.ts fixes requested.*
+_Note: There are 4 remaining TypeScript errors in other files
+(WorkOrderForm.tsx, pm-engine.ts, storage.ts) but these are outside the scope of
+the api-v2.ts fixes requested._

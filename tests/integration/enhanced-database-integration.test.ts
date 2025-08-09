@@ -1,6 +1,6 @@
 /**
  * Enhanced Database Integration Tests
- * 
+ *
  * This test suite validates the DatabaseImplementation.md specifications:
  * - Multi-tenant organization-based data isolation
  * - Full-text search capabilities
@@ -22,11 +22,7 @@ dotenv.config({ path: path.resolve(process.cwd(), '.env.local') });
 import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
 // Import service AFTER environment variables are loaded
 import { EnhancedDatabaseService } from '../server/services/enhanced-database-service-working';
-import { 
-  validateAndTransform,
-  camelToSnake,
-  snakeToCamel 
-} from '../shared/validation-utils';
+import { validateAndTransform, camelToSnake, snakeToCamel } from '../shared/validation-utils';
 import {
   insertOrganizationSchema,
   insertWorkOrderSchema,
@@ -35,7 +31,7 @@ import {
   insertTagSchema,
   type Organization,
   type WorkOrder,
-  type Equipment
+  type Equipment,
 } from '../shared/schema';
 
 describe('Enhanced Database Service - Production Integration Tests', () => {
@@ -70,12 +66,7 @@ describe('Enhanced Database Service - Production Integration Tests', () => {
 
     // Create a test user profile to satisfy foreign key constraints
     try {
-      await enhancedDbService.createTestUser(
-        testUserId,
-        'test@example.com',
-        'Test',
-        'User'
-      );
+      await enhancedDbService.createTestUser(testUserId, 'test@example.com', 'Test', 'User');
     } catch (error) {
       console.log('Test user may already exist:', error);
     }
@@ -93,10 +84,7 @@ describe('Enhanced Database Service - Production Integration Tests', () => {
       active: true,
     };
 
-    testOrganization = await enhancedDbService.createOrganization(
-      orgData,
-      testContext
-    );
+    testOrganization = await enhancedDbService.createOrganization(orgData, testContext);
 
     testContext.organizationId = testOrganization.id;
   });
@@ -119,10 +107,7 @@ describe('Enhanced Database Service - Production Integration Tests', () => {
         active: true,
       };
 
-      testOrganization = await enhancedDbService.createOrganization(
-        orgData,
-        testContext
-      );
+      testOrganization = await enhancedDbService.createOrganization(orgData, testContext);
 
       expect(testOrganization).toBeDefined();
       expect(testOrganization.name).toBe(orgData.name);
@@ -137,7 +122,7 @@ describe('Enhanced Database Service - Production Integration Tests', () => {
 
     it('should retrieve organization by ID', async () => {
       const retrievedOrg = await enhancedDbService.getOrganization(testOrganization.id);
-      
+
       expect(retrievedOrg).toBeDefined();
       expect(retrievedOrg?.id).toBe(testOrganization.id);
       expect(retrievedOrg?.name).toBe(testOrganization.name);
@@ -207,65 +192,85 @@ describe('Enhanced Database Service - Production Integration Tests', () => {
     it('should perform full-text search on work orders', async () => {
       console.log('Test organization ID:', testOrganization.id);
       console.log('Test work orders created:', testWorkOrders.length);
-      
-      const searchResults = await enhancedDbService.searchWorkOrders({
-        organizationId: testOrganization.id,
-        searchTerm: 'hydraulic', // Search for a term that exists in descriptions
-        limit: 10,
-      }, testContext);
+
+      const searchResults = await enhancedDbService.searchWorkOrders(
+        {
+          organizationId: testOrganization.id,
+          searchTerm: 'hydraulic', // Search for a term that exists in descriptions
+          limit: 10,
+        },
+        testContext
+      );
 
       console.log('Search results:', searchResults.total, 'work orders found');
-      console.log('Work orders found:', searchResults.workOrders.map(wo => ({ foNumber: wo.foNumber, description: wo.description })));
+      console.log(
+        'Work orders found:',
+        searchResults.workOrders.map(wo => ({ foNumber: wo.foNumber, description: wo.description }))
+      );
       expect(searchResults.workOrders).toBeDefined();
       expect(searchResults.total).toBeGreaterThanOrEqual(1);
-      
+
       // Should find the pump work order
-      const pumpWorkOrder = searchResults.workOrders.find(wo => wo.foNumber?.includes('WO-001-PUMP') || wo.description?.includes('hydraulic pump'));
+      const pumpWorkOrder = searchResults.workOrders.find(
+        wo => wo.foNumber?.includes('WO-001-PUMP') || wo.description?.includes('hydraulic pump')
+      );
       expect(pumpWorkOrder).toBeDefined();
       expect(pumpWorkOrder?.description).toContain('hydraulic pump');
     });
 
     it('should filter work orders by status and priority', async () => {
-      const criticalWorkOrders = await enhancedDbService.searchWorkOrders({
-        organizationId: testOrganization.id,
-        filters: {
-          priority: 'critical',
-          status: 'in_progress',
+      const criticalWorkOrders = await enhancedDbService.searchWorkOrders(
+        {
+          organizationId: testOrganization.id,
+          filters: {
+            priority: 'critical',
+            status: 'in_progress',
+          },
         },
-      }, testContext);
+        testContext
+      );
 
       expect(criticalWorkOrders.workOrders).toBeDefined();
       expect(criticalWorkOrders.workOrders.length).toBeGreaterThanOrEqual(1);
-      
-      const hvacWorkOrder = criticalWorkOrders.workOrders.find(wo => wo.foNumber?.includes('WO-003-HVAC') || wo.description?.includes('HVAC system failure'));
+
+      const hvacWorkOrder = criticalWorkOrders.workOrders.find(
+        wo =>
+          wo.foNumber?.includes('WO-003-HVAC') || wo.description?.includes('HVAC system failure')
+      );
       expect(hvacWorkOrder).toBeDefined();
       expect(hvacWorkOrder?.priority).toBe('critical');
     });
 
     it('should support pagination in search results', async () => {
-      const firstPage = await enhancedDbService.searchWorkOrders({
-        organizationId: testOrganization.id,
-        limit: 2,
-        offset: 0,
-        orderBy: 'desc',
-        orderField: 'createdAt',
-      }, testContext);
+      const firstPage = await enhancedDbService.searchWorkOrders(
+        {
+          organizationId: testOrganization.id,
+          limit: 2,
+          offset: 0,
+          orderBy: 'desc',
+          orderField: 'createdAt',
+        },
+        testContext
+      );
 
       expect(firstPage.workOrders.length).toBeLessThanOrEqual(2);
       expect(firstPage.total).toBeGreaterThanOrEqual(3);
 
-      const secondPage = await enhancedDbService.searchWorkOrders({
-        organizationId: testOrganization.id,
-        limit: 2,
-        offset: 2,
-      }, testContext);
+      const secondPage = await enhancedDbService.searchWorkOrders(
+        {
+          organizationId: testOrganization.id,
+          limit: 2,
+          offset: 2,
+        },
+        testContext
+      );
 
       expect(secondPage.workOrders.length).toBeGreaterThanOrEqual(1);
     });
 
     it('should update work order with audit trail', async () => {
       const workOrderToUpdate = testWorkOrders[0];
-      
+
       const updates = {
         status: 'completed' as const,
         actualHours: 4.5,
@@ -301,10 +306,10 @@ describe('Enhanced Database Service - Production Integration Tests', () => {
           criticality: 'high' as const,
           manufacturer: 'HydroPro Industries',
           serialNumber: 'HP2000-2024-001',
-          specifications: { 
-            pressure: '3000 PSI', 
+          specifications: {
+            pressure: '3000 PSI',
             flow: '50 GPM',
-            power: '25 HP'
+            power: '25 HP',
           },
         },
         {
@@ -316,10 +321,10 @@ describe('Enhanced Database Service - Production Integration Tests', () => {
           criticality: 'medium' as const,
           manufacturer: 'MotorTech Corp',
           serialNumber: 'MT500-2024-001',
-          specifications: { 
+          specifications: {
             power: '5 HP',
             voltage: '480V',
-            rpm: '1750'
+            rpm: '1750',
           },
         },
       ];
@@ -373,11 +378,8 @@ describe('Enhanced Database Service - Production Integration Tests', () => {
     it('should soft delete work order with audit trail', async () => {
       if (testWorkOrders.length > 0) {
         const workOrderToDelete = testWorkOrders[testWorkOrders.length - 1];
-        
-        await enhancedDbService.softDeleteWorkOrder(
-          workOrderToDelete.id,
-          testContext
-        );
+
+        await enhancedDbService.softDeleteWorkOrder(workOrderToDelete.id, testContext);
 
         // Verify work order is soft deleted (would need method to check)
         expect(true).toBe(true); // Placeholder for actual verification
@@ -388,7 +390,7 @@ describe('Enhanced Database Service - Production Integration Tests', () => {
   describe('🔄 Transaction Management', () => {
     it('should handle transactions with rollback on error', async () => {
       try {
-        await enhancedDbService.withTransaction(async (client) => {
+        await enhancedDbService.withTransaction(async client => {
           // This would perform multiple operations in a transaction
           // Simulate an error to test rollback
           throw new Error('Simulated transaction error');
@@ -409,7 +411,7 @@ describe('Enhanced Database Service - Production Integration Tests', () => {
       expect(healthMetrics.database.status).toBe('healthy');
       expect(healthMetrics.database.pool).toBeDefined();
       expect(healthMetrics.database.performance).toBeDefined();
-      
+
       expect(typeof healthMetrics.database.pool.totalConnections).toBe('number');
       expect(typeof healthMetrics.database.performance.totalQueries).toBe('number');
     });
@@ -432,8 +434,8 @@ describe('🔧 Field Mapping and Validation Tests', () => {
         createdAt: new Date(),
         customFields: {
           phoneNumber: '+1-555-0123',
-          isActive: true
-        }
+          isActive: true,
+        },
       };
 
       const snakeCaseData = camelToSnake(camelCaseData);
@@ -454,8 +456,8 @@ describe('🔧 Field Mapping and Validation Tests', () => {
         created_at: new Date(),
         custom_fields: {
           phone_number: '+1-555-0456',
-          is_active: false
-        }
+          is_active: false,
+        },
       };
 
       const camelCaseData = snakeToCamel(snakeCaseData);
@@ -495,7 +497,7 @@ describe('🔧 Field Mapping and Validation Tests', () => {
       };
 
       const result = validateAndTransform(insertWorkOrderSchema)(validWorkOrderData);
-      
+
       expect(result.foNumber).toBe('WO-TEST-001'); // Should be camelCase
       expect(result.type).toBe('corrective');
       expect(result.estimatedHours).toBe(2.5); // Should be converted to number
@@ -519,7 +521,7 @@ describe('🔧 Field Mapping and Validation Tests', () => {
         expect(errorDetails.type).toBe('VALIDATION_ERROR');
         expect(errorDetails.errors).toBeInstanceOf(Array);
         expect(errorDetails.errors.length).toBeGreaterThan(0);
-        
+
         // Check that field-level errors are provided
         const assetTagError = errorDetails.errors.find((err: any) => err.field === 'assetTag');
         expect(assetTagError).toBeDefined();
@@ -531,7 +533,7 @@ describe('🔧 Field Mapping and Validation Tests', () => {
   describe('Performance Validation', () => {
     it('should validate large datasets efficiently', () => {
       const startTime = Date.now();
-      
+
       // Create 100 work order objects to validate
       const workOrders = Array.from({ length: 100 }, (_, i) => ({
         foNumber: `WO-PERF-${i.toString().padStart(3, '0')}`,
@@ -547,7 +549,7 @@ describe('🔧 Field Mapping and Validation Tests', () => {
       });
 
       const duration = Date.now() - startTime;
-      
+
       // Should validate 100 objects in under 100ms
       expect(duration).toBeLessThan(100);
       console.log(`Validated 100 work orders in ${duration}ms`);
@@ -562,13 +564,13 @@ describe('📋 Database Schema Compliance Tests', () => {
   it('should comply with DatabaseImplementation.md core principles', () => {
     // Test UUID primary keys - schemas should validate UUID format
     expect(insertOrganizationSchema).toBeDefined();
-    
+
     // Test audit fields presence in schemas
     expect(insertWorkOrderSchema).toBeDefined();
-    
+
     // Test soft delete support (deletedAt should be optional in schema)
     // This would be tested at the database level
-    
+
     // Test full-text search readiness
     // Work orders and equipment should have tsv fields for search
     expect(true).toBe(true); // Schema validation passed
@@ -577,13 +579,13 @@ describe('📋 Database Schema Compliance Tests', () => {
   it('should ensure referential integrity constraints', () => {
     // Test that foreign key relationships are properly defined
     expect(insertWorkOrderSchema).toBeDefined();
-    
+
     // These schemas should validate UUID references
     expect(insertOrganizationSchema).toBeDefined();
     expect(insertEquipmentSchema).toBeDefined();
     expect(insertActivityLogSchema).toBeDefined();
     expect(insertTagSchema).toBeDefined();
-    
+
     // Schema relationships should be enforced by database constraints
     expect(true).toBe(true); // Schema relationships verified
   });

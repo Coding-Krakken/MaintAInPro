@@ -10,7 +10,7 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  
+
   // Handle preflight requests
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
@@ -28,7 +28,7 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
           resolved: false,
           source: 'system-monitor',
           severity: 'medium',
-          details: 'Memory usage is approaching critical threshold'
+          details: 'Memory usage is approaching critical threshold',
         },
         {
           id: '2',
@@ -38,8 +38,8 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
           resolved: false,
           source: 'maintenance-scheduler',
           severity: 'low',
-          details: 'System maintenance scheduled for 2:00 AM UTC'
-        }
+          details: 'System maintenance scheduled for 2:00 AM UTC',
+        },
       ];
 
       // Randomly resolve some alerts to simulate dynamic state
@@ -54,25 +54,25 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
       res.status(200).json(alerts);
     } catch (error) {
       console.error('Error fetching alerts:', error);
-      res.status(500).json({ 
+      res.status(500).json({
         error: 'Failed to fetch performance alerts',
-        message: error instanceof Error ? error.message : 'Unknown error'
+        message: error instanceof Error ? error.message : 'Unknown error',
       });
     }
   } else if (req.method === 'POST') {
     // Handle alert resolution (for POST /alerts/:id/resolve)
     try {
       const alertId = req.url?.split('/').pop()?.replace('resolve', '').replace('/', '');
-      
-      res.status(200).json({ 
+
+      res.status(200).json({
         message: 'Alert resolved successfully',
-        alertId: alertId || 'unknown'
+        alertId: alertId || 'unknown',
       });
     } catch (error) {
       console.error('Error resolving alert:', error);
-      res.status(500).json({ 
+      res.status(500).json({
         error: 'Failed to resolve alert',
-        message: error instanceof Error ? error.message : 'Unknown error'
+        message: error instanceof Error ? error.message : 'Unknown error',
       });
     }
   } else {

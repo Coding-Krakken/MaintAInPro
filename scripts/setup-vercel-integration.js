@@ -41,13 +41,14 @@ console.log('\n🔑 Setting up GitHub repository secrets...\n');
 // Set the Vercel secrets in GitHub
 try {
   console.log('Setting VERCEL_PROJECT_ID...');
-  execSync(`gh secret set VERCEL_PROJECT_ID --body "${projectConfig.projectId}"`, { stdio: 'pipe' });
+  execSync(`gh secret set VERCEL_PROJECT_ID --body "${projectConfig.projectId}"`, {
+    stdio: 'pipe',
+  });
   console.log('✅ VERCEL_PROJECT_ID set');
 
   console.log('Setting VERCEL_ORG_ID...');
   execSync(`gh secret set VERCEL_ORG_ID --body "${projectConfig.orgId}"`, { stdio: 'pipe' });
   console.log('✅ VERCEL_ORG_ID set');
-
 } catch (error) {
   console.log('❌ Failed to set GitHub secrets:', error.message);
   process.exit(1);
@@ -70,13 +71,17 @@ console.log('   1. Go to: https://vercel.com/account/tokens');
 console.log('   2. Create new token with "Full Access" scope');
 console.log('   3. Run: gh secret set VERCEL_TOKEN --body "your_token_here"');
 
-console.log('\n🚀 After setting VERCEL_TOKEN, the autonomous deployment loop will be fully operational!');
+console.log(
+  '\n🚀 After setting VERCEL_TOKEN, the autonomous deployment loop will be fully operational!'
+);
 
 console.log('\n📊 Current GitHub Secrets Status:');
 try {
-  const secrets = JSON.parse(execSync('gh api repos/:owner/:repo/actions/secrets', { encoding: 'utf8' }));
+  const secrets = JSON.parse(
+    execSync('gh api repos/:owner/:repo/actions/secrets', { encoding: 'utf8' })
+  );
   const secretNames = secrets.secrets.map(s => s.name);
-  
+
   ['VERCEL_TOKEN', 'VERCEL_ORG_ID', 'VERCEL_PROJECT_ID'].forEach(secret => {
     const status = secretNames.includes(secret) ? '✅' : '❌';
     console.log(`   ${status} ${secret}`);

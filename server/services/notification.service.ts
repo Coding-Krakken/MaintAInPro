@@ -20,20 +20,20 @@ class NotificationServiceImpl implements NotificationService {
     this.io = new SocketIOServer(httpServer, {
       cors: {
         origin: process.env.NODE_ENV === 'production' ? false : true,
-        methods: ["GET", "POST"],
-        credentials: true
+        methods: ['GET', 'POST'],
+        credentials: true,
       },
-      transports: ['websocket', 'polling']
+      transports: ['websocket', 'polling'],
     });
 
-    this.io.on('connection', (socket) => {
+    this.io.on('connection', socket => {
       console.log(`Socket connected: ${socket.id}`);
 
       // Handle user authentication
       socket.on('authenticate', (data: { userId: string; warehouseId: string }) => {
         try {
           const { userId, warehouseId } = data;
-          
+
           // Store user mapping
           if (!this.userSockets.has(userId)) {
             this.userSockets.set(userId, new Set());
@@ -85,7 +85,7 @@ class NotificationServiceImpl implements NotificationService {
       });
 
       // Handle errors
-      socket.on('error', (error) => {
+      socket.on('error', error => {
         console.error(`Socket error for ${socket.id}:`, error);
       });
     });
@@ -125,7 +125,7 @@ class NotificationServiceImpl implements NotificationService {
       if (notificationData.userId) {
         this.io.to(`user:${notificationData.userId}`).emit('notification', {
           type: 'notification',
-          data: notification
+          data: notification,
         });
 
         // Send to warehouse if applicable (notifications are user-scoped, so get user's warehouse)
@@ -133,7 +133,7 @@ class NotificationServiceImpl implements NotificationService {
         if (userProfile?.warehouseId) {
           this.io.to(`warehouse:${userProfile.warehouseId}`).emit('warehouse_notification', {
             type: 'warehouse_notification',
-            data: notification
+            data: notification,
           });
         }
       }
@@ -151,7 +151,7 @@ class NotificationServiceImpl implements NotificationService {
     this.io.to(`user:${userId}`).emit('real_time_update', {
       type: 'update',
       timestamp: new Date().toISOString(),
-      data
+      data,
     });
   }
 
@@ -162,7 +162,7 @@ class NotificationServiceImpl implements NotificationService {
       type: 'warehouse_update',
       timestamp: new Date().toISOString(),
       warehouseId,
-      data
+      data,
     });
   }
 
@@ -172,16 +172,20 @@ class NotificationServiceImpl implements NotificationService {
     this.io.emit('system_alert', {
       type: 'system_alert',
       timestamp: new Date().toISOString(),
-      data
+      data,
     });
   }
 
   // Helper methods for specific notification types
-  async sendWorkOrderNotification(workOrderId: string, action: string, warehouseId: string): Promise<void> {
+  async sendWorkOrderNotification(
+    workOrderId: string,
+    action: string,
+    warehouseId: string
+  ): Promise<void> {
     await this.broadcastToWarehouse(warehouseId, {
       type: 'work_order',
       action,
-      workOrderId
+      workOrderId,
     });
 
     // Broadcast to specific room
@@ -189,33 +193,42 @@ class NotificationServiceImpl implements NotificationService {
       this.io.to(`work_orders:${warehouseId}`).emit('work_order_update', {
         workOrderId,
         action,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
     }
   }
 
-  async sendEquipmentNotification(equipmentId: string, action: string, warehouseId: string): Promise<void> {
+  async sendEquipmentNotification(
+    equipmentId: string,
+    action: string,
+    warehouseId: string
+  ): Promise<void> {
     await this.broadcastToWarehouse(warehouseId, {
       type: 'equipment',
       action,
-      equipmentId
+      equipmentId,
     });
 
     if (this.io) {
       this.io.to(`equipment:${warehouseId}`).emit('equipment_update', {
         equipmentId,
         action,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
     }
   }
 
-  async sendInventoryAlert(partId: string, action: string, warehouseId: string, stockLevel?: number): Promise<void> {
+  async sendInventoryAlert(
+    partId: string,
+    action: string,
+    warehouseId: string,
+    stockLevel?: number
+  ): Promise<void> {
     await this.broadcastToWarehouse(warehouseId, {
       type: 'inventory',
       action,
       partId,
-      stockLevel
+      stockLevel,
     });
 
     if (this.io) {
@@ -223,37 +236,41 @@ class NotificationServiceImpl implements NotificationService {
         partId,
         action,
         stockLevel,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
     }
   }
 
-  async sendPMNotification(pmTemplateId: string, action: string, warehouseId: string): Promise<void> {
+  async sendPMNotification(
+    pmTemplateId: string,
+    action: string,
+    warehouseId: string
+  ): Promise<void> {
     await this.broadcastToWarehouse(warehouseId, {
       type: 'pm',
       action,
-      pmTemplateId
+      pmTemplateId,
     });
 
     if (this.io) {
       this.io.to(`pm:${warehouseId}`).emit('pm_update', {
         pmTemplateId,
         action,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
     }
   }
 
   // Get connection statistics
-  getConnectionStats(): { 
-    totalConnections: number; 
-    userConnections: number; 
-    warehouseConnections: number; 
+  getConnectionStats(): {
+    totalConnections: number;
+    userConnections: number;
+    warehouseConnections: number;
   } {
     return {
       totalConnections: this.io ? this.io.sockets.sockets.size : 0,
       userConnections: this.userSockets.size,
-      warehouseConnections: this.warehouseSockets.size
+      warehouseConnections: this.warehouseSockets.size,
     };
   }
 

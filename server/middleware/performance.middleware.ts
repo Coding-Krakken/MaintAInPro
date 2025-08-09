@@ -10,38 +10,42 @@ export interface PerformanceRequest extends Request {
  * Performance monitoring middleware
  * Tracks request response times and counts
  */
-export function performanceMiddleware(req: PerformanceRequest, res: Response, next: NextFunction): void {
+export function performanceMiddleware(
+  req: PerformanceRequest,
+  res: Response,
+  next: NextFunction
+): void {
   // Record start time
   req.startTime = performance.now();
-  
+
   // Increment request count
   monitoringService.incrementRequestCount();
 
   // Override res.json to capture response time
   const originalJson = res.json;
-  res.json = function(body?: any) {
+  res.json = function (body?: any) {
     if (req.startTime) {
       const responseTime = Math.round(performance.now() - req.startTime);
       monitoringService.recordResponseTime(responseTime);
-      
+
       // Add performance headers
       res.set('X-Response-Time', `${responseTime}ms`);
     }
-    
+
     return originalJson.call(this, body);
   };
 
   // Override res.send to capture response time for non-JSON responses
   const originalSend = res.send;
-  res.send = function(body?: any) {
+  res.send = function (body?: any) {
     if (req.startTime) {
       const responseTime = Math.round(performance.now() - req.startTime);
       monitoringService.recordResponseTime(responseTime);
-      
+
       // Add performance headers
       res.set('X-Response-Time', `${responseTime}ms`);
     }
-    
+
     return originalSend.call(this, body);
   };
 
@@ -52,7 +56,12 @@ export function performanceMiddleware(req: PerformanceRequest, res: Response, ne
  * Error tracking middleware
  * Records error occurrences for monitoring
  */
-export function errorTrackingMiddleware(err: any, req: Request, res: Response, next: NextFunction): void {
+export function errorTrackingMiddleware(
+  err: any,
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void {
   // Increment error count
   monitoringService.incrementErrorCount();
 

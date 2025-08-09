@@ -15,7 +15,7 @@ export const testData = {
     partNumber: 'HYT106',
     description: 'Test Part',
     quantity: 2,
-  }
+  },
 };
 
 export const testCredentials = {
@@ -26,5 +26,5 @@ export const testCredentials = {
   valid: {
     email: 'test@example.com',
     password: 'password',
-  }
+  },
 };

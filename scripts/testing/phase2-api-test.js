@@ -8,7 +8,7 @@ const testResults = {
   total: 0,
   passed: 0,
   failed: 0,
-  errors: []
+  errors: [],
 };
 
 function runTest(testName, testFunction) {

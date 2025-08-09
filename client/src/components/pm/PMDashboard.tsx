@@ -117,7 +117,7 @@ const PMDashboard: React.FC = () => {
       if (!response.ok) throw new Error('Failed to generate PM work orders');
       return response.json();
     },
-    onSuccess: (data) => {
+    onSuccess: data => {
       setGenerationResult(data);
       queryClient.invalidateQueries({ queryKey: ['/api/work-orders'] });
       queryClient.invalidateQueries({ queryKey: ['/api/pm-engine/schedule'] });
@@ -138,7 +138,7 @@ const PMDashboard: React.FC = () => {
       if (!response.ok) throw new Error('Failed to run PM automation');
       return response.json();
     },
-    onSuccess: (data) => {
+    onSuccess: data => {
       setGenerationResult(data);
       queryClient.invalidateQueries({ queryKey: ['/api/work-orders'] });
       queryClient.invalidateQueries({ queryKey: ['/api/pm-engine/schedule'] });
@@ -161,13 +161,13 @@ const PMDashboard: React.FC = () => {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'compliant':
-        return <CheckCircle className="h-4 w-4" />;
+        return <CheckCircle className='h-4 w-4' />;
       case 'due':
-        return <Clock className="h-4 w-4" />;
+        return <Clock className='h-4 w-4' />;
       case 'overdue':
-        return <AlertCircle className="h-4 w-4" />;
+        return <AlertCircle className='h-4 w-4' />;
       default:
-        return <Calendar className="h-4 w-4" />;
+        return <Calendar className='h-4 w-4' />;
     }
   };
 
@@ -180,25 +180,25 @@ const PMDashboard: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Preventive Maintenance Dashboard</h1>
-        <div className="flex gap-2">
+    <div className='space-y-6'>
+      <div className='flex justify-between items-center'>
+        <h1 className='text-2xl font-bold'>Preventive Maintenance Dashboard</h1>
+        <div className='flex gap-2'>
           <Button
             onClick={() => generatePMsMutation.mutate()}
             disabled={generatePMsMutation.isPending}
-            className="flex items-center gap-2"
+            className='flex items-center gap-2'
           >
-            <Play className="h-4 w-4" />
+            <Play className='h-4 w-4' />
             Generate PM Work Orders
           </Button>
           <Button
             onClick={() => runAutomationMutation.mutate()}
             disabled={runAutomationMutation.isPending}
-            variant="outline"
-            className="flex items-center gap-2"
+            variant='outline'
+            className='flex items-center gap-2'
           >
-            <Play className="h-4 w-4" />
+            <Play className='h-4 w-4' />
             Run PM Automation
           </Button>
         </div>
@@ -206,18 +206,16 @@ const PMDashboard: React.FC = () => {
 
       {generationResult && (
         <Alert>
-          <AlertCircle className="h-4 w-4" />
+          <AlertCircle className='h-4 w-4' />
           <AlertDescription>
-            {generationResult.success ? (
-              `Successfully generated ${generationResult.generated} PM work orders`
-            ) : (
-              `PM generation failed: ${generationResult.errors?.join(', ')}`
-            )}
+            {generationResult.success
+              ? `Successfully generated ${generationResult.generated} PM work orders`
+              : `PM generation failed: ${generationResult.errors?.join(', ')}`}
           </AlertDescription>
         </Alert>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
         {/* Equipment Selection */}
         <Card>
           <CardHeader>
@@ -225,7 +223,7 @@ const PMDashboard: React.FC = () => {
             <CardDescription>Select equipment to view PM schedule</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-2">
+            <div className='space-y-2'>
               {equipment.map((item: any) => (
                 <div
                   key={item.id}
@@ -236,12 +234,15 @@ const PMDashboard: React.FC = () => {
                   }`}
                   onClick={() => setSelectedEquipmentId(item.id)}
                 >
-                  <div className="flex justify-between items-center">
+                  <div className='flex justify-between items-center'>
                     <div>
-                      <p className="font-medium">{item.assetTag}</p>
-                      <p className="text-sm text-gray-600">{item.model}</p>
+                      <p className='font-medium'>{item.assetTag}</p>
+                      <p className='text-sm text-gray-600'>{item.model}</p>
                     </div>
-                    <Badge variant="outline" className={`${item.status === 'active' ? 'border-green-500' : 'border-gray-500'}`}>
+                    <Badge
+                      variant='outline'
+                      className={`${item.status === 'active' ? 'border-green-500' : 'border-gray-500'}`}
+                    >
                       {item.status}
                     </Badge>
                   </div>
@@ -258,15 +259,17 @@ const PMDashboard: React.FC = () => {
             <CardDescription>Available preventive maintenance templates</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-2">
-              {pmTemplates.map((template) => (
-                <div key={template.id} className="p-3 border rounded-lg">
-                  <div className="flex justify-between items-start">
+            <div className='space-y-2'>
+              {pmTemplates.map(template => (
+                <div key={template.id} className='p-3 border rounded-lg'>
+                  <div className='flex justify-between items-start'>
                     <div>
-                      <p className="font-medium">{template.model}</p>
-                      <p className="text-sm text-gray-600">{template.component} - {template.action}</p>
+                      <p className='font-medium'>{template.model}</p>
+                      <p className='text-sm text-gray-600'>
+                        {template.component} - {template.action}
+                      </p>
                     </div>
-                    <Badge variant="outline">{formatFrequency(template.frequency)}</Badge>
+                    <Badge variant='outline'>{formatFrequency(template.frequency)}</Badge>
                   </div>
                 </div>
               ))}
@@ -276,33 +279,37 @@ const PMDashboard: React.FC = () => {
       </div>
 
       {selectedEquipmentId && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
           {/* PM Schedule */}
           <Card>
             <CardHeader>
               <CardTitle>PM Schedule</CardTitle>
-              <CardDescription>Preventive maintenance schedule for selected equipment</CardDescription>
+              <CardDescription>
+                Preventive maintenance schedule for selected equipment
+              </CardDescription>
             </CardHeader>
             <CardContent>
               {pmSchedule.length === 0 ? (
-                <p className="text-gray-500">No PM schedule available for this equipment</p>
+                <p className='text-gray-500'>No PM schedule available for this equipment</p>
               ) : (
-                <div className="space-y-3">
+                <div className='space-y-3'>
                   {pmSchedule.map((schedule, index) => (
-                    <div key={index} className="p-3 border rounded-lg">
-                      <div className="flex justify-between items-start">
+                    <div key={index} className='p-3 border rounded-lg'>
+                      <div className='flex justify-between items-start'>
                         <div>
-                          <p className="font-medium">Next Due: {formatDate(schedule.nextDueDate)}</p>
-                          <p className="text-sm text-gray-600">
+                          <p className='font-medium'>
+                            Next Due: {formatDate(schedule.nextDueDate)}
+                          </p>
+                          <p className='text-sm text-gray-600'>
                             Frequency: {formatFrequency(schedule.frequency)}
                           </p>
                           {schedule.lastCompletedDate && (
-                            <p className="text-sm text-gray-600">
+                            <p className='text-sm text-gray-600'>
                               Last Completed: {formatDate(schedule.lastCompletedDate)}
                             </p>
                           )}
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className='flex items-center gap-2'>
                           <Badge className={getStatusColor(schedule.complianceStatus)}>
                             {getStatusIcon(schedule.complianceStatus)}
                             {schedule.complianceStatus}
@@ -324,39 +331,43 @@ const PMDashboard: React.FC = () => {
             </CardHeader>
             <CardContent>
               {compliance ? (
-                <div className="space-y-4">
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-green-600">{compliance.compliancePercentage}%</div>
-                    <p className="text-sm text-gray-600">Compliance Rate</p>
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="text-center p-3 bg-gray-50 rounded-lg">
-                      <div className="text-xl font-semibold">{compliance.totalPMCount}</div>
-                      <p className="text-sm text-gray-600">Total PMs</p>
+                <div className='space-y-4'>
+                  <div className='text-center'>
+                    <div className='text-3xl font-bold text-green-600'>
+                      {compliance.compliancePercentage}%
                     </div>
-                    <div className="text-center p-3 bg-red-50 rounded-lg">
-                      <div className="text-xl font-semibold text-red-600">{compliance.missedPMCount}</div>
-                      <p className="text-sm text-gray-600">Missed PMs</p>
+                    <p className='text-sm text-gray-600'>Compliance Rate</p>
+                  </div>
+
+                  <div className='grid grid-cols-2 gap-4'>
+                    <div className='text-center p-3 bg-gray-50 rounded-lg'>
+                      <div className='text-xl font-semibold'>{compliance.totalPMCount}</div>
+                      <p className='text-sm text-gray-600'>Total PMs</p>
+                    </div>
+                    <div className='text-center p-3 bg-red-50 rounded-lg'>
+                      <div className='text-xl font-semibold text-red-600'>
+                        {compliance.missedPMCount}
+                      </div>
+                      <p className='text-sm text-gray-600'>Missed PMs</p>
                     </div>
                   </div>
 
                   {compliance.lastPMDate && (
-                    <div className="text-center p-3 bg-blue-50 rounded-lg">
-                      <p className="text-sm text-gray-600">Last PM Date</p>
-                      <p className="font-semibold">{formatDate(compliance.lastPMDate)}</p>
+                    <div className='text-center p-3 bg-blue-50 rounded-lg'>
+                      <p className='text-sm text-gray-600'>Last PM Date</p>
+                      <p className='font-semibold'>{formatDate(compliance.lastPMDate)}</p>
                     </div>
                   )}
 
                   {compliance.nextPMDate && (
-                    <div className="text-center p-3 bg-yellow-50 rounded-lg">
-                      <p className="text-sm text-gray-600">Next PM Date</p>
-                      <p className="font-semibold">{formatDate(compliance.nextPMDate)}</p>
+                    <div className='text-center p-3 bg-yellow-50 rounded-lg'>
+                      <p className='text-sm text-gray-600'>Next PM Date</p>
+                      <p className='font-semibold'>{formatDate(compliance.nextPMDate)}</p>
                     </div>
                   )}
                 </div>
               ) : (
-                <p className="text-gray-500">Loading compliance data...</p>
+                <p className='text-gray-500'>Loading compliance data...</p>
               )}
             </CardContent>
           </Card>

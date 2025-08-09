@@ -4,7 +4,8 @@
 
 ### Architectural Principles
 
-- **Domain-Driven Design (DDD)**: Organize code by business domains, not technical layers
+- **Domain-Driven Design (DDD)**: Organize code by business domains, not
+  technical layers
 - **CQRS Pattern**: Separate read/write operations for optimal performance
 - **Event Sourcing**: Track all state changes for audit and debugging
 - **Hexagonal Architecture**: Decouple business logic from external dependencies
@@ -597,12 +598,16 @@ getTTFB(sendToAnalytics);
 // Supabase Real-time Subscription
 const workOrderSubscription = supabase
   .channel('work-orders')
-  .on('postgres_changes', { event: '*', schema: 'public', table: 'work_orders' }, payload => {
-    // Update local state
-    queryClient.invalidateQueries(['work-orders']);
-    // Notify users
-    showNotification('Work order updated', payload.new);
-  })
+  .on(
+    'postgres_changes',
+    { event: '*', schema: 'public', table: 'work_orders' },
+    payload => {
+      // Update local state
+      queryClient.invalidateQueries(['work-orders']);
+      // Notify users
+      showNotification('Work order updated', payload.new);
+    }
+  )
   .subscribe();
 ```
 
@@ -887,7 +892,10 @@ class IoTManager {
     }
   }
 
-  subscribeToSensorData(deviceId: string, callback: (data: SensorReading) => void) {
+  subscribeToSensorData(
+    deviceId: string,
+    callback: (data: SensorReading) => void
+  ) {
     // Subscribe to real-time sensor data
     // Process and normalize data
     // Trigger callbacks with formatted data
@@ -930,6 +938,6 @@ class PerformanceMonitor {
 }
 ```
 
-This enhanced architecture provides a comprehensive foundation for next-generation maintenance
-management, incorporating cutting-edge technologies and patterns for scalability, performance, and
-maintainability.
+This enhanced architecture provides a comprehensive foundation for
+next-generation maintenance management, incorporating cutting-edge technologies
+and patterns for scalability, performance, and maintainability.

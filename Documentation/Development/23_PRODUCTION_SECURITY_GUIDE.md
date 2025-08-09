@@ -2,20 +2,24 @@
 
 ## 🔒 Security Architecture Overview
 
-MaintAInPro implements enterprise-grade security measures designed for production environments. This guide documents the comprehensive security implementation.
+MaintAInPro implements enterprise-grade security measures designed for
+production environments. This guide documents the comprehensive security
+implementation.
 
 ## Security Middleware Stack
 
 ### Core Security Components
 
 #### 1. Rate Limiting Protection
+
 - **Authentication Rate Limiting**: 5 attempts per 15 minutes per IP
-- **API Rate Limiting**: 1000 requests per minute per IP  
+- **API Rate Limiting**: 1000 requests per minute per IP
 - **Upload Rate Limiting**: 50 uploads per 15 minutes per IP
 - **Password Reset Rate Limiting**: 3 attempts per hour per IP
 - **Export Rate Limiting**: 10 exports per hour per IP
 
 #### 2. Input Security
+
 - **SQL Injection Protection**: Pattern-based detection and blocking
 - **XSS Protection**: HTML tag and script sanitization
 - **Input Sanitization**: Comprehensive data cleaning
@@ -23,6 +27,7 @@ MaintAInPro implements enterprise-grade security measures designed for productio
 - **Suspicious User Agent Detection**: Blocks known attack tools
 
 #### 3. Security Headers
+
 ```typescript
 // Comprehensive security headers applied to all responses
 'X-Content-Type-Options': 'nosniff'
@@ -34,12 +39,14 @@ MaintAInPro implements enterprise-grade security measures designed for productio
 ```
 
 #### 4. Authentication & Authorization
+
 - **JWT Token Validation**: Secure session management
 - **Role-Based Access Control**: Multi-level permission system
 - **Session Validation**: Database-backed session tracking
 - **Token Refresh**: Automated token renewal
 
 #### 5. Audit Logging
+
 - **Request Tracking**: Complete API request logging
 - **Security Event Logging**: Suspicious activity detection
 - **Performance Monitoring**: Response time tracking
@@ -47,11 +54,14 @@ MaintAInPro implements enterprise-grade security measures designed for productio
 
 ## IPv6 Security Implementation
 
-Our security middleware properly handles IPv6 addresses using express-rate-limit's default key generator, ensuring proper rate limiting for both IPv4 and IPv6 connections.
+Our security middleware properly handles IPv6 addresses using
+express-rate-limit's default key generator, ensuring proper rate limiting for
+both IPv4 and IPv6 connections.
 
 ## CORS Configuration
 
 Dynamic CORS configuration supports multiple environments:
+
 - Development: localhost:3000, localhost:5173
 - Production: Environment-specific URLs
 - Secure credential handling
@@ -59,12 +69,13 @@ Dynamic CORS configuration supports multiple environments:
 ## Deployment Security Checklist
 
 ### Environment Variables Required
+
 ```env
 # Database Security
 DATABASE_URL=postgres://...
 DB_SSL_MODE=require
 
-# JWT Security  
+# JWT Security
 JWT_SECRET=<strong-secret>
 JWT_REFRESH_SECRET=<strong-refresh-secret>
 
@@ -78,6 +89,7 @@ PRODUCTION_URL=https://your-api.com
 ```
 
 ### Pre-Deployment Verification
+
 - [ ] All rate limits configured appropriately for production
 - [ ] Security headers validated
 - [ ] SQL injection protection tested
@@ -89,6 +101,7 @@ PRODUCTION_URL=https://your-api.com
 ## Security Monitoring
 
 ### Key Metrics to Monitor
+
 1. **Rate Limit Violations**: Track blocked requests
 2. **Authentication Failures**: Monitor login attempts
 3. **SQL Injection Attempts**: Track blocked malicious queries
@@ -96,7 +109,9 @@ PRODUCTION_URL=https://your-api.com
 5. **Session Anomalies**: Track unusual session patterns
 
 ### Log Analysis
+
 All security events are logged with structured data for analysis:
+
 ```json
 {
   "method": "POST",
@@ -112,8 +127,9 @@ All security events are logged with structured data for analysis:
 ## Security Testing
 
 The security implementation includes comprehensive test coverage:
+
 - Input validation tests
-- Rate limiting verification  
+- Rate limiting verification
 - Authentication/authorization tests
 - CORS configuration tests
 - Security header validation
@@ -122,6 +138,7 @@ The security implementation includes comprehensive test coverage:
 ## Incident Response
 
 In case of security incidents:
+
 1. Monitor audit logs for patterns
 2. Adjust rate limits if under attack
 3. Temporarily block suspicious IPs using IP whitelist
@@ -131,12 +148,14 @@ In case of security incidents:
 ## Regular Security Maintenance
 
 ### Monthly Tasks
+
 - [ ] Review audit logs for anomalies
 - [ ] Update security dependencies
 - [ ] Test security measures
 - [ ] Review rate limit effectiveness
 
-### Quarterly Tasks  
+### Quarterly Tasks
+
 - [ ] Security penetration testing
 - [ ] Update security policies
 - [ ] Review access controls
@@ -144,6 +163,5 @@ In case of security incidents:
 
 ---
 
-**Security Contact**: For security issues, follow responsible disclosure practices.
-**Last Updated**: August 6, 2025
-**Version**: 1.0.0
+**Security Contact**: For security issues, follow responsible disclosure
+practices. **Last Updated**: August 6, 2025 **Version**: 1.0.0

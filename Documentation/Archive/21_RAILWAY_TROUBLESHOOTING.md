@@ -4,9 +4,11 @@
 
 ### 1. Build Failure During npm ci
 
-**Problem**: The Railway build was failing during the `npm ci` step, hanging with package installation.
+**Problem**: The Railway build was failing during the `npm ci` step, hanging
+with package installation.
 
 **Solutions Applied**:
+
 - Updated Node.js version from 18 to 20 in `nixpacks.toml`
 - Updated npm version from 9.x to 10.x
 - Added build optimization flags to npm ci
@@ -14,13 +16,16 @@
 
 ### 2. TypeScript Compilation Issues
 
-**Problem**: The build script was failing because `tsc` command wasn't available globally.
+**Problem**: The build script was failing because `tsc` command wasn't available
+globally.
 
-**Solution**: Updated build script to use `npx tsc --noEmit` instead of `tsc --noEmit`.
+**Solution**: Updated build script to use `npx tsc --noEmit` instead of
+`tsc --noEmit`.
 
 ### 3. Configuration Changes Made
 
 #### nixpacks.toml
+
 ```toml
 [phases.setup]
 nixPkgs = ["nodejs_20", "npm-10_x"]
@@ -41,6 +46,7 @@ NODE_OPTIONS = "--max-old-space-size=4096"
 ```
 
 #### railway.json
+
 ```json
 {
   "build": {
@@ -61,6 +67,7 @@ NODE_OPTIONS = "--max-old-space-size=4096"
 ```
 
 #### package.json build script
+
 ```json
 "build": "vite build && npx tsc --noEmit"
 ```
@@ -68,6 +75,7 @@ NODE_OPTIONS = "--max-old-space-size=4096"
 ## Railway CLI Commands
 
 ### Installation
+
 ```bash
 # Install Railway CLI globally
 npm install -g @railway/cli
@@ -77,6 +85,7 @@ curl -fsSL https://railway.app/install.sh | sh
 ```
 
 ### Deployment Commands
+
 ```bash
 # Login to Railway
 railway login
@@ -97,7 +106,9 @@ railway logs --follow
 ## Monitoring and Debugging
 
 ### Health Check
+
 The application has a health check endpoint at `/api/health` that returns:
+
 ```json
 {
   "status": "ok",
@@ -112,17 +123,20 @@ The application has a health check endpoint at `/api/health` that returns:
 
 1. **Build Timeout**: Increase build timeout in Railway settings
 2. **Memory Issues**: The `NODE_OPTIONS` flag increases memory to 4GB
-3. **Dependency Issues**: Use `npm ci --production=false` to install all dependencies
+3. **Dependency Issues**: Use `npm ci --production=false` to install all
+   dependencies
 4. **TypeScript Issues**: Use `npx tsc` instead of global `tsc`
 
 ### Deployment Script
 
 Use the provided `deploy.sh` script:
+
 ```bash
 npm run deploy:railway
 ```
 
 Or manually:
+
 ```bash
 ./deploy.sh
 ```
@@ -137,6 +151,7 @@ Or manually:
 ## Environment Variables
 
 Make sure these are set in Railway:
+
 - `NODE_ENV=production`
 - `NPM_CONFIG_PRODUCTION=false`
 - `NODE_OPTIONS=--max-old-space-size=4096`

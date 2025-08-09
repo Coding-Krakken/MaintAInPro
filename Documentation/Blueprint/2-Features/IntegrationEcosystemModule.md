@@ -9,17 +9,18 @@
 
 ## 🎯 Description
 
-A comprehensive integration platform that provides seamless connectivity with industrial IoT
-systems, advanced analytics platforms, supply chain networks, and cutting-edge technologies to
-create a unified maintenance ecosystem.
+A comprehensive integration platform that provides seamless connectivity with
+industrial IoT systems, advanced analytics platforms, supply chain networks, and
+cutting-edge technologies to create a unified maintenance ecosystem.
 
 ## ✅ Acceptance Criteria
 
 ### INT-001: Industrial IoT & Sensor Integration
 
 **Feature**: Native IoT Protocol Support  
-**User Story**: As a maintenance manager, I want real-time equipment monitoring through industrial
-IoT sensors to enable predictive maintenance and automated alerts.
+**User Story**: As a maintenance manager, I want real-time equipment monitoring
+through industrial IoT sensors to enable predictive maintenance and automated
+alerts.
 
 **Acceptance Criteria**:
 
@@ -37,8 +38,8 @@ IoT sensors to enable predictive maintenance and automated alerts.
 ### INT-002: Advanced Analytics & BI Integration
 
 **Feature**: Business Intelligence Platform Connectivity  
-**User Story**: As an executive, I want deep integration with BI tools to create sophisticated
-reports and dashboards for strategic decision-making.
+**User Story**: As an executive, I want deep integration with BI tools to create
+sophisticated reports and dashboards for strategic decision-making.
 
 **Acceptance Criteria**:
 
@@ -56,8 +57,9 @@ reports and dashboards for strategic decision-making.
 ### INT-003: Supply Chain & Procurement Integration
 
 **Feature**: Automated Supplier Network Integration  
-**User Story**: As a procurement manager, I want seamless integration with supplier systems for
-automated ordering, delivery tracking, and vendor management.
+**User Story**: As a procurement manager, I want seamless integration with
+supplier systems for automated ordering, delivery tracking, and vendor
+management.
 
 **Acceptance Criteria**:
 
@@ -154,7 +156,11 @@ class IoTIntegrationManager {
     }
   }
 
-  private async processSensorReading(deviceId: string, sensorId: string, data: any): Promise<void> {
+  private async processSensorReading(
+    deviceId: string,
+    sensorId: string,
+    data: any
+  ): Promise<void> {
     const reading: SensorReading = {
       deviceId,
       sensorId,
@@ -177,7 +183,10 @@ class IoTIntegrationManager {
     this.eventBus.emit('sensor-reading', reading);
   }
 
-  async getDeviceData(deviceId: string, timeRange: DateRange): Promise<SensorReading[]> {
+  async getDeviceData(
+    deviceId: string,
+    timeRange: DateRange
+  ): Promise<SensorReading[]> {
     return await this.timeSeriesDB.query({
       deviceId,
       startTime: timeRange.start,
@@ -231,7 +240,11 @@ class AnalyticsIntegrationManager {
     const pipeline = new DataPipeline({
       source: 'maintainpro_db',
       destination: connection.type.toLowerCase(),
-      transformations: [new DataCleaning(), new DataNormalization(), new DataAggregation()],
+      transformations: [
+        new DataCleaning(),
+        new DataNormalization(),
+        new DataAggregation(),
+      ],
     });
 
     await this.etlPipeline.register(connection.id, pipeline);
@@ -263,10 +276,16 @@ class AnalyticsIntegrationManager {
     });
 
     // Generate dashboard configuration for target BI platform
-    const config = await this.generateDashboardConfig(dashboard, request.platform);
+    const config = await this.generateDashboardConfig(
+      dashboard,
+      request.platform
+    );
 
     // Deploy dashboard to BI platform
-    const deployedDashboard = await this.deployDashboard(config, request.platform);
+    const deployedDashboard = await this.deployDashboard(
+      config,
+      request.platform
+    );
 
     return deployedDashboard;
   }
@@ -346,7 +365,9 @@ class SupplyChainIntegrationManager {
     this.suppliers.set(supplier.id, supplier);
   }
 
-  async createPurchaseOrder(orderRequest: OrderRequest): Promise<PurchaseOrder> {
+  async createPurchaseOrder(
+    orderRequest: OrderRequest
+  ): Promise<PurchaseOrder> {
     const supplier = this.suppliers.get(orderRequest.supplierId);
     if (!supplier) throw new Error('Supplier not found');
 
@@ -384,12 +405,18 @@ class SupplyChainIntegrationManager {
     }
   }
 
-  private async sendEDIOrder(po: PurchaseOrder, supplier: SupplierConnection): Promise<void> {
+  private async sendEDIOrder(
+    po: PurchaseOrder,
+    supplier: SupplierConnection
+  ): Promise<void> {
     // Generate EDI 850 (Purchase Order) document
     const edi850 = this.ediProcessor.generatePurchaseOrder(po);
 
     // Send via AS2, SFTP, or other EDI transport
-    await this.ediProcessor.sendDocument(edi850, supplier.configuration.endpoint);
+    await this.ediProcessor.sendDocument(
+      edi850,
+      supplier.configuration.endpoint
+    );
 
     // Update order status
     po.status = 'sent';
@@ -399,7 +426,9 @@ class SupplyChainIntegrationManager {
     const supplier = this.suppliers.get(supplierId);
     if (!supplier) throw new Error('Supplier not found');
 
-    const catalogCapability = supplier.capabilities.find(c => c.type === 'catalog');
+    const catalogCapability = supplier.capabilities.find(
+      c => c.type === 'catalog'
+    );
     if (!catalogCapability?.enabled) {
       throw new Error('Catalog synchronization not supported');
     }
@@ -414,7 +443,10 @@ class SupplyChainIntegrationManager {
     await this.catalogManager.updateCatalog(supplierId, normalizedCatalog);
 
     // Notify relevant users
-    this.eventBus.emit('catalog-updated', { supplierId, itemCount: normalizedCatalog.length });
+    this.eventBus.emit('catalog-updated', {
+      supplierId,
+      itemCount: normalizedCatalog.length,
+    });
   }
 
   async trackShipment(orderId: string): Promise<ShipmentStatus> {
@@ -427,7 +459,10 @@ class SupplyChainIntegrationManager {
     if (!supplier) throw new Error('Supplier not found');
 
     // Get tracking info from supplier or carrier
-    const trackingInfo = await this.getShipmentTracking(order.trackingNumber, supplier);
+    const trackingInfo = await this.getShipmentTracking(
+      order.trackingNumber,
+      supplier
+    );
 
     return {
       trackingNumber: order.trackingNumber,
@@ -442,7 +477,10 @@ class SupplyChainIntegrationManager {
     supplierId: string,
     period: DateRange
   ): Promise<SupplierPerformanceReport> {
-    const orders = await this.orderManager.getOrdersBySupplier(supplierId, period);
+    const orders = await this.orderManager.getOrdersBySupplier(
+      supplierId,
+      period
+    );
 
     const metrics = {
       onTimeDeliveryRate: this.calculateOnTimeDelivery(orders),
@@ -528,5 +566,6 @@ Purchase Request → Supplier Integration → Order Processing → Tracking → 
 - Delivery accuracy: >95%
 - Cost savings through automation: 15-25%
 
-This Integration & Ecosystem module transforms MaintAInPro into a comprehensive platform that
-seamlessly connects with the entire industrial maintenance ecosystem.
+This Integration & Ecosystem module transforms MaintAInPro into a comprehensive
+platform that seamlessly connects with the entire industrial maintenance
+ecosystem.

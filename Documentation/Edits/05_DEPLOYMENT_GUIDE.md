@@ -2,7 +2,8 @@
 
 ## Overview
 
-This guide covers deployment options for MaintainPro CMMS, from local development to production environments.
+This guide covers deployment options for MaintainPro CMMS, from local
+development to production environments.
 
 ## Prerequisites
 
@@ -148,7 +149,7 @@ services:
   app:
     build: .
     ports:
-      - "5000:5000"
+      - '5000:5000'
     environment:
       - NODE_ENV=production
       - DATABASE_URL=postgresql://postgres:password@db:5432/maintainpro
@@ -166,7 +167,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - '5432:5432'
 
 volumes:
   postgres_data:
@@ -225,6 +226,7 @@ Create `railway.json`:
 #### 3. Environment Variables
 
 Set in Railway dashboard:
+
 - `DATABASE_URL` (from Railway PostgreSQL addon)
 - `NODE_ENV=production`
 - `PORT=5000`
@@ -298,11 +300,11 @@ const client = redis.createClient();
 app.get('/api/pm-compliance', async (req, res) => {
   const cacheKey = `pm-compliance-${req.headers['x-warehouse-id']}`;
   const cached = await client.get(cacheKey);
-  
+
   if (cached) {
     return res.json(JSON.parse(cached));
   }
-  
+
   const data = await getPMCompliance();
   await client.setex(cacheKey, 300, JSON.stringify(data)); // 5 min cache
   res.json(data);
@@ -319,7 +321,7 @@ app.get('/health', (req, res) => {
     status: 'healthy',
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
-    version: process.env.npm_package_version
+    version: process.env.npm_package_version,
   });
 });
 ```
@@ -337,20 +339,23 @@ const logger = winston.createLogger({
   ),
   transports: [
     new winston.transports.File({ filename: 'error.log', level: 'error' }),
-    new winston.transports.File({ filename: 'combined.log' })
-  ]
+    new winston.transports.File({ filename: 'combined.log' }),
+  ],
 });
 
 if (process.env.NODE_ENV !== 'production') {
-  logger.add(new winston.transports.Console({
-    format: winston.format.simple()
-  }));
+  logger.add(
+    new winston.transports.Console({
+      format: winston.format.simple(),
+    })
+  );
 }
 ```
 
 ### 3. Performance Monitoring
 
 Consider integrating:
+
 - New Relic for APM
 - Sentry for error tracking
 - DataDog for infrastructure monitoring
@@ -375,21 +380,23 @@ Consider integrating:
 ```javascript
 const helmet = require('helmet');
 
-app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
-      scriptSrc: ["'self'"],
-      imgSrc: ["'self'", "data:", "https:"],
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        scriptSrc: ["'self'"],
+        imgSrc: ["'self'", 'data:', 'https:'],
+      },
     },
-  },
-  hsts: {
-    maxAge: 31536000,
-    includeSubDomains: true,
-    preload: true
-  }
-}));
+    hsts: {
+      maxAge: 31536000,
+      includeSubDomains: true,
+      preload: true,
+    },
+  })
+);
 ```
 
 ## Backup and Recovery
@@ -418,6 +425,7 @@ tar -czf uploads_backup_$(date +%Y%m%d).tar.gz uploads/
 ### Common Issues
 
 1. **Port Already in Use**
+
    ```bash
    lsof -ti:5000 | xargs kill -9
    ```
@@ -432,7 +440,8 @@ tar -czf uploads_backup_$(date +%Y%m%d).tar.gz uploads/
    - Clear build cache: `rm -rf dist && npm run build`
 
 4. **Memory Issues**
-   - Increase Node.js memory: `NODE_OPTIONS="--max-old-space-size=4096" npm start`
+   - Increase Node.js memory:
+     `NODE_OPTIONS="--max-old-space-size=4096" npm start`
 
 ### Logs Location
 
@@ -472,6 +481,7 @@ pm2 restart maintainpro
 ## Support
 
 For deployment issues or questions:
+
 - Check logs first
 - Review this documentation
 - Create GitHub issue with deployment details

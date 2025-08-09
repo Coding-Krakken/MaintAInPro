@@ -51,11 +51,11 @@ jobs:
         run: |
           DEPLOYMENT_URL=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
           echo "preview-url=$DEPLOYMENT_URL" >> $GITHUB_OUTPUT
-          
+
           # Extract deployment ID
           DEPLOYMENT_ID=$(echo "$DEPLOYMENT_URL" | grep -o '[^/]*\.vercel\.app' | head -1)
           echo "deployment-id=$DEPLOYMENT_ID" >> $GITHUB_OUTPUT
-          
+
           echo "🚀 Preview deployed to: $DEPLOYMENT_URL"
 
       - name: Test Deployment Health
@@ -63,7 +63,7 @@ jobs:
           echo "🔍 Testing deployment health..."
           URL="${{ steps.deploy.outputs.preview-url }}"
           echo "Testing: $URL"
-          
+
           # Simple health check with curl
           for i in {1..3}; do
             echo "Attempt $i/3..."
@@ -80,7 +80,7 @@ jobs:
             echo "⏳ Waiting 10s before retry..."
             sleep 10
           done
-          
+
           echo "⚠️ Health check failed, but preview may still be working (auth protection)"
           # Don't fail the workflow for auth-protected deployments
           exit 0
@@ -92,18 +92,18 @@ jobs:
             const deploymentUrl = '${{ steps.deploy.outputs.preview-url }}';
             const deploymentId = '${{ steps.deploy.outputs.deployment-id }}';
             const commitSha = context.sha.substring(0, 7);
-            
+
             const comment = `## 🚀 Preview Deployment
-            
+
             | Property | Value |
             |----------|-------|
             | **URL** | ${deploymentUrl} |
             | **Deployment ID** | ${deploymentId} |
             | **Commit** | ${commitSha} |
             | **Status** | ✅ Ready |
-            
+
             > Preview deployment is ready for testing!`;
-            
+
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
@@ -142,11 +142,11 @@ jobs:
         run: |
           DEPLOYMENT_URL=$(vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }})
           echo "production-url=$DEPLOYMENT_URL" >> $GITHUB_OUTPUT
-          
+
           # Extract deployment ID
           DEPLOYMENT_ID=$(echo "$DEPLOYMENT_URL" | grep -o '[^/]*\.vercel\.app' | head -1)
           echo "deployment-id=$DEPLOYMENT_ID" >> $GITHUB_OUTPUT
-          
+
           echo "🚀 Production deployed to: $DEPLOYMENT_URL"
 
       - name: Test Deployment Health
@@ -155,7 +155,7 @@ jobs:
           echo "🔍 Testing deployment health..."
           URL="${{ steps.deploy.outputs.production-url }}"
           echo "Testing: $URL"
-          
+
           # Simple health check with curl
           for i in {1..5}; do
             echo "Attempt $i/5..."
@@ -172,7 +172,7 @@ jobs:
             echo "⏳ Waiting 10s before retry..."
             sleep 10
           done
-          
+
           echo "❌ Health check failed after 5 attempts"
           exit 1
 
@@ -183,25 +183,25 @@ jobs:
           script: |
             const title = `🚨 Production Deployment Failed - ${context.sha.substring(0, 7)}`;
             const body = `## Deployment Failure Report
-            
+
             **Commit:** ${context.sha}
             **Branch:** ${context.ref}
             **Actor:** ${context.actor}
             **Workflow:** ${context.workflow}
             **Run:** ${context.runNumber}
-            
+
             **Failed Steps:**
             - Deployment URL: ${{ steps.deploy.outputs.production-url }}
             - Health Check: Failed
-            
+
             **Next Steps:**
             1. Check deployment logs: ${context.payload.repository.html_url}/actions/runs/${context.runId}
             2. Verify Vercel deployment status
             3. Check application health endpoints
             4. Review recent changes in commit ${context.sha.substring(0, 7)}
-            
+
             **Auto-created by deployment workflow**`;
-            
+
             github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -216,7 +216,7 @@ jobs:
           echo "🔄 Updating domain aliases..."
           DEPLOYMENT_URL="${{ steps.deploy.outputs.production-url }}"
           DEPLOYMENT_ID=$(echo "$DEPLOYMENT_URL" | grep -o '[^/]*\.vercel\.app' | head -1)
-          
+
           if [ "${{ github.ref }}" = "refs/heads/main" ]; then
             echo "Updating main branch domains..."
             vercel alias set "$DEPLOYMENT_ID" unitedautosupply.org --scope coding-krakken-projects --token=${{ secrets.VERCEL_TOKEN }} || echo "Failed to update unitedautosupply.org"
@@ -226,7 +226,7 @@ jobs:
             vercel alias set "$DEPLOYMENT_ID" uasmaintenance.com --scope coding-krakken-projects --token=${{ secrets.VERCEL_TOKEN }} || echo "Failed to update uasmaintenance.com"
             vercel alias set "$DEPLOYMENT_ID" www.uasmaintenance.com --scope coding-krakken-projects --token=${{ secrets.VERCEL_TOKEN }} || echo "Failed to update www.uasmaintenance.com"
           fi
-          
+
           echo "✅ Domain aliases updated"
 
       - name: Deployment Success Summary
@@ -253,7 +253,7 @@ jobs:
             "workflowRun": "${{ github.run_id }}"
           }
           EOF
-          
+
           echo "Deployment metadata:"
           cat deployment-metadata.json
 

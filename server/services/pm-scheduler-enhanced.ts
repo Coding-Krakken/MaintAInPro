@@ -200,7 +200,11 @@ class PMSchedulerEnhanced {
   /**
    * Generate optimized PM schedule for a warehouse
    */
-  public async generateOptimizedSchedule(warehouseId: string, startDate: Date, endDate: Date): Promise<PMSchedulingResult> {
+  public async generateOptimizedSchedule(
+    warehouseId: string,
+    startDate: Date,
+    endDate: Date
+  ): Promise<PMSchedulingResult> {
     try {
       const rules = await this.loadSchedulingRules(warehouseId);
       const config = await this.loadSchedulingConfig(warehouseId);
@@ -220,19 +224,23 @@ class PMSchedulerEnhanced {
 
       // Process each active rule
       for (const rule of rules.filter(r => r.isActive)) {
-        const relevantEquipment = equipment.filter(eq => 
-          rule.equipmentModels.includes(eq.model) && 
-          eq.status === 'active'
+        const relevantEquipment = equipment.filter(
+          eq => rule.equipmentModels.includes(eq.model) && eq.status === 'active'
         );
 
         for (const equip of relevantEquipment) {
           const schedule = await pmEngine.getPMSchedule(equip.id, rule.id);
-          
+
           // Check if PM is due within the scheduling window
           if (schedule.nextDueDate >= startDate && schedule.nextDueDate <= endDate) {
             // Check for conflicts
-            const conflicts = await this.checkSchedulingConflicts(equip.id, schedule.nextDueDate, rule, existingWorkOrders);
-            
+            const conflicts = await this.checkSchedulingConflicts(
+              equip.id,
+              schedule.nextDueDate,
+              rule,
+              existingWorkOrders
+            );
+
             if (conflicts.length === 0) {
               // Create optimized schedule entry
               const scheduledPM = {
@@ -245,10 +253,12 @@ class PMSchedulerEnhanced {
               };
 
               result.scheduledPMs.push(scheduledPM);
-              
+
               // Update statistics
-              result.statistics.byPriority[rule.priority] = (result.statistics.byPriority[rule.priority] || 0) + 1;
-              result.statistics.byModel[equip.model] = (result.statistics.byModel[equip.model] || 0) + 1;
+              result.statistics.byPriority[rule.priority] =
+                (result.statistics.byPriority[rule.priority] || 0) + 1;
+              result.statistics.byModel[equip.model] =
+                (result.statistics.byModel[equip.model] || 0) + 1;
             } else {
               result.conflicts.push(...conflicts);
             }
@@ -259,14 +269,19 @@ class PMSchedulerEnhanced {
       // Sort by priority and date
       result.scheduledPMs.sort((a, b) => {
         const priorityOrder = { critical: 4, high: 3, medium: 2, low: 1 };
-        const priorityDiff = priorityOrder[b.priority as keyof typeof priorityOrder] - priorityOrder[a.priority as keyof typeof priorityOrder];
-        
+        const priorityDiff =
+          priorityOrder[b.priority as keyof typeof priorityOrder] -
+          priorityOrder[a.priority as keyof typeof priorityOrder];
+
         if (priorityDiff !== 0) return priorityDiff;
         return new Date(a.scheduledDate).getTime() - new Date(b.scheduledDate).getTime();
       });
 
       result.statistics.totalScheduled = result.scheduledPMs.length;
-      result.statistics.utilizationRate = this.calculateUtilizationRate(result.scheduledPMs, config);
+      result.statistics.utilizationRate = this.calculateUtilizationRate(
+        result.scheduledPMs,
+        config
+      );
 
       return result;
     } catch (error) {
@@ -287,11 +302,12 @@ class PMSchedulerEnhanced {
     const conflicts: any[] = [];
 
     // Check for existing work orders on the same equipment
-    const conflictingWOs = existingWorkOrders.filter(wo => 
-      wo.equipmentId === equipmentId && 
-      wo.status !== 'completed' && 
-      wo.status !== 'closed' &&
-      Math.abs(new Date(wo.dueDate).getTime() - scheduledDate.getTime()) < 24 * 60 * 60 * 1000
+    const conflictingWOs = existingWorkOrders.filter(
+      wo =>
+        wo.equipmentId === equipmentId &&
+        wo.status !== 'completed' &&
+        wo.status !== 'closed' &&
+        Math.abs(new Date(wo.dueDate).getTime() - scheduledDate.getTime()) < 24 * 60 * 60 * 1000
     );
 
     if (conflictingWOs.length > 0) {
@@ -305,11 +321,12 @@ class PMSchedulerEnhanced {
 
     // Check technician availability (simplified)
     if (rule.assignedTechnicians.length > 0) {
-      const techWorkOrders = existingWorkOrders.filter(wo => 
-        rule.assignedTechnicians.includes(wo.assignedTo || '') &&
-        wo.status !== 'completed' &&
-        wo.status !== 'closed' &&
-        Math.abs(new Date(wo.dueDate).getTime() - scheduledDate.getTime()) < 4 * 60 * 60 * 1000
+      const techWorkOrders = existingWorkOrders.filter(
+        wo =>
+          rule.assignedTechnicians.includes(wo.assignedTo || '') &&
+          wo.status !== 'completed' &&
+          wo.status !== 'closed' &&
+          Math.abs(new Date(wo.dueDate).getTime() - scheduledDate.getTime()) < 4 * 60 * 60 * 1000
       );
 
       if (techWorkOrders.length > 0) {
@@ -333,7 +350,7 @@ class PMSchedulerEnhanced {
     const workingHours = 8; // 8 hours per day
     const workingDays = config.globalSettings.workingDays.length;
     const maxCapacity = workingHours * workingDays * 7; // Weekly capacity
-    
+
     return Math.min((totalDuration / maxCapacity) * 100, 100);
   }
 
@@ -348,11 +365,13 @@ class PMSchedulerEnhanced {
 
       for (const equip of equipment) {
         const complianceStatus = await pmEngine.checkComplianceStatus(equip.id, warehouseId);
-        
-        if (complianceStatus.compliancePercentage < config.complianceTargets.overallComplianceRate) {
+
+        if (
+          complianceStatus.compliancePercentage < config.complianceTargets.overallComplianceRate
+        ) {
           // Create escalation notifications
           const escalationLevel = this.determineEscalationLevel(complianceStatus, config);
-          
+
           if (escalationLevel > 0) {
             await this.triggerEscalation(equip.id, escalationLevel, config, complianceStatus);
           }
@@ -383,15 +402,14 @@ class PMSchedulerEnhanced {
     complianceStatus: any
   ): Promise<void> {
     const escalationRule = config.escalationRules.escalationLevels.find(el => el.level === level);
-    
+
     if (escalationRule) {
       const equipment = await storage.getEquipmentById(equipmentId);
       const profiles = await storage.getProfiles();
-      
+
       for (const recipientRole of escalationRule.recipients) {
-        const recipients = profiles.filter(p => 
-          p.warehouseId === config.warehouseId &&
-          p.role === recipientRole
+        const recipients = profiles.filter(
+          p => p.warehouseId === config.warehouseId && p.role === recipientRole
         );
 
         for (const recipient of recipients) {
@@ -421,30 +439,39 @@ class PMSchedulerEnhanced {
     this.isRunning = true;
     console.log(`Starting automated PM scheduling with ${intervalMinutes} minute interval`);
 
-    this.schedulingInterval = setInterval(async () => {
-      try {
-        const warehouses = await storage.getWarehouses();
-        
-        for (const warehouse of warehouses) {
-          if (warehouse.active) {
-            await this.processMissedPMEscalations(warehouse.id);
-            
-            // Generate schedules for the next 7 days
-            const startDate = new Date();
-            const endDate = new Date();
-            endDate.setDate(startDate.getDate() + 7);
-            
-            const schedule = await this.generateOptimizedSchedule(warehouse.id, startDate, endDate);
-            
-            if (schedule.scheduledPMs.length > 0) {
-              console.log(`Generated ${schedule.scheduledPMs.length} optimized PM schedules for ${warehouse.name}`);
+    this.schedulingInterval = setInterval(
+      async () => {
+        try {
+          const warehouses = await storage.getWarehouses();
+
+          for (const warehouse of warehouses) {
+            if (warehouse.active) {
+              await this.processMissedPMEscalations(warehouse.id);
+
+              // Generate schedules for the next 7 days
+              const startDate = new Date();
+              const endDate = new Date();
+              endDate.setDate(startDate.getDate() + 7);
+
+              const schedule = await this.generateOptimizedSchedule(
+                warehouse.id,
+                startDate,
+                endDate
+              );
+
+              if (schedule.scheduledPMs.length > 0) {
+                console.log(
+                  `Generated ${schedule.scheduledPMs.length} optimized PM schedules for ${warehouse.name}`
+                );
+              }
             }
           }
+        } catch (error) {
+          console.error('Error in automated scheduling:', error);
         }
-      } catch (error) {
-        console.error('Error in automated scheduling:', error);
-      }
-    }, intervalMinutes * 60 * 1000);
+      },
+      intervalMinutes * 60 * 1000
+    );
   }
 
   /**

@@ -16,7 +16,7 @@ export class EnhancedCacheService {
     misses: 0,
     redisHits: 0,
     memoryHits: 0,
-    errors: 0
+    errors: 0,
   };
 
   constructor() {
@@ -37,7 +37,7 @@ export class EnhancedCacheService {
   private async initializeRedis(): Promise<void> {
     try {
       const redisUrl = process.env.REDIS_URL || process.env.REDISCLOUD_URL;
-      
+
       if (!redisUrl) {
         console.log('[Cache] No Redis URL provided, using memory cache only');
         return;
@@ -46,11 +46,11 @@ export class EnhancedCacheService {
       this.redisClient = createClient({
         url: redisUrl,
         socket: {
-          connectTimeout: 5000
-        }
+          connectTimeout: 5000,
+        },
       });
 
-      this.redisClient.on('error', (err) => {
+      this.redisClient.on('error', err => {
         console.error('[Cache] Redis connection error:', err.message);
         this.isRedisConnected = false;
         this.cacheStats.errors++;
@@ -86,10 +86,10 @@ export class EnhancedCacheService {
         const redisResult = await this.redisClient.get(key);
         if (redisResult !== null && typeof redisResult === 'string') {
           const data = JSON.parse(redisResult);
-          
+
           // Store in memory cache for future hits
           this.setInMemory(key, data, this.defaultTTL);
-          
+
           this.cacheStats.hits++;
           this.cacheStats.redisHits++;
           return data;
@@ -181,7 +181,7 @@ export class EnhancedCacheService {
       stats: { ...this.cacheStats },
       memorySize: this.memoryCache.size,
       hitRate,
-      redisConnected: this.isRedisConnected
+      redisConnected: this.isRedisConnected,
     };
   }
 
@@ -251,11 +251,11 @@ export class EnhancedCacheService {
       // Try Redis first for batch operation
       if (this.isRedisConnected && this.redisClient) {
         const redisResults = await this.redisClient.mGet(keys);
-        
+
         for (let i = 0; i < keys.length; i++) {
           const key = keys[i];
           const value = redisResults[i];
-          
+
           if (value !== null && typeof value === 'string') {
             results[key] = JSON.parse(value);
             this.cacheStats.hits++;
@@ -289,18 +289,18 @@ export class EnhancedCacheService {
 
   private getFromMemory<T>(key: string): T | null {
     const entry = this.memoryCache.get(key);
-    
+
     if (!entry) return null;
-    
+
     // Check expiration
     if (Date.now() > entry.expires) {
       this.memoryCache.delete(key);
       return null;
     }
-    
+
     // Update access statistics
     entry.hits++;
-    
+
     return entry.data;
   }
 
@@ -312,8 +312,8 @@ export class EnhancedCacheService {
 
     this.memoryCache.set(key, {
       data,
-      expires: Date.now() + (ttlSeconds * 1000),
-      hits: 0
+      expires: Date.now() + ttlSeconds * 1000,
+      hits: 0,
     });
   }
 
@@ -335,23 +335,24 @@ export class EnhancedCacheService {
 
   private matchesPattern(key: string, pattern: string): boolean {
     // Simple glob pattern matching (* and ?)
-    const regexPattern = pattern
-      .replace(/\*/g, '.*')
-      .replace(/\?/g, '.');
-    
+    const regexPattern = pattern.replace(/\*/g, '.*').replace(/\?/g, '.');
+
     return new RegExp(`^${regexPattern}$`).test(key);
   }
 
   private startCleanupInterval(): void {
     // Clean up expired memory cache entries every 5 minutes
-    setInterval(() => {
-      const now = Date.now();
-      for (const [key, entry] of this.memoryCache.entries()) {
-        if (now > entry.expires) {
-          this.memoryCache.delete(key);
+    setInterval(
+      () => {
+        const now = Date.now();
+        for (const [key, entry] of this.memoryCache.entries()) {
+          if (now > entry.expires) {
+            this.memoryCache.delete(key);
+          }
         }
-      }
-    }, 5 * 60 * 1000);
+      },
+      5 * 60 * 1000
+    );
   }
 
   /**

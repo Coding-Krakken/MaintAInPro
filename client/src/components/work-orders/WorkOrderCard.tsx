@@ -59,30 +59,29 @@ export default function WorkOrderCard({ workOrder, onClick }: WorkOrderCardProps
     }
   };
 
-  const isOverdue = workOrder.dueDate && new Date(workOrder.dueDate) < new Date() && workOrder.status !== 'completed';
+  const isOverdue =
+    workOrder.dueDate &&
+    new Date(workOrder.dueDate) < new Date() &&
+    workOrder.status !== 'completed';
 
   return (
-    <div 
+    <div
       className={`flex items-center justify-between p-4 border rounded-lg transition-colors cursor-pointer hover:bg-gray-50 ${
         isOverdue ? 'border-red-200 bg-red-50' : 'border-gray-200'
       }`}
       onClick={onClick}
-      data-testid="work-order-card"
+      data-testid='work-order-card'
     >
-      <div className="flex items-center space-x-4 flex-1 min-w-0">
-        <div className="w-10 h-10 bg-primary-50 rounded-lg flex items-center justify-center flex-shrink-0">
-          <span className="text-primary-700 font-semibold text-sm">
+      <div className='flex items-center space-x-4 flex-1 min-w-0'>
+        <div className='w-10 h-10 bg-primary-50 rounded-lg flex items-center justify-center flex-shrink-0'>
+          <span className='text-primary-700 font-semibold text-sm'>
             {workOrder.foNumber.split('-')[1]}
           </span>
         </div>
-        <div className="flex-1 min-w-0">
-          <h3 className="font-medium text-gray-900 truncate">
-            {workOrder.description}
-          </h3>
-          <div className="flex items-center space-x-4 mt-1 text-sm text-gray-500">
-            <span>
-              Equipment: {workOrder.assetModel || 'Not specified'}
-            </span>
+        <div className='flex-1 min-w-0'>
+          <h3 className='font-medium text-gray-900 truncate'>{workOrder.description}</h3>
+          <div className='flex items-center space-x-4 mt-1 text-sm text-gray-500'>
+            <span>Equipment: {workOrder.assetModel || 'Not specified'}</span>
             {assignedUser && (
               <span>
                 Assigned: {assignedUser.firstName} {assignedUser.lastName}
@@ -91,15 +90,13 @@ export default function WorkOrderCard({ workOrder, onClick }: WorkOrderCardProps
           </div>
         </div>
       </div>
-      
-      <div className="flex items-center space-x-3 flex-shrink-0">
+
+      <div className='flex items-center space-x-3 flex-shrink-0'>
         <Badge className={getStatusColor(workOrder.status)}>
           {workOrder.status.replace('_', ' ')}
         </Badge>
-        <Badge className={getPriorityColor(workOrder.priority)}>
-          {workOrder.priority}
-        </Badge>
-        <div className="text-sm text-gray-500 text-right">
+        <Badge className={getPriorityColor(workOrder.priority)}>{workOrder.priority}</Badge>
+        <div className='text-sm text-gray-500 text-right'>
           {workOrder.dueDate ? (
             <span className={isOverdue ? 'text-red-600 font-medium' : ''}>
               Due: {formatDistanceToNow(new Date(workOrder.dueDate), { addSuffix: true })}

@@ -9,7 +9,7 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  
+
   // Handle preflight requests
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
@@ -20,6 +20,6 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
     timestamp: new Date().toISOString(),
     message: 'Vercel serverless function is working',
     environment: 'production',
-    deployment: process.env.VERCEL_URL || 'local'
+    deployment: process.env.VERCEL_URL || 'local',
   });
 }

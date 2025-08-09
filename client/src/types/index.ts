@@ -15,7 +15,7 @@ export interface WorkOrderChecklistItem {
   hasPhotoRequired?: boolean;
   hasSignoffRequired?: boolean;
   acceptableValues?: string[];
-  warningThresholds?: { min?: number; max?: number; };
+  warningThresholds?: { min?: number; max?: number };
   valueType?: 'text' | 'number' | 'boolean' | 'choice';
   validationRules?: string[];
 }

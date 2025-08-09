@@ -1,6 +1,7 @@
 # Repository Configuration Checklist
 
-This document outlines the manual GitHub repository settings required to enable the autonomous development loop.
+This document outlines the manual GitHub repository settings required to enable
+the autonomous development loop.
 
 ## Required GitHub Repository Settings
 
@@ -17,7 +18,7 @@ Navigate to **Settings → Branches → Add rule** for `main` branch:
   ✅ Require review from code owners (if CODEOWNERS exists)
 ✅ Require status checks to pass before merging
   ✅ Require branches to be up to date before merging
-  ✅ Status checks: 
+  ✅ Status checks:
       - Build & Tests
       - Security Scan
       - Documentation Check
@@ -43,6 +44,7 @@ Navigate to **Settings → General → Pull Requests**:
 Navigate to **Settings → Secrets and variables → Actions**:
 
 #### Required Secrets
+
 ```bash
 VERCEL_TOKEN          # Vercel API token for deployments
 VERCEL_ORG_ID         # Your Vercel organization ID
@@ -50,6 +52,7 @@ VERCEL_PROJECT_ID     # Your Vercel project ID
 ```
 
 #### Optional Secrets
+
 ```bash
 CODECOV_TOKEN         # For code coverage reporting
 SENTRY_DSN           # For error tracking
@@ -84,6 +87,7 @@ These are automatically configured by the setup:
 Create these labels manually or use GitHub CLI:
 
 #### Using GitHub CLI:
+
 ```bash
 gh label create "autoplan" --color "0366d6" --description "Issue created automatically by the Blueprint planner"
 gh label create "agent-ok" --color "28a745" --description "Issue approved for GitHub Copilot coding agent"
@@ -93,11 +97,15 @@ gh label create "needs-human" --color "fbca04" --description "Requires human rev
 ```
 
 #### Manual Creation:
+
 1. Go to **Issues → Labels**
 2. Click **New label** for each:
-   - **autoplan** (blue #0366d6): Issue created automatically by the Blueprint planner
-   - **agent-ok** (green #28a745): Issue approved for GitHub Copilot coding agent
-   - **automerge** (purple #6f42c1): PR approved for automatic merging after CI passes
+   - **autoplan** (blue #0366d6): Issue created automatically by the Blueprint
+     planner
+   - **agent-ok** (green #28a745): Issue approved for GitHub Copilot coding
+     agent
+   - **automerge** (purple #6f42c1): PR approved for automatic merging after CI
+     passes
    - **blocked** (red #d73a49): Work is blocked pending resolution
    - **needs-human** (yellow #fbca04): Requires human review or intervention
 
@@ -114,11 +122,13 @@ Navigate to **Settings → Actions → General**:
 ### 8. Vercel Integration
 
 #### Option A: Vercel GitHub App (Recommended)
+
 1. Install [Vercel GitHub App](https://vercel.com/integrations/github)
 2. Configure deployment settings in Vercel dashboard
 3. Set environment variables in Vercel project settings
 
 #### Option B: Manual Setup
+
 1. Create Vercel project linked to repository
 2. Configure build settings:
    - **Framework Preset**: Other
@@ -158,18 +168,21 @@ Enable Copilot for your organization:
 After configuration, verify the setup:
 
 ### ✅ Basic Functionality
+
 - [ ] Create a test issue with `agent-ok` label
 - [ ] Verify Copilot can access the repository
 - [ ] Test PR creation and auto-merge flow
 - [ ] Confirm Vercel deployment works
 
 ### ✅ Security
+
 - [ ] Branch protection prevents direct pushes to main
 - [ ] Required status checks are enforced
 - [ ] Secret scanning is active
 - [ ] CodeQL analysis runs on PRs
 
 ### ✅ Autonomous Loop
+
 - [ ] Blueprint planner can create issues
 - [ ] Issues are automatically assigned to Copilot
 - [ ] PRs trigger CI pipeline
@@ -177,6 +190,7 @@ After configuration, verify the setup:
 - [ ] Deployments trigger post-merge traceability
 
 ### ✅ Error Handling
+
 - [ ] Failed deployments trigger recovery procedures
 - [ ] Health check failures initiate rollback
 - [ ] Critical issues create emergency tickets
@@ -187,6 +201,7 @@ After configuration, verify the setup:
 ### Common Issues
 
 #### 1. Auto-merge Not Working
+
 ```bash
 # Check branch protection rules
 # Verify required status checks are passing
@@ -194,6 +209,7 @@ After configuration, verify the setup:
 ```
 
 #### 2. Vercel Deployment Failures
+
 ```bash
 # Verify VERCEL_TOKEN has correct permissions
 # Check VERCEL_ORG_ID and VERCEL_PROJECT_ID are correct
@@ -201,6 +217,7 @@ After configuration, verify the setup:
 ```
 
 #### 3. GitHub Actions Permission Issues
+
 ```bash
 # Check Actions permissions allow write access
 # Verify GITHUB_TOKEN has sufficient permissions
@@ -208,6 +225,7 @@ After configuration, verify the setup:
 ```
 
 #### 4. Copilot Not Responding to Issues
+
 ```bash
 # Verify issue has 'agent-ok' label
 # Check Copilot has access to repository
@@ -217,11 +235,13 @@ After configuration, verify the setup:
 ### Emergency Procedures
 
 #### Disable Autonomous Loop
+
 1. Add `blocked` label to all open issues
 2. Disable GitHub Actions workflows
 3. Review and manually control deployments
 
 #### Reset Configuration
+
 1. Remove all autonomous labels from issues
 2. Clear branch protection rules temporarily
 3. Re-run setup checklist
@@ -230,6 +250,7 @@ After configuration, verify the setup:
 ## Support
 
 For configuration issues:
+
 - **Technical Problems**: Create issue with `needs-human` label
 - **Security Concerns**: Contact security team immediately
 - **Access Issues**: Check with GitHub organization administrators

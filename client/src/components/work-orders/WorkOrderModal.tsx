@@ -14,20 +14,17 @@ export default function WorkOrderModal({ isOpen, onClose, workOrderId }: WorkOrd
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className='max-w-2xl max-h-[90vh] overflow-y-auto'>
         <DialogHeader>
-          <DialogTitle>
-            {workOrderId ? 'Edit Work Order' : 'Create Work Order'}
-          </DialogTitle>
+          <DialogTitle>{workOrderId ? 'Edit Work Order' : 'Create Work Order'}</DialogTitle>
           <DialogDescription>
-            {workOrderId ? 'Update the work order details below.' : 'Fill out the form to create a new work order.'}
+            {workOrderId
+              ? 'Update the work order details below.'
+              : 'Fill out the form to create a new work order.'}
           </DialogDescription>
         </DialogHeader>
-        
-        <WorkOrderForm
-          onSuccess={handleSuccess}
-          onCancel={onClose}
-        />
+
+        <WorkOrderForm onSuccess={handleSuccess} onCancel={onClose} />
       </DialogContent>
     </Dialog>
   );

@@ -1,7 +1,13 @@
 import { useState } from 'react';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
 import { Search, QrCode, Plus, Settings } from 'lucide-react';
@@ -21,17 +27,20 @@ export default function EquipmentPage() {
 
   const { data: equipment, isLoading } = useEquipment();
 
-  const filteredEquipment = equipment?.filter(item => {
-    const matchesSearch = !searchQuery || 
-      item.assetTag.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.model.toLowerCase().includes(searchQuery.toLowerCase());
+  const filteredEquipment =
+    equipment?.filter(item => {
+      const matchesSearch =
+        !searchQuery ||
+        item.assetTag.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.model.toLowerCase().includes(searchQuery.toLowerCase());
 
-    const matchesStatus = statusFilter === 'all' || item.status === statusFilter;
-    const matchesCriticality = criticalityFilter === 'all' || item.criticality === criticalityFilter;
+      const matchesStatus = statusFilter === 'all' || item.status === statusFilter;
+      const matchesCriticality =
+        criticalityFilter === 'all' || item.criticality === criticalityFilter;
 
-    return matchesSearch && matchesStatus && matchesCriticality;
-  }) || [];
+      return matchesSearch && matchesStatus && matchesCriticality;
+    }) || [];
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -75,83 +84,76 @@ export default function EquipmentPage() {
     <>
       <div>
         {/* Page Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
+        <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8'>
           <div>
-            <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">
-              Equipment
-            </h1>
-            <p className="text-gray-600 mt-1">
-              Manage and track all equipment assets
-            </p>
+            <h1 className='text-2xl lg:text-3xl font-bold text-gray-900'>Equipment</h1>
+            <p className='text-gray-600 mt-1'>Manage and track all equipment assets</p>
           </div>
-          <div className="flex space-x-2 mt-4 sm:mt-0">
-            <Button 
-              variant="outline" 
+          <div className='flex space-x-2 mt-4 sm:mt-0'>
+            <Button
+              variant='outline'
               onClick={() => setShowQRScanner(true)}
-              data-testid="qr-scan-button"
+              data-testid='qr-scan-button'
             >
-              <QrCode className="w-4 h-4 mr-2" />
+              <QrCode className='w-4 h-4 mr-2' />
               Scan QR
             </Button>
-            <Button 
-              data-testid="create-equipment-button"
-              onClick={() => setShowCreateModal(true)}
-            >
-              <Plus className="w-4 h-4 mr-2" />
+            <Button data-testid='create-equipment-button' onClick={() => setShowCreateModal(true)}>
+              <Plus className='w-4 h-4 mr-2' />
               Add Equipment
             </Button>
           </div>
         </div>
 
         {/* Filters and Search */}
-        <Card className="mb-6">
+        <Card className='mb-6'>
           <CardHeader>
-            <CardTitle className="text-lg font-semibold">Filters</CardTitle>
+            <CardTitle className='text-lg font-semibold'>Filters</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className='grid grid-cols-1 md:grid-cols-4 gap-4'>
               {/* Search */}
-              <div className="relative">
-                <Search className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
+              <div className='relative'>
+                <Search className='absolute left-3 top-2.5 w-4 h-4 text-gray-400' />
                 <Input
-                  placeholder="Search equipment..."
+                  placeholder='Search equipment...'
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10"
+                  onChange={e => setSearchQuery(e.target.value)}
+                  className='pl-10'
                 />
               </div>
 
               {/* Status Filter */}
               <Select value={statusFilter} onValueChange={setStatusFilter}>
                 <SelectTrigger>
-                  <SelectValue placeholder="All Status" />
+                  <SelectValue placeholder='All Status' />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Status</SelectItem>
-                  <SelectItem value="active">Active</SelectItem>
-                  <SelectItem value="inactive">Inactive</SelectItem>
-                  <SelectItem value="maintenance">Maintenance</SelectItem>
-                  <SelectItem value="retired">Retired</SelectItem>
+                  <SelectItem value='all'>All Status</SelectItem>
+                  <SelectItem value='active'>Active</SelectItem>
+                  <SelectItem value='inactive'>Inactive</SelectItem>
+                  <SelectItem value='maintenance'>Maintenance</SelectItem>
+                  <SelectItem value='retired'>Retired</SelectItem>
                 </SelectContent>
               </Select>
 
               {/* Criticality Filter */}
               <Select value={criticalityFilter} onValueChange={setCriticalityFilter}>
                 <SelectTrigger>
-                  <SelectValue placeholder="All Criticality" />
+                  <SelectValue placeholder='All Criticality' />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Criticality</SelectItem>
-                  <SelectItem value="low">Low</SelectItem>
-                  <SelectItem value="medium">Medium</SelectItem>
-                  <SelectItem value="high">High</SelectItem>
-                  <SelectItem value="critical">Critical</SelectItem>
+                  <SelectItem value='all'>All Criticality</SelectItem>
+                  <SelectItem value='low'>Low</SelectItem>
+                  <SelectItem value='medium'>Medium</SelectItem>
+                  <SelectItem value='high'>High</SelectItem>
+                  <SelectItem value='critical'>Critical</SelectItem>
                 </SelectContent>
               </Select>
 
               {/* Clear Filters */}
-              <Button 
-                variant="outline" 
+              <Button
+                variant='outline'
                 onClick={() => {
                   setSearchQuery('');
                   setStatusFilter('all');
@@ -165,70 +167,63 @@ export default function EquipmentPage() {
         </Card>
 
         {/* Equipment Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
           {isLoading ? (
             Array.from({ length: 6 }).map((_, i) => (
-              <Card key={i} className="animate-pulse">
-                <CardContent className="p-6">
-                  <div className="h-24 bg-gray-200 rounded mb-4"></div>
-                  <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-                  <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+              <Card key={i} className='animate-pulse'>
+                <CardContent className='p-6'>
+                  <div className='h-24 bg-gray-200 rounded mb-4'></div>
+                  <div className='h-4 bg-gray-200 rounded w-3/4 mb-2'></div>
+                  <div className='h-4 bg-gray-200 rounded w-1/2'></div>
                 </CardContent>
               </Card>
             ))
           ) : filteredEquipment.length === 0 ? (
-            <div className="col-span-full text-center py-12">
-              <Settings className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-500 mb-4">
+            <div className='col-span-full text-center py-12'>
+              <Settings className='w-12 h-12 text-gray-400 mx-auto mb-4' />
+              <p className='text-gray-500 mb-4'>
                 {searchQuery || statusFilter !== 'all' || criticalityFilter !== 'all'
                   ? 'No equipment found matching your criteria'
-                  : 'No equipment found'
-                }
+                  : 'No equipment found'}
               </p>
               <Button>Add Equipment</Button>
             </div>
           ) : (
-            filteredEquipment.map((item) => (
-              <Card 
-                key={item.id} 
-                className="cursor-pointer hover:shadow-md transition-shadow"
+            filteredEquipment.map(item => (
+              <Card
+                key={item.id}
+                className='cursor-pointer hover:shadow-md transition-shadow'
                 onClick={() => setSelectedEquipment(item.id)}
               >
-                <CardContent className="p-6">
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center">
-                      <Settings className="w-6 h-6 text-primary-600" />
+                <CardContent className='p-6'>
+                  <div className='flex items-start justify-between mb-4'>
+                    <div className='w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center'>
+                      <Settings className='w-6 h-6 text-primary-600' />
                     </div>
-                    <div className="flex space-x-2">
-                      <Badge className={getStatusColor(item.status)}>
-                        {item.status}
-                      </Badge>
+                    <div className='flex space-x-2'>
+                      <Badge className={getStatusColor(item.status)}>{item.status}</Badge>
                       <Badge className={getCriticalityColor(item.criticality)}>
                         {item.criticality}
                       </Badge>
                     </div>
                   </div>
-                  
-                  <h3 className="font-semibold text-gray-900 mb-1">
-                    {item.assetTag}
-                  </h3>
-                  <p className="text-sm text-gray-600 mb-2">
-                    {item.description}
-                  </p>
-                  
-                  <div className="space-y-1 text-sm text-gray-500">
-                    <div className="flex justify-between">
+
+                  <h3 className='font-semibold text-gray-900 mb-1'>{item.assetTag}</h3>
+                  <p className='text-sm text-gray-600 mb-2'>{item.description}</p>
+
+                  <div className='space-y-1 text-sm text-gray-500'>
+                    <div className='flex justify-between'>
                       <span>Model:</span>
                       <span>{item.model}</span>
                     </div>
                     {item.area && (
-                      <div className="flex justify-between">
+                      <div className='flex justify-between'>
                         <span>Location:</span>
                         <span>{item.area}</span>
                       </div>
                     )}
                     {item.manufacturer && (
-                      <div className="flex justify-between">
+                      <div className='flex justify-between'>
                         <span>Manufacturer:</span>
                         <span>{item.manufacturer}</span>
                       </div>
@@ -252,10 +247,7 @@ export default function EquipmentPage() {
 
       {/* Equipment Form Modal */}
       {showCreateModal && (
-        <EquipmentFormModal
-          isOpen={showCreateModal}
-          onClose={() => setShowCreateModal(false)}
-        />
+        <EquipmentFormModal isOpen={showCreateModal} onClose={() => setShowCreateModal(false)} />
       )}
 
       {/* QR Scanner Modal */}

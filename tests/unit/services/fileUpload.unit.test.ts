@@ -13,26 +13,28 @@ describe('FileUploadService', () => {
     it('should accept valid file types', () => {
       const imageFile = new File([''], 'test.jpg', { type: 'image/jpeg' });
       const pdfFile = new File([''], 'test.pdf', { type: 'application/pdf' });
-      
+
       expect(FileUploadService.validateFile(imageFile).isValid).toBe(true);
       expect(FileUploadService.validateFile(pdfFile).isValid).toBe(true);
     });
 
     it('should reject invalid file types', () => {
       const execFile = new File([''], 'test.exe', { type: 'application/exe' });
-      
+
       expect(FileUploadService.validateFile(execFile).isValid).toBe(false);
     });
 
     it('should reject files that are too large', () => {
-      const largeFile = new File(['x'.repeat(6 * 1024 * 1024)], 'large.jpg', { type: 'image/jpeg' });
-      
+      const largeFile = new File(['x'.repeat(6 * 1024 * 1024)], 'large.jpg', {
+        type: 'image/jpeg',
+      });
+
       expect(FileUploadService.validateFile(largeFile).isValid).toBe(false);
     });
 
     it('should accept files within size limit', () => {
       const smallFile = new File(['x'.repeat(1024)], 'small.jpg', { type: 'image/jpeg' });
-      
+
       expect(FileUploadService.validateFile(smallFile).isValid).toBe(true);
     });
   });
@@ -54,18 +56,18 @@ describe('FileUploadService', () => {
   describe('compressImage', () => {
     it('should return non-image files unchanged', async () => {
       const pdfFile = new File(['pdf content'], 'test.pdf', { type: 'application/pdf' });
-      
+
       const result = await FileUploadService.compressImage(pdfFile);
-      
+
       expect(result).toBe(pdfFile);
     });
 
     it.skip('should compress image files', async () => {
       // Create a mock image file
       const imageFile = new File(['image data'], 'test.jpg', { type: 'image/jpeg' });
-      
+
       // Mock canvas toBlob method
-      const mockToBlob = vi.fn((callback) => {
+      const mockToBlob = vi.fn(callback => {
         const blob = new Blob(['compressed'], { type: 'image/jpeg' });
         // Call callback immediately
         callback(blob);
@@ -100,7 +102,7 @@ describe('FileUploadService', () => {
 
       // Mock DOM methods
       vi.stubGlobal('document', {
-        createElement: vi.fn((tag) => {
+        createElement: vi.fn(tag => {
           if (tag === 'canvas') return mockCanvas;
           if (tag === 'img') return mockImage;
           return {};
@@ -113,7 +115,7 @@ describe('FileUploadService', () => {
       });
 
       const result = await FileUploadService.compressImage(imageFile);
-      
+
       expect(result).toBeInstanceOf(File);
       expect(mockToBlob).toHaveBeenCalled();
     }, 10000);
@@ -158,11 +160,7 @@ describe('FileUploadService', () => {
 
       (global.fetch as any).mockResolvedValue(mockResponse);
 
-      const result = await FileUploadService.uploadFile(
-        mockFile,
-        { workOrderId: 'wo-123' },
-        {}
-      );
+      const result = await FileUploadService.uploadFile(mockFile, { workOrderId: 'wo-123' }, {});
 
       expect(result.success).toBe(false);
       expect(result.error).toContain('Upload failed');
@@ -170,14 +168,10 @@ describe('FileUploadService', () => {
 
     it.skip('should handle network errors', async () => {
       const mockFile = new File(['content'], 'test.jpg', { type: 'image/jpeg' });
-      
+
       (global.fetch as any).mockRejectedValue(new Error('Network error'));
 
-      const result = await FileUploadService.uploadFile(
-        mockFile,
-        { workOrderId: 'wo-123' },
-        {}
-      );
+      const result = await FileUploadService.uploadFile(mockFile, { workOrderId: 'wo-123' }, {});
 
       expect(result.success).toBe(false);
       expect(result.error).toBe('Network error');
@@ -186,11 +180,7 @@ describe('FileUploadService', () => {
     it('should reject invalid files', async () => {
       const invalidFile = new File([''], 'test.exe', { type: 'application/exe' });
 
-      const result = await FileUploadService.uploadFile(
-        invalidFile,
-        { workOrderId: 'wo-123' },
-        {}
-      );
+      const result = await FileUploadService.uploadFile(invalidFile, { workOrderId: 'wo-123' }, {});
 
       expect(result.success).toBe(false);
       expect(result.error).toContain('not allowed');
@@ -237,7 +227,7 @@ describe('FileUploadService', () => {
   describe('generatePreview', () => {
     it('should generate preview successfully', async () => {
       const fileUrl = 'https://example.com/file.jpg';
-      
+
       const result = await FileUploadService.generatePreview(fileUrl);
 
       expect(result.success).toBe(true);

@@ -1,8 +1,8 @@
-import '@testing-library/jest-dom'
-import { configureAxe, toHaveNoViolations } from 'jest-axe'
+import '@testing-library/jest-dom';
+import { configureAxe, toHaveNoViolations } from 'jest-axe';
 
 // Extend Jest matchers
-expect.extend(toHaveNoViolations)
+expect.extend(toHaveNoViolations);
 
 // Configure axe for accessibility testing
 const axe = configureAxe({
@@ -11,12 +11,12 @@ const axe = configureAxe({
     'color-contrast': { enabled: true },
     'focus-order-semantics': { enabled: true },
     'landmark-unique': { enabled: true },
-    'region': { enabled: true },
+    region: { enabled: true },
   },
-})
+});
 
 // Make axe available globally
-global.axe = axe
+global.axe = axe;
 
 // Mock window.matchMedia for accessibility tests
 Object.defineProperty(window, 'matchMedia', {
@@ -31,21 +31,21 @@ Object.defineProperty(window, 'matchMedia', {
     removeEventListener: jest.fn(),
     dispatchEvent: jest.fn(),
   })),
-})
+});
 
 // Mock ResizeObserver
 global.ResizeObserver = jest.fn().mockImplementation(() => ({
   observe: jest.fn(),
   unobserve: jest.fn(),
   disconnect: jest.fn(),
-}))
+}));
 
 // Mock IntersectionObserver
 global.IntersectionObserver = jest.fn().mockImplementation(() => ({
   observe: jest.fn(),
   unobserve: jest.fn(),
   disconnect: jest.fn(),
-}))
+}));
 
 // Set up default timeout for accessibility tests
-jest.setTimeout(30000)
+jest.setTimeout(30000);

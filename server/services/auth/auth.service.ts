@@ -75,11 +75,11 @@ export class AuthService {
       // Check if IP is blacklisted
       if (SecurityService.isIPBlacklisted(ipAddress)) {
         await AuditService.logLogin('', ipAddress, userAgent, false, {
-          reason: 'blacklisted_ip'
+          reason: 'blacklisted_ip',
         });
         return {
           success: false,
-          error: 'Access denied'
+          error: 'Access denied',
         };
       }
 
@@ -88,11 +88,11 @@ export class AuthService {
       if (threatResult.shouldBlock) {
         await AuditService.logLogin('', ipAddress, userAgent, false, {
           reason: 'threat_detected',
-          threats: threatResult.reasons
+          threats: threatResult.reasons,
         });
         return {
           success: false,
-          error: 'Access denied due to suspicious activity'
+          error: 'Access denied due to suspicious activity',
         };
       }
 
@@ -102,13 +102,13 @@ export class AuthService {
         const timeRemaining = SecurityService.getLockoutTimeRemaining(lockoutKey);
         await AuditService.logLogin('', ipAddress, userAgent, false, {
           reason: 'account_locked',
-          timeRemaining
+          timeRemaining,
         });
         return {
           success: false,
           accountLocked: true,
           lockoutTimeRemaining: timeRemaining,
-          error: 'Account is temporarily locked due to multiple failed login attempts'
+          error: 'Account is temporarily locked due to multiple failed login attempts',
         };
       }
 
@@ -118,22 +118,22 @@ export class AuthService {
         SecurityService.recordFailedLogin(lockoutKey);
         await AuditService.logLogin('', ipAddress, userAgent, false, {
           reason: 'user_not_found',
-          email
+          email,
         });
         return {
           success: false,
-          error: 'Invalid credentials'
+          error: 'Invalid credentials',
         };
       }
 
       // Check if user is active
       if (!user.active) {
         await AuditService.logLogin(user.id, ipAddress, userAgent, false, {
-          reason: 'account_disabled'
+          reason: 'account_disabled',
         });
         return {
           success: false,
-          error: 'Account is disabled'
+          error: 'Account is disabled',
         };
       }
 
@@ -142,11 +142,11 @@ export class AuthService {
       if (!userCreds) {
         SecurityService.recordFailedLogin(lockoutKey);
         await AuditService.logLogin(user.id, ipAddress, userAgent, false, {
-          reason: 'credentials_not_found'
+          reason: 'credentials_not_found',
         });
         return {
           success: false,
-          error: 'Invalid credentials'
+          error: 'Invalid credentials',
         };
       }
 
@@ -159,22 +159,22 @@ export class AuthService {
       if (!passwordValid) {
         const isLocked = SecurityService.recordFailedLogin(lockoutKey);
         await AuditService.logLogin(user.id, ipAddress, userAgent, false, {
-          reason: 'invalid_password'
+          reason: 'invalid_password',
         });
-        
+
         if (isLocked) {
           const timeRemaining = SecurityService.getLockoutTimeRemaining(lockoutKey);
           return {
             success: false,
             accountLocked: true,
             lockoutTimeRemaining: timeRemaining,
-            error: 'Account locked due to multiple failed login attempts'
+            error: 'Account locked due to multiple failed login attempts',
           };
         }
-        
+
         return {
           success: false,
-          error: 'Invalid credentials'
+          error: 'Invalid credentials',
         };
       }
 
@@ -184,12 +184,12 @@ export class AuthService {
 
       if (mfaEnabled && !mfaToken) {
         await AuditService.logLogin(user.id, ipAddress, userAgent, false, {
-          reason: 'mfa_required'
+          reason: 'mfa_required',
         });
         return {
           success: false,
           mfaRequired: true,
-          error: 'Multi-factor authentication required'
+          error: 'Multi-factor authentication required',
         };
       }
 
@@ -198,11 +198,11 @@ export class AuthService {
         if (!mfaResult.success) {
           SecurityService.recordFailedLogin(lockoutKey);
           await AuditService.logLogin(user.id, ipAddress, userAgent, false, {
-            reason: 'invalid_mfa_token'
+            reason: 'invalid_mfa_token',
           });
           return {
             success: false,
-            error: 'Invalid multi-factor authentication token'
+            error: 'Invalid multi-factor authentication token',
           };
         }
       }
@@ -216,7 +216,7 @@ export class AuthService {
         userAgent,
         ipAddress,
         rememberMe,
-        deviceFingerprint
+        deviceFingerprint,
       };
 
       const { session, tokens } = await SessionService.createSession(
@@ -233,7 +233,7 @@ export class AuthService {
       await AuditService.logLogin(user.id, ipAddress, userAgent, true, {
         sessionId: session.id,
         mfaUsed: mfaEnabled,
-        deviceFingerprint
+        deviceFingerprint,
       });
 
       return {
@@ -246,21 +246,20 @@ export class AuthService {
           role: user.role,
           warehouseId: user.warehouseId,
           emailVerified: user.emailVerified || false,
-          mfaEnabled
+          mfaEnabled,
         },
         tokens,
-        sessionId: session.id
+        sessionId: session.id,
       };
-
     } catch (error) {
       console.error('Login error:', error);
       await AuditService.logLogin('', ipAddress, userAgent, false, {
         reason: 'system_error',
-        error: error.message
+        error: error.message,
       });
       return {
         success: false,
-        error: 'Login failed due to system error'
+        error: 'Login failed due to system error',
       };
     }
   }
@@ -271,20 +270,15 @@ export class AuthService {
   ): Promise<{ success: boolean }> {
     try {
       const sessionValidation = await SessionService.validateSession(sessionId);
-      
+
       if (sessionValidation.isValid && sessionValidation.session) {
         const userId = sessionValidation.session.userId;
-        
+
         // End the session
         await SessionService.endSession(sessionId);
-        
+
         // Log the logout
-        await AuditService.logLogout(
-          userId,
-          sessionId,
-          context.ipAddress,
-          context.userAgent
-        );
+        await AuditService.logLogout(userId, sessionId, context.ipAddress, context.userAgent);
       }
 
       return { success: true };
@@ -301,14 +295,14 @@ export class AuthService {
     try {
       // Verify refresh token
       const decoded = JWTService.verifyRefreshToken(refreshToken);
-      
+
       // Validate session
       const sessionValidation = await SessionService.validateSession(decoded.sessionId);
-      
+
       if (!sessionValidation.isValid || !sessionValidation.session) {
         return {
           success: false,
-          error: 'Invalid session'
+          error: 'Invalid session',
         };
       }
 
@@ -316,7 +310,7 @@ export class AuthService {
       if (!user || !user.active) {
         return {
           success: false,
-          error: 'User not found or inactive'
+          error: 'User not found or inactive',
         };
       }
 
@@ -326,7 +320,7 @@ export class AuthService {
         email: user.email,
         role: user.role,
         warehouseId: user.warehouseId,
-        sessionId: decoded.sessionId
+        sessionId: decoded.sessionId,
       });
 
       // Extend session
@@ -343,20 +337,19 @@ export class AuthService {
           ipAddress: context.ipAddress,
           userAgent: context.userAgent,
           success: true,
-          riskLevel: 'low'
+          riskLevel: 'low',
         }
       );
 
       return {
         success: true,
-        tokens
+        tokens,
       };
-
     } catch (error) {
       console.error('Token refresh error:', error);
       return {
         success: false,
-        error: 'Failed to refresh token'
+        error: 'Failed to refresh token',
       };
     }
   }
@@ -371,7 +364,7 @@ export class AuthService {
       if (!emailRegex.test(data.email)) {
         return {
           success: false,
-          error: 'Invalid email format'
+          error: 'Invalid email format',
         };
       }
 
@@ -380,7 +373,7 @@ export class AuthService {
       if (existingUser) {
         return {
           success: false,
-          error: 'User already exists'
+          error: 'User already exists',
         };
       }
 
@@ -388,13 +381,13 @@ export class AuthService {
       const passwordValidation = PasswordService.validatePassword(data.password, {
         email: data.email,
         firstName: data.firstName,
-        lastName: data.lastName
+        lastName: data.lastName,
       });
 
       if (!passwordValidation.isValid) {
         return {
           success: false,
-          error: passwordValidation.errors.join(', ')
+          error: passwordValidation.errors.join(', '),
         };
       }
 
@@ -414,7 +407,7 @@ export class AuthService {
         emailVerified: false,
         emailVerificationToken: randomBytes(32).toString('hex'),
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       };
 
       const credentials = {
@@ -425,7 +418,7 @@ export class AuthService {
         mustChangePassword: false,
         previousPasswords: [],
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       };
 
       // Store user and credentials
@@ -439,35 +432,36 @@ export class AuthService {
         {
           email: data.email,
           role: data.role,
-          warehouseId: data.warehouseId
+          warehouseId: data.warehouseId,
         },
         {
           userId,
           ipAddress: context.ipAddress,
           userAgent: context.userAgent,
           success: true,
-          riskLevel: 'medium'
+          riskLevel: 'medium',
         }
       );
 
       return {
         success: true,
-        userId
+        userId,
       };
-
     } catch (error) {
       console.error('Registration error:', error);
       return {
         success: false,
-        error: 'Registration failed'
+        error: 'Registration failed',
       };
     }
   }
 
-  static async requestPasswordReset(request: PasswordResetRequest): Promise<{ success: boolean; error?: string }> {
+  static async requestPasswordReset(
+    request: PasswordResetRequest
+  ): Promise<{ success: boolean; error?: string }> {
     try {
       const user = Array.from(this.users.values()).find(u => u.email === request.email);
-      
+
       if (!user) {
         // Don't reveal if user exists or not
         return { success: true };
@@ -482,7 +476,7 @@ export class AuthService {
         expiresAt: new Date(Date.now() + 60 * 60 * 1000), // 1 hour
         ipAddress: request.ipAddress,
         userAgent: request.userAgent,
-        createdAt: new Date()
+        createdAt: new Date(),
       };
 
       this.passwordResetTokens.set(token, resetData);
@@ -497,7 +491,7 @@ export class AuthService {
           ipAddress: request.ipAddress,
           userAgent: request.userAgent,
           success: true,
-          riskLevel: 'medium'
+          riskLevel: 'medium',
         }
       );
 
@@ -505,24 +499,25 @@ export class AuthService {
       console.log(`Password reset token for ${request.email}: ${token}`);
 
       return { success: true };
-
     } catch (error) {
       console.error('Password reset request error:', error);
       return {
         success: false,
-        error: 'Failed to process password reset request'
+        error: 'Failed to process password reset request',
       };
     }
   }
 
-  static async confirmPasswordReset(request: PasswordResetConfirm): Promise<{ success: boolean; error?: string }> {
+  static async confirmPasswordReset(
+    request: PasswordResetConfirm
+  ): Promise<{ success: boolean; error?: string }> {
     try {
       const resetData = this.passwordResetTokens.get(request.token);
-      
+
       if (!resetData || resetData.expiresAt < new Date()) {
         return {
           success: false,
-          error: 'Invalid or expired reset token'
+          error: 'Invalid or expired reset token',
         };
       }
 
@@ -530,7 +525,7 @@ export class AuthService {
       if (!user) {
         return {
           success: false,
-          error: 'User not found'
+          error: 'User not found',
         };
       }
 
@@ -538,13 +533,13 @@ export class AuthService {
       const passwordValidation = PasswordService.validatePassword(request.newPassword, {
         email: user.email,
         firstName: user.firstName,
-        lastName: user.lastName
+        lastName: user.lastName,
       });
 
       if (!passwordValidation.isValid) {
         return {
           success: false,
-          error: passwordValidation.errors.join(', ')
+          error: passwordValidation.errors.join(', '),
         };
       }
 
@@ -562,7 +557,7 @@ export class AuthService {
         credentials.passwordHash = hash;
         credentials.passwordSalt = salt;
         credentials.updatedAt = new Date();
-        
+
         this.userCredentials.set(resetData.userId, credentials);
       }
 
@@ -582,12 +577,11 @@ export class AuthService {
       );
 
       return { success: true };
-
     } catch (error) {
       console.error('Password reset confirmation error:', error);
       return {
         success: false,
-        error: 'Failed to reset password'
+        error: 'Failed to reset password',
       };
     }
   }
@@ -602,7 +596,7 @@ export class AuthService {
       if (!user) {
         return {
           success: false,
-          error: 'User not found'
+          error: 'User not found',
         };
       }
 
@@ -616,26 +610,26 @@ export class AuthService {
           if (!phoneNumber || !MFAService.isValidPhoneNumber(phoneNumber)) {
             return {
               success: false,
-              error: 'Valid phone number required for SMS MFA'
+              error: 'Valid phone number required for SMS MFA',
             };
           }
           setup = {
             secret: MFAService.formatPhoneNumber(phoneNumber),
             qrCodeUrl: '',
-            backupCodes: MFAService.generateBackupCodes()
+            backupCodes: MFAService.generateBackupCodes(),
           };
           break;
         case 'email':
           setup = {
             secret: user.email,
             qrCodeUrl: '',
-            backupCodes: MFAService.generateBackupCodes()
+            backupCodes: MFAService.generateBackupCodes(),
           };
           break;
         default:
           return {
             success: false,
-            error: 'Invalid MFA type'
+            error: 'Invalid MFA type',
           };
       }
 
@@ -647,21 +641,20 @@ export class AuthService {
         secret: setup.secret,
         isEnabled: false,
         backupCodes: MFAService.encryptBackupCodes(setup.backupCodes),
-        createdAt: new Date()
+        createdAt: new Date(),
       };
 
       this.userMFA.set(userId, mfaConfig);
 
       return {
         success: true,
-        setup
+        setup,
       };
-
     } catch (error) {
       console.error('MFA setup error:', error);
       return {
         success: false,
-        error: 'Failed to setup MFA'
+        error: 'Failed to setup MFA',
       };
     }
   }
@@ -676,7 +669,7 @@ export class AuthService {
       if (!mfaConfig) {
         return {
           success: false,
-          error: 'MFA not configured'
+          error: 'MFA not configured',
         };
       }
 
@@ -685,7 +678,7 @@ export class AuthService {
       if (!verification.success) {
         return {
           success: false,
-          error: 'Invalid verification token'
+          error: 'Invalid verification token',
         };
       }
 
@@ -694,22 +687,16 @@ export class AuthService {
       this.userMFA.set(userId, mfaConfig);
 
       // Log MFA enablement
-      await AuditService.logMFAEvent(
-        userId,
-        'enable',
-        context.ipAddress,
-        context.userAgent,
-        true,
-        { type: mfaConfig.type }
-      );
+      await AuditService.logMFAEvent(userId, 'enable', context.ipAddress, context.userAgent, true, {
+        type: mfaConfig.type,
+      });
 
       return { success: true };
-
     } catch (error) {
       console.error('MFA enable error:', error);
       return {
         success: false,
-        error: 'Failed to enable MFA'
+        error: 'Failed to enable MFA',
       };
     }
   }
@@ -744,7 +731,7 @@ export class AuthService {
       if (!sessionValidation.isValid || !sessionValidation.session) {
         return {
           allowed: false,
-          error: 'Invalid session'
+          error: 'Invalid session',
         };
       }
 
@@ -752,7 +739,7 @@ export class AuthService {
       if (!user || !user.active) {
         return {
           allowed: false,
-          error: 'User not found or inactive'
+          error: 'User not found or inactive',
         };
       }
 
@@ -762,7 +749,7 @@ export class AuthService {
         role: user.role,
         warehouseId: user.warehouseId,
         sessionId,
-        resourceId
+        resourceId,
       };
 
       const allowed = RBACService.hasPermission(context, resource as any, action as any);
@@ -782,14 +769,13 @@ export class AuthService {
 
       return {
         allowed,
-        user: allowed ? user : undefined
+        user: allowed ? user : undefined,
       };
-
     } catch (error) {
       console.error('Access validation error:', error);
       return {
         allowed: false,
-        error: 'Access validation failed'
+        error: 'Access validation failed',
       };
     }
   }
@@ -805,7 +791,7 @@ export class AuthService {
         role: 'supervisor' as UserRole,
         warehouseId: '1',
         active: true,
-        emailVerified: true
+        emailVerified: true,
       },
       {
         id: 'technician-user-id',
@@ -815,7 +801,7 @@ export class AuthService {
         role: 'technician' as UserRole,
         warehouseId: '1',
         active: true,
-        emailVerified: true
+        emailVerified: true,
       },
       {
         id: 'manager-user-id',
@@ -825,13 +811,13 @@ export class AuthService {
         role: 'manager' as UserRole,
         warehouseId: '1',
         active: true,
-        emailVerified: true
-      }
+        emailVerified: true,
+      },
     ];
 
-    testUsers.forEach(async (user) => {
+    testUsers.forEach(async user => {
       this.users.set(user.id, user);
-      
+
       // Create default password "demo123"
       const { hash, salt } = await PasswordService.hashPassword('demo123');
       this.userCredentials.set(user.id, {
@@ -842,7 +828,7 @@ export class AuthService {
         mustChangePassword: false,
         previousPasswords: [],
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       });
     });
   }

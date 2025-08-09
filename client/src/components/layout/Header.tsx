@@ -52,96 +52,95 @@ export default function Header({ onMobileMenuToggle, showMobileMenuButton }: Hea
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-white border-b border-gray-200 px-4 py-3 lg:px-6">
-      <div className="flex items-center justify-between">
+    <header className='sticky top-0 z-40 bg-white border-b border-gray-200 px-4 py-3 lg:px-6'>
+      <div className='flex items-center justify-between'>
         {/* Mobile menu button */}
         {showMobileMenuButton && (
           <Button
-            variant="ghost"
-            size="icon"
+            variant='ghost'
+            size='icon'
             onClick={onMobileMenuToggle}
-            className="lg:hidden"
-            data-testid="mobile-menu-button"
+            className='lg:hidden'
+            data-testid='mobile-menu-button'
           >
-            <Menu className="w-6 h-6" />
+            <Menu className='w-6 h-6' />
           </Button>
         )}
-        
+
         {/* Search Bar */}
-        <div className="hidden sm:block flex-1 max-w-md mx-4">
+        <div className='hidden sm:block flex-1 max-w-md mx-4'>
           <form onSubmit={handleSearch}>
-            <div className="relative">
+            <div className='relative'>
               <Input
-                type="text"
-                placeholder="Search work orders, equipment..."
+                type='text'
+                placeholder='Search work orders, equipment...'
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
+                onChange={e => setSearchQuery(e.target.value)}
+                className='pl-10'
               />
-              <Search className="absolute left-3 top-2.5 w-5 h-5 text-gray-400" />
+              <Search className='absolute left-3 top-2.5 w-5 h-5 text-gray-400' />
             </div>
           </form>
         </div>
-        
+
         {/* Right side actions */}
-        <div className="flex items-center space-x-4">
+        <div className='flex items-center space-x-4'>
           {/* QR Scanner Button (Mobile) */}
           <Button
-            variant="ghost"
-            size="icon"
-            className="sm:hidden"
+            variant='ghost'
+            size='icon'
+            className='sm:hidden'
             onClick={() => {
               // Implement QR scanner
               console.log('Open QR scanner');
             }}
           >
-            <QrCode className="w-6 h-6" />
+            <QrCode className='w-6 h-6' />
           </Button>
-          
+
           {/* Notifications */}
-          <div className="relative">
-            <Button variant="ghost" size="icon">
-              <Bell className="w-6 h-6" />
+          <div className='relative'>
+            <Button variant='ghost' size='icon'>
+              <Bell className='w-6 h-6' />
               {unreadCount > 0 && (
-                <Badge 
-                  variant="destructive" 
-                  className="absolute -top-1 -right-1 w-5 h-5 text-xs rounded-full p-0 flex items-center justify-center"
+                <Badge
+                  variant='destructive'
+                  className='absolute -top-1 -right-1 w-5 h-5 text-xs rounded-full p-0 flex items-center justify-center'
                 >
                   {unreadCount}
                 </Badge>
               )}
             </Button>
           </div>
-          
+
           {/* User Menu */}
           <div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button 
-                  variant="ghost" 
-                  className="flex items-center space-x-2"
-                  data-testid="user-menu-button"
+                <Button
+                  variant='ghost'
+                  className='flex items-center space-x-2'
+                  data-testid='user-menu-button'
                 >
-                  <div className="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center">
-                    <span className="text-primary-700 font-semibold text-sm">
-                      {user?.firstName?.[0]}{user?.lastName?.[0]}
+                  <div className='w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center'>
+                    <span className='text-primary-700 font-semibold text-sm'>
+                      {user?.firstName?.[0]}
+                      {user?.lastName?.[0]}
                     </span>
                   </div>
-                  <span data-testid="user-name" className="hidden sm:inline">
+                  <span data-testid='user-name' className='hidden sm:inline'>
                     {user?.firstName} {user?.lastName}
                   </span>
-                  <ChevronDown className="w-4 h-4" />
+                  <ChevronDown className='w-4 h-4' />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
+              <DropdownMenuContent align='end'>
                 <DropdownMenuItem>
-                  <span className="text-sm text-gray-700">
-                    {user?.email}
-                  </span>
+                  <span className='text-sm text-gray-700'>{user?.email}</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleLogout} data-testid="logout-button">
-                  <LogOut className="w-4 h-4 mr-2" />
+                <DropdownMenuItem onClick={handleLogout} data-testid='logout-button'>
+                  <LogOut className='w-4 h-4 mr-2' />
                   Logout
                 </DropdownMenuItem>
               </DropdownMenuContent>

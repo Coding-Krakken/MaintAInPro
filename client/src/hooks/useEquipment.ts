@@ -54,7 +54,7 @@ export function useEquipmentByAssetTag(assetTag: string) {
 
 export function useCreateEquipment() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async (equipment: InsertEquipment) => {
       const response = await apiRequest('POST', '/api/equipment', equipment);
@@ -68,7 +68,7 @@ export function useCreateEquipment() {
 
 export function useUpdateEquipment() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async ({ id, data }: { id: string; data: Partial<InsertEquipment> }) => {
       const response = await apiRequest('PATCH', `/api/equipment/${id}`, data);

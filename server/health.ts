@@ -22,24 +22,24 @@ export default function health(req: VercelRequest, res: VercelResponse) {
         auth: process.env.JWT_SECRET ? 'enabled' : 'disabled',
         database: process.env.DATABASE_URL ? 'enabled' : 'disabled',
         redis: process.env.REDIS_URL ? 'enabled' : 'disabled',
-        email: process.env.SMTP_HOST ? 'enabled' : 'disabled'
-      }
+        email: process.env.SMTP_HOST ? 'enabled' : 'disabled',
+      },
     };
 
     // Set cache headers to prevent caching
     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
     res.setHeader('Pragma', 'no-cache');
     res.setHeader('Expires', '0');
-    
+
     // Return health data
     res.status(200).json(healthData);
   } catch (error) {
     console.error('Health check failed:', error);
-    
+
     res.status(503).json({
       status: 'error',
       timestamp: new Date().toISOString(),
-      error: error instanceof Error ? error.message : 'Unknown error'
+      error: error instanceof Error ? error.message : 'Unknown error',
     });
   }
 }

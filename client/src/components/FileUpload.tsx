@@ -1,5 +1,15 @@
 import React, { useState, useRef, useCallback } from 'react';
-import { Upload, X, File, Image, FileText, Music, Video, AlertCircle, CheckCircle } from 'lucide-react';
+import {
+  Upload,
+  X,
+  File,
+  Image,
+  FileText,
+  Music,
+  Video,
+  AlertCircle,
+  CheckCircle,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
@@ -36,108 +46,121 @@ export const FileUpload: React.FC<FileUploadProps> = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const getFileIcon = (fileType: string) => {
-    if (fileType.startsWith('image/')) return <Image className="w-5 h-5" />;
-    if (fileType === 'application/pdf') return <FileText className="w-5 h-5" />;
-    if (fileType.startsWith('audio/')) return <Music className="w-5 h-5" />;
-    if (fileType.startsWith('video/')) return <Video className="w-5 h-5" />;
-    return <File className="w-5 h-5" />;
+    if (fileType.startsWith('image/')) return <Image className='w-5 h-5' />;
+    if (fileType === 'application/pdf') return <FileText className='w-5 h-5' />;
+    if (fileType.startsWith('audio/')) return <Music className='w-5 h-5' />;
+    if (fileType.startsWith('video/')) return <Video className='w-5 h-5' />;
+    return <File className='w-5 h-5' />;
   };
 
-  const handleFiles = useCallback(async (files: FileList) => {
-    if (disabled) return;
+  const handleFiles = useCallback(
+    async (files: FileList) => {
+      if (disabled) return;
 
-    const fileArray = Array.from(files);
-    
-    // Check file limit
-    if (uploads.length + fileArray.length > maxFiles) {
-      setError(`Maximum ${maxFiles} files allowed`);
-      return;
-    }
+      const fileArray = Array.from(files);
 
-    setError(null);
+      // Check file limit
+      if (uploads.length + fileArray.length > maxFiles) {
+        setError(`Maximum ${maxFiles} files allowed`);
+        return;
+      }
 
-    for (const file of fileArray) {
-      const uploadId = `${Date.now()}-${Math.random()}`;
-      const newUpload: AttachmentUpload = {
-        id: uploadId,
-        file,
-        progress: 0,
-        status: 'pending' as const,
-      };
+      setError(null);
 
-      setUploads(prev => [...prev, newUpload]);
-
-      try {
-        const uploadContext = {
-          ...(workOrderId && { workOrderId }),
-          ...(equipmentId && { equipmentId }),
-          ...(pmTemplateId && { pmTemplateId }),
-          ...(vendorId && { vendorId })
-        };
-        
-        const result = await FileUploadService.uploadFile(
+      for (const file of fileArray) {
+        const uploadId = `${Date.now()}-${Math.random()}`;
+        const newUpload: AttachmentUpload = {
+          id: uploadId,
           file,
-          uploadContext,
-          {},
-          (progress) => {
-            setUploads(prev => prev.map(upload => 
-              upload.file === file ? { ...upload, progress } : upload
-            ));
-          }
-        );
+          progress: 0,
+          status: 'pending' as const,
+        };
 
-        if (result.success) {
-          setUploads(prev => prev.map(upload => 
-            upload.file === file 
-              ? { 
-                  ...upload, 
-                  progress: 100, 
-                  ...(result.fileUrl && { url: result.fileUrl }),
-                  status: 'complete' as const
-                }
-              : upload
-          ));
-          
-          if (onUploadSuccess && result.fileUrl && result.fileName) {
-            onUploadSuccess(result.fileUrl, result.fileName);
+        setUploads(prev => [...prev, newUpload]);
+
+        try {
+          const uploadContext = {
+            ...(workOrderId && { workOrderId }),
+            ...(equipmentId && { equipmentId }),
+            ...(pmTemplateId && { pmTemplateId }),
+            ...(vendorId && { vendorId }),
+          };
+
+          const result = await FileUploadService.uploadFile(file, uploadContext, {}, progress => {
+            setUploads(prev =>
+              prev.map(upload => (upload.file === file ? { ...upload, progress } : upload))
+            );
+          });
+
+          if (result.success) {
+            setUploads(prev =>
+              prev.map(upload =>
+                upload.file === file
+                  ? {
+                      ...upload,
+                      progress: 100,
+                      ...(result.fileUrl && { url: result.fileUrl }),
+                      status: 'complete' as const,
+                    }
+                  : upload
+              )
+            );
+
+            if (onUploadSuccess && result.fileUrl && result.fileName) {
+              onUploadSuccess(result.fileUrl, result.fileName);
+            }
+          } else {
+            setUploads(prev =>
+              prev.map(upload =>
+                upload.file === file
+                  ? {
+                      ...upload,
+                      ...(result.error && { error: result.error }),
+                      status: 'error' as const,
+                    }
+                  : upload
+              )
+            );
+
+            if (onUploadError && result.error) {
+              onUploadError(result.error);
+            }
           }
-        } else {
-          setUploads(prev => prev.map(upload => 
-            upload.file === file 
-              ? { 
-                  ...upload, 
-                  ...(result.error && { error: result.error }),
-                  status: 'error' as const
-                }
-              : upload
-          ));
-          
-          if (onUploadError && result.error) {
-            onUploadError(result.error);
+        } catch (error) {
+          const errorMessage = error instanceof Error ? error.message : 'Upload failed';
+          setUploads(prev =>
+            prev.map(upload => (upload.file === file ? { ...upload, error: errorMessage } : upload))
+          );
+
+          if (onUploadError) {
+            onUploadError(errorMessage);
           }
-        }
-      } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : 'Upload failed';
-        setUploads(prev => prev.map(upload => 
-          upload.file === file 
-            ? { ...upload, error: errorMessage }
-            : upload
-        ));
-        
-        if (onUploadError) {
-          onUploadError(errorMessage);
         }
       }
-    }
-  }, [uploads, maxFiles, disabled, workOrderId, equipmentId, pmTemplateId, vendorId, onUploadSuccess, onUploadError]);
+    },
+    [
+      uploads,
+      maxFiles,
+      disabled,
+      workOrderId,
+      equipmentId,
+      pmTemplateId,
+      vendorId,
+      onUploadSuccess,
+      onUploadError,
+    ]
+  );
 
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    setDragActive(false);
-    
-    const files = e.dataTransfer.files;
-    handleFiles(files);
-  }, [handleFiles]);
+  const handleDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault();
+      setDragActive(false);
+
+      const files = e.dataTransfer.files;
+      handleFiles(files);
+    },
+    [handleFiles]
+  );
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -149,12 +172,15 @@ export const FileUpload: React.FC<FileUploadProps> = ({
     setDragActive(false);
   }, []);
 
-  const handleFileInput = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (files) {
-      handleFiles(files);
-    }
-  }, [handleFiles]);
+  const handleFileInput = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const files = e.target.files;
+      if (files) {
+        handleFiles(files);
+      }
+    },
+    [handleFiles]
+  );
 
   const removeUpload = useCallback((file: File) => {
     setUploads(prev => prev.filter(upload => upload.file !== file));
@@ -178,25 +204,23 @@ export const FileUpload: React.FC<FileUploadProps> = ({
         onDragLeave={handleDragLeave}
         onClick={openFileDialog}
       >
-        <CardContent className="p-8 text-center">
-          <div className="flex flex-col items-center space-y-4">
-            <Upload className="w-12 h-12 text-gray-400" />
+        <CardContent className='p-8 text-center'>
+          <div className='flex flex-col items-center space-y-4'>
+            <Upload className='w-12 h-12 text-gray-400' />
             <div>
-              <p className="text-lg font-medium text-gray-900">
+              <p className='text-lg font-medium text-gray-900'>
                 Drop files here or click to upload
               </p>
-              <p className="text-sm text-gray-500">
+              <p className='text-sm text-gray-500'>
                 Supports images, PDFs, audio, and video files (max 5MB each)
               </p>
-              <p className="text-xs text-gray-400 mt-1">
-                Maximum {maxFiles} files
-              </p>
+              <p className='text-xs text-gray-400 mt-1'>Maximum {maxFiles} files</p>
             </div>
             <Button
-              type="button"
-              variant="outline"
+              type='button'
+              variant='outline'
               disabled={disabled}
-              onClick={(e) => {
+              onClick={e => {
                 e.stopPropagation();
                 openFileDialog();
               }}
@@ -210,74 +234,66 @@ export const FileUpload: React.FC<FileUploadProps> = ({
       {/* Hidden File Input */}
       <input
         ref={fileInputRef}
-        type="file"
+        type='file'
         multiple
-        accept="image/*,application/pdf,audio/*,video/*"
+        accept='image/*,application/pdf,audio/*,video/*'
         onChange={handleFileInput}
-        className="hidden"
+        className='hidden'
         disabled={disabled}
       />
 
       {/* Error Message */}
       {error && (
-        <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
+        <Alert variant='destructive'>
+          <AlertCircle className='h-4 w-4' />
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
 
       {/* Upload Progress */}
       {uploads.length > 0 && (
-        <div className="space-y-2">
-          <h4 className="font-medium text-sm text-gray-700">
+        <div className='space-y-2'>
+          <h4 className='font-medium text-sm text-gray-700'>
             Uploading {uploads.length} file{uploads.length > 1 ? 's' : ''}
           </h4>
           {uploads.map((upload, index) => (
-            <Card key={index} className="p-3">
-              <div className="flex items-center space-x-3">
+            <Card key={index} className='p-3'>
+              <div className='flex items-center space-x-3'>
                 {/* File Icon */}
-                <div className="flex-shrink-0">
-                  {getFileIcon(upload.file.type)}
-                </div>
+                <div className='flex-shrink-0'>{getFileIcon(upload.file.type)}</div>
 
                 {/* File Info */}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between">
-                    <p className="text-sm font-medium text-gray-900 truncate">
-                      {upload.file.name}
-                    </p>
-                    <div className="flex items-center space-x-2">
+                <div className='flex-1 min-w-0'>
+                  <div className='flex items-center justify-between'>
+                    <p className='text-sm font-medium text-gray-900 truncate'>{upload.file.name}</p>
+                    <div className='flex items-center space-x-2'>
                       {upload.error ? (
-                        <AlertCircle className="w-4 h-4 text-red-500" />
+                        <AlertCircle className='w-4 h-4 text-red-500' />
                       ) : upload.progress === 100 ? (
-                        <CheckCircle className="w-4 h-4 text-green-500" />
+                        <CheckCircle className='w-4 h-4 text-green-500' />
                       ) : null}
                       <button
                         onClick={() => removeUpload(upload.file)}
-                        className="text-gray-400 hover:text-gray-600"
+                        className='text-gray-400 hover:text-gray-600'
                       >
-                        <X className="w-4 h-4" />
+                        <X className='w-4 h-4' />
                       </button>
                     </div>
                   </div>
-                  
-                  <p className="text-xs text-gray-500">
+
+                  <p className='text-xs text-gray-500'>
                     {FileUploadService.formatFileSize(upload.file.size)}
                   </p>
 
                   {/* Progress Bar */}
                   {!upload.error && upload.progress < 100 && (
-                    <div className="mt-2">
-                      <Progress value={upload.progress} className="h-1" />
+                    <div className='mt-2'>
+                      <Progress value={upload.progress} className='h-1' />
                     </div>
                   )}
 
                   {/* Error Message */}
-                  {upload.error && (
-                    <p className="text-xs text-red-500 mt-1">
-                      {upload.error}
-                    </p>
-                  )}
+                  {upload.error && <p className='text-xs text-red-500 mt-1'>{upload.error}</p>}
                 </div>
               </div>
             </Card>

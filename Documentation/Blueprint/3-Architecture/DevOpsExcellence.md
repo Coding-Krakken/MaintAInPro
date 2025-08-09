@@ -2,43 +2,49 @@
 
 ## 📋 Overview
 
-This document establishes the DevOps and infrastructure engineering standards for MaintAInPro, implementing practices equivalent to those used by elite technology organizations. The framework ensures reproducible deployments, comprehensive automation, and operational excellence at enterprise scale.
+This document establishes the DevOps and infrastructure engineering standards
+for MaintAInPro, implementing practices equivalent to those used by elite
+technology organizations. The framework ensures reproducible deployments,
+comprehensive automation, and operational excellence at enterprise scale.
 
 ## 🎯 DevOps Philosophy & Principles
 
 ### **Elite Engineering Culture**
 
 #### **Core DevOps Principles**
+
 ```yaml
 devops_principles:
   collaboration:
-    - cross_functional_teams: "Development, operations, and security collaboration"
-    - shared_responsibility: "Collective ownership of production systems"
-    - blameless_culture: "Learning-focused incident response"
-    - continuous_feedback: "Real-time feedback loops across teams"
-  
+    - cross_functional_teams:
+        'Development, operations, and security collaboration'
+    - shared_responsibility: 'Collective ownership of production systems'
+    - blameless_culture: 'Learning-focused incident response'
+    - continuous_feedback: 'Real-time feedback loops across teams'
+
   automation:
-    - infrastructure_as_code: "100% infrastructure automation"
-    - deployment_automation: "Fully automated deployment pipelines"
-    - testing_automation: "Comprehensive automated testing"
-    - monitoring_automation: "Self-healing systems with auto-remediation"
-  
+    - infrastructure_as_code: '100% infrastructure automation'
+    - deployment_automation: 'Fully automated deployment pipelines'
+    - testing_automation: 'Comprehensive automated testing'
+    - monitoring_automation: 'Self-healing systems with auto-remediation'
+
   measurement:
-    - everything_measured: "Comprehensive metrics collection"
-    - data_driven_decisions: "Evidence-based optimization"
-    - continuous_improvement: "Regular retrospectives and optimization"
-    - performance_budgets: "Strict performance and quality gates"
-  
+    - everything_measured: 'Comprehensive metrics collection'
+    - data_driven_decisions: 'Evidence-based optimization'
+    - continuous_improvement: 'Regular retrospectives and optimization'
+    - performance_budgets: 'Strict performance and quality gates'
+
   sharing:
-    - knowledge_sharing: "Documentation-first culture"
-    - tooling_standardization: "Consistent tooling across teams"
-    - best_practices: "Shared libraries and patterns"
-    - incident_learning: "Postmortem-driven improvements"
+    - knowledge_sharing: 'Documentation-first culture'
+    - tooling_standardization: 'Consistent tooling across teams'
+    - best_practices: 'Shared libraries and patterns'
+    - incident_learning: 'Postmortem-driven improvements'
 ```
 
 ### **Deployment Topology & Environments**
 
 #### **Multi-Environment Strategy**
+
 ```typescript
 interface EnvironmentTopology {
   development: {
@@ -49,7 +55,7 @@ interface EnvironmentTopology {
     monitoring: 'Basic logging with development tools';
     deployment: 'Hot reload with watch mode';
   };
-  
+
   testing: {
     purpose: 'Automated testing and quality assurance';
     infrastructure: 'Kubernetes cluster with limited resources';
@@ -58,7 +64,7 @@ interface EnvironmentTopology {
     monitoring: 'Test metrics and coverage reporting';
     deployment: 'Automated on feature branch creation';
   };
-  
+
   staging: {
     purpose: 'Production mirror for integration testing';
     infrastructure: 'Production-equivalent Kubernetes cluster';
@@ -67,7 +73,7 @@ interface EnvironmentTopology {
     monitoring: 'Full observability stack with alerting';
     deployment: 'Automated on main branch merge';
   };
-  
+
   production: {
     purpose: 'Customer-facing environment with high availability';
     infrastructure: 'Multi-region Kubernetes with auto-scaling';
@@ -84,6 +90,7 @@ interface EnvironmentTopology {
 ### **Kubernetes-Native Architecture**
 
 #### **Cluster Configuration**
+
 ```yaml
 # cluster-config.yaml
 apiVersion: v1
@@ -144,6 +151,7 @@ data:
 ```
 
 #### **Application Deployment Manifests**
+
 ```yaml
 # deployment.yaml
 apiVersion: apps/v1
@@ -169,9 +177,9 @@ spec:
         app: maintainpro-web
         version: v1.0.0
       annotations:
-        prometheus.io/scrape: "true"
-        prometheus.io/port: "3000"
-        prometheus.io/path: "/metrics"
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '3000'
+        prometheus.io/path: '/metrics'
     spec:
       serviceAccountName: maintainpro-web
       securityContext:
@@ -179,81 +187,81 @@ spec:
         runAsUser: 1001
         fsGroup: 1001
       containers:
-      - name: web
-        image: maintainpro/web:v1.0.0
-        imagePullPolicy: Always
-        ports:
-        - containerPort: 3000
-          name: http
-        env:
-        - name: NODE_ENV
-          value: "production"
-        - name: SUPABASE_URL
-          valueFrom:
-            secretKeyRef:
-              name: maintainpro-secrets
-              key: supabase-url
-        - name: SUPABASE_ANON_KEY
-          valueFrom:
-            secretKeyRef:
-              name: maintainpro-secrets
-              key: supabase-anon-key
-        resources:
-          requests:
-            memory: "256Mi"
-            cpu: "250m"
-          limits:
-            memory: "512Mi"
-            cpu: "500m"
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 3000
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 5
-          failureThreshold: 3
-        readinessProbe:
-          httpGet:
-            path: /ready
-            port: 3000
-          initialDelaySeconds: 5
-          periodSeconds: 5
-          timeoutSeconds: 3
-          failureThreshold: 2
-        securityContext:
-          allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: true
-          capabilities:
-            drop:
-            - ALL
-        volumeMounts:
-        - name: tmp
-          mountPath: /tmp
-        - name: cache
-          mountPath: /app/.cache
+        - name: web
+          image: maintainpro/web:v1.0.0
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+              name: http
+          env:
+            - name: NODE_ENV
+              value: 'production'
+            - name: SUPABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: maintainpro-secrets
+                  key: supabase-url
+            - name: SUPABASE_ANON_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: maintainpro-secrets
+                  key: supabase-anon-key
+          resources:
+            requests:
+              memory: '256Mi'
+              cpu: '250m'
+            limits:
+              memory: '512Mi'
+              cpu: '500m'
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 2
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            - name: cache
+              mountPath: /app/.cache
       volumes:
-      - name: tmp
-        emptyDir: {}
-      - name: cache
-        emptyDir: {}
+        - name: tmp
+          emptyDir: {}
+        - name: cache
+          emptyDir: {}
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 100
-            podAffinityTerm:
-              labelSelector:
-                matchExpressions:
-                - key: app
-                  operator: In
-                  values:
-                  - maintainpro-web
-              topologyKey: kubernetes.io/hostname
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - maintainpro-web
+                topologyKey: kubernetes.io/hostname
       tolerations:
-      - key: "node-type"
-        operator: "Equal"
-        value: "application"
-        effect: "NoSchedule"
+        - key: 'node-type'
+          operator: 'Equal'
+          value: 'application'
+          effect: 'NoSchedule'
 
 ---
 apiVersion: v1
@@ -266,10 +274,10 @@ spec:
   selector:
     app: maintainpro-web
   ports:
-  - port: 80
-    targetPort: 3000
-    protocol: TCP
-    name: http
+    - port: 80
+      targetPort: 3000
+      protocol: TCP
+      name: http
   type: ClusterIP
 
 ---
@@ -286,21 +294,22 @@ metadata:
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
 spec:
   rules:
-  - host: app.maintainpro.com
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: maintainpro-web-service
-            port:
-              number: 80
+    - host: app.maintainpro.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: maintainpro-web-service
+                port:
+                  number: 80
 ```
 
 ### **Helm Chart Architecture**
 
 #### **Production Helm Chart**
+
 ```yaml
 # Chart.yaml
 apiVersion: v2
@@ -308,7 +317,7 @@ name: maintainpro
 description: Enterprise CMMS Platform
 type: application
 version: 1.0.0
-appVersion: "1.0.0"
+appVersion: '1.0.0'
 home: https://maintainpro.com
 sources:
   - https://github.com/maintainpro/maintainpro
@@ -332,42 +341,42 @@ dependencies:
 
 # values.yaml
 global:
-  imageRegistry: "registry.maintainpro.com"
+  imageRegistry: 'registry.maintainpro.com'
   imagePullSecrets:
     - name: registry-secret
-  storageClass: "gp3"
+  storageClass: 'gp3'
 
 web:
   enabled: true
   replicaCount: 6
   image:
     repository: maintainpro/web
-    tag: "1.0.0"
+    tag: '1.0.0'
     pullPolicy: Always
-  
+
   autoscaling:
     enabled: true
     minReplicas: 6
     maxReplicas: 50
     targetCPUUtilizationPercentage: 70
     targetMemoryUtilizationPercentage: 80
-  
+
   resources:
     requests:
-      memory: "256Mi"
-      cpu: "250m"
+      memory: '256Mi'
+      cpu: '250m'
     limits:
-      memory: "512Mi"
-      cpu: "500m"
-  
+      memory: '512Mi'
+      cpu: '500m'
+
   service:
     type: ClusterIP
     port: 80
     targetPort: 3000
-  
+
   ingress:
     enabled: true
-    className: "alb"
+    className: 'alb'
     annotations:
       alb.ingress.kubernetes.io/scheme: internet-facing
       alb.ingress.kubernetes.io/target-type: ip
@@ -387,9 +396,9 @@ edgeFunctions:
   replicaCount: 3
   image:
     repository: maintainpro/edge-functions
-    tag: "1.0.0"
+    tag: '1.0.0'
     pullPolicy: Always
-  
+
   autoscaling:
     enabled: true
     minReplicas: 3
@@ -397,33 +406,33 @@ edgeFunctions:
     targetCPUUtilizationPercentage: 60
 
 postgresql:
-  enabled: false  # Using managed database
-  
+  enabled: false # Using managed database
+
 redis:
   enabled: true
   auth:
     enabled: true
-    password: "change-me"
+    password: 'change-me'
   master:
     persistence:
       enabled: true
       size: 8Gi
-      storageClass: "gp3"
+      storageClass: 'gp3'
 
 monitoring:
   prometheus:
     enabled: true
   grafana:
     enabled: true
-    adminPassword: "change-me"
+    adminPassword: 'change-me'
   alertmanager:
     enabled: true
 
 secrets:
-  supabaseUrl: "https://xxx.supabase.co"
-  supabaseAnonKey: "change-me"
-  supabaseServiceKey: "change-me"
-  jwtSecret: "change-me"
+  supabaseUrl: 'https://xxx.supabase.co'
+  supabaseAnonKey: 'change-me'
+  supabaseServiceKey: 'change-me'
+  jwtSecret: 'change-me'
 ```
 
 ## 🔄 CI/CD Pipeline Excellence
@@ -431,6 +440,7 @@ secrets:
 ### **GitHub Actions Workflow**
 
 #### **Comprehensive Pipeline**
+
 ```yaml
 # .github/workflows/ci-cd.yml
 name: Elite CI/CD Pipeline
@@ -455,30 +465,30 @@ jobs:
     strategy:
       matrix:
         node-version: [18, 20]
-    
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Required for SonarQube analysis
-      
+          fetch-depth: 0 # Required for SonarQube analysis
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-      
+
       - name: Install Dependencies
         run: |
           npm ci --frozen-lockfile
           npm audit --audit-level=moderate
-      
+
       - name: Code Quality Analysis
         run: |
           npm run lint:strict
           npm run type-check:strict
           npm run format:check
-      
+
       - name: Unit & Integration Tests
         run: |
           npm run test:coverage
@@ -486,25 +496,25 @@ jobs:
         env:
           CI: true
           COVERAGE_THRESHOLD: 95
-      
+
       - name: Mutation Testing
         run: npm run test:mutation
         env:
           MUTATION_THRESHOLD: 80
-      
+
       - name: Security Scanning
         run: |
           npx snyk test --severity-threshold=medium
           npx semgrep --config=auto --error
           npx audit-ci --moderate
-      
+
       - name: Upload Coverage
         uses: codecov/codecov-action@v3
         with:
           file: ./coverage/lcov.info
           flags: unittests
           name: codecov-umbrella
-      
+
       - name: SonarQube Analysis
         uses: sonarqube-quality-gate-action@master
         env:
@@ -515,25 +525,25 @@ jobs:
     name: Build & Security Scan
     runs-on: ubuntu-latest
     needs: quality-gates
-    
+
     outputs:
       image-digest: ${{ steps.build.outputs.digest }}
       image-tag: ${{ steps.meta.outputs.tags }}
-    
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-      
+
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v3
-      
+
       - name: Login to Container Registry
         uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - name: Extract Metadata
         id: meta
         uses: docker/metadata-action@v5
@@ -545,7 +555,7 @@ jobs:
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=sha,prefix={{branch}}-
-      
+
       - name: Build Container Image
         id: build
         uses: docker/build-push-action@v5
@@ -558,7 +568,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           platforms: linux/amd64,linux/arm64
-      
+
       - name: Container Security Scan
         uses: aquasecurity/trivy-action@master
         with:
@@ -566,7 +576,7 @@ jobs:
           format: 'sarif'
           output: 'trivy-results.sarif'
           severity: 'CRITICAL,HIGH'
-      
+
       - name: Upload Trivy Results
         uses: github/codeql-action/upload-sarif@v2
         with:
@@ -577,32 +587,32 @@ jobs:
     name: E2E Testing
     runs-on: ubuntu-latest
     needs: build-and-scan
-    
+
     strategy:
       matrix:
         browser: [chromium, firefox, webkit]
-    
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'npm'
-      
+
       - name: Install Dependencies
         run: npm ci --frozen-lockfile
-      
+
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps ${{ matrix.browser }}
-      
+
       - name: Run E2E Tests
         run: npx playwright test --project=${{ matrix.browser }}
         env:
           PLAYWRIGHT_BASE_URL: http://localhost:3000
-      
+
       - name: Upload E2E Results
         uses: actions/upload-artifact@v3
         if: always()
@@ -616,32 +626,32 @@ jobs:
     name: Performance Testing
     runs-on: ubuntu-latest
     needs: build-and-scan
-    
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'npm'
-      
+
       - name: Install Dependencies
         run: npm ci --frozen-lockfile
-      
+
       - name: Build Application
         run: npm run build
         env:
           NODE_ENV: production
-      
+
       - name: Lighthouse CI
         run: |
           npm install -g @lhci/cli@0.12.x
           lhci autorun
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
-      
+
       - name: Bundle Analysis
         run: |
           npm run build:analyze
@@ -654,28 +664,28 @@ jobs:
     needs: [e2e-testing, performance-testing]
     if: github.ref == 'refs/heads/main'
     environment: staging
-    
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-      
+
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-west-2
-      
+
       - name: Setup Kubectl
         uses: azure/setup-kubectl@v3
         with:
           version: 'v1.28.0'
-      
+
       - name: Setup Helm
         uses: azure/setup-helm@v3
         with:
           version: 'v3.13.0'
-      
+
       - name: Deploy to Staging
         run: |
           aws eks update-kubeconfig --name maintainpro-staging
@@ -685,11 +695,11 @@ jobs:
             --values ./helm/maintainpro/values-staging.yaml \
             --set web.image.tag=${{ github.sha }} \
             --wait --timeout=600s
-      
+
       - name: Staging Smoke Tests
         run: |
           npm run test:smoke -- --baseURL=https://staging.maintainpro.com
-      
+
       - name: Security Baseline Test
         run: |
           npx newman run ./tests/security/api-security-tests.json \
@@ -702,32 +712,32 @@ jobs:
     needs: deploy-staging
     if: github.event_name == 'release' && github.event.action == 'published'
     environment: production
-    
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-      
+
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_PROD }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_PROD }}
           aws-region: us-west-2
-      
+
       - name: Setup Kubectl
         uses: azure/setup-kubectl@v3
         with:
           version: 'v1.28.0'
-      
+
       - name: Setup Helm
         uses: azure/setup-helm@v3
         with:
           version: 'v3.13.0'
-      
+
       - name: Blue-Green Deployment
         run: |
           aws eks update-kubeconfig --name maintainpro-production
-          
+
           # Deploy to green environment
           helm upgrade --install maintainpro-green ./helm/maintainpro \
             --namespace maintainpro-production \
@@ -735,28 +745,28 @@ jobs:
             --set web.image.tag=${{ github.sha }} \
             --set deployment.slot=green \
             --wait --timeout=900s
-          
+
           # Run health checks
           npm run test:health -- --baseURL=https://green.maintainpro.com
-          
+
           # Switch traffic to green
           kubectl patch service maintainpro-web-service \
             -p '{"spec":{"selector":{"slot":"green"}}}'
-          
+
           # Wait for traffic validation
           sleep 300
-          
+
           # Remove blue environment
           helm uninstall maintainpro-blue --namespace maintainpro-production || true
-          
+
           # Rename green to blue for next deployment
           kubectl label deployment maintainpro-green-web slot=blue --overwrite
-      
+
       - name: Production Validation
         run: |
           npm run test:smoke -- --baseURL=https://app.maintainpro.com
           npm run test:security -- --baseURL=https://app.maintainpro.com
-      
+
       - name: Update Deployment Status
         run: |
           curl -X POST https://api.github.com/repos/${{ github.repository }}/deployments \
@@ -774,7 +784,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: deploy-production
     if: always()
-    
+
     steps:
       - name: Monitor Deployment Health
         run: |
@@ -784,13 +794,13 @@ jobs:
             curl -f https://app.maintainpro.com/health || exit 1
             sleep 60
           done
-      
+
       - name: Update Status Checks
         run: |
           # Update external monitoring services
           curl -X POST "${{ secrets.DATADOG_WEBHOOK_URL }}" \
             -d "Deployment completed: ${{ github.sha }}"
-          
+
           curl -X POST "${{ secrets.PAGERDUTY_WEBHOOK_URL }}" \
             -d "Production deployment successful"
 ```
@@ -800,6 +810,7 @@ jobs:
 ### **Environment Configuration Strategy**
 
 #### **Multi-Environment Configuration**
+
 ```typescript
 interface EnvironmentConfig {
   development: {
@@ -819,7 +830,7 @@ interface EnvironmentConfig {
       level: 'debug';
     };
   };
-  
+
   staging: {
     database: {
       host: 'staging-db.maintainpro.com';
@@ -837,7 +848,7 @@ interface EnvironmentConfig {
       level: 'info';
     };
   };
-  
+
   production: {
     database: {
       host: 'prod-db.maintainpro.com';
@@ -859,6 +870,7 @@ interface EnvironmentConfig {
 ```
 
 #### **Secrets Management with HashiCorp Vault**
+
 ```yaml
 # vault-config.yaml
 vault:
@@ -866,52 +878,54 @@ vault:
     ha:
       enabled: true
       replicas: 3
-    
+
     dataStorage:
       enabled: true
       size: 10Gi
       storageClass: gp3
-    
+
     auditStorage:
       enabled: true
       size: 5Gi
       storageClass: gp3
-    
+
     seal:
       awskms:
         enabled: true
         region: us-west-2
-        kmsKeyId: "arn:aws:kms:us-west-2:123456789012:key/12345678-1234-1234-1234-123456789012"
-    
+        kmsKeyId: 'arn:aws:kms:us-west-2:123456789012:key/12345678-1234-1234-1234-123456789012'
+
     auth:
       kubernetes:
         enabled: true
-        role: "maintainpro"
-        bound_service_account_names: ["maintainpro-web", "maintainpro-api"]
-        bound_service_account_namespaces: ["maintainpro-production"]
-        policies: ["maintainpro-read"]
+        role: 'maintainpro'
+        bound_service_account_names: ['maintainpro-web', 'maintainpro-api']
+        bound_service_account_namespaces: ['maintainpro-production']
+        policies: ['maintainpro-read']
 
   secrets:
     database:
-      path: "secret/database"
+      path: 'secret/database'
       data:
-        username: "maintainpro_user"
-        password: "{{ vault_generated_password }}"
-        connection_string: "postgresql://maintainpro_user:{{ vault_generated_password }}@prod-db.maintainpro.com:5432/maintainpro"
-    
+        username: 'maintainpro_user'
+        password: '{{ vault_generated_password }}'
+        connection_string:
+          'postgresql://maintainpro_user:{{ vault_generated_password
+          }}@prod-db.maintainpro.com:5432/maintainpro'
+
     supabase:
-      path: "secret/supabase"
+      path: 'secret/supabase'
       data:
-        url: "https://xxx.supabase.co"
-        anon_key: "{{ supabase_anon_key }}"
-        service_key: "{{ supabase_service_key }}"
-    
+        url: 'https://xxx.supabase.co'
+        anon_key: '{{ supabase_anon_key }}'
+        service_key: '{{ supabase_service_key }}'
+
     jwt:
-      path: "secret/jwt"
+      path: 'secret/jwt'
       data:
-        secret: "{{ vault_generated_jwt_secret }}"
-        issuer: "maintainpro.com"
-        expiry: "15m"
+        secret: '{{ vault_generated_jwt_secret }}'
+        issuer: 'maintainpro.com'
+        expiry: '15m'
 
 # External Secrets Operator Configuration
 apiVersion: external-secrets.io/v1beta1
@@ -922,15 +936,15 @@ metadata:
 spec:
   provider:
     vault:
-      server: "https://vault.maintainpro.com"
-      path: "secret"
-      version: "v2"
+      server: 'https://vault.maintainpro.com'
+      path: 'secret'
+      version: 'v2'
       auth:
         kubernetes:
-          mountPath: "kubernetes"
-          role: "maintainpro"
+          mountPath: 'kubernetes'
+          role: 'maintainpro'
           serviceAccountRef:
-            name: "external-secrets-sa"
+            name: 'external-secrets-sa'
 
 ---
 apiVersion: external-secrets.io/v1beta1
@@ -947,22 +961,22 @@ spec:
     name: maintainpro-secrets
     creationPolicy: Owner
   data:
-  - secretKey: database-url
-    remoteRef:
-      key: database
-      property: connection_string
-  - secretKey: supabase-url
-    remoteRef:
-      key: supabase
-      property: url
-  - secretKey: supabase-anon-key
-    remoteRef:
-      key: supabase
-      property: anon_key
-  - secretKey: jwt-secret
-    remoteRef:
-      key: jwt
-      property: secret
+    - secretKey: database-url
+      remoteRef:
+        key: database
+        property: connection_string
+    - secretKey: supabase-url
+      remoteRef:
+        key: supabase
+        property: url
+    - secretKey: supabase-anon-key
+      remoteRef:
+        key: supabase
+        property: anon_key
+    - secretKey: jwt-secret
+      remoteRef:
+        key: jwt
+        property: secret
 ```
 
 ## 🔍 Observability & Monitoring Excellence
@@ -970,6 +984,7 @@ spec:
 ### **Comprehensive Monitoring Stack**
 
 #### **Prometheus & Grafana Configuration**
+
 ```yaml
 # monitoring-stack.yaml
 apiVersion: v1
@@ -984,16 +999,16 @@ data:
       external_labels:
         cluster: 'maintainpro-production'
         environment: 'production'
-    
+
     rule_files:
       - "/etc/prometheus/rules/*.yml"
-    
+
     alerting:
       alertmanagers:
         - static_configs:
             - targets:
               - alertmanager:9093
-    
+
     scrape_configs:
       # Application Metrics
       - job_name: 'maintainpro-web'
@@ -1164,6 +1179,7 @@ data:
 ```
 
 #### **Distributed Tracing with Jaeger**
+
 ```yaml
 # jaeger-config.yaml
 apiVersion: v1
@@ -1218,39 +1234,39 @@ spec:
         app: jaeger
     spec:
       containers:
-      - name: jaeger
-        image: jaegertracing/all-in-one:1.50
-        ports:
-        - containerPort: 16686
-          name: ui
-        - containerPort: 14268
-          name: collector
-        - containerPort: 6831
-          name: agent-udp
-        - containerPort: 6832
-          name: agent-binary
-        env:
-        - name: COLLECTOR_OTLP_ENABLED
-          value: "true"
-        - name: ELASTICSEARCH_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: elasticsearch-credentials
-              key: password
-        volumeMounts:
-        - name: config
-          mountPath: /etc/jaeger
-        resources:
-          requests:
-            memory: "512Mi"
-            cpu: "250m"
-          limits:
-            memory: "1Gi"
-            cpu: "500m"
+        - name: jaeger
+          image: jaegertracing/all-in-one:1.50
+          ports:
+            - containerPort: 16686
+              name: ui
+            - containerPort: 14268
+              name: collector
+            - containerPort: 6831
+              name: agent-udp
+            - containerPort: 6832
+              name: agent-binary
+          env:
+            - name: COLLECTOR_OTLP_ENABLED
+              value: 'true'
+            - name: ELASTICSEARCH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: elasticsearch-credentials
+                  key: password
+          volumeMounts:
+            - name: config
+              mountPath: /etc/jaeger
+          resources:
+            requests:
+              memory: '512Mi'
+              cpu: '250m'
+            limits:
+              memory: '1Gi'
+              cpu: '500m'
       volumes:
-      - name: config
-        configMap:
-          name: jaeger-config
+        - name: config
+          configMap:
+            name: jaeger-config
 ```
 
 ## 🚨 Incident Response & Disaster Recovery
@@ -1258,6 +1274,7 @@ spec:
 ### **Incident Response Automation**
 
 #### **PagerDuty Integration**
+
 ```yaml
 # alertmanager-config.yaml
 apiVersion: v1
@@ -1286,12 +1303,12 @@ data:
         receiver: slack-warnings
         group_wait: 1m
         repeat_interval: 4h
-    
+
     receivers:
     - name: 'web.hook'
       webhook_configs:
       - url: 'http://localhost:5001/'
-    
+
     - name: pagerduty-critical
       pagerduty_configs:
       - routing_key: '${PAGERDUTY_INTEGRATION_KEY}'
@@ -1304,7 +1321,7 @@ data:
           cluster: '{{ .GroupLabels.cluster }}'
           service: '{{ .GroupLabels.service }}'
           runbook: 'https://runbooks.maintainpro.com/{{ .GroupLabels.alertname }}'
-    
+
     - name: slack-warnings
       slack_configs:
       - api_url: '${SLACK_API_URL}'
@@ -1316,6 +1333,7 @@ data:
 ```
 
 #### **Automated Disaster Recovery**
+
 ```bash
 #!/bin/bash
 # disaster-recovery.sh - Automated disaster recovery script
@@ -1339,7 +1357,7 @@ kubectl get pods --all-namespaces | grep -v Running || true
 if [[ "${RECOVERY_TYPE}" == "failover" ]]; then
     echo "🔄 Switching to disaster recovery region..."
     aws eks update-kubeconfig --name maintainpro-${ENVIRONMENT}-dr --region us-east-1
-    
+
     # Update DNS to point to DR region
     aws route53 change-resource-record-sets \
         --hosted-zone-id Z123456789 \
@@ -1462,6 +1480,7 @@ echo "📧 Stakeholder notifications sent"
 ### **Auto-Scaling Configuration**
 
 #### **Horizontal Pod Autoscaler (HPA)**
+
 ```yaml
 # hpa-config.yaml
 apiVersion: autoscaling/v2
@@ -1477,41 +1496,41 @@ spec:
   minReplicas: 6
   maxReplicas: 100
   metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 70
-  - type: Resource
-    resource:
-      name: memory
-      target:
-        type: Utilization
-        averageUtilization: 80
-  - type: Pods
-    pods:
-      metric:
-        name: http_requests_per_second
-      target:
-        type: AverageValue
-        averageValue: "1000"
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80
+    - type: Pods
+      pods:
+        metric:
+          name: http_requests_per_second
+        target:
+          type: AverageValue
+          averageValue: '1000'
   behavior:
     scaleUp:
       stabilizationWindowSeconds: 60
       policies:
-      - type: Percent
-        value: 100
-        periodSeconds: 15
-      - type: Pods
-        value: 4
-        periodSeconds: 60
+        - type: Percent
+          value: 100
+          periodSeconds: 15
+        - type: Pods
+          value: 4
+          periodSeconds: 60
     scaleDown:
       stabilizationWindowSeconds: 300
       policies:
-      - type: Percent
-        value: 10
-        periodSeconds: 60
+        - type: Percent
+          value: 10
+          periodSeconds: 60
 
 ---
 apiVersion: autoscaling/v2
@@ -1527,26 +1546,27 @@ spec:
   minReplicas: 3
   maxReplicas: 50
   metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 60
-  - type: Object
-    object:
-      metric:
-        name: requests_per_second
-      describedObject:
-        apiVersion: v1
-        kind: Service
-        name: maintainpro-api-service
-      target:
-        type: Value
-        value: "500"
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 60
+    - type: Object
+      object:
+        metric:
+          name: requests_per_second
+        describedObject:
+          apiVersion: v1
+          kind: Service
+          name: maintainpro-api-service
+        target:
+          type: Value
+          value: '500'
 ```
 
 #### **Vertical Pod Autoscaler (VPA)**
+
 ```yaml
 # vpa-config.yaml
 apiVersion: autoscaling.k8s.io/v1
@@ -1560,23 +1580,24 @@ spec:
     kind: Deployment
     name: maintainpro-web
   updatePolicy:
-    updateMode: "Auto"
+    updateMode: 'Auto'
   resourcePolicy:
     containerPolicies:
-    - containerName: web
-      maxAllowed:
-        cpu: "2"
-        memory: "4Gi"
-      minAllowed:
-        cpu: "100m"
-        memory: "128Mi"
-      controlledResources: ["cpu", "memory"]
-      controlledValues: RequestsAndLimits
+      - containerName: web
+        maxAllowed:
+          cpu: '2'
+          memory: '4Gi'
+        minAllowed:
+          cpu: '100m'
+          memory: '128Mi'
+        controlledResources: ['cpu', 'memory']
+        controlledValues: RequestsAndLimits
 ```
 
 ### **Cluster Auto-Scaling**
 
 #### **Cluster Autoscaler Configuration**
+
 ```yaml
 # cluster-autoscaler.yaml
 apiVersion: apps/v1
@@ -1600,41 +1621,41 @@ spec:
     spec:
       serviceAccount: cluster-autoscaler
       containers:
-      - image: k8s.gcr.io/autoscaling/cluster-autoscaler:v1.28.0
-        name: cluster-autoscaler
-        resources:
-          limits:
-            cpu: 100m
-            memory: 300Mi
-          requests:
-            cpu: 100m
-            memory: 300Mi
-        command:
-        - ./cluster-autoscaler
-        - --v=4
-        - --stderrthreshold=info
-        - --cloud-provider=aws
-        - --skip-nodes-with-local-storage=false
-        - --expander=least-waste
-        - --node-group-auto-discovery=asg:tag=k8s.io/cluster-autoscaler/enabled,k8s.io/cluster-autoscaler/maintainpro-production
-        - --balance-similar-node-groups
-        - --scale-down-enabled=true
-        - --scale-down-delay-after-add=10m
-        - --scale-down-unneeded-time=10m
-        - --scale-down-utilization-threshold=0.5
-        - --max-node-provision-time=15m
-        env:
-        - name: AWS_REGION
-          value: us-west-2
-        volumeMounts:
-        - name: ssl-certs
-          mountPath: /etc/ssl/certs/ca-certificates.crt
-          readOnly: true
-        imagePullPolicy: Always
+        - image: k8s.gcr.io/autoscaling/cluster-autoscaler:v1.28.0
+          name: cluster-autoscaler
+          resources:
+            limits:
+              cpu: 100m
+              memory: 300Mi
+            requests:
+              cpu: 100m
+              memory: 300Mi
+          command:
+            - ./cluster-autoscaler
+            - --v=4
+            - --stderrthreshold=info
+            - --cloud-provider=aws
+            - --skip-nodes-with-local-storage=false
+            - --expander=least-waste
+            - --node-group-auto-discovery=asg:tag=k8s.io/cluster-autoscaler/enabled,k8s.io/cluster-autoscaler/maintainpro-production
+            - --balance-similar-node-groups
+            - --scale-down-enabled=true
+            - --scale-down-delay-after-add=10m
+            - --scale-down-unneeded-time=10m
+            - --scale-down-utilization-threshold=0.5
+            - --max-node-provision-time=15m
+          env:
+            - name: AWS_REGION
+              value: us-west-2
+          volumeMounts:
+            - name: ssl-certs
+              mountPath: /etc/ssl/certs/ca-certificates.crt
+              readOnly: true
+          imagePullPolicy: Always
       volumes:
-      - name: ssl-certs
-        hostPath:
-          path: "/etc/ssl/certs/ca-bundle.crt"
+        - name: ssl-certs
+          hostPath:
+            path: '/etc/ssl/certs/ca-bundle.crt'
       nodeSelector:
         kubernetes.io/arch: amd64
         node-type: system
@@ -1645,50 +1666,51 @@ spec:
 ### **DORA Metrics Implementation**
 
 #### **Deployment Frequency**
+
 ```yaml
 deployment_frequency:
-  target: "Multiple deployments per day"
+  target: 'Multiple deployments per day'
   measurement:
     - github_deployments_api
     - helm_release_tracking
     - kubernetes_deployment_events
-  
+
   automation:
     - automated_deployment_tracking
     - release_notes_generation
     - deployment_success_rate_monitoring
 
 lead_time_for_changes:
-  target: "<24 hours from commit to production"
+  target: '<24 hours from commit to production'
   measurement:
     - git_commit_timestamp
     - pipeline_completion_time
     - production_deployment_time
-  
+
   optimization:
     - parallel_testing_execution
     - caching_strategies
     - infrastructure_provisioning_speed
 
 change_failure_rate:
-  target: "<2% of deployments cause issues"
+  target: '<2% of deployments cause issues'
   measurement:
     - rollback_frequency
     - incident_correlation
     - error_rate_increase_detection
-  
+
   prevention:
     - comprehensive_testing
     - canary_deployments
     - automated_rollback_triggers
 
 mean_time_to_recovery:
-  target: "<15 minutes for critical issues"
+  target: '<15 minutes for critical issues'
   measurement:
     - incident_detection_time
     - response_time
     - resolution_time
-  
+
   automation:
     - automated_alerting
     - runbook_automation
@@ -1697,10 +1719,18 @@ mean_time_to_recovery:
 
 ## 🏆 Conclusion
 
-This DevOps Excellence framework establishes MaintAInPro's infrastructure and operational practices at the level of elite technology organizations. Through comprehensive automation, world-class monitoring, and battle-tested incident response procedures, the platform achieves operational excellence that enables rapid innovation while maintaining enterprise-grade reliability.
+This DevOps Excellence framework establishes MaintAInPro's infrastructure and
+operational practices at the level of elite technology organizations. Through
+comprehensive automation, world-class monitoring, and battle-tested incident
+response procedures, the platform achieves operational excellence that enables
+rapid innovation while maintaining enterprise-grade reliability.
 
-The framework provides the foundation for continuous improvement, enabling the team to maintain operational excellence while rapidly delivering innovative features that differentiate MaintAInPro in the competitive marketplace.
+The framework provides the foundation for continuous improvement, enabling the
+team to maintain operational excellence while rapidly delivering innovative
+features that differentiate MaintAInPro in the competitive marketplace.
 
 ---
 
-*This DevOps framework represents our commitment to operational excellence and serves as the foundation for building and operating world-class infrastructure that supports rapid innovation and enterprise-scale reliability.*
+_This DevOps framework represents our commitment to operational excellence and
+serves as the foundation for building and operating world-class infrastructure
+that supports rapid innovation and enterprise-scale reliability._

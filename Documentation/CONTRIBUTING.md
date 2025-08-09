@@ -2,7 +2,8 @@
 
 ## Welcome Contributors! 🎉
 
-We're excited that you're interested in contributing to MaintAInPro! This guide will help you get started with contributing to our enterprise CMMS platform.
+We're excited that you're interested in contributing to MaintAInPro! This guide
+will help you get started with contributing to our enterprise CMMS platform.
 
 ## Table of Contents
 
@@ -19,11 +20,15 @@ We're excited that you're interested in contributing to MaintAInPro! This guide 
 
 ### Our Pledge
 
-We are committed to making participation in our project a harassment-free experience for everyone, regardless of age, body size, disability, ethnicity, gender identity and expression, level of experience, nationality, personal appearance, race, religion, or sexual identity and orientation.
+We are committed to making participation in our project a harassment-free
+experience for everyone, regardless of age, body size, disability, ethnicity,
+gender identity and expression, level of experience, nationality, personal
+appearance, race, religion, or sexual identity and orientation.
 
 ### Our Standards
 
 **Positive behaviors include:**
+
 - Using welcoming and inclusive language
 - Being respectful of differing viewpoints
 - Gracefully accepting constructive criticism
@@ -31,6 +36,7 @@ We are committed to making participation in our project a harassment-free experi
 - Showing empathy towards other community members
 
 **Unacceptable behaviors include:**
+
 - Harassment, trolling, or discriminatory language
 - Publishing private information without permission
 - Professional misconduct or inappropriate behavior
@@ -50,6 +56,7 @@ Before contributing, ensure you have:
 ### Development Setup
 
 1. **Fork the Repository**
+
    ```bash
    # Click the "Fork" button on GitHub
    # Then clone your fork
@@ -58,35 +65,40 @@ Before contributing, ensure you have:
    ```
 
 2. **Set Up Upstream Remote**
+
    ```bash
    git remote add upstream https://github.com/ORIGINAL_OWNER/MaintAInPro.git
    git remote -v
    ```
 
 3. **Install Dependencies**
+
    ```bash
    npm install
    ```
 
 4. **Environment Configuration**
+
    ```bash
    # Copy environment template
    cp .env.example .env
-   
+
    # Edit .env with your configuration
    # DATABASE_URL is optional - uses in-memory storage
    ```
 
 5. **Start Development Server**
+
    ```bash
    npm run dev
    ```
 
 6. **Verify Setup**
+
    ```bash
    # Run tests to ensure everything works
    npm run test
-   
+
    # Check TypeScript compilation
    npm run check
    ```
@@ -149,13 +161,14 @@ git push -u origin feature/your-feature-name
    - Write self-documenting code
 
 4. **Test Your Changes**
+
    ```bash
    # Run all tests
    npm run test
-   
+
    # Run type checking
    npm run check
-   
+
    # Run linting
    npm run lint
    ```
@@ -165,6 +178,7 @@ git push -u origin feature/your-feature-name
 ### TypeScript Guidelines
 
 1. **Always Use Types**
+
    ```typescript
    // ✅ Good
    interface WorkOrder {
@@ -173,11 +187,11 @@ git push -u origin feature/your-feature-name
      status: 'new' | 'in_progress' | 'completed';
      createdAt: Date;
    }
-   
+
    function createWorkOrder(data: Partial<WorkOrder>): WorkOrder {
      // Implementation
    }
-   
+
    // ❌ Avoid
    function createWorkOrder(data: any): any {
      // Implementation
@@ -185,6 +199,7 @@ git push -u origin feature/your-feature-name
    ```
 
 2. **Use Strict Type Checking**
+
    ```typescript
    // Enable strict mode in tsconfig.json
    {
@@ -197,6 +212,7 @@ git push -u origin feature/your-feature-name
    ```
 
 3. **Prefer Interfaces Over Types**
+
    ```typescript
    // ✅ Good
    interface Equipment {
@@ -204,7 +220,7 @@ git push -u origin feature/your-feature-name
      assetTag: string;
      status: EquipmentStatus;
    }
-   
+
    // ✅ Also good for unions
    type EquipmentStatus = 'active' | 'inactive' | 'maintenance';
    ```
@@ -212,22 +228,24 @@ git push -u origin feature/your-feature-name
 ### React Component Guidelines
 
 1. **Use Functional Components with Hooks**
+
    ```typescript
    // ✅ Good
    const WorkOrderCard: React.FC<WorkOrderCardProps> = ({ workOrder }) => {
      const [isExpanded, setIsExpanded] = useState(false);
-     
+
      return (
        <Card className="work-order-card">
          {/* Component JSX */}
        </Card>
      );
    };
-   
+
    // ❌ Avoid class components unless necessary
    ```
 
 2. **Props Interface Definition**
+
    ```typescript
    interface WorkOrderCardProps {
      workOrder: WorkOrder;
@@ -237,16 +255,17 @@ git push -u origin feature/your-feature-name
    ```
 
 3. **Custom Hooks for Reusable Logic**
+
    ```typescript
    // Custom hook example
    function useWorkOrders(filters?: WorkOrderFilters) {
      const [workOrders, setWorkOrders] = useState<WorkOrder[]>([]);
      const [loading, setLoading] = useState(true);
-     
+
      useEffect(() => {
        // Fetch logic
      }, [filters]);
-     
+
      return { workOrders, loading, refetch };
    }
    ```
@@ -254,23 +273,24 @@ git push -u origin feature/your-feature-name
 ### API Development Guidelines
 
 1. **Use Zod for Validation**
+
    ```typescript
    import { z } from 'zod';
-   
+
    const createWorkOrderSchema = z.object({
      description: z.string().min(1, 'Description is required'),
      type: z.enum(['corrective', 'preventive', 'emergency']),
      priority: z.enum(['low', 'medium', 'high', 'critical']),
-     equipmentId: z.string().uuid().optional()
+     equipmentId: z.string().uuid().optional(),
    });
-   
+
    // Use in route handler
    app.post('/api/work-orders', (req, res) => {
      const validation = createWorkOrderSchema.safeParse(req.body);
      if (!validation.success) {
-       return res.status(400).json({ 
+       return res.status(400).json({
          error: 'Validation failed',
-         details: validation.error.issues 
+         details: validation.error.issues,
        });
      }
      // Process valid data
@@ -278,6 +298,7 @@ git push -u origin feature/your-feature-name
    ```
 
 2. **Consistent Error Handling**
+
    ```typescript
    // Standard error response format
    interface ApiError {
@@ -287,21 +308,22 @@ git push -u origin feature/your-feature-name
      timestamp: string;
      path: string;
    }
-   
+
    // Error middleware
    app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
      const errorResponse: ApiError = {
        error: err.message,
        code: err.name || 'INTERNAL_ERROR',
        timestamp: new Date().toISOString(),
-       path: req.path
+       path: req.path,
      };
-     
+
      res.status(500).json(errorResponse);
    });
    ```
 
 3. **RESTful API Design**
+
    ```typescript
    // ✅ Good RESTful endpoints
    GET    /api/work-orders              // List work orders
@@ -309,7 +331,7 @@ git push -u origin feature/your-feature-name
    GET    /api/work-orders/:id          // Get specific work order
    PATCH  /api/work-orders/:id          // Update work order
    DELETE /api/work-orders/:id          // Delete work order
-   
+
    // ✅ Good nested resources
    GET    /api/work-orders/:id/checklist     // Get checklist items
    POST   /api/work-orders/:id/checklist     // Add checklist item
@@ -318,6 +340,7 @@ git push -u origin feature/your-feature-name
 ### Database Guidelines
 
 1. **Use TypeScript with Drizzle ORM**
+
    ```typescript
    // Schema definition
    export const workOrders = pgTable('work_orders', {
@@ -325,15 +348,16 @@ git push -u origin feature/your-feature-name
      foNumber: text('fo_number').notNull().unique(),
      description: text('description').notNull(),
      status: workOrderStatusEnum('status').notNull().default('new'),
-     createdAt: timestamp('created_at').defaultNow().notNull()
+     createdAt: timestamp('created_at').defaultNow().notNull(),
    });
-   
+
    // Type inference
    export type WorkOrder = typeof workOrders.$inferSelect;
    export type InsertWorkOrder = typeof workOrders.$inferInsert;
    ```
 
 2. **Query Optimization**
+
    ```typescript
    // ✅ Good - Use indexes and selective queries
    const workOrders = await db
@@ -347,7 +371,7 @@ git push -u origin feature/your-feature-name
      )
      .orderBy(desc(workOrdersTable.createdAt))
      .limit(20);
-   
+
    // ❌ Avoid - Don't select all columns if not needed
    const workOrders = await db.select().from(workOrdersTable);
    ```
@@ -357,6 +381,7 @@ git push -u origin feature/your-feature-name
 ### Test Structure
 
 1. **Follow AAA Pattern**
+
    ```typescript
    describe('WorkOrder Service', () => {
      it('should create work order with valid data', async () => {
@@ -364,12 +389,12 @@ git push -u origin feature/your-feature-name
        const workOrderData = {
          description: 'Fix conveyor belt',
          type: 'corrective' as const,
-         priority: 'high' as const
+         priority: 'high' as const,
        };
-       
+
        // Act
        const result = await workOrderService.create(workOrderData);
-       
+
        // Assert
        expect(result).toBeDefined();
        expect(result.description).toBe('Fix conveyor belt');
@@ -379,6 +404,7 @@ git push -u origin feature/your-feature-name
    ```
 
 2. **Test Categories**
+
    ```typescript
    // Unit tests - Test individual functions/components
    describe('formatDate utility', () => {
@@ -387,7 +413,7 @@ git push -u origin feature/your-feature-name
        expect(formatDate(date)).toBe('Dec 1, 2023');
      });
    });
-   
+
    // Integration tests - Test API endpoints
    describe('Work Orders API', () => {
      it('should create work order via API', async () => {
@@ -396,11 +422,11 @@ git push -u origin feature/your-feature-name
          .set(authHeaders)
          .send(workOrderData)
          .expect(201);
-       
+
        expect(response.body.id).toBeDefined();
      });
    });
-   
+
    // Component tests - Test React components
    describe('WorkOrderCard Component', () => {
      it('should render work order information', () => {
@@ -411,17 +437,18 @@ git push -u origin feature/your-feature-name
    ```
 
 3. **Mock Strategy**
+
    ```typescript
    // Mock external dependencies
    vi.mock('../services/notification.service', () => ({
-     sendNotification: vi.fn().mockResolvedValue(true)
+     sendNotification: vi.fn().mockResolvedValue(true),
    }));
-   
+
    // Mock implementation
    const mockStorage = {
      createWorkOrder: vi.fn(),
      getWorkOrder: vi.fn(),
-     updateWorkOrder: vi.fn()
+     updateWorkOrder: vi.fn(),
    };
    ```
 
@@ -473,13 +500,14 @@ refactor(storage): optimize database query performance
 ### Pull Request Process
 
 1. **Prepare Your Changes**
+
    ```bash
    # Ensure your branch is up to date
    git checkout main
    git pull upstream main
    git checkout your-feature-branch
    git merge main
-   
+
    # Run tests and checks
    npm run test
    npm run check
@@ -493,30 +521,36 @@ refactor(storage): optimize database query performance
    - Add screenshots for UI changes
 
 3. **Pull Request Template**
+
    ```markdown
    ## Description
+
    Brief description of changes
-   
+
    ## Type of Change
+
    - [ ] Bug fix
    - [ ] New feature
    - [ ] Documentation update
    - [ ] Performance improvement
-   
+
    ## Testing
+
    - [ ] Unit tests added/updated
    - [ ] Integration tests added/updated
    - [ ] Manual testing completed
-   
+
    ## Checklist
+
    - [ ] Code follows style guidelines
    - [ ] Self-review completed
    - [ ] Tests pass
    - [ ] Documentation updated
-   
+
    ## Screenshots (if applicable)
-   
+
    ## Related Issues
+
    Fixes #123
    ```
 
@@ -545,10 +579,11 @@ refactor(storage): optimize database query performance
 ### Documentation Requirements
 
 1. **Code Documentation**
+
    ```typescript
    /**
     * Creates a new work order with the provided data
-    * 
+    *
     * @param workOrderData - The work order data to create
     * @returns Promise resolving to the created work order
     * @throws {ValidationError} When required fields are missing
@@ -606,6 +641,7 @@ refactor(storage): optimize database query performance
 ### Security Issues
 
 For security vulnerabilities:
+
 1. **DO NOT** create public issue
 2. Email security team directly
 3. Include detailed description
@@ -616,14 +652,16 @@ For security vulnerabilities:
 ### Contributors
 
 We recognize contributors in several ways:
+
 - **README**: Listed in contributors section
-- **Changelog**: Credited for specific contributions  
+- **Changelog**: Credited for specific contributions
 - **GitHub**: Contributor status and badges
 - **Community**: Highlighted in community updates
 
 ### Maintainer Path
 
 Regular contributors may be invited to become maintainers:
+
 1. Consistent quality contributions
 2. Good understanding of codebase
 3. Helpful in code reviews
@@ -649,7 +687,7 @@ Regular contributors may be invited to become maintainers:
 
 ## Thank You! 🙏
 
-Thank you for contributing to MaintAInPro! Your contributions help make enterprise maintenance management better for everyone.
+Thank you for contributing to MaintAInPro! Your contributions help make
+enterprise maintenance management better for everyone.
 
-*Last updated: August 2025*
-*Contributing Guide Version: v1.3.0*
+_Last updated: August 2025_ _Contributing Guide Version: v1.3.0_

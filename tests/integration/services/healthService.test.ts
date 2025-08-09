@@ -69,7 +69,7 @@ describe('Health Service Integration', () => {
       expect(result).toEqual(mockHealthData);
       expect(mockFetch).toHaveBeenCalledWith('/api/health', {
         headers: {
-          'Authorization': 'Bearer demo-token',
+          Authorization: 'Bearer demo-token',
           'x-user-id': 'test-user-id',
           'x-warehouse-id': 'test-warehouse-id',
         },
@@ -116,7 +116,7 @@ describe('Health Service Integration', () => {
 
       expect(mockFetch).toHaveBeenCalledWith('/api/health', {
         headers: {
-          'Authorization': 'Bearer demo-token',
+          Authorization: 'Bearer demo-token',
           'x-user-id': 'default-user-id',
           'x-warehouse-id': 'default-warehouse-id',
         },

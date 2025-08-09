@@ -20,11 +20,11 @@ export default function DashboardStats() {
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8'>
         {Array.from({ length: 4 }).map((_, i) => (
-          <Card key={i} className="animate-pulse">
-            <CardContent className="p-6">
-              <div className="h-16 bg-gray-200 rounded"></div>
+          <Card key={i} className='animate-pulse'>
+            <CardContent className='p-6'>
+              <div className='h-16 bg-gray-200 rounded'></div>
             </CardContent>
           </Card>
         ))}
@@ -76,24 +76,31 @@ export default function DashboardStats() {
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-      {statCards.map((stat) => (
-        <Card key={stat.title} className="shadow-sm border border-gray-200">
-          <CardContent className="p-6" data-testid={stat.testId}>
-            <div className="flex items-center justify-between">
+    <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8'>
+      {statCards.map(stat => (
+        <Card key={stat.title} className='shadow-sm border border-gray-200'>
+          <CardContent className='p-6' data-testid={stat.testId}>
+            <div className='flex items-center justify-between'>
               <div>
-                <p className="text-sm font-medium text-gray-600">{stat.title}</p>
-                <p className="text-3xl font-bold text-gray-900 mt-1">{stat.value}</p>
-                <p className={`text-sm mt-1 ${
-                  stat.changeType === 'positive' ? 'text-success-600' :
-                  stat.changeType === 'negative' ? 'text-error-600' :
-                  stat.changeType === 'neutral' ? 'text-gray-500' :
-                  'text-gray-500'
-                }`}>
+                <p className='text-sm font-medium text-gray-600'>{stat.title}</p>
+                <p className='text-3xl font-bold text-gray-900 mt-1'>{stat.value}</p>
+                <p
+                  className={`text-sm mt-1 ${
+                    stat.changeType === 'positive'
+                      ? 'text-success-600'
+                      : stat.changeType === 'negative'
+                        ? 'text-error-600'
+                        : stat.changeType === 'neutral'
+                          ? 'text-gray-500'
+                          : 'text-gray-500'
+                  }`}
+                >
                   {stat.change}
                 </p>
               </div>
-              <div className={`w-12 h-12 ${stat.iconBg} rounded-lg flex items-center justify-center`}>
+              <div
+                className={`w-12 h-12 ${stat.iconBg} rounded-lg flex items-center justify-center`}
+              >
                 <stat.icon className={`w-6 h-6 ${stat.iconColor}`} />
               </div>
             </div>

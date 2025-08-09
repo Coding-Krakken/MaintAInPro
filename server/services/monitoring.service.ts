@@ -63,7 +63,7 @@ class MonitoringService {
    */
   recordResponseTime(responseTime: number): void {
     this.responseTimeLog.push(responseTime);
-    
+
     // Keep log size manageable
     if (this.responseTimeLog.length > this.MAX_LOG_SIZE) {
       this.responseTimeLog.shift();
@@ -98,30 +98,28 @@ class MonitoringService {
     // Get business metrics
     try {
       const warehouses = await storage.getWarehouses();
-      const allWorkOrders = warehouses.length > 0 
-        ? await storage.getWorkOrders(warehouses[0].id) 
-        : [];
-      
-      const allEquipment = warehouses.length > 0
-        ? await storage.getEquipment(warehouses[0].id)
-        : [];
+      const allWorkOrders =
+        warehouses.length > 0 ? await storage.getWorkOrders(warehouses[0].id) : [];
 
-      const activeWorkOrders = allWorkOrders.filter(wo => 
-        wo.status !== 'completed' && wo.status !== 'closed'
+      const allEquipment =
+        warehouses.length > 0 ? await storage.getEquipment(warehouses[0].id) : [];
+
+      const activeWorkOrders = allWorkOrders.filter(
+        wo => wo.status !== 'completed' && wo.status !== 'closed'
       ).length;
 
-      const overdueWorkOrders = allWorkOrders.filter(wo => 
-        wo.status !== 'completed' && 
-        wo.status !== 'closed' &&
-        new Date(wo.dueDate) < new Date()
+      const overdueWorkOrders = allWorkOrders.filter(
+        wo =>
+          wo.status !== 'completed' && wo.status !== 'closed' && new Date(wo.dueDate) < new Date()
       ).length;
 
       // Calculate PM compliance (simplified)
       const pmWorkOrders = allWorkOrders.filter(wo => wo.type === 'preventive');
       const completedPMOrders = pmWorkOrders.filter(wo => wo.status === 'completed');
-      const pmCompliance = pmWorkOrders.length > 0 
-        ? Math.round((completedPMOrders.length / pmWorkOrders.length) * 100)
-        : 100;
+      const pmCompliance =
+        pmWorkOrders.length > 0
+          ? Math.round((completedPMOrders.length / pmWorkOrders.length) * 100)
+          : 100;
 
       return {
         memory: {
@@ -141,11 +139,11 @@ class MonitoringService {
           overdueWorkOrders,
           equipmentCount: allEquipment.length,
           pmCompliance,
-        }
+        },
       };
     } catch (error) {
       console.error('Error fetching business metrics:', error);
-      
+
       return {
         memory: {
           used: Math.round(memoryUsage.heapUsed / 1024 / 1024),
@@ -164,7 +162,7 @@ class MonitoringService {
           overdueWorkOrders: 0,
           equipmentCount: 0,
           pmCompliance: 0,
-        }
+        },
       };
     }
   }
@@ -196,7 +194,7 @@ class MonitoringService {
    */
   private calculateAverageResponseTime(): number {
     if (this.responseTimeLog.length === 0) return 0;
-    
+
     const sum = this.responseTimeLog.reduce((acc, time) => acc + time, 0);
     return Math.round(sum / this.responseTimeLog.length);
   }
@@ -223,7 +221,7 @@ class MonitoringService {
   private checkErrorRateAlert(): void {
     if (this.requestCount > 0) {
       const errorRate = (this.errorCount / this.requestCount) * 100;
-      
+
       if (errorRate > this.thresholds.errorRate) {
         this.createAlert({
           type: 'warning',
@@ -242,7 +240,7 @@ class MonitoringService {
    */
   private createAlert(alertData: Omit<PerformanceAlert, 'id' | 'timestamp'>): void {
     const id = `alert_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    
+
     const alert: PerformanceAlert = {
       ...alertData,
       id,
@@ -253,9 +251,10 @@ class MonitoringService {
 
     // Keep alerts manageable - remove old ones
     if (this.alerts.size > 100) {
-      const oldestAlert = Array.from(this.alerts.values())
-        .sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime())[0];
-      
+      const oldestAlert = Array.from(this.alerts.values()).sort(
+        (a, b) => a.timestamp.getTime() - b.timestamp.getTime()
+      )[0];
+
       this.alerts.delete(oldestAlert.id);
     }
   }

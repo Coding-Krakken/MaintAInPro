@@ -2,7 +2,8 @@
 
 ## Overview
 
-The validation middleware provides comprehensive request/response validation, security, and field transformation for the MaintAInPro CMMS API.
+The validation middleware provides comprehensive request/response validation,
+security, and field transformation for the MaintAInPro CMMS API.
 
 ## Features
 
@@ -17,22 +18,28 @@ The validation middleware provides comprehensive request/response validation, se
 ### Basic Validation
 
 ```typescript
-import { ValidationMiddleware, apiSchemas } from '../middleware/validation.middleware';
+import {
+  ValidationMiddleware,
+  apiSchemas,
+} from '../middleware/validation.middleware';
 
 // Validate request body
-app.post('/api/work-orders', 
+app.post(
+  '/api/work-orders',
   ValidationMiddleware.validateBody(apiSchemas.createWorkOrder),
   workOrderController.create
 );
 
 // Validate query parameters
-app.get('/api/work-orders',
+app.get(
+  '/api/work-orders',
   ValidationMiddleware.validateQuery(apiSchemas.workOrderQuery),
   workOrderController.list
 );
 
 // Validate URL parameters
-app.get('/api/work-orders/:id',
+app.get(
+  '/api/work-orders/:id',
   ValidationMiddleware.validateParams(apiSchemas.uuidParam),
   workOrderController.getById
 );
@@ -42,7 +49,8 @@ app.get('/api/work-orders/:id',
 
 ```typescript
 // Ensure user has access to organization
-app.use('/api/work-orders',
+app.use(
+  '/api/work-orders',
   ValidationMiddleware.validateOrganizationAccess(),
   workOrderRouter
 );
@@ -60,7 +68,7 @@ app.use(ValidationMiddleware.transformResponse());
 ### Work Orders
 
 - `apiSchemas.createWorkOrder` - Create work order validation
-- `apiSchemas.updateWorkOrder` - Update work order validation  
+- `apiSchemas.updateWorkOrder` - Update work order validation
 - `apiSchemas.workOrderQuery` - Query parameter validation
 
 ### Equipment
@@ -78,15 +86,18 @@ app.use(ValidationMiddleware.transformResponse());
 ## Security Features
 
 ### Rate Limiting
+
 - 100 requests per 15 minutes per IP
 - Configurable limits per endpoint
 
 ### Input Sanitization
+
 - XSS prevention
 - Script tag removal
 - SQL injection protection
 
 ### Headers
+
 - Comprehensive security headers via Helmet.js
 - CORS configuration
 - Content Security Policy
@@ -94,6 +105,7 @@ app.use(ValidationMiddleware.transformResponse());
 ## Error Handling
 
 ### Validation Errors
+
 ```json
 {
   "type": "VALIDATION_ERROR",
@@ -112,6 +124,7 @@ app.use(ValidationMiddleware.transformResponse());
 ```
 
 ### Rate Limit Errors
+
 ```json
 {
   "type": "RATE_LIMIT_ERROR",
@@ -124,12 +137,14 @@ app.use(ValidationMiddleware.transformResponse());
 ## Request/Response Flow
 
 ### Request Processing
+
 1. **Security**: Rate limiting, headers, sanitization
 2. **Validation**: Schema validation with field mapping
 3. **Organization**: Multi-tenant access control
 4. **Logging**: Request tracking and performance monitoring
 
 ### Response Processing
+
 1. **Transformation**: snake_case → camelCase conversion
 2. **Metadata**: Request ID, timestamp, organization ID
 3. **Error Handling**: Consistent error format
@@ -140,6 +155,7 @@ app.use(ValidationMiddleware.transformResponse());
 The middleware automatically handles field name transformations:
 
 ### API Request (camelCase)
+
 ```json
 {
   "foNumber": "WO-001",
@@ -149,15 +165,17 @@ The middleware automatically handles field name transformations:
 ```
 
 ### Database Storage (snake_case)
+
 ```json
 {
   "fo_number": "WO-001",
-  "equipment_id": "uuid-here", 
+  "equipment_id": "uuid-here",
   "organization_id": "org-uuid"
 }
 ```
 
 ### API Response (camelCase)
+
 ```json
 {
   "foNumber": "WO-001",
@@ -179,17 +197,18 @@ The middleware extends Express Request types:
 declare global {
   namespace Express {
     interface Request {
-      validatedBody?: any;      // Validated request body
-      originalBody?: any;       // Original request body
-      validatedQuery?: any;     // Validated query parameters
-      validatedParams?: any;    // Validated URL parameters
-      user?: {                  // Authenticated user
+      validatedBody?: any; // Validated request body
+      originalBody?: any; // Original request body
+      validatedQuery?: any; // Validated query parameters
+      validatedParams?: any; // Validated URL parameters
+      user?: {
+        // Authenticated user
         id: string;
         email: string;
         role: string;
         organizationId: string;
       };
-      organizationId?: string;  // Current organization context
+      organizationId?: string; // Current organization context
     }
   }
 }
@@ -198,7 +217,8 @@ declare global {
 ## Best Practices
 
 1. **Always validate input**: Use appropriate schemas for all endpoints
-2. **Organization isolation**: Include organization validation for multi-tenant data
+2. **Organization isolation**: Include organization validation for multi-tenant
+   data
 3. **Error handling**: Provide meaningful error messages
 4. **Performance**: Use pagination for list endpoints
 5. **Security**: Apply rate limiting to public endpoints

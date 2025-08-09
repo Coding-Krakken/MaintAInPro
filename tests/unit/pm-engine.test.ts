@@ -73,31 +73,33 @@ describe('PMEngine', () => {
       const pastDate = new Date();
       pastDate.setDate(pastDate.getDate() - 5); // 5 days ago
 
-      const mockWorkOrders: WorkOrder[] = [{
-        id: 'wo-1',
-        foNumber: 'WO-001',
-        warehouseId: mockWarehouseId,
-        type: 'preventive',
-        description: 'PM Work Order',
-        area: 'Test Area',
-        assetModel: 'Test Model',
-        status: 'completed',
-        priority: 'medium',
-        requestedBy: 'user-1',
-        assignedTo: 'user-2',
-        equipmentId: mockEquipmentId,
-        createdAt: pastDate,
-        completedAt: pastDate,
-        escalated: false,
-        followUp: false,
-        escalationLevel: 0,
-        updatedAt: pastDate,
-        dueDate: null,
-        verifiedBy: null,
-        estimatedHours: null,
-        actualHours: null,
-        notes: null,
-      }];
+      const mockWorkOrders: WorkOrder[] = [
+        {
+          id: 'wo-1',
+          foNumber: 'WO-001',
+          warehouseId: mockWarehouseId,
+          type: 'preventive',
+          description: 'PM Work Order',
+          area: 'Test Area',
+          assetModel: 'Test Model',
+          status: 'completed',
+          priority: 'medium',
+          requestedBy: 'user-1',
+          assignedTo: 'user-2',
+          equipmentId: mockEquipmentId,
+          createdAt: pastDate,
+          completedAt: pastDate,
+          escalated: false,
+          followUp: false,
+          escalationLevel: 0,
+          updatedAt: pastDate,
+          dueDate: null,
+          verifiedBy: null,
+          estimatedHours: null,
+          actualHours: null,
+          notes: null,
+        },
+      ];
 
       vi.mocked(storage.getPmTemplate).mockResolvedValue(mockTemplate);
       vi.mocked(storage.getWorkOrders).mockResolvedValue(mockWorkOrders);
@@ -126,17 +128,19 @@ describe('PMEngine', () => {
         specifications: null,
       };
 
-      const mockTemplates: PmTemplate[] = [{
-        id: mockTemplateId,
-        warehouseId: mockWarehouseId,
-        model: 'Test Model',
-        component: 'Test Component',
-        action: 'Test Action',
-        frequency: 'monthly',
-        customFields: null,
-        active: true,
-        createdAt: new Date(),
-      }];
+      const mockTemplates: PmTemplate[] = [
+        {
+          id: mockTemplateId,
+          warehouseId: mockWarehouseId,
+          model: 'Test Model',
+          component: 'Test Component',
+          action: 'Test Action',
+          frequency: 'monthly',
+          customFields: null,
+          active: true,
+          createdAt: new Date(),
+        },
+      ];
 
       vi.mocked(storage.getEquipment).mockResolvedValue([mockEquipment]);
       vi.mocked(storage.getPmTemplates).mockResolvedValue(mockTemplates);
@@ -211,7 +215,14 @@ describe('PMEngine', () => {
       vi.mocked(storage.getEquipment).mockResolvedValue([mockEquipment]);
       vi.mocked(storage.getWorkOrders).mockResolvedValue([]);
       vi.mocked(storage.getProfiles).mockResolvedValue([
-        { id: 'supervisor-1', role: 'supervisor', warehouseId: mockWarehouseId, email: 'super@test.com', name: 'Supervisor', active: true },
+        {
+          id: 'supervisor-1',
+          role: 'supervisor',
+          warehouseId: mockWarehouseId,
+          email: 'super@test.com',
+          name: 'Supervisor',
+          active: true,
+        },
       ]);
       vi.mocked(storage.createWorkOrder).mockResolvedValue(mockWorkOrder);
       vi.mocked(storage.createWorkOrderChecklistItem).mockResolvedValue({

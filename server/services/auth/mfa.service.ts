@@ -25,14 +25,18 @@ export class MFAService {
   private static readonly BACKUP_CODE_LENGTH = 8;
   private static readonly MAX_VERIFICATION_ATTEMPTS = 3;
   private static readonly VERIFICATION_WINDOW = 30; // seconds
-  private static readonly ENCRYPTION_KEY = process.env.MFA_ENCRYPTION_KEY || randomBytes(32).toString('hex');
+  private static readonly ENCRYPTION_KEY =
+    process.env.MFA_ENCRYPTION_KEY || randomBytes(32).toString('hex');
 
-  static generateTOTPSecret(userEmail: string, issuer: string = 'MaintainPro CMMS'): MFASetupResult {
+  static generateTOTPSecret(
+    userEmail: string,
+    issuer: string = 'MaintainPro CMMS'
+  ): MFASetupResult {
     // Generate a secret for TOTP
     const secret = speakeasy.generateSecret({
       name: `${issuer} (${userEmail})`,
       issuer: issuer,
-      length: 32
+      length: 32,
     });
 
     // Generate backup codes
@@ -41,16 +45,20 @@ export class MFAService {
     return {
       secret: secret.base32,
       qrCodeUrl: secret.otpauth_url!,
-      backupCodes
+      backupCodes,
     };
   }
 
-  static async generateQRCode(secret: string, userEmail: string, issuer: string = 'MaintainPro CMMS'): Promise<string> {
+  static async generateQRCode(
+    secret: string,
+    userEmail: string,
+    issuer: string = 'MaintainPro CMMS'
+  ): Promise<string> {
     const otpauth_url = speakeasy.otpauthURL({
       secret: secret,
       label: `${issuer} (${userEmail})`,
       issuer: issuer,
-      encoding: 'base32'
+      encoding: 'base32',
     });
 
     try {
@@ -61,11 +69,7 @@ export class MFAService {
     }
   }
 
-  static verifyTOTP(
-    token: string,
-    secret: string,
-    window: number = 1
-  ): MFAVerificationResult {
+  static verifyTOTP(token: string, secret: string, window: number = 1): MFAVerificationResult {
     try {
       // Remove any spaces or formatting from the token
       const cleanToken = token.replace(/\s/g, '');
@@ -75,39 +79,39 @@ export class MFAService {
         secret: secret,
         encoding: 'base32',
         token: cleanToken,
-        window: window // Allow tokens from previous/next time window
+        window: window, // Allow tokens from previous/next time window
       });
 
       return {
-        success: verified
+        success: verified,
       };
     } catch (error) {
       return {
         success: false,
-        error: 'Invalid token format'
+        error: 'Invalid token format',
       };
     }
   }
 
   static generateBackupCodes(): string[] {
     const codes: string[] = [];
-    
+
     for (let i = 0; i < this.BACKUP_CODE_COUNT; i++) {
       const code = this.generateSecureCode(this.BACKUP_CODE_LENGTH);
       codes.push(code);
     }
-    
+
     return codes;
   }
 
   private static generateSecureCode(length: number): string {
     const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     let code = '';
-    
+
     for (let i = 0; i < length; i++) {
       code += charset[randomInt(charset.length)];
     }
-    
+
     return code;
   }
 
@@ -138,34 +142,32 @@ export class MFAService {
   ): { success: boolean; updatedCodes?: BackupCode[]; error?: string } {
     try {
       const cleanCode = providedCode.replace(/\s/g, '').toUpperCase();
-      
-      const codeIndex = backupCodes.findIndex(
-        bc => bc.code === cleanCode && !bc.used
-      );
-      
+
+      const codeIndex = backupCodes.findIndex(bc => bc.code === cleanCode && !bc.used);
+
       if (codeIndex === -1) {
         return {
           success: false,
-          error: 'Invalid or already used backup code'
+          error: 'Invalid or already used backup code',
         };
       }
-      
+
       // Mark the code as used
       const updatedCodes = [...backupCodes];
       updatedCodes[codeIndex] = {
         ...updatedCodes[codeIndex],
         used: true,
-        usedAt: new Date()
+        usedAt: new Date(),
       };
-      
+
       return {
         success: true,
-        updatedCodes
+        updatedCodes,
       };
     } catch (error) {
       return {
         success: false,
-        error: 'Failed to verify backup code'
+        error: 'Failed to verify backup code',
       };
     }
   }
@@ -173,22 +175,22 @@ export class MFAService {
   static async sendSMSCode(phoneNumber: string): Promise<{ success: boolean; error?: string }> {
     // This would integrate with an SMS service like Twilio, AWS SNS, etc.
     // For now, we'll simulate the functionality
-    
+
     try {
       const code = this.generateSMSCode();
-      
+
       // Store the code temporarily (in a real implementation, this would go to Redis or database)
       // For demonstration purposes, we'll just log it
       console.log(`SMS Code for ${phoneNumber}: ${code}`);
-      
+
       // In a real implementation:
       // await smsService.send(phoneNumber, `Your MaintainPro verification code is: ${code}`);
-      
+
       return { success: true };
     } catch (error) {
       return {
         success: false,
-        error: 'Failed to send SMS code'
+        error: 'Failed to send SMS code',
       };
     }
   }
@@ -205,17 +207,17 @@ export class MFAService {
     // This would integrate with an email service
     try {
       const code = this.generateSMSCode(); // Same format as SMS
-      
+
       console.log(`Email Code for ${email}: ${code}`);
-      
+
       // In a real implementation:
       // await emailService.send(email, 'MFA Verification Code', `Your verification code is: ${code}`);
-      
+
       return { success: true };
     } catch (error) {
       return {
         success: false,
-        error: 'Failed to send email code'
+        error: 'Failed to send email code',
       };
     }
   }
@@ -230,24 +232,24 @@ export class MFAService {
   static formatPhoneNumber(phoneNumber: string): string {
     // Remove all non-digit characters except +
     const cleaned = phoneNumber.replace(/[^\d+]/g, '');
-    
+
     // If it doesn't start with +, add +1 for US numbers (customize as needed)
     if (!cleaned.startsWith('+')) {
       return '+1' + cleaned;
     }
-    
+
     return cleaned;
   }
 
   static getMFAMethods(userPreferences?: any): string[] {
     const availableMethods = ['totp', 'sms', 'email'];
-    
+
     if (userPreferences?.disabledMfaMethods) {
       return availableMethods.filter(
         method => !userPreferences.disabledMfaMethods.includes(method)
       );
     }
-    
+
     return availableMethods;
   }
 

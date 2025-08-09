@@ -70,7 +70,7 @@ export class AuditService {
       userAgent: context.userAgent,
       success: context.success ?? true,
       riskLevel: context.riskLevel ?? this.determineRiskLevel(action, resource, details),
-      timestamp: new Date()
+      timestamp: new Date(),
     };
 
     // Add to in-memory store
@@ -99,14 +99,14 @@ export class AuditService {
       'authentication',
       {
         ...details,
-        attemptResult: success ? 'success' : 'failure'
+        attemptResult: success ? 'success' : 'failure',
       },
       {
         userId,
         ipAddress,
         userAgent,
         success,
-        riskLevel: success ? 'low' : 'medium'
+        riskLevel: success ? 'low' : 'medium',
       }
     );
   }
@@ -127,7 +127,7 @@ export class AuditService {
         ipAddress,
         userAgent,
         success: true,
-        riskLevel: 'low'
+        riskLevel: 'low',
       }
     );
   }
@@ -148,7 +148,7 @@ export class AuditService {
         ipAddress,
         userAgent,
         success,
-        riskLevel: 'medium'
+        riskLevel: 'medium',
       }
     );
   }
@@ -161,18 +161,13 @@ export class AuditService {
     success: boolean,
     details: Record<string, any> = {}
   ): Promise<string> {
-    return this.logEvent(
-      `mfa_${action}`,
-      'authentication',
-      details,
-      {
-        userId,
-        ipAddress,
-        userAgent,
-        success,
-        riskLevel: action === 'disable' ? 'high' : 'medium'
-      }
-    );
+    return this.logEvent(`mfa_${action}`, 'authentication', details, {
+      userId,
+      ipAddress,
+      userAgent,
+      success,
+      riskLevel: action === 'disable' ? 'high' : 'medium',
+    });
   }
 
   static async logDataAccess(
@@ -185,7 +180,7 @@ export class AuditService {
     success: boolean = true
   ): Promise<string> {
     const riskLevel = this.assessDataAccessRisk(resource, action);
-    
+
     return this.logEvent(
       action,
       resource,
@@ -196,7 +191,7 @@ export class AuditService {
         userAgent,
         resourceId,
         success,
-        riskLevel
+        riskLevel,
       }
     );
   }
@@ -221,7 +216,7 @@ export class AuditService {
         userAgent,
         resourceId,
         success,
-        riskLevel: 'high' // Admin actions are always high risk
+        riskLevel: 'high', // Admin actions are always high risk
       }
     );
   }
@@ -237,16 +232,11 @@ export class AuditService {
       riskLevel?: 'low' | 'medium' | 'high' | 'critical';
     }
   ): Promise<string> {
-    return this.logEvent(
-      action,
-      'security',
-      details,
-      {
-        ...context,
-        success: true, // Security events are logged regardless
-        riskLevel: context.riskLevel ?? 'high'
-      }
-    );
+    return this.logEvent(action, 'security', details, {
+      ...context,
+      success: true, // Security events are logged regardless
+      riskLevel: context.riskLevel ?? 'high',
+    });
   }
 
   static async queryLogs(query: AuditQuery): Promise<{
@@ -302,7 +292,7 @@ export class AuditService {
     return {
       logs: paginatedLogs,
       total,
-      hasMore
+      hasMore,
     };
   }
 
@@ -310,9 +300,7 @@ export class AuditService {
     let logs = [...this.auditLogs];
 
     if (timeframe) {
-      logs = logs.filter(log => 
-        log.timestamp >= timeframe.start && log.timestamp <= timeframe.end
-      );
+      logs = logs.filter(log => log.timestamp >= timeframe.start && log.timestamp <= timeframe.end);
     }
 
     const stats: AuditStats = {
@@ -323,7 +311,7 @@ export class AuditService {
       eventsByAction: {},
       eventsByResource: {},
       uniqueUsers: new Set(logs.map(log => log.userId).filter(Boolean)).size,
-      uniqueIPs: new Set(logs.map(log => log.ipAddress)).size
+      uniqueIPs: new Set(logs.map(log => log.ipAddress)).size,
     };
 
     // Count events by risk level
@@ -348,16 +336,17 @@ export class AuditService {
     let logs = [...this.auditLogs];
 
     if (timeframe) {
-      logs = logs.filter(log => 
-        log.timestamp >= timeframe.start && log.timestamp <= timeframe.end
-      );
+      logs = logs.filter(log => log.timestamp >= timeframe.start && log.timestamp <= timeframe.end);
     }
 
     // Filter for high-risk security events
-    return logs.filter(log => 
-      (log.riskLevel === 'high' || log.riskLevel === 'critical') &&
-      (!log.success || log.resource === 'security')
-    ).sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
+    return logs
+      .filter(
+        log =>
+          (log.riskLevel === 'high' || log.riskLevel === 'critical') &&
+          (!log.success || log.resource === 'security')
+      )
+      .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
   }
 
   static async getFailedLoginAttempts(
@@ -369,7 +358,7 @@ export class AuditService {
       success: false,
       startDate: timeframe.start,
       endDate: timeframe.end,
-      ipAddress
+      ipAddress,
     }).then(result => result.logs);
   }
 
@@ -380,22 +369,22 @@ export class AuditService {
     return this.queryLogs({
       userId,
       startDate: timeframe?.start,
-      endDate: timeframe?.end
+      endDate: timeframe?.end,
     }).then(result => result.logs);
   }
 
   private static sanitizeDetails(details: Record<string, any>): Record<string, any> {
     const sanitized = { ...details };
-    
+
     // Remove sensitive information
     const sensitiveKeys = ['password', 'token', 'secret', 'key', 'credential'];
-    
+
     for (const key of Object.keys(sanitized)) {
       if (sensitiveKeys.some(sensitive => key.toLowerCase().includes(sensitive))) {
         sanitized[key] = '[REDACTED]';
       }
     }
-    
+
     return sanitized;
   }
 
@@ -432,7 +421,10 @@ export class AuditService {
     return 'low';
   }
 
-  private static assessDataAccessRisk(resource: string, action: string): 'low' | 'medium' | 'high' | 'critical' {
+  private static assessDataAccessRisk(
+    resource: string,
+    action: string
+  ): 'low' | 'medium' | 'high' | 'critical' {
     const highRiskResources = ['users', 'audit_logs', 'settings'];
     const moderateRiskActions = ['create', 'update', 'delete'];
 
@@ -447,16 +439,13 @@ export class AuditService {
     return 'low';
   }
 
-  static async exportLogs(
-    query: AuditQuery,
-    format: 'json' | 'csv' = 'json'
-  ): Promise<string> {
+  static async exportLogs(query: AuditQuery, format: 'json' | 'csv' = 'json'): Promise<string> {
     const result = await this.queryLogs({ ...query, limit: 10000 }); // Large limit for export
-    
+
     if (format === 'csv') {
       return this.convertToCSV(result.logs);
     }
-    
+
     return JSON.stringify(result.logs, null, 2);
   }
 
@@ -474,7 +463,7 @@ export class AuditService {
       'riskLevel',
       'ipAddress',
       'userAgent',
-      'details'
+      'details',
     ];
 
     const rows = logs.map(log => [
@@ -488,7 +477,7 @@ export class AuditService {
       log.riskLevel,
       log.ipAddress,
       log.userAgent,
-      JSON.stringify(log.details)
+      JSON.stringify(log.details),
     ]);
 
     return [headers, ...rows]
@@ -502,7 +491,7 @@ export class AuditService {
 
     const initialCount = this.auditLogs.length;
     this.auditLogs = this.auditLogs.filter(log => log.timestamp > cutoffDate);
-    
+
     return initialCount - this.auditLogs.length;
   }
 }

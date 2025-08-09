@@ -48,21 +48,26 @@ class WebhookService {
   }
 
   // Webhook endpoint management
-  async registerWebhook(endpoint: Omit<WebhookEndpoint, 'id' | 'createdAt' | 'lastDelivery'>): Promise<WebhookEndpoint> {
+  async registerWebhook(
+    endpoint: Omit<WebhookEndpoint, 'id' | 'createdAt' | 'lastDelivery'>
+  ): Promise<WebhookEndpoint> {
     const webhook: WebhookEndpoint = {
       ...endpoint,
       id: crypto.randomUUID(),
       createdAt: new Date(),
-      secret: endpoint.secret || this.generateSecret()
+      secret: endpoint.secret || this.generateSecret(),
     };
 
     this.endpoints.set(webhook.id, webhook);
     console.log(`Webhook registered: ${webhook.url} for events: ${webhook.events.join(', ')}`);
-    
+
     return webhook;
   }
 
-  async updateWebhook(id: string, updates: Partial<WebhookEndpoint>): Promise<WebhookEndpoint | null> {
+  async updateWebhook(
+    id: string,
+    updates: Partial<WebhookEndpoint>
+  ): Promise<WebhookEndpoint | null> {
     const existing = this.endpoints.get(id);
     if (!existing) return null;
 
@@ -88,11 +93,12 @@ class WebhookService {
   // Event emission
   async emitEvent(event: WebhookEvent): Promise<void> {
     console.log(`Emitting webhook event: ${event.event} for ${event.entity}:${event.entityId}`);
-    
-    const relevantEndpoints = Array.from(this.endpoints.values()).filter(endpoint => 
-      endpoint.active && 
-      endpoint.events.includes(event.event) &&
-      (!endpoint.warehouseId || endpoint.warehouseId === event.warehouseId)
+
+    const relevantEndpoints = Array.from(this.endpoints.values()).filter(
+      endpoint =>
+        endpoint.active &&
+        endpoint.events.includes(event.event) &&
+        (!endpoint.warehouseId || endpoint.warehouseId === event.warehouseId)
     );
 
     for (const endpoint of relevantEndpoints) {
@@ -108,7 +114,7 @@ class WebhookService {
       eventId: event.id,
       status: 'pending',
       attempts: 0,
-      createdAt: new Date()
+      createdAt: new Date(),
     };
 
     this.deliveries.set(delivery.id, delivery);
@@ -122,8 +128,8 @@ class WebhookService {
   }
 
   private async attemptDelivery(
-    endpoint: WebhookEndpoint, 
-    event: WebhookEvent, 
+    endpoint: WebhookEndpoint,
+    event: WebhookEvent,
     delivery: WebhookDelivery
   ): Promise<void> {
     const payload = this.createPayload(event);
@@ -137,10 +143,10 @@ class WebhookService {
           'X-MaintainPro-Signature': signature,
           'X-MaintainPro-Event': event.event,
           'X-MaintainPro-Delivery': delivery.id,
-          'User-Agent': 'MaintainPro-Webhook/1.0'
+          'User-Agent': 'MaintainPro-Webhook/1.0',
         },
         body: JSON.stringify(payload),
-        signal: AbortSignal.timeout(10000) // 10 second timeout
+        signal: AbortSignal.timeout(10000), // 10 second timeout
       });
 
       delivery.attempts++;
@@ -163,8 +169,8 @@ class WebhookService {
   }
 
   private async scheduleRetry(
-    endpoint: WebhookEndpoint, 
-    event: WebhookEvent, 
+    endpoint: WebhookEndpoint,
+    event: WebhookEvent,
     delivery: WebhookDelivery
   ): Promise<void> {
     if (delivery.attempts >= 5) {
@@ -194,17 +200,14 @@ class WebhookService {
         entity: event.entity,
         entityId: event.entityId,
         warehouseId: event.warehouseId,
-        payload: event.data
-      }
+        payload: event.data,
+      },
     };
   }
 
   private signPayload(payload: any, secret: string): string {
     const body = JSON.stringify(payload);
-    return crypto
-      .createHmac('sha256', secret)
-      .update(body, 'utf8')
-      .digest('hex');
+    return crypto.createHmac('sha256', secret).update(body, 'utf8').digest('hex');
   }
 
   private generateSecret(): string {
@@ -217,7 +220,7 @@ class WebhookService {
       .createHmac('sha256', secret)
       .update(payload, 'utf8')
       .digest('hex');
-    
+
     return crypto.timingSafeEqual(
       Buffer.from(signature, 'hex'),
       Buffer.from(expectedSignature, 'hex')
@@ -276,7 +279,7 @@ export const WebhookEvents = {
   // PM Events
   PM_SCHEDULED: 'pm.scheduled',
   PM_OVERDUE: 'pm.overdue',
-  PM_COMPLETED: 'pm.completed'
+  PM_COMPLETED: 'pm.completed',
 } as const;
 
-export type WebhookEventType = typeof WebhookEvents[keyof typeof WebhookEvents];
+export type WebhookEventType = (typeof WebhookEvents)[keyof typeof WebhookEvents];

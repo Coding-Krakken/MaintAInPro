@@ -2,7 +2,9 @@
 
 ## Overview
 
-The MaintAInPro API provides comprehensive access to maintenance management functionality through RESTful endpoints. The API supports multi-tenant organizations, role-based access control, and comprehensive audit trails.
+The MaintAInPro API provides comprehensive access to maintenance management
+functionality through RESTful endpoints. The API supports multi-tenant
+organizations, role-based access control, and comprehensive audit trails.
 
 ## Base URL
 
@@ -24,15 +26,17 @@ Authorization: Bearer <jwt_token>
 ### Organizations
 
 #### Create Organization
+
 ```http
 POST /api/v2/organizations
 ```
 
 **Request Body:**
+
 ```json
 {
   "name": "Acme Manufacturing",
-  "slug": "acme-manufacturing", 
+  "slug": "acme-manufacturing",
   "settings": {
     "timezone": "UTC",
     "currency": "USD"
@@ -48,6 +52,7 @@ POST /api/v2/organizations
 ```
 
 **Response:**
+
 ```json
 {
   "id": "org-uuid",
@@ -61,11 +66,13 @@ POST /api/v2/organizations
 ```
 
 #### Get Organization
+
 ```http
 GET /api/v2/organizations/{id}
 ```
 
 **Response:**
+
 ```json
 {
   "id": "org-uuid",
@@ -83,11 +90,13 @@ GET /api/v2/organizations/{id}
 ### Work Orders
 
 #### Create Work Order
+
 ```http
 POST /api/v2/work-orders
 ```
 
 **Request Body:**
+
 ```json
 {
   "foNumber": "WO-2025-001",
@@ -107,6 +116,7 @@ POST /api/v2/work-orders
 ```
 
 **Response:**
+
 ```json
 {
   "id": "wo-uuid",
@@ -122,11 +132,13 @@ POST /api/v2/work-orders
 ```
 
 #### Search Work Orders
+
 ```http
 POST /api/v2/work-orders/search
 ```
 
 **Request Body:**
+
 ```json
 {
   "organizationId": "org-uuid",
@@ -144,6 +156,7 @@ POST /api/v2/work-orders/search
 ```
 
 **Response:**
+
 ```json
 {
   "workOrders": [
@@ -163,11 +176,13 @@ POST /api/v2/work-orders/search
 ```
 
 #### Update Work Order
+
 ```http
 PUT /api/v2/work-orders/{id}
 ```
 
 **Request Body:**
+
 ```json
 {
   "status": "completed",
@@ -178,6 +193,7 @@ PUT /api/v2/work-orders/{id}
 ```
 
 **Response:**
+
 ```json
 {
   "id": "wo-uuid",
@@ -192,11 +208,13 @@ PUT /api/v2/work-orders/{id}
 ### Equipment Management
 
 #### Search Equipment (Schema Ready)
+
 ```http
 POST /api/v2/equipment/search
 ```
 
 **Request Body:**
+
 ```json
 {
   "organizationId": "org-uuid",
@@ -212,15 +230,17 @@ POST /api/v2/equipment/search
 ### Tagging System
 
 #### Add Entity Tag
+
 ```http
 POST /api/v2/tags/entities
 ```
 
 **Request Body:**
+
 ```json
 {
   "entityType": "work_order",
-  "entityId": "wo-uuid", 
+  "entityId": "wo-uuid",
   "tagName": "urgent-repair"
 }
 ```
@@ -228,11 +248,13 @@ POST /api/v2/tags/entities
 ### Soft Delete Operations
 
 #### Soft Delete Work Order
+
 ```http
 DELETE /api/v2/work-orders/{id}
 ```
 
 **Response:**
+
 ```json
 {
   "message": "Work order soft deleted successfully",
@@ -243,11 +265,13 @@ DELETE /api/v2/work-orders/{id}
 ### Health and Monitoring
 
 #### Get Health Metrics
+
 ```http
 GET /api/v2/health/database
 ```
 
 **Response:**
+
 ```json
 {
   "database": {
@@ -268,11 +292,13 @@ GET /api/v2/health/database
 ```
 
 #### Trigger Database Optimizations
+
 ```http
 POST /api/v2/health/optimize
 ```
 
 **Response:**
+
 ```json
 {
   "message": "Database optimizations completed successfully",
@@ -284,6 +310,7 @@ POST /api/v2/health/optimize
 ## Error Handling
 
 ### Standard Error Response
+
 ```json
 {
   "error": {
@@ -291,7 +318,7 @@ POST /api/v2/health/optimize
     "message": "Invalid input data",
     "details": [
       {
-        "field": "foNumber", 
+        "field": "foNumber",
         "message": "FO Number is required"
       }
     ]
@@ -318,9 +345,11 @@ POST /api/v2/health/optimize
 
 ## Field Mapping
 
-The API automatically handles field transformations between camelCase (API) and snake_case (database):
+The API automatically handles field transformations between camelCase (API) and
+snake_case (database):
 
 ### API Request (camelCase)
+
 ```json
 {
   "foNumber": "WO-001",
@@ -331,9 +360,10 @@ The API automatically handles field transformations between camelCase (API) and 
 ```
 
 ### Database Storage (snake_case)
+
 ```sql
 fo_number: 'WO-001',
-requested_by: 'user-id', 
+requested_by: 'user-id',
 organization_id: 'org-id',
 estimated_hours: 4.5
 ```
@@ -348,8 +378,8 @@ All operations include comprehensive audit trails:
   "entityType": "work_order",
   "entityId": "wo-uuid",
   "changes": {
-    "status": {"from": "new", "to": "completed"},
-    "actualHours": {"from": null, "to": "4.50"}
+    "status": { "from": "new", "to": "completed" },
+    "actualHours": { "from": null, "to": "4.50" }
   },
   "context": {
     "userId": "user-uuid",
@@ -378,28 +408,30 @@ All operations include comprehensive audit trails:
 ## WebSocket Events (Real-time)
 
 ### Work Order Updates
+
 ```javascript
 // Subscribe to work order updates
-socket.on('work_order_updated', (data) => {
+socket.on('work_order_updated', data => {
   console.log('Work order updated:', data);
 });
 
 // Emit work order update
 socket.emit('update_work_order', {
   id: 'wo-uuid',
-  status: 'completed'
+  status: 'completed',
 });
 ```
 
 ## SDK Examples
 
 ### JavaScript/TypeScript
+
 ```typescript
 import { MaintAInProClient } from '@maintainpro/sdk';
 
 const client = new MaintAInProClient({
   apiKey: 'your-api-key',
-  baseUrl: 'https://api.maintainpro.com'
+  baseUrl: 'https://api.maintainpro.com',
 });
 
 // Create work order
@@ -407,17 +439,18 @@ const workOrder = await client.workOrders.create({
   foNumber: 'WO-2025-001',
   type: 'corrective',
   description: 'Repair hydraulic pump',
-  priority: 'high'
+  priority: 'high',
 });
 
 // Search work orders
 const results = await client.workOrders.search({
   searchTerm: 'hydraulic',
-  filters: { priority: 'high' }
+  filters: { priority: 'high' },
 });
 ```
 
 ### Python
+
 ```python
 from maintainpro import MaintAInProClient
 
@@ -429,7 +462,7 @@ client = MaintAInProClient(
 # Create work order
 work_order = client.work_orders.create(
     fo_number='WO-2025-001',
-    type='corrective', 
+    type='corrective',
     description='Repair hydraulic pump',
     priority='high'
 )

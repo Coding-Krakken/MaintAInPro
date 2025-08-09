@@ -18,20 +18,20 @@ export const testUsers = {
     password: 'password',
     name: 'Mike Johnson',
     role: 'manager',
-  }
+  },
 };
 
 export async function loginAs(page: Page, userType: keyof typeof testUsers) {
   const user = testUsers[userType];
-  
+
   await page.goto('/login');
   await page.fill('[data-testid="email-input"]', user.email);
   await page.fill('[data-testid="password-input"]', user.password);
   await page.click('[data-testid="login-button"]');
-  
+
   // Wait for successful login
   await expect(page).toHaveURL('/dashboard');
-  
+
   return user;
 }
 

@@ -26,7 +26,7 @@ export const useMobile = (): MobileDetection => {
 
     const width = window.innerWidth;
     const height = window.innerHeight;
-    
+
     return {
       isMobile: width < 768,
       isTablet: width >= 768 && width < 1024,
@@ -42,7 +42,7 @@ export const useMobile = (): MobileDetection => {
     const handleResize = () => {
       const width = window.innerWidth;
       const height = window.innerHeight;
-      
+
       setDetection({
         isMobile: width < 768,
         isTablet: width >= 768 && width < 1024,

@@ -15,16 +15,16 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
     deployment: {
       url: process.env.VERCEL_URL || 'unknown',
       region: process.env.VERCEL_REGION || 'unknown',
-      sha: process.env.VERCEL_GIT_COMMIT_SHA || 'unknown'
+      sha: process.env.VERCEL_GIT_COMMIT_SHA || 'unknown',
     },
     uptime: process.uptime(),
     memory: process.memoryUsage(),
-    service: 'MaintAInPro CMMS'
+    service: 'MaintAInPro CMMS',
   };
 
   // Set appropriate headers
   res.setHeader('Content-Type', 'application/json');
   res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-  
+
   res.status(200).json(healthData);
 }

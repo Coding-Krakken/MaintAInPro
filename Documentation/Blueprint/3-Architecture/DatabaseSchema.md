@@ -780,6 +780,6 @@ CREATE TRIGGER generate_wo_number_trigger
     FOR EACH ROW EXECUTE FUNCTION generate_wo_number();
 ```
 
-This comprehensive database schema provides a robust foundation for the MaintAInPro CMMS system,
-ensuring data integrity, security, and performance while supporting all the features outlined in the
-blueprint.
+This comprehensive database schema provides a robust foundation for the
+MaintAInPro CMMS system, ensuring data integrity, security, and performance
+while supporting all the features outlined in the blueprint.
