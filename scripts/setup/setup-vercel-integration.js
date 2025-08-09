@@ -11,7 +11,7 @@ import { execSync } from 'child_process';
 console.log('🔧 Setting up Vercel integration for autonomous deployment...\n');
 
 // Read Vercel project configuration
-const projectConfig = JSON.parse(fs.readFileSync('.vercel/project.json', 'utf8'));
+const projectConfig = JSON.parse(fs.readFileSync('setup/.vercel/project.json', 'utf8'));
 
 console.log('📋 Vercel Project Configuration:');
 console.log(`   Project ID: ${projectConfig.projectId}`);
