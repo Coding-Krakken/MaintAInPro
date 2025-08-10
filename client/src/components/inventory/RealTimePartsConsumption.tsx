@@ -74,7 +74,13 @@ interface PartsConsumptionData {
 interface RealTimeUpdate {
   type: 'parts_consumed' | 'stock_updated' | 'low_stock_alert';
   partId: string;
-  data: any;
+  data: {
+    quantity?: number;
+    newStock?: number;
+    threshold?: number;
+    partName?: string;
+    location?: string;
+  };
   timestamp: string;
 }
 
@@ -124,7 +130,7 @@ const RealTimePartsConsumption: React.FC<{ workOrderId?: string }> = ({ workOrde
         description: 'Parts consumption recorded and inventory updated',
       });
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       toast({
         title: 'Consumption Failed',
         description: error.message || 'Failed to record parts consumption',
@@ -158,7 +164,7 @@ const RealTimePartsConsumption: React.FC<{ workOrderId?: string }> = ({ workOrde
         });
       }
     });
-  }, [notifications]);
+  }, [notifications, recentUpdates, toast]);
 
   const handleConsumePart = () => {
     if (!selectedPart || !workOrderId) return;

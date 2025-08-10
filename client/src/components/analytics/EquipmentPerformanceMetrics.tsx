@@ -18,6 +18,15 @@ import {
   BarChart3,
   Download,
 } from 'lucide-react';
+
+interface Equipment {
+  id: string;
+  model: string;
+  assetTag: string;
+  serialNumber: string;
+  location: string;
+}
+
 import {
   LineChart,
   Line,
@@ -222,7 +231,7 @@ const EquipmentPerformanceMetrics: React.FC<EquipmentPerformanceMetricsProps> = 
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value='all'>All Equipment</SelectItem>
-                  {equipmentList.map((equipment: any) => (
+                  {equipmentList.map((equipment: Equipment) => (
                     <SelectItem key={equipment.id} value={equipment.id}>
                       {equipment.model}
                     </SelectItem>

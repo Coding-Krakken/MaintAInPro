@@ -6,6 +6,14 @@ import { Badge } from '@/components/ui/badge';
 import { AlertCircle, Clock, CheckCircle, Play, Calendar } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
+interface Equipment {
+  id: string;
+  assetTag: string;
+  model: string;
+  location: string;
+  status: string;
+}
+
 interface PMSchedule {
   equipmentId: string;
   templateId: string;
@@ -224,7 +232,7 @@ const PMDashboard: React.FC = () => {
           </CardHeader>
           <CardContent>
             <div className='space-y-2'>
-              {equipment.map((item: any) => (
+              {equipment.map((item: Equipment) => (
                 <div
                   key={item.id}
                   className={`p-3 border rounded-lg cursor-pointer transition-colors ${

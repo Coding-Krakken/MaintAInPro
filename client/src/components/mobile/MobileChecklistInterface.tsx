@@ -25,6 +25,19 @@ interface ChecklistItemWithMobile extends WorkOrderChecklistItem {
   priority: 'low' | 'medium' | 'high' | 'critical';
 }
 
+interface SpeechRecognitionEvent {
+  resultIndex: number;
+  results: {
+    length: number;
+    [index: number]: {
+      [index: number]: {
+        transcript: string;
+      };
+      isFinal: boolean;
+    };
+  };
+}
+
 const MobileChecklistInterface: React.FC<MobileChecklistInterfaceProps> = ({
   workOrderId,
   isReadOnly = false,
@@ -60,7 +73,7 @@ const MobileChecklistInterface: React.FC<MobileChecklistInterfaceProps> = ({
         description: 'Checklist item updated successfully',
       });
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       toast({
         title: 'Update Failed',
         description: error.message || 'Failed to update checklist item',
@@ -70,7 +83,7 @@ const MobileChecklistInterface: React.FC<MobileChecklistInterfaceProps> = ({
   });
 
   const currentItem: ChecklistItemWithMobile | undefined = checklistItems[currentItemIndex];
-  const completedCount = checklistItems.filter((item: any) => item.status === 'done').length;
+  const completedCount = checklistItems.filter((item: ChecklistItemWithMobile) => item.status === 'done').length;
   const totalCount = checklistItems.length;
   const progressPercentage = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
 
@@ -98,7 +111,7 @@ const MobileChecklistInterface: React.FC<MobileChecklistInterfaceProps> = ({
       setIsVoiceMode(true);
     };
 
-    recognition.onresult = (event: any) => {
+    recognition.onresult = (event: SpeechRecognitionEvent) => {
       let _interimTranscript = '';
       let finalTranscript = '';
 
@@ -403,7 +416,7 @@ const MobileChecklistInterface: React.FC<MobileChecklistInterfaceProps> = ({
       <Card className='rounded-none border-x-0 border-b-0 shadow-sm'>
         <CardContent className='p-4'>
           <div className='flex items-center space-x-2 overflow-x-auto'>
-            {checklistItems.map((item: any, index: number) => (
+            {checklistItems.map((item: ChecklistItemWithMobile, index: number) => (
               <Button
                 key={item.id}
                 variant={index === currentItemIndex ? 'default' : 'outline'}
