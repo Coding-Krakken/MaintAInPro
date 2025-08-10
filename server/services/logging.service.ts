@@ -1,4 +1,10 @@
 import { Request, Response } from 'express';
+import type { AuthenticatedUser } from '../../shared/types/auth';
+
+interface LoggingRequest extends Request {
+  user?: AuthenticatedUser;
+  startTime?: number;
+}
 import { db } from '../db';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -9,13 +15,13 @@ import * as path from 'path';
  */
 
 // Log levels
-enum LogLevel {
-  ERROR = 0,
-  WARN = 1,
-  INFO = 2,
-  HTTP = 3,
-  DEBUG = 4,
-}
+export const LogLevel = {
+  ERROR: 0,
+  WARN: 1,
+  INFO: 2,
+  HTTP: 3,
+  DEBUG: 4,
+} as const;
 
 interface LogEntry {
   timestamp: string;
@@ -24,7 +30,7 @@ interface LogEntry {
   service: string;
   environment: string;
   version: string;
-  meta?: any;
+  meta?: Record<string, unknown>;
 }
 
 /**
@@ -32,7 +38,7 @@ interface LogEntry {
  */
 export class LoggingService {
   private static instance: LoggingService;
-  private logLevel: LogLevel;
+  private logLevel: number;
   private logDir: string;
 
   private constructor() {
@@ -63,7 +69,7 @@ export class LoggingService {
   /**
    * Create structured log entry
    */
-  private createLogEntry(level: string, message: string, meta?: any): LogEntry {
+  private createLogEntry(level: string, message: string, meta?: Record<string, unknown>): LogEntry {
     return {
       timestamp: new Date().toISOString(),
       level,
@@ -91,7 +97,7 @@ export class LoggingService {
   /**
    * Log with level check
    */
-  private log(level: LogLevel, levelName: string, message: string, meta?: any): void {
+  private log(level: number, levelName: string, message: string, meta?: Record<string, unknown>): void {
     if (level > this.logLevel) return;
 
     const logEntry = this.createLogEntry(levelName, message, meta);
@@ -123,21 +129,21 @@ export class LoggingService {
   /**
    * Log information message
    */
-  info(message: string, meta?: any): void {
+  info(message: string, meta?: Record<string, unknown>): void {
     this.log(LogLevel.INFO, 'INFO', message, meta);
   }
 
   /**
    * Log warning message
    */
-  warn(message: string, meta?: any): void {
+  warn(message: string, meta?: Record<string, unknown>): void {
     this.log(LogLevel.WARN, 'WARN', message, meta);
   }
 
   /**
    * Log error message
    */
-  error(message: string, error?: Error | any, meta?: any): void {
+  error(message: string, error?: Error | unknown, meta?: Record<string, unknown>): void {
     const errorMeta = {
       ...meta,
       error:
@@ -155,14 +161,14 @@ export class LoggingService {
   /**
    * Log debug message
    */
-  debug(message: string, meta?: any): void {
+  debug(message: string, meta?: Record<string, unknown>): void {
     this.log(LogLevel.DEBUG, 'DEBUG', message, meta);
   }
 
   /**
    * Log HTTP request
    */
-  http(message: string, meta?: any): void {
+  http(message: string, meta?: Record<string, unknown>): void {
     this.log(LogLevel.HTTP, 'HTTP', message, meta);
   }
 
@@ -172,7 +178,7 @@ export class LoggingService {
   async logUserActivity(
     userId: string,
     action: string,
-    details: any,
+    details: Record<string, unknown>,
     req?: Request
   ): Promise<void> {
     const activityData = {
@@ -222,7 +228,7 @@ export class LoggingService {
       | 'login_failure'
       | 'permission_denied'
       | 'suspicious_activity',
-    details: any,
+    details: Record<string, unknown>,
     req?: Request
   ): Promise<void> {
     const securityData = {
@@ -275,8 +281,8 @@ export class LoggingService {
     operation: 'INSERT' | 'UPDATE' | 'DELETE' | 'SELECT',
     tableName: string,
     recordId?: string,
-    oldValues?: any,
-    newValues?: any,
+    oldValues?: Record<string, unknown>,
+    newValues?: Record<string, unknown>,
     userId?: string
   ): Promise<void> {
     const dbData = {
@@ -320,7 +326,7 @@ export class LoggingService {
   /**
    * Log performance metrics
    */
-  logPerformance(operation: string, duration: number, metadata?: any): void {
+  logPerformance(operation: string, duration: number, metadata?: Record<string, unknown>): void {
     const perfData = {
       operation,
       duration,
@@ -347,7 +353,7 @@ export class LoggingService {
       duration,
       ip: req.ip,
       userAgent: req.get('User-Agent'),
-      userId: (req as any).user?.id,
+  userId: (req as LoggingRequest).user?.id,
       error: error
         ? {
             name: error.name,
@@ -404,11 +410,11 @@ export function httpLoggingMiddleware(req: Request, res: Response, next: Functio
   const loggingService = LoggingService.getInstance();
 
   // Store start time on request
-  (req as any).startTime = startTime;
+  (req as LoggingRequest).startTime = startTime;
 
   // Override res.end to capture response time
   const originalEnd = res.end;
-  res.end = function (...args: any[]) {
+  res.end = function (...args: unknown[]) {
     const duration = Date.now() - startTime;
     loggingService.logApiRequest(req, res, duration);
     return originalEnd.apply(this, args);
@@ -427,7 +433,7 @@ export function errorLoggingMiddleware(
   next: Function
 ): void {
   const loggingService = LoggingService.getInstance();
-  const duration = Date.now() - ((req as any).startTime || 0);
+  const duration = Date.now() - ((req as LoggingRequest).startTime || 0);
 
   loggingService.logApiRequest(req, res, duration, error);
 

@@ -7,7 +7,7 @@ interface HealthCheckResult {
   name: string;
   status: 'healthy' | 'degraded' | 'unhealthy';
   responseTime: number;
-  details?: any;
+  details?: Record<string, unknown>;
   error?: string;
 }
 
@@ -27,7 +27,7 @@ export class AdvancedHealthService {
   private dependencies: SystemDependency[];
   private lastHealthCheck: Date | null = null;
   private healthCheckInterval: NodeJS.Timeout | null = null;
-  private healthHistory: Array<{ timestamp: Date; status: string; details: any }> = [];
+  private healthHistory: Array<{ timestamp: Date; status: string; details: Record<string, unknown> }> = [];
   private readonly HEALTH_HISTORY_LIMIT = 100;
 
   constructor() {
@@ -109,11 +109,10 @@ export class AdvancedHealthService {
     };
     performance: {
       average_response_time: number;
-      database_performance: any;
-      cache_performance: any;
+      database_performance: Record<string, unknown>;
+      cache_performance: Record<string, unknown>;
     };
   }> {
-    const startTime = Date.now();
     const timestamp = new Date();
     const checks: HealthCheckResult[] = [];
 
@@ -270,7 +269,7 @@ export class AdvancedHealthService {
       const responseTime = Date.now() - startTime;
       const stats = enhancedCache.getStats();
 
-      const isWorking = retrieved !== null && (retrieved as any)?.test === true;
+  const isWorking = retrieved !== null && typeof retrieved === 'object' && 'test' in retrieved && (retrieved as Record<string, unknown>).test === true;
 
       return {
         name: 'cache_service',
@@ -435,10 +434,10 @@ export class AdvancedHealthService {
   /**
    * Get database performance metrics
    */
-  private async getDatabasePerformanceMetrics(): Promise<any> {
+  private async getDatabasePerformanceMetrics(): Promise<Record<string, unknown>> {
     try {
       return await databaseOptimizer.getDatabaseHealthMetrics();
-    } catch (error) {
+    } catch {
       return { error: 'Could not retrieve database metrics' };
     }
   }
@@ -470,17 +469,17 @@ export class AdvancedHealthService {
   /**
    * Get health check history
    */
-  getHealthHistory(): Array<{ timestamp: Date; status: string; details: any }> {
+  getHealthHistory(): Array<{ timestamp: Date; status: string; details: Record<string, unknown> }> {
     return [...this.healthHistory];
   }
 
   /**
    * Add result to health history with size limit
    */
-  private addToHealthHistory(result: any): void {
+  private addToHealthHistory(result: Record<string, unknown>): void {
     this.healthHistory.push({
-      timestamp: result.timestamp,
-      status: result.status,
+      timestamp: result.timestamp as Date,
+      status: result.status as string,
       details: {
         summary: result.summary,
         performance: result.performance,

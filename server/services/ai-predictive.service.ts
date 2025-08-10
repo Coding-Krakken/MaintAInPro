@@ -1,4 +1,5 @@
 import { storage } from '../storage';
+import type { Equipment, WorkOrder } from '../../shared/schema';
 
 export interface EquipmentHealthScore {
   equipmentId: string;
@@ -198,12 +199,11 @@ class AIPredictiveService {
 
       // Predict failure date using exponential distribution
       const predictedFailureDate = this.predictFailureDate(
-        failureData.meanTimeBetweenFailures,
-        probabilityOfFailure
+        failureData.meanTimeBetweenFailures
       );
 
       // Determine most likely failure type
-      const failureType = this.predictFailureType(failureHistory, targetEquipment);
+      const failureType = this.predictFailureType(failureHistory);
 
       // Calculate prediction confidence
       const confidence = this.calculatePredictionConfidence(
@@ -223,7 +223,7 @@ class AIPredictiveService {
       );
 
       // Assess data quality
-      const dataQuality = this.assessDataQuality(equipmentWorkOrders.length, targetEquipment);
+      const dataQuality = this.assessDataQuality(equipmentWorkOrders.length);
 
       const prediction: FailurePrediction = {
         equipmentId,
@@ -273,24 +273,20 @@ class AIPredictiveService {
       // Determine optimal strategy
       const recommendedStrategy = this.recommendOptimalStrategy(
         healthScore,
-        failurePrediction,
-        targetEquipment,
-        equipmentWorkOrders
+        failurePrediction
       );
 
       // Calculate cost savings
       const costSavings = this.calculateCostSavings(
         currentStrategy,
         recommendedStrategy,
-        equipmentWorkOrders,
-        targetEquipment
+        equipmentWorkOrders
       );
 
       // Generate implementation plan
       const implementationPlan = this.generateImplementationPlan(
         currentStrategy,
-        recommendedStrategy,
-        targetEquipment
+        recommendedStrategy
       );
 
       return {
@@ -328,7 +324,7 @@ class AIPredictiveService {
           return woDate >= monthDate && woDate < nextMonth;
         });
 
-        const metrics = this.calculateMonthlyMetrics(monthWorkOrders, monthDate);
+        const metrics = this.calculateMonthlyMetrics(monthWorkOrders);
 
         trends.push({
           date: monthDate.toISOString().slice(0, 7),
@@ -351,12 +347,13 @@ class AIPredictiveService {
 
   private async calculateAvailabilityScore(
     equipmentId: string,
-    workOrders: any[]
+    workOrders: WorkOrder[]
   ): Promise<number> {
     // Calculate availability based on uptime vs downtime
     const totalHours = 30 * 24; // Last 30 days
     const downtimeHours = workOrders.reduce((sum, wo) => {
-      const duration = wo.actualDuration || 4; // Assume 4 hours if not recorded
+      // Use wo.actualHours (decimal, hours) or fallback to 4 if not present
+      const duration = typeof wo.actualHours === 'number' ? Number(wo.actualHours) : 4;
       return sum + duration;
     }, 0);
 
@@ -364,7 +361,7 @@ class AIPredictiveService {
     return Math.max(0, Math.min(100, availability));
   }
 
-  private async calculateReliabilityScore(equipmentId: string, workOrders: any[]): Promise<number> {
+  private async calculateReliabilityScore(equipmentId: string, workOrders: WorkOrder[]): Promise<number> {
     // Calculate reliability based on failure frequency and MTBF
     const failureCount = workOrders.filter(wo => wo.type === 'corrective').length;
     const timeSpan = 365; // days
@@ -375,7 +372,7 @@ class AIPredictiveService {
     return Math.max(0, reliabilityScore);
   }
 
-  private async calculatePerformanceScore(equipmentId: string, equipment: any): Promise<number> {
+  private async calculatePerformanceScore(equipmentId: string, equipment: Equipment): Promise<number> {
     // Base performance score on equipment status and age
     let score = 100;
 
@@ -393,18 +390,18 @@ class AIPredictiveService {
     return Math.max(0, Math.min(100, score));
   }
 
-  private async calculateMaintenanceScore(equipmentId: string, workOrders: any[]): Promise<number> {
+  private async calculateMaintenanceScore(equipmentId: string, workOrders: WorkOrder[]): Promise<number> {
     // Score based on maintenance frequency and type balance
-    const preventiveCount = workOrders.filter(wo => wo.type === 'preventive').length;
-    const correctiveCount = workOrders.filter(wo => wo.type === 'corrective').length;
-    const totalCount = workOrders.length;
+  const preventiveCount = workOrders.filter(wo => wo.type === 'preventive').length;
+  // Removed unused variable: correctiveCount
+  const totalCount = workOrders.length;
 
-    if (totalCount === 0) return 85; // New equipment with no history
+  if (totalCount === 0) return 85; // New equipment with no history
 
-    const preventiveRatio = preventiveCount / totalCount;
-    const maintenanceScore = preventiveRatio * 100;
+  const preventiveRatio = preventiveCount / totalCount;
+  const maintenanceScore = preventiveRatio * 100;
 
-    return Math.max(0, Math.min(100, maintenanceScore));
+  return Math.max(0, Math.min(100, maintenanceScore));
   }
 
   private determineTrend(
@@ -458,7 +455,7 @@ class AIPredictiveService {
     return recommendations;
   }
 
-  private analyzeFailurePatterns(failureHistory: any[]): {
+  private analyzeFailurePatterns(failureHistory: WorkOrder[]): {
     meanTimeBetweenFailures: number;
     failureRate: number;
   } {
@@ -490,23 +487,24 @@ class AIPredictiveService {
   private calculateFailureProbability(
     failureData: { meanTimeBetweenFailures: number; failureRate: number },
     healthScore: number,
-    equipment: any
+    equipment: Equipment
   ): number {
-    // Base probability from failure rate
-    let probability = failureData.failureRate * 30; // 30-day probability
+  // Base probability from failure rate
+  let probability = failureData.failureRate * 30; // 30-day probability
 
-    // Adjust based on health score
-    const healthFactor = (100 - healthScore) / 100;
-    probability *= 1 + healthFactor;
+  // Adjust based on health score
+  const healthFactor = (100 - healthScore) / 100;
+  probability *= 1 + healthFactor;
 
-    // Adjust based on criticality
-    if (equipment.criticality === 'high') probability *= 1.2;
-    if (equipment.criticality === 'low') probability *= 0.8;
+  // Adjust based on criticality
+  if (equipment.criticality === 'high') probability *= 1.2;
+  if (equipment.criticality === 'low') probability *= 0.8;
 
-    return Math.min(1, Math.max(0, probability)) * 100;
+  // Use probability directly, no unused variable
+  return Math.min(1, Math.max(0, probability)) * 100;
   }
 
-  private predictFailureDate(mtbf: number, probability: number): Date {
+  private predictFailureDate(mtbf: number): Date {
     // Use exponential distribution to predict failure date
     const lambda = 1 / mtbf;
     const randomValue = Math.random();
@@ -518,7 +516,7 @@ class AIPredictiveService {
     return failureDate;
   }
 
-  private predictFailureType(failureHistory: any[], equipment: any): string {
+  private predictFailureType(failureHistory: WorkOrder[]): string {
     // Analyze most common failure types
     const failureTypes = failureHistory.map(wo => wo.description?.toLowerCase() || '');
 
@@ -568,7 +566,7 @@ class AIPredictiveService {
     probabilityOfFailure: number,
     failureType: string,
     impactLevel: string,
-    equipment: any
+    equipment: Equipment
   ): PredictiveAction[] {
     const actions: PredictiveAction[] = [];
 
@@ -615,8 +613,7 @@ class AIPredictiveService {
   }
 
   private assessDataQuality(
-    workOrderCount: number,
-    equipment: any
+    workOrderCount: number
   ): 'poor' | 'fair' | 'good' | 'excellent' {
     if (workOrderCount >= 20) return 'excellent';
     if (workOrderCount >= 10) return 'good';
@@ -624,9 +621,8 @@ class AIPredictiveService {
     return 'poor';
   }
 
-  private analyzeCurrentStrategy(workOrders: any[]): 'reactive' | 'preventive' | 'predictive' {
+  private analyzeCurrentStrategy(workOrders: WorkOrder[]): 'reactive' | 'preventive' | 'predictive' {
     const preventiveCount = workOrders.filter(wo => wo.type === 'preventive').length;
-    const correctiveCount = workOrders.filter(wo => wo.type === 'corrective').length;
     const totalCount = workOrders.length;
 
     if (totalCount === 0) return 'reactive';
@@ -640,16 +636,9 @@ class AIPredictiveService {
 
   private recommendOptimalStrategy(
     healthScore: EquipmentHealthScore,
-    prediction: FailurePrediction,
-    equipment: any,
-    workOrders: any[]
+    prediction: FailurePrediction
   ): 'reactive' | 'preventive' | 'predictive' {
     // High-value, critical equipment should use predictive
-    if (equipment.criticality === 'high' && healthScore.overallScore < 80) {
-      return 'predictive';
-    }
-
-    // Equipment with good data quality can benefit from predictive
     if (prediction.dataQuality === 'excellent' || prediction.dataQuality === 'good') {
       return 'predictive';
     }
@@ -665,8 +654,7 @@ class AIPredictiveService {
   private calculateCostSavings(
     currentStrategy: string,
     recommendedStrategy: string,
-    workOrders: any[],
-    equipment: any
+    workOrders: WorkOrder[]
   ): MaintenanceOptimization['costSavings'] {
     // Calculate current annual costs
     const correctiveWorkOrders = workOrders.filter(wo => wo.type === 'corrective');
@@ -701,8 +689,7 @@ class AIPredictiveService {
 
   private generateImplementationPlan(
     currentStrategy: string,
-    recommendedStrategy: string,
-    equipment: any
+    recommendedStrategy: string
   ): OptimizationStep[] {
     const steps: OptimizationStep[] = [];
 
@@ -739,8 +726,7 @@ class AIPredictiveService {
   }
 
   private calculateMonthlyMetrics(
-    workOrders: any[],
-    monthDate: Date
+    workOrders: WorkOrder[]
   ): {
     mtbf: number;
     mttr: number;
@@ -750,7 +736,9 @@ class AIPredictiveService {
   } {
     const failures = workOrders.filter(wo => wo.type === 'corrective');
     const totalHours = 30 * 24; // Hours in month
-    const totalDowntime = workOrders.reduce((sum, wo) => sum + (wo.actualDuration || 4), 0);
+    const totalDowntime = workOrders.reduce((sum, wo) => {
+      return sum + (typeof wo.actualHours === 'number' ? Number(wo.actualHours) : 4);
+    }, 0);
 
     return {
       mtbf: failures.length > 0 ? totalHours / failures.length : totalHours,
