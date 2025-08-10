@@ -190,7 +190,7 @@ export class FileUploadService {
       vendorId?: string;
     },
     options: Partial<FileUploadOptions> = {},
-    onProgress?: (progress: number) => void
+    _onProgress?: (_progress: number) => void
   ): Promise<FileUploadResult> {
     try {
       const config = { ...this.DEFAULT_OPTIONS, ...options };

@@ -26,7 +26,7 @@ export class WebSocketService {
   private reconnectAttempts = 0;
   private maxReconnectAttempts = 5;
   private reconnectDelay = 1000;
-  private subscriptions = new Map<string, (data: unknown) => void>();
+  private subscriptions = new Map<string, (_data: unknown) => void>();
 
   constructor() {
     this.connect();
@@ -219,7 +219,7 @@ export class WebSocketService {
     return this.isConnected && this.socket?.connected === true;
   }
 
-  public subscribe(event: string, callback: (data: unknown) => void): () => void {
+  public subscribe(event: string, callback: (_data: unknown) => void): () => void {
     this.subscriptions.set(event, callback);
 
     // Return unsubscribe function
@@ -239,27 +239,27 @@ export class WebSocketService {
         'x-warehouse-id': localStorage.getItem('warehouseId') || '',
       },
     }).catch(_error => {
-      console.error('Failed to send test notification:', error);
+      console.error('Failed to send test notification:', _error);
     });
   }
 
-  public subscribeToWorkOrders(callback: (data: unknown) => void): () => void {
+  public subscribeToWorkOrders(callback: (_data: unknown) => void): () => void {
     return this.subscribe('work_order_update', callback);
   }
 
-  public subscribeToEquipment(callback: (data: unknown) => void): () => void {
+  public subscribeToEquipment(callback: (_data: unknown) => void): () => void {
     return this.subscribe('equipment_update', callback);
   }
 
-  public subscribeToInventory(callback: (data: unknown) => void): () => void {
+  public subscribeToInventory(callback: (_data: unknown) => void): () => void {
     return this.subscribe('inventory_update', callback);
   }
 
-  public subscribeToPM(callback: (data: unknown) => void): () => void {
+  public subscribeToPM(callback: (_data: unknown) => void): () => void {
     return this.subscribe('pm_update', callback);
   }
 
-  public subscribeToNotifications(callback: (data: NotificationData) => void): () => void {
+  public subscribeToNotifications(callback: (_data: NotificationData) => void): () => void {
     return this.subscribe('notification', callback);
   }
 

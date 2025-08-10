@@ -24,7 +24,7 @@ export class PWAService {
   private static instance: PWAService;
   private installPromptEvent: InstallPromptEvent | null = null;
   private registration: ServiceWorkerRegistration | null = null;
-  private listeners: Map<string, ((data: unknown) => void)[]> = new Map();
+  private listeners: Map<string, ((_data: unknown) => void)[]> = new Map();
   private status: PWAStatus = {
     isInstallable: false,
     isInstalled: false,
@@ -316,7 +316,7 @@ export class PWAService {
   /**
    * Add event listener
    */
-  addEventListener(event: string, callback: (data: unknown) => void): () => void {
+  addEventListener(event: string, callback: (_data: unknown) => void): () => void {
     if (!this.listeners.has(event)) {
       this.listeners.set(event, []);
     }
@@ -410,7 +410,7 @@ export class PWAService {
   /**
    * Remove event listener
    */
-  removeEventListener(event: string, callback: (data: unknown) => void): void {
+  removeEventListener(event: string, callback: (_data: unknown) => void): void {
     const callbacks = this.listeners.get(event);
     if (callbacks) {
       const index = callbacks.indexOf(callback);

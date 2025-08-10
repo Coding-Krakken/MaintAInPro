@@ -10,7 +10,7 @@ import { pmScheduler } from './services/pm-scheduler';
 import { backgroundJobScheduler } from './services/background-jobs';
 import { CacheService } from './services/cache.service';
 import { performanceService } from './services/performance.service';
-import { databaseOptimizer } from './services/database-optimizer.service';
+
 import { startupOptimizer } from './services/startup-optimizer.service';
 import {
   loggingService,

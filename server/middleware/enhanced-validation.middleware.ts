@@ -9,7 +9,7 @@ import {
   snakeToCamel,
   fieldValidators,
 } from '@shared/validation-utils';
-import { EnhancedRequest, AuthenticatedUser, AuthenticatedRequest } from '../../shared/types/auth';
+import { EnhancedRequest } from '../../shared/types/auth';
 
 /**
  * Enhanced validation middleware with comprehensive error handling and audit logging
