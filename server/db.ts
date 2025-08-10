@@ -25,7 +25,7 @@ if (!process.env.DATABASE_URL) {
   });
 
   db = drizzle(pool, { schema });
-  Database = typeof db;
+  _Database = typeof db;
 
   console.log('Database connection initialized successfully');
 }

@@ -340,7 +340,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       return btoa(JSON.stringify(fingerprint));
     } catch (_error) {
-      console.warn('Device fingerprinting failed:', error);
+      console.warn('Device fingerprinting failed:', _error);
       return 'fallback-fingerprint';
     }
   };

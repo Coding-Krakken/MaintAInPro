@@ -125,7 +125,7 @@ const QRCodeGenerator: React.FC<QRCodeGeneratorProps> = ({ equipmentId: _equipme
         description: `Successfully generated ${options.format} QR code for ${qrData}`,
       });
     } catch (_error) {
-      console.error('QR Code generation error:', error);
+      console.error('QR Code generation error:', _error);
       toast({
         title: 'Generation Failed',
         description: 'Failed to generate QR code. Please try again.',
@@ -166,7 +166,7 @@ const QRCodeGenerator: React.FC<QRCodeGeneratorProps> = ({ equipmentId: _equipme
         description: 'QR code image copied to clipboard',
       });
     } catch (_error) {
-      console.error('Copy failed:', error);
+      console.error('Copy failed:', _error);
       toast({
         title: 'Copy Failed',
         description: 'Failed to copy QR code to clipboard',
