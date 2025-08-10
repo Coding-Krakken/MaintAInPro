@@ -5,14 +5,11 @@ import {
   validationChain,
   commonSchemas,
 } from '../middleware/enhanced-validation.middleware';
-import { EnhancedRequest } from '../../shared/types/auth';
+
 import {
   insertWorkOrderSchema,
   insertEquipmentSchema,
   insertPartSchema,
-  workOrders,
-  equipment,
-  parts,
 } from '@shared/schema';
 import { storage } from '../storage';
 
