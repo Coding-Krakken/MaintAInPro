@@ -29,7 +29,7 @@ interface QROptions {
   format: 'PNG' | 'SVG';
 }
 
-const QRCodeGenerator: React.FC<QRCodeGeneratorProps> = ({ equipmentId, assetTag, onGenerate }) => {
+const QRCodeGenerator: React.FC<QRCodeGeneratorProps> = ({ equipmentId: _equipmentId, assetTag, onGenerate }) => {
   const { toast } = useToast();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [qrData, setQrData] = useState(assetTag || '');

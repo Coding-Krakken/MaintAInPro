@@ -121,6 +121,10 @@ export default [
         DataTransfer: 'readonly',
         performance: 'readonly',
         CustomEvent: 'readonly',
+        Image: 'readonly',
+        btoa: 'readonly',
+        ClipboardItem: 'readonly',
+        HTMLCanvasElement: 'readonly',
       },
     },
     plugins: {
