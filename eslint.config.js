@@ -187,6 +187,25 @@ export default [
     },
   },
   
+  // K6 performance test files configuration
+  {
+    files: ['tests/performance/**/*.js'],
+    languageOptions: {
+      globals: {
+        __ENV: 'readonly',
+        console: 'readonly',
+        check: 'readonly',
+        group: 'readonly',
+        fail: 'readonly',
+        http: 'readonly',
+        open: 'readonly',
+      },
+    },
+    rules: {
+      'no-console': 'off',
+    },
+  },
+  
   // Server/Node.js files configuration
   {
     files: ['server/**/*.{js,ts}', 'scripts/**/*.{js,ts}', '*.config.{js,ts}'],

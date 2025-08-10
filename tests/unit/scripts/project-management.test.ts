@@ -114,7 +114,7 @@ describe('GitHub Project Management Script', () => {
   describe('GraphQL Query Generation', () => {
     it('should generate correct query for organization projects', () => {
       const isOrg = true;
-      const expectedQuery = `
+      const _expectedQuery = `
         query($owner: String!) {
           organization(login: $owner) {
             projectsV2(first: 100) {

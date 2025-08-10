@@ -3,7 +3,7 @@
  * Tests the new HealthMetrics interface and HealthService methods
  */
 
-import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 
 // Since we can't easily run the full client tests, let's create a focused test
 // that validates our interface implementations match the requirements
