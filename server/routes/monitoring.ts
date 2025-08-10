@@ -11,7 +11,7 @@ router.get('/metrics', async (req, res) => {
     const metrics = await monitoringService.getSystemMetrics();
     res.json(metrics);
   } catch (__error) {
-    console.error('Error fetching metrics:', _error);
+    console.error('Error fetching metrics:', __error);
     res.status(500).json({
       error: 'Failed to fetch system metrics',
       message: error instanceof Error ? _error.message : 'Unknown error',
@@ -27,7 +27,7 @@ router.get('/alerts', (req, res) => {
     const alerts = monitoringService.getPerformanceAlerts();
     res.json(alerts);
   } catch (__error) {
-    console.error('Error fetching alerts:', _error);
+    console.error('Error fetching alerts:', __error);
     res.status(500).json({
       error: 'Failed to fetch performance alerts',
       message: error instanceof Error ? _error.message : 'Unknown error',
@@ -49,7 +49,7 @@ router.post('/alerts/:id/resolve', (req, res) => {
       res.status(404).json({ error: 'Alert not found' });
     }
   } catch (__error) {
-    console.error('Error resolving alert:', _error);
+    console.error('Error resolving alert:', __error);
     res.status(500).json({
       error: 'Failed to resolve alert',
       message: error instanceof Error ? _error.message : 'Unknown error',
@@ -85,7 +85,7 @@ router.get('/health', async (req, res) => {
     const statusCode = health.status === 'critical' ? 503 : 200;
     res.status(statusCode).json(health);
   } catch (__error) {
-    console.error('Error in health check:', _error);
+    console.error('Error in health check:', __error);
     res.status(500).json({
       status: 'error',
       timestamp: new Date().toISOString(),
@@ -145,7 +145,7 @@ router.get('/system', async (req, res) => {
 
     res.json(systemMetrics);
   } catch (__error) {
-    console.error('Error fetching system metrics:', _error);
+    console.error('Error fetching system metrics:', __error);
     res.status(500).json({
       error: 'Failed to fetch system metrics',
       message: error instanceof Error ? _error.message : 'Unknown error',
@@ -204,7 +204,7 @@ router.get('/kpi', async (req, res) => {
 
     res.json(kpiMetrics);
   } catch (__error) {
-    console.error('Error fetching KPI metrics:', _error);
+    console.error('Error fetching KPI metrics:', __error);
     res.status(500).json({
       error: 'Failed to fetch KPI metrics',
       message: error instanceof Error ? _error.message : 'Unknown error',

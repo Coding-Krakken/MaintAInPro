@@ -1,4 +1,4 @@
-import { AttachmentUpload } from '../types';
+// import { AttachmentUpload } from '../types';
 
 export interface FileUploadOptions {
   maxSize?: number;
@@ -265,7 +265,7 @@ export class FileUploadService {
 
       return response.ok;
     } catch (__error) {
-      console.error('Failed to delete file:', _error);
+      console.error('Failed to delete file:', __error);
       return false;
     }
   }

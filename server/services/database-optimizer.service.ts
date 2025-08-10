@@ -386,7 +386,7 @@ export class DatabaseOptimizerService {
         performance,
       };
     } catch (__error) {
-      console.error('Error getting database health metrics:', _error);
+      console.error('Error getting database health metrics:', __error);
       return {
         connections: 0,
         cacheHitRatio: 0,

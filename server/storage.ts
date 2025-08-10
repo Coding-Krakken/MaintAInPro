@@ -1283,7 +1283,7 @@ async function initializeStorage(): Promise<IStorage> {
       console.log('✅ PostgreSQL storage initialized successfully');
       return dbStorage;
     } catch (__error) {
-      console.error('❌ Failed to initialize PostgreSQL storage:', _error);
+      console.error('❌ Failed to initialize PostgreSQL storage:', __error);
       console.log('🔄 Falling back to in-memory storage');
       return new MemStorage();
     }
@@ -1303,7 +1303,7 @@ initializeStorage()
     console.log('🎯 Storage initialization complete');
   })
   .catch(_error => {
-    console.error('❌ Storage initialization error:', error);
+    console.error('❌ Storage initialization error:', _error);
     storage = new MemStorage(); // Fallback to MemStorage
   });
 
