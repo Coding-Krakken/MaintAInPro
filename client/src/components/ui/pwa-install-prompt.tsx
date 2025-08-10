@@ -37,7 +37,7 @@ export function PWAInstallPrompt() {
         });
         setIsVisible(false);
       }
-    } catch (error) {
+    } catch (_error) {
       toast({
         title: 'Installation Failed',
         description: 'Failed to install the app. Please try again.',
@@ -115,7 +115,7 @@ export function PWAUpdatePrompt() {
         description: 'The app has been updated. Reloading...',
       });
       // Reload will happen automatically
-    } catch (error) {
+    } catch (_error) {
       toast({
         title: 'Update Failed',
         description: 'Failed to update the app. Please try again.',

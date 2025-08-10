@@ -11,13 +11,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { useWebSocket } from '@/hooks/useWebSocket';
 import {
@@ -25,12 +18,9 @@ import {
   Plus,
   Minus,
   AlertTriangle,
-  CheckCircle,
   Clock,
-  Scan,
   Search,
   TrendingDown,
-  TrendingUp,
   DollarSign,
   Activity,
 } from 'lucide-react';
@@ -123,7 +113,7 @@ const RealTimePartsConsumption: React.FC<{ workOrderId?: string }> = ({ workOrde
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       }),
-    onSuccess: response => {
+    onSuccess: (_response) => {
       queryClient.invalidateQueries({ queryKey: ['parts-inventory'] });
       queryClient.invalidateQueries({ queryKey: ['parts-usage', workOrderId] });
       setIsDialogOpen(false);

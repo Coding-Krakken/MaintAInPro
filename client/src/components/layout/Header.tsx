@@ -14,6 +14,15 @@ import {
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
 
+interface Notification {
+  id: string;
+  title: string;
+  message: string;
+  read: boolean;
+  type: string;
+  createdAt: string;
+}
+
 interface HeaderProps {
   onMobileMenuToggle: () => void;
   showMobileMenuButton: boolean;
@@ -24,7 +33,7 @@ export default function Header({ onMobileMenuToggle, showMobileMenuButton }: Hea
   const { user, logout } = useAuth();
   const [, setLocation] = useLocation();
 
-  const { data: notifications } = useQuery({
+  const { data: notifications } = useQuery<Notification[]>({
     queryKey: ['/api/notifications'],
     queryFn: async () => {
       const response = await fetch('/api/notifications', {
@@ -38,7 +47,7 @@ export default function Header({ onMobileMenuToggle, showMobileMenuButton }: Hea
     },
   });
 
-  const unreadCount = notifications?.filter((n: any) => !n.read).length || 0;
+  const unreadCount = notifications?.filter((n: Notification) => !n.read).length || 0;
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();

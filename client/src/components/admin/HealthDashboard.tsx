@@ -20,6 +20,14 @@ import {
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 
+interface MemoryInfo {
+  heapUsed: number;
+  heapTotal: number;
+  rss: number;
+  external?: number;
+  arrayBuffers?: number;
+}
+
 function StatusBadge({ status }: { status: string }) {
   const isHealthy = status === 'ok' || status === 'healthy';
 
@@ -44,7 +52,7 @@ function FeatureStatus({ feature, status }: { feature: string; status: string })
   );
 }
 
-function MemoryUsageCard({ memory }: { memory: any }) {
+function MemoryUsageCard({ memory }: { memory: MemoryInfo }) {
   const memoryUsagePercent = Math.round((memory.heapUsed / memory.heapTotal) * 100);
   const heapUsedMB = Math.round(memory.heapUsed / 1024 / 1024);
   const heapTotalMB = Math.round(memory.heapTotal / 1024 / 1024);

@@ -6,7 +6,7 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { CheckCircle, XCircle, AlertTriangle, Clock, Camera, Mic, Zap } from 'lucide-react';
+import { CheckCircle, XCircle, AlertTriangle, Clock, Camera, Mic } from 'lucide-react';
 import { WorkOrderChecklistItem } from '@/types';
 import { FileUpload } from '@/components/FileUpload';
 import { useMobile } from '@/hooks/useMobile';
@@ -32,7 +32,7 @@ const MobileChecklistInterface: React.FC<MobileChecklistInterfaceProps> = ({
 }) => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  const { isMobile, isTablet, isTouchDevice } = useMobile();
+  const { isTouchDevice } = useMobile();
 
   const [currentItemIndex, setCurrentItemIndex] = useState(0);
   const [isVoiceMode, setIsVoiceMode] = useState(false);
@@ -99,7 +99,7 @@ const MobileChecklistInterface: React.FC<MobileChecklistInterfaceProps> = ({
     };
 
     recognition.onresult = (event: any) => {
-      let interimTranscript = '';
+      let _interimTranscript = '';
       let finalTranscript = '';
 
       for (let i = event.resultIndex; i < event.results.length; i++) {
@@ -107,7 +107,7 @@ const MobileChecklistInterface: React.FC<MobileChecklistInterfaceProps> = ({
         if (event.results[i].isFinal) {
           finalTranscript += transcript;
         } else {
-          interimTranscript += transcript;
+          _interimTranscript += transcript;
         }
       }
 
