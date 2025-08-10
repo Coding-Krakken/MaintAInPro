@@ -131,9 +131,9 @@ class PMSchedulerEnhanced {
 
       this.schedulingRules.set(warehouseId, rules);
       return rules;
-    } catch (__error) {
-      console.__error('Error loading scheduling rules:', _error);
-      throw __error;
+    } catch (___error) {
+      console.error('Error loading scheduling rules:', __error);
+      throw ___error;
     }
   }
 
@@ -191,9 +191,9 @@ class PMSchedulerEnhanced {
 
       this.schedulingConfigs.set(warehouseId, config);
       return config;
-    } catch (__error) {
-      console.__error('Error loading scheduling config:', _error);
-      throw __error;
+    } catch (___error) {
+      console.error('Error loading scheduling config:', __error);
+      throw ___error;
     }
   }
 
@@ -284,9 +284,9 @@ class PMSchedulerEnhanced {
       );
 
       return result;
-    } catch (__error) {
-      console.__error('Error generating optimized schedule:', _error);
-      throw __error;
+    } catch (___error) {
+      console.error('Error generating optimized schedule:', __error);
+      throw ___error;
     }
   }
 
@@ -377,8 +377,8 @@ class PMSchedulerEnhanced {
           }
         }
       }
-    } catch (__error) {
-      console.__error('Error processing missed PM escalations:', _error);
+    } catch (___error) {
+      console.error('Error processing missed PM escalations:', __error);
     }
   }
 
@@ -466,8 +466,8 @@ class PMSchedulerEnhanced {
               }
             }
           }
-        } catch (__error) {
-          console.__error('Error in automated scheduling:', _error);
+        } catch (___error) {
+          console.error('Error in automated scheduling:', __error);
         }
       },
       intervalMinutes * 60 * 1000
