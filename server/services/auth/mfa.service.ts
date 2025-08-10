@@ -88,7 +88,7 @@ export class MFAService {
     } catch (_error) {
       return {
         success: false,
-        _error: 'Invalid token format',
+        error: 'Invalid token format',
       };
     }
   }
@@ -167,7 +167,7 @@ export class MFAService {
     } catch (_error) {
       return {
         success: false,
-        _error: 'Failed to verify backup code',
+        error: 'Failed to verify backup code',
       };
     }
   }
@@ -190,7 +190,7 @@ export class MFAService {
     } catch (_error) {
       return {
         success: false,
-        _error: 'Failed to send SMS code',
+        error: 'Failed to send SMS code',
       };
     }
   }
@@ -217,7 +217,7 @@ export class MFAService {
     } catch (_error) {
       return {
         success: false,
-        _error: 'Failed to send email code',
+        error: 'Failed to send email code',
       };
     }
   }

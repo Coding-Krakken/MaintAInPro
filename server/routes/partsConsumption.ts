@@ -108,7 +108,7 @@ router.post('/work-orders/:id/parts-usage', async (req, res) => {
       inventoryImpact,
     });
   } catch (__error) {
-    console.error('Error creating parts usage:', _error);
+    console.__error('Error creating parts usage:', _error);
     res.status(500).json({ message: 'Failed to create parts usage' });
   }
 });
@@ -192,7 +192,7 @@ router.post('/work-orders/:id/consume-parts', async (req, res) => {
       message: `Successfully consumed ${consumedCount} parts from inventory`,
     });
   } catch (__error) {
-    console.error('Error consuming parts:', _error);
+    console.__error('Error consuming parts:', _error);
     res.status(500).json({ message: 'Failed to consume parts' });
   }
 });
@@ -259,7 +259,7 @@ router.get('/analytics/parts-consumption', async (req, res) => {
       rawData: partsUsage,
     });
   } catch (__error) {
-    console.error('Error getting parts consumption analytics:', _error);
+    console.__error('Error getting parts consumption analytics:', _error);
     res.status(500).json({ message: 'Failed to get analytics' });
   }
 });
@@ -294,7 +294,7 @@ router.get('/work-orders/:id/inventory-impact', async (req, res) => {
 
     res.json(impacts);
   } catch (__error) {
-    console.error('Error getting inventory impact:', _error);
+    console.__error('Error getting inventory impact:', _error);
     res.status(500).json({ message: 'Failed to get inventory impact' });
   }
 });

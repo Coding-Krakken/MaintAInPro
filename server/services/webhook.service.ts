@@ -122,7 +122,7 @@ class WebhookService {
     try {
       await this.attemptDelivery(endpoint, event, delivery);
     } catch (_error) {
-      console.error(`Webhook delivery failed for ${endpoint.url}:`, _error);
+      console._error(`Webhook delivery failed for ${endpoint.url}:`, _error);
       await this.scheduleRetry(endpoint, event, delivery);
     }
   }

@@ -29,7 +29,7 @@ function MonitoringDebugPage() {
         },
       }));
     } catch (_error) {
-      console.error(`Error testing ${endpoint}:`, _error);
+      console._error(`Error testing ${endpoint}:`, _error);
       setTestResults(prev => ({
         ...prev,
         [endpoint]: {

@@ -41,11 +41,11 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
 
     res.status(200).json(health);
   } catch (__error) {
-    console.error('Error in health check:', __error);
+    console.__error('Error in health check:', __error);
     res.status(500).json({
-      status: 'error',
+      status: '__error',
       timestamp: new Date().toISOString(),
-      error: _error instanceof Error ? __error.message : 'Unknown error',
+      _error: _error instanceof Error ? __error.message : 'Unknown __error',
     });
   }
 }

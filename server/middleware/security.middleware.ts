@@ -274,9 +274,9 @@ export async function enhancedAuth(req: any, res: Response, next: NextFunction):
 
     next();
   } catch (__error) {
-    console.error('Authentication error:', _error);
+    console.__error('Authentication _error:', _error);
     res.status(500).json({
-      error: 'Authentication system error',
+      _error: 'Authentication system __error',
       code: 'AUTH_ERROR',
     });
   }
@@ -325,9 +325,9 @@ export function requireRole(allowedRoles: string[]) {
 
       next();
     } catch (__error) {
-      console.error('Authorization error:', _error);
+      console.__error('Authorization _error:', _error);
       res.status(500).json({
-        error: 'Authorization system error',
+        _error: 'Authorization system __error',
         code: 'AUTH_ERROR',
       });
     }
@@ -366,9 +366,9 @@ export function validateRequestSchema(schema: z.ZodSchema) {
 
       next();
     } catch (__error) {
-      console.error('Validation error:', _error);
+      console.__error('Validation _error:', _error);
       res.status(500).json({
-        error: 'Validation system error',
+        _error: 'Validation system __error',
         code: 'VALIDATION_SYSTEM_ERROR',
       });
     }
@@ -539,9 +539,9 @@ export async function validateSession(req: any, res: Response, next: NextFunctio
 
     next();
   } catch (__error) {
-    console.error('Session validation error:', _error);
+    console.__error('Session validation _error:', _error);
     res.status(500).json({
-      error: 'Internal Server Error',
+      _error: 'Internal Server Error',
       message: 'Session validation failed',
     });
   }

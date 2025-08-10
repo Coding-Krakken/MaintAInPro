@@ -53,10 +53,10 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
 
       res.status(200).json(alerts);
     } catch (__error) {
-      console.error('Error fetching alerts:', __error);
+      console.__error('Error fetching alerts:', __error);
       res.status(500).json({
-        error: 'Failed to fetch performance alerts',
-        message: __error instanceof Error ? __error.message : 'Unknown error',
+        _error: 'Failed to fetch performance alerts',
+        message: __error instanceof Error ? __error.message : 'Unknown __error',
       });
     }
   } else if (req.method === 'POST') {
@@ -69,10 +69,10 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
         alertId: alertId || 'unknown',
       });
     } catch (__error) {
-      console.error('Error resolving alert:', __error);
+      console.__error('Error resolving alert:', __error);
       res.status(500).json({
-        error: 'Failed to resolve alert',
-        message: __error instanceof Error ? __error.message : 'Unknown error',
+        _error: 'Failed to resolve alert',
+        message: __error instanceof Error ? __error.message : 'Unknown __error',
       });
     }
   } else {

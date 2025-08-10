@@ -275,10 +275,10 @@ router.get(
         filters: filters,
       });
     } catch (__error) {
-      console.error('Get work orders error:', _error);
+      console.__error('Get work orders _error:', _error);
       res.status(500).json({
         success: false,
-        error: 'FETCH_ERROR',
+        _error: 'FETCH_ERROR',
         message: 'Failed to fetch work orders',
       });
     }
@@ -307,10 +307,10 @@ router.get(
         data: workOrder,
       });
     } catch (__error) {
-      console.error('Get work order error:', _error);
+      console.__error('Get work order _error:', _error);
       res.status(500).json({
         success: false,
-        error: 'FETCH_ERROR',
+        _error: 'FETCH_ERROR',
         message: 'Failed to fetch work order',
       });
     }
@@ -386,10 +386,10 @@ router.post('/work-orders', validateSchema(insertWorkOrderSchema), async (req: a
       message: 'Work order created successfully',
     });
   } catch (__error) {
-    console.error('Create work order error:', _error);
+    console.__error('Create work order _error:', _error);
     res.status(500).json({
       success: false,
-      error: 'CREATE_ERROR',
+      _error: 'CREATE_ERROR',
       message: 'Failed to create work order',
     });
   }
@@ -462,10 +462,10 @@ router.put(
         message: 'Work order updated successfully',
       });
     } catch (__error) {
-      console.error('Update work order error:', _error);
+      console.__error('Update work order _error:', _error);
       res.status(500).json({
         success: false,
-        error: 'UPDATE_ERROR',
+        _error: 'UPDATE_ERROR',
         message: 'Failed to update work order',
       });
     }
@@ -498,10 +498,10 @@ router.delete(
         message: 'Work order deleted successfully',
       });
     } catch (__error) {
-      console.error('Delete work order error:', _error);
+      console.__error('Delete work order _error:', _error);
       res.status(500).json({
         success: false,
-        error: 'DELETE_ERROR',
+        _error: 'DELETE_ERROR',
         message: 'Failed to delete work order',
       });
     }
@@ -584,10 +584,10 @@ router.get(
         },
       });
     } catch (__error) {
-      console.error('Get equipment error:', _error);
+      console.__error('Get equipment _error:', _error);
       res.status(500).json({
         success: false,
-        error: 'FETCH_ERROR',
+        _error: 'FETCH_ERROR',
         message: 'Failed to fetch equipment',
       });
     }
@@ -628,10 +628,10 @@ router.post('/equipment', validateSchema(insertEquipmentSchema), async (req: any
       message: 'Equipment created successfully',
     });
   } catch (__error) {
-    console.error('Create equipment error:', _error);
+    console.__error('Create equipment _error:', _error);
     res.status(500).json({
       success: false,
-      error: 'CREATE_ERROR',
+      _error: 'CREATE_ERROR',
       message: 'Failed to create equipment',
     });
   }
@@ -659,10 +659,10 @@ router.get(
         data: equipment,
       });
     } catch (__error) {
-      console.error('Get equipment error:', _error);
+      console.__error('Get equipment _error:', _error);
       res.status(500).json({
         success: false,
-        error: 'FETCH_ERROR',
+        _error: 'FETCH_ERROR',
         message: 'Failed to fetch equipment',
       });
     }
@@ -715,10 +715,10 @@ router.put(
         message: 'Equipment updated successfully',
       });
     } catch (__error) {
-      console.error('Update equipment error:', _error);
+      console.__error('Update equipment _error:', _error);
       res.status(500).json({
         success: false,
-        error: 'UPDATE_ERROR',
+        _error: 'UPDATE_ERROR',
         message: 'Failed to update equipment',
       });
     }
@@ -800,10 +800,10 @@ router.get(
         },
       });
     } catch (__error) {
-      console.error('Get parts error:', _error);
+      console.__error('Get parts _error:', _error);
       res.status(500).json({
         success: false,
-        error: 'FETCH_ERROR',
+        _error: 'FETCH_ERROR',
         message: 'Failed to fetch parts',
       });
     }
@@ -825,10 +825,10 @@ router.post('/parts', validateSchema(insertPartSchema), async (req: any, res) =>
       message: 'Part created successfully',
     });
   } catch (__error) {
-    console.error('Create part error:', _error);
+    console.__error('Create part _error:', _error);
     res.status(500).json({
       success: false,
-      error: 'CREATE_ERROR',
+      _error: 'CREATE_ERROR',
       message: 'Failed to create part',
     });
   }
@@ -856,10 +856,10 @@ router.get(
         data: part,
       });
     } catch (__error) {
-      console.error('Get part error:', _error);
+      console.__error('Get part _error:', _error);
       res.status(500).json({
         success: false,
-        error: 'FETCH_ERROR',
+        _error: 'FETCH_ERROR',
         message: 'Failed to fetch part',
       });
     }
@@ -943,10 +943,10 @@ router.put(
         message: 'Part updated successfully',
       });
     } catch (__error) {
-      console.error('Update part error:', _error);
+      console.__error('Update part _error:', _error);
       res.status(500).json({
         success: false,
-        error: 'UPDATE_ERROR',
+        _error: 'UPDATE_ERROR',
         message: 'Failed to update part',
       });
     }
@@ -1066,10 +1066,10 @@ router.get(
         data: analytics,
       });
     } catch (__error) {
-      console.error('Get analytics error:', _error);
+      console.__error('Get analytics _error:', _error);
       res.status(500).json({
         success: false,
-        error: 'FETCH_ERROR',
+        _error: 'FETCH_ERROR',
         message: 'Failed to fetch analytics data',
       });
     }
@@ -1106,10 +1106,10 @@ router.get(
         },
       });
     } catch (__error) {
-      console.error('Get trends error:', _error);
+      console.__error('Get trends _error:', _error);
       res.status(500).json({
         success: false,
-        error: 'FETCH_ERROR',
+        _error: 'FETCH_ERROR',
         message: 'Failed to fetch trend data',
       });
     }
@@ -1154,7 +1154,7 @@ router.patch(
         } catch (_error) {
           results.failed.push({
             id: workOrderId,
-            _error: _error instanceof Error ? __error.message : 'Unknown _error',
+            error: _error instanceof Error ? __error.message : 'Unknown _error',
           });
         }
       }
@@ -1165,10 +1165,10 @@ router.patch(
         message: `Bulk update completed. ${results.updated.length} updated, ${results.failed.length} failed.`,
       });
     } catch (__error) {
-      console.error('Bulk update error:', _error);
+      console.__error('Bulk update _error:', _error);
       res.status(500).json({
         success: false,
-        error: 'BULK_UPDATE_ERROR',
+        _error: 'BULK_UPDATE_ERROR',
         message: 'Failed to perform bulk update',
       });
     }
@@ -1229,7 +1229,7 @@ router.patch(
         } catch (_error) {
           results.failed.push({
             id: workOrderId,
-            _error: _error instanceof Error ? __error.message : 'Unknown _error',
+            error: _error instanceof Error ? __error.message : 'Unknown _error',
           });
         }
       }
@@ -1240,10 +1240,10 @@ router.patch(
         message: `Bulk assignment completed. ${results.assigned.length} assigned, ${results.failed.length} failed.`,
       });
     } catch (__error) {
-      console.error('Bulk assign error:', _error);
+      console.__error('Bulk assign _error:', _error);
       res.status(500).json({
         success: false,
-        error: 'BULK_ASSIGN_ERROR',
+        _error: 'BULK_ASSIGN_ERROR',
         message: 'Failed to perform bulk assignment',
       });
     }

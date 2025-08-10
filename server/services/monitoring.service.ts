@@ -142,7 +142,7 @@ class MonitoringService {
         },
       };
     } catch (__error) {
-      console.error('Error fetching business metrics:', _error);
+      console.__error('Error fetching business metrics:', _error);
 
       return {
         memory: {

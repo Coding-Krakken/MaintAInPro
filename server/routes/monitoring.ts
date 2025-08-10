@@ -11,10 +11,10 @@ router.get('/metrics', async (req, res) => {
     const metrics = await monitoringService.getSystemMetrics();
     res.json(metrics);
   } catch (__error) {
-    console.error('Error fetching metrics:', __error);
+    console.__error('Error fetching metrics:', __error);
     res.status(500).json({
-      error: 'Failed to fetch system metrics',
-      message: error instanceof Error ? _error.message : 'Unknown error',
+      _error: 'Failed to fetch system metrics',
+      message: __error instanceof Error ? _error.message : 'Unknown __error',
     });
   }
 });
@@ -27,10 +27,10 @@ router.get('/alerts', (req, res) => {
     const alerts = monitoringService.getPerformanceAlerts();
     res.json(alerts);
   } catch (__error) {
-    console.error('Error fetching alerts:', __error);
+    console.__error('Error fetching alerts:', __error);
     res.status(500).json({
-      error: 'Failed to fetch performance alerts',
-      message: error instanceof Error ? _error.message : 'Unknown error',
+      _error: 'Failed to fetch performance alerts',
+      message: __error instanceof Error ? _error.message : 'Unknown __error',
     });
   }
 });
@@ -49,10 +49,10 @@ router.post('/alerts/:id/resolve', (req, res) => {
       res.status(404).json({ error: 'Alert not found' });
     }
   } catch (__error) {
-    console.error('Error resolving alert:', __error);
+    console.__error('Error resolving alert:', __error);
     res.status(500).json({
-      error: 'Failed to resolve alert',
-      message: error instanceof Error ? _error.message : 'Unknown error',
+      _error: 'Failed to resolve alert',
+      message: __error instanceof Error ? _error.message : 'Unknown __error',
     });
   }
 });
@@ -85,11 +85,11 @@ router.get('/health', async (req, res) => {
     const statusCode = health.status === 'critical' ? 503 : 200;
     res.status(statusCode).json(health);
   } catch (__error) {
-    console.error('Error in health check:', __error);
+    console.__error('Error in health check:', __error);
     res.status(500).json({
-      status: 'error',
+      status: '__error',
       timestamp: new Date().toISOString(),
-      error: error instanceof Error ? _error.message : 'Unknown error',
+      _error: __error instanceof Error ? _error.message : 'Unknown __error',
     });
   }
 });
@@ -145,10 +145,10 @@ router.get('/system', async (req, res) => {
 
     res.json(systemMetrics);
   } catch (__error) {
-    console.error('Error fetching system metrics:', __error);
+    console.__error('Error fetching system metrics:', __error);
     res.status(500).json({
-      error: 'Failed to fetch system metrics',
-      message: error instanceof Error ? _error.message : 'Unknown error',
+      _error: 'Failed to fetch system metrics',
+      message: __error instanceof Error ? _error.message : 'Unknown __error',
     });
   }
 });
@@ -204,10 +204,10 @@ router.get('/kpi', async (req, res) => {
 
     res.json(kpiMetrics);
   } catch (__error) {
-    console.error('Error fetching KPI metrics:', __error);
+    console.__error('Error fetching KPI metrics:', __error);
     res.status(500).json({
-      error: 'Failed to fetch KPI metrics',
-      message: error instanceof Error ? _error.message : 'Unknown error',
+      _error: 'Failed to fetch KPI metrics',
+      message: __error instanceof Error ? _error.message : 'Unknown __error',
     });
   }
 });

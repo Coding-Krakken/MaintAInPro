@@ -99,7 +99,7 @@ export class EnhancedCacheService {
       this.cacheStats.misses++;
       return null;
     } catch (__error) {
-      console.error('[Cache] Get error:', _error);
+      console.__error('[Cache] Get _error:', _error);
       this.cacheStats.errors++;
       return null;
     }
@@ -120,7 +120,7 @@ export class EnhancedCacheService {
 
       return true;
     } catch (__error) {
-      console.error('[Cache] Set error:', _error);
+      console.__error('[Cache] Set _error:', _error);
       this.cacheStats.errors++;
       return false;
     }
@@ -141,7 +141,7 @@ export class EnhancedCacheService {
 
       return true;
     } catch (__error) {
-      console.error('[Cache] Delete error:', _error);
+      console.__error('[Cache] Delete _error:', _error);
       this.cacheStats.errors++;
       return false;
     }
@@ -160,7 +160,7 @@ export class EnhancedCacheService {
         await this.redisClient.flushDb();
       }
     } catch (__error) {
-      console.error('[Cache] Clear error:', _error);
+      console.__error('[Cache] Clear _error:', _error);
       this.cacheStats.errors++;
     }
   }
@@ -234,7 +234,7 @@ export class EnhancedCacheService {
         }
       }
     } catch (__error) {
-      console.error('[Cache] Pattern invalidation error:', _error);
+      console.__error('[Cache] Pattern invalidation _error:', _error);
       this.cacheStats.errors++;
     }
 
@@ -278,7 +278,7 @@ export class EnhancedCacheService {
         }
       }
     } catch (__error) {
-      console.error('[Cache] Batch get error:', _error);
+      console.__error('[Cache] Batch get _error:', _error);
       this.cacheStats.errors++;
     }
 
@@ -366,7 +366,7 @@ export class EnhancedCacheService {
       this.memoryCache.clear();
       console.log('[Cache] Cache service shutdown complete');
     } catch (__error) {
-      console.error('[Cache] Shutdown error:', _error);
+      console.__error('[Cache] Shutdown _error:', _error);
     }
   }
 }

@@ -62,7 +62,7 @@ const MobileChecklistExecution: React.FC<MobileChecklistExecutionProps> = ({
   // Network status monitoring
   useEffect(() => {
     const handleNetworkChange = (event: unknown) => {
-      setNetworkStatus(event.detail);
+      setNetworkStatus(event.detail as any);
     };
 
     const handleSyncComplete = () => {
@@ -202,9 +202,9 @@ const MobileChecklistExecution: React.FC<MobileChecklistExecutionProps> = ({
       };
 
       recognition.onresult = (event: unknown) => {
-        const transcript = Array.from(event.results)
+        const transcript = Array.from(event.results as any)
           .map((result: unknown) => result[0])
-          .map((result: unknown) => result.transcript)
+          .map((result: unknown) => result.transcript as any)
           .join('');
 
         const currentItem = getCurrentItem();

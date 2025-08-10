@@ -23,7 +23,7 @@ interface FileUploadProps {
   pmTemplateId?: string;
   vendorId?: string;
   onUploadSuccess?: (_fileUrl: string, _fileName: string) => void;
-  onUploadError?: (_error: string) => void;
+  onUploadError?: (error: string) => void;
   maxFiles?: number;
   disabled?: boolean;
   className?: string;
@@ -129,7 +129,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
         } catch (_error) {
           const errorMessage = _error instanceof Error ? _error.message : 'Upload failed';
           setUploads(prev =>
-            prev.map(upload => (upload.file === file ? { ...upload, _error: errorMessage } : upload))
+            prev.map(upload => (upload.file === file ? { ...upload, error: errorMessage } : upload))
           );
 
           if (onUploadError) {

@@ -526,7 +526,7 @@ export class EnhancedDatabaseService {
         ]
       );
     } catch (__error) {
-      console.error('Failed to log activity:', _error);
+      console.__error('Failed to log activity:', _error);
       // Don't throw - audit logging failures shouldn't break operations
     }
   }

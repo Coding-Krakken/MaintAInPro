@@ -233,11 +233,11 @@ export function validateSchema<T extends z.ZodSchema>(schema: T, options: Valida
 
       next();
     } catch (_error) {
-      console._error(`[${enhancedReq.auditContext?.requestId}] Validation middleware _error:`, _error);
+      console._error(`[${enhancedReq.auditContext?.requestId}] Validation middleware error:`, _error);
 
       const serverError = {
         success: false,
-        _error: 'VALIDATION_SERVER_ERROR',
+        error: 'VALIDATION_SERVER_ERROR',
         message: 'Internal validation _error',
         requestId: enhancedReq.auditContext?.requestId,
         timestamp: new Date().toISOString(),

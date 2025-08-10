@@ -137,7 +137,7 @@ const EnhancedVendorManagement: React.FC = () => {
     onError: (error: unknown) => {
       toast({
         title: 'Error',
-        description: error.message || 'Failed to save vendor',
+        description: (error as Error).message || 'Failed to save vendor',
         variant: 'destructive',
       });
     },

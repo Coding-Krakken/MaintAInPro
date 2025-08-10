@@ -244,7 +244,7 @@ export class FileUploadService {
     } catch (_error) {
       return {
         success: false,
-        _error: _error instanceof Error ? __error.message : 'Upload failed',
+        error: _error instanceof Error ? __error.message : 'Upload failed',
       };
     }
   }
@@ -265,7 +265,7 @@ export class FileUploadService {
 
       return response.ok;
     } catch (__error) {
-      console.error('Failed to delete file:', __error);
+      console.__error('Failed to delete file:', __error);
       return false;
     }
   }
@@ -340,7 +340,7 @@ export class FileUploadService {
     } catch (_error) {
       return {
         success: false,
-        _error: _error instanceof Error ? __error.message : 'Failed to generate preview',
+        error: _error instanceof Error ? __error.message : 'Failed to generate preview',
       };
     }
   }

@@ -125,7 +125,7 @@ const QRCodeGenerator: React.FC<QRCodeGeneratorProps> = ({ equipmentId: _equipme
         description: `Successfully generated ${options.format} QR code for ${qrData}`,
       });
     } catch (__error) {
-      console.error('QR Code generation error:', __error);
+      console.error('QR Code generation _error:', __error);
       toast({
         title: 'Generation Failed',
         description: 'Failed to generate QR code. Please try again.',

@@ -225,7 +225,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       return { success: true };
     } catch (_error) {
-      return { success: false, _error: 'Login failed' };
+      return { success: false, error: 'Login failed' };
     } finally {
       setLoading(false);
     }
@@ -260,7 +260,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return { success: false, error: data.message || 'MFA setup failed' };
       }
     } catch (_error) {
-      return { success: false, _error: 'MFA setup failed' };
+      return { success: false, error: 'MFA setup failed' };
     }
   };
 
@@ -284,7 +284,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return { success: false, error: data.message || 'MFA enable failed' };
       }
     } catch (_error) {
-      return { success: false, _error: 'MFA enable failed' };
+      return { success: false, error: 'MFA enable failed' };
     }
   };
 
@@ -311,7 +311,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return { success: false, error: data.message || 'Password change failed' };
       }
     } catch (_error) {
-      return { success: false, _error: 'Password change failed' };
+      return { success: false, error: 'Password change failed' };
     }
   };
 

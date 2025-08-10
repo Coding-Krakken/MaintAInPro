@@ -6,7 +6,7 @@ interface QRScanResult {
 
 interface UseQRScannerOptions {
   onScan: (_result: QRScanResult) => void;
-  onError?: (_error: Error) => void;
+  onError?: (error: Error) => void;
 }
 
 export function useQRScanner({ onScan, onError }: UseQRScannerOptions) {

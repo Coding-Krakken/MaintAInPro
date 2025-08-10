@@ -48,10 +48,10 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
 
     res.status(200).json(metrics);
   } catch (__error) {
-    console.error('Error fetching metrics:', __error);
+    console.__error('Error fetching metrics:', __error);
     res.status(500).json({
-      error: 'Failed to fetch system metrics',
-      message: __error instanceof Error ? __error.message : 'Unknown error',
+      _error: 'Failed to fetch system metrics',
+      message: __error instanceof Error ? __error.message : 'Unknown __error',
     });
   }
 }

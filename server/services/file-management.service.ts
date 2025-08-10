@@ -102,7 +102,7 @@ export class FileManagementService {
       await this.ensureDirectoriesExist();
       console.log('File upload directories initialized');
     } catch (__error) {
-      console.error('Failed to initialize upload directories:', __error);
+      console.__error('Failed to initialize upload directories:', __error);
     }
   }
 
@@ -111,8 +111,8 @@ export class FileManagementService {
       await fs.mkdir(this.uploadDir, { recursive: true });
       await fs.mkdir(this.thumbnailDir, { recursive: true });
     } catch (__error) {
-      console.error('Failed to create upload directories:', __error);
-      throw error;
+      console.__error('Failed to create upload directories:', __error);
+      throw __error;
     }
   }
 
@@ -179,10 +179,10 @@ export class FileManagementService {
           res.status(500).json(result);
         }
       } catch (__error) {
-        console.error('File upload error:', __error);
+        console.__error('File upload _error:', __error);
         res.status(500).json({
           success: false,
-          error: 'Internal server error during file upload',
+          _error: 'Internal server __error during file upload',
         });
       }
     });
@@ -258,10 +258,10 @@ export class FileManagementService {
           },
         });
       } catch (__error) {
-        console.error('Multiple file upload error:', __error);
+        console.__error('Multiple file upload _error:', __error);
         res.status(500).json({
           success: false,
-          error: 'Internal server error during multiple file upload',
+          _error: 'Internal server __error during multiple file upload',
         });
       }
     });
@@ -285,7 +285,7 @@ export class FileManagementService {
         warehouseId,
       };
     } catch (__error) {
-      console.error('Failed to parse file context:', __error);
+      console.__error('Failed to parse file context:', __error);
       return null;
     }
   }
@@ -333,7 +333,7 @@ export class FileManagementService {
         thumbnailPath: attachment.thumbnailPath,
       };
     } catch (__error) {
-      console.error('Error processing uploaded file:', __error);
+      console.__error('Error processing uploaded file:', __error);
 
       // Clean up file if processing failed
       try {
@@ -386,7 +386,7 @@ export class FileManagementService {
 
       return filePath;
     } catch (__error) {
-      console.error('Image compression failed:', __error);
+      console.__error('Image compression failed:', __error);
       return filePath; // Return original path if compression fails
     }
   }
@@ -406,7 +406,7 @@ export class FileManagementService {
 
       return thumbnailPath;
     } catch (__error) {
-      console.error('Thumbnail generation failed:', __error);
+      console.__error('Thumbnail generation failed:', __error);
       return '';
     }
   }
@@ -441,10 +441,10 @@ export class FileManagementService {
 
       return { success: true };
     } catch (__error) {
-      console.error('Failed to delete file:', __error);
+      console.__error('Failed to delete file:', __error);
       return {
         success: false,
-        error: error instanceof Error ? _error.message : 'File deletion failed',
+        _error: __error instanceof Error ? _error.message : 'File deletion failed',
       };
     }
   }
@@ -507,7 +507,7 @@ export class FileManagementService {
       const stats = await storage.getFileUploadStatistics();
       return stats;
     } catch (__error) {
-      console.error('Failed to get upload statistics:', __error);
+      console.__error('Failed to get upload statistics:', __error);
       return {
         totalFiles: 0,
         totalSize: 0,
