@@ -92,17 +92,17 @@ export default [
       '@typescript-eslint': typescript,
     },
     rules: {
-      'no-unused-vars': 'off', // Temporarily disabled - will be re-enabled with proper patterns
-      '@typescript-eslint/no-unused-vars': 'off', // Temporarily disabled until next iteration
-      'no-useless-escape': 'off', // Temporarily disabled - 4 escape character issues to fix later
-      'no-case-declarations': 'off', // Temporarily disabled - 4 case declaration issues to fix later
-      'prefer-const': 'off', // Temporarily disabled - 1 const issue to fix later
-      'no-control-regex': 'off', // Temporarily disabled - 1 control character issue to fix later
-      'no-useless-catch': 'off', // Temporarily disabled - 1 useless catch issue to fix later
+      'no-unused-vars': 'error',
+      '@typescript-eslint/no-unused-vars': 'error',
+      'no-useless-escape': 'error',
+      'no-case-declarations': 'error',
+      'prefer-const': 'error',
+      'no-control-regex': 'error',
+      'no-useless-catch': 'error',
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/explicit-module-boundary-types': 'off',
-      '@typescript-eslint/no-explicit-any': 'off', // Temporarily off to focus on critical errors
-      '@typescript-eslint/no-non-null-assertion': 'off', // Temporarily off to focus on critical errors
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-non-null-assertion': 'warn',
       '@typescript-eslint/no-var-requires': 'off',
     },
   },
@@ -255,7 +255,7 @@ export default [
       'react/jsx-key': 'error',
       'react/no-unescaped-entities': 'off',
       'react-hooks/rules-of-hooks': 'error',
-      'react-hooks/exhaustive-deps': 'warn',
+      'react-hooks/exhaustive-deps': 'error',
     },
   },
   
@@ -268,8 +268,8 @@ export default [
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-non-null-assertion': 'off',
-      'no-unused-vars': 'off',
-      '@typescript-eslint/no-unused-vars': 'off', // Temporarily disabled
+      'no-unused-vars': 'error',
+      '@typescript-eslint/no-unused-vars': 'error',
     },
     languageOptions: {
       globals: {
@@ -383,7 +383,7 @@ export default [
     rules: {
       'no-console': 'off',
       '@typescript-eslint/no-var-requires': 'off',
-      'no-unused-vars': 'off', // Temporarily disabled - will be re-enabled with proper patterns
+      'no-unused-vars': 'error',
     },
   },
 
@@ -422,7 +422,7 @@ export default [
     },
     rules: {
       'no-console': 'off',
-      'no-unused-vars': 'off', // Temporarily disabled - will be re-enabled with proper patterns
+      'no-unused-vars': 'error',
     },
   },
 ];
