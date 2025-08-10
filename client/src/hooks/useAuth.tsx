@@ -50,7 +50,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     ); // Refresh every 14 minutes (before 15-minute expiry)
 
     return () => clearInterval(refreshInterval);
-  }, []);
+  }, [refreshToken]);
 
   const checkAuth = async () => {
     try {
@@ -168,7 +168,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const logout = async () => {
+  const logout = useCallback(async () => {
     try {
       const token = localStorage.getItem('authToken');
       if (token) {
@@ -192,9 +192,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(null);
       setMfaRequired(false);
     }
-  };
+  }, []);
 
-  const refreshToken = async (): Promise<boolean> => {
+  const refreshToken = useCallback(async (): Promise<boolean> => {
     try {
       const refToken = localStorage.getItem('refreshToken');
       if (!refToken) {
@@ -224,7 +224,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       await logout();
       return false;
     }
-  };
+  }, [logout]);
 
   const setupMFA = async (): Promise<{
     success: boolean;

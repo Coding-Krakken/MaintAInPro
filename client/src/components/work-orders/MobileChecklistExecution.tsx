@@ -80,7 +80,7 @@ const MobileChecklistExecution: React.FC<MobileChecklistExecutionProps> = ({
       window.removeEventListener('networkStatusChange', handleNetworkChange);
       window.removeEventListener('offlineSyncComplete', handleSyncComplete);
     };
-  }, [toast]);
+  }, [toast, getPendingActionsCount]);
 
   // Fetch checklist items with offline caching
   const { data: checklistItems = [], isLoading } = useQuery({
@@ -221,7 +221,7 @@ const MobileChecklistExecution: React.FC<MobileChecklistExecutionProps> = ({
 
       recognition.start();
     },
-    [updateChecklistItem, localUpdates, toast]
+    [updateChecklistItem, localUpdates, toast, getCurrentItem]
   );
 
   // Photo capture with mobile optimization
@@ -250,14 +250,14 @@ const MobileChecklistExecution: React.FC<MobileChecklistExecutionProps> = ({
   );
 
   // Navigation helpers
-  const getCurrentItem = () => {
+  const getCurrentItem = useCallback(() => {
     const item = checklistItems[currentItemIndex];
     if (!item) return null;
 
     // Merge with local updates
     const localUpdate = localUpdates.get(item.id);
     return localUpdate ? { ...item, ...localUpdate } : item;
-  };
+  }, [checklistItems, currentItemIndex, localUpdates]);
 
   const getCompletionStats = () => {
     const total = checklistItems.length;
