@@ -214,7 +214,7 @@
     "react-router-dom": "^7.8.0",
     "supertest": "^6.3.4",
     "tailwindcss": "^3.4.17",
-    "ts-jest": "^29.4.0",
+    "ts-jest": "^29.4.1",
     "typescript": "5.9.2",
     "vite": "^7.1.1",
     "vite-tsconfig-paths": "^5.1.4",
