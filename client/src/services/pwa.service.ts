@@ -60,7 +60,7 @@ export class PWAService {
       this.setupPushNotifications();
 
       console.log('PWA service initialized successfully');
-    } catch (__error) {
+    } catch (_error) {
       console.error('Failed to initialize PWA service:', _error);
     }
   }
@@ -101,7 +101,7 @@ export class PWAService {
       // Notify when service worker is ready
       await navigator.serviceWorker.ready;
       console.log('Service worker is ready');
-    } catch (__error) {
+    } catch (_error) {
       console.error('Service worker registration failed:', _error);
     }
   }
@@ -162,7 +162,7 @@ export class PWAService {
 
           // Send subscription to server
           await this.sendSubscriptionToServer(subscription);
-        } catch (__error) {
+        } catch (_error) {
           console.log('Push subscription failed:', _error);
         }
       }
@@ -192,7 +192,7 @@ export class PWAService {
         console.log('User dismissed install prompt');
         return false;
       }
-    } catch (__error) {
+    } catch (_error) {
       console.error('Install prompt failed:', _error);
       return false;
     }
@@ -246,7 +246,7 @@ export class PWAService {
       try {
         await (this.registration as any).sync.register(tag);
         console.log(`Background sync registered: ${tag}`);
-      } catch (__error) {
+      } catch (_error) {
         console.error('Background sync registration failed:', _error);
       }
     }
@@ -300,7 +300,7 @@ export class PWAService {
       try {
         await this.registration.update();
         window.location.reload();
-      } catch (__error) {
+      } catch (_error) {
         console.error('Service worker update failed:', _error);
       }
     }
@@ -388,7 +388,7 @@ export class PWAService {
         body: JSON.stringify(subscription),
       });
       console.log('Push subscription sent to server');
-    } catch (__error) {
+    } catch (_error) {
       console.error('Failed to send subscription to server:', _error);
     }
   }

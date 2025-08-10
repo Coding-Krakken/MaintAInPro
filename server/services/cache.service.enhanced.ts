@@ -63,7 +63,7 @@ export class EnhancedCacheService {
 
       await this.redisClient.connect();
     } catch (_error) {
-      console.log('[Cache] Failed to connect to Redis, using memory cache only:', __error.message);
+      console.log('[Cache] Failed to connect to Redis, using memory cache only:', _error.message);
       this.isRedisConnected = false;
     }
   }
@@ -98,8 +98,8 @@ export class EnhancedCacheService {
 
       this.cacheStats.misses++;
       return null;
-    } catch (__error) {
-      console.__error('[Cache] Get _error:', _error);
+    } catch (_error) {
+      console._error('[Cache] Get _error:', _error);
       this.cacheStats.errors++;
       return null;
     }
@@ -119,8 +119,8 @@ export class EnhancedCacheService {
       }
 
       return true;
-    } catch (__error) {
-      console.__error('[Cache] Set _error:', _error);
+    } catch (_error) {
+      console._error('[Cache] Set _error:', _error);
       this.cacheStats.errors++;
       return false;
     }
@@ -140,8 +140,8 @@ export class EnhancedCacheService {
       }
 
       return true;
-    } catch (__error) {
-      console.__error('[Cache] Delete _error:', _error);
+    } catch (_error) {
+      console._error('[Cache] Delete _error:', _error);
       this.cacheStats.errors++;
       return false;
     }
@@ -159,8 +159,8 @@ export class EnhancedCacheService {
       if (this.isRedisConnected && this.redisClient) {
         await this.redisClient.flushDb();
       }
-    } catch (__error) {
-      console.__error('[Cache] Clear _error:', _error);
+    } catch (_error) {
+      console._error('[Cache] Clear _error:', _error);
       this.cacheStats.errors++;
     }
   }
@@ -233,8 +233,8 @@ export class EnhancedCacheService {
           invalidated += keys.length;
         }
       }
-    } catch (__error) {
-      console.__error('[Cache] Pattern invalidation _error:', _error);
+    } catch (_error) {
+      console._error('[Cache] Pattern invalidation _error:', _error);
       this.cacheStats.errors++;
     }
 
@@ -277,8 +277,8 @@ export class EnhancedCacheService {
           }
         }
       }
-    } catch (__error) {
-      console.__error('[Cache] Batch get _error:', _error);
+    } catch (_error) {
+      console._error('[Cache] Batch get _error:', _error);
       this.cacheStats.errors++;
     }
 
@@ -365,8 +365,8 @@ export class EnhancedCacheService {
       }
       this.memoryCache.clear();
       console.log('[Cache] Cache service shutdown complete');
-    } catch (__error) {
-      console.__error('[Cache] Shutdown _error:', _error);
+    } catch (_error) {
+      console._error('[Cache] Shutdown _error:', _error);
     }
   }
 }

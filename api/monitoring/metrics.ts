@@ -47,11 +47,11 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
     };
 
     res.status(200).json(metrics);
-  } catch (__error) {
-    console.__error('Error fetching metrics:', __error);
+  } catch (_error) {
+    console._error('Error fetching metrics:', _error);
     res.status(500).json({
       _error: 'Failed to fetch system metrics',
-      message: __error instanceof Error ? __error.message : 'Unknown __error',
+      message: _error instanceof Error ? _error.message : 'Unknown _error',
     });
   }
 }

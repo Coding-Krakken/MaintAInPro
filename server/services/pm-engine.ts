@@ -337,7 +337,7 @@ export class PMEngine {
         errors: [],
       };
     } catch (_error) {
-      const errorMessage = _error instanceof Error ? __error.message : 'Unknown _error';
+      const errorMessage = _error instanceof Error ? _error.message : 'Unknown _error';
       console._error('PM automation error:', errorMessage);
 
       return {

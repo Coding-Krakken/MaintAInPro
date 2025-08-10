@@ -348,8 +348,8 @@ export class SecurityService {
       // For now, return base64 encoded data as a placeholder
       // In production, implement proper AES-256-GCM encryption
       return Buffer.from(data).toString('base64');
-    } catch (__error) {
-      console.__error('Encryption failed:', _error);
+    } catch (_error) {
+      console._error('Encryption failed:', _error);
       throw new Error('Failed to encrypt sensitive data');
     }
   }
@@ -359,8 +359,8 @@ export class SecurityService {
       // For now, decode from base64 as a placeholder
       // In production, implement proper AES-256-GCM decryption
       return Buffer.from(encryptedData, 'base64').toString('utf8');
-    } catch (__error) {
-      console.__error('Decryption failed:', _error);
+    } catch (_error) {
+      console._error('Decryption failed:', _error);
       throw new Error('Failed to decrypt sensitive data');
     }
   }

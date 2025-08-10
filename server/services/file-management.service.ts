@@ -101,8 +101,8 @@ export class FileManagementService {
     try {
       await this.ensureDirectoriesExist();
       console.log('File upload directories initialized');
-    } catch (__error) {
-      console.__error('Failed to initialize upload directories:', __error);
+    } catch (_error) {
+      console._error('Failed to initialize upload directories:', _error);
     }
   }
 
@@ -110,9 +110,9 @@ export class FileManagementService {
     try {
       await fs.mkdir(this.uploadDir, { recursive: true });
       await fs.mkdir(this.thumbnailDir, { recursive: true });
-    } catch (__error) {
-      console.__error('Failed to create upload directories:', __error);
-      throw __error;
+    } catch (_error) {
+      console._error('Failed to create upload directories:', _error);
+      throw _error;
     }
   }
 
@@ -178,11 +178,11 @@ export class FileManagementService {
         } else {
           res.status(500).json(result);
         }
-      } catch (__error) {
-        console.__error('File upload _error:', __error);
+      } catch (_error) {
+        console._error('File upload _error:', _error);
         res.status(500).json({
           success: false,
-          _error: 'Internal server __error during file upload',
+          _error: 'Internal server _error during file upload',
         });
       }
     });
@@ -257,11 +257,11 @@ export class FileManagementService {
             failed: failed.length,
           },
         });
-      } catch (__error) {
-        console.__error('Multiple file upload _error:', __error);
+      } catch (_error) {
+        console._error('Multiple file upload _error:', _error);
         res.status(500).json({
           success: false,
-          _error: 'Internal server __error during multiple file upload',
+          _error: 'Internal server _error during multiple file upload',
         });
       }
     });
@@ -284,8 +284,8 @@ export class FileManagementService {
         userId,
         warehouseId,
       };
-    } catch (__error) {
-      console.__error('Failed to parse file context:', __error);
+    } catch (_error) {
+      console._error('Failed to parse file context:', _error);
       return null;
     }
   }
@@ -332,8 +332,8 @@ export class FileManagementService {
         fileType: attachment.fileType,
         thumbnailPath: attachment.thumbnailPath,
       };
-    } catch (__error) {
-      console.__error('Error processing uploaded file:', __error);
+    } catch (_error) {
+      console._error('Error processing uploaded file:', _error);
 
       // Clean up file if processing failed
       try {
@@ -385,8 +385,8 @@ export class FileManagementService {
       await fs.rename(outputPath, filePath);
 
       return filePath;
-    } catch (__error) {
-      console.__error('Image compression failed:', __error);
+    } catch (_error) {
+      console._error('Image compression failed:', _error);
       return filePath; // Return original path if compression fails
     }
   }
@@ -405,8 +405,8 @@ export class FileManagementService {
         .toFile(thumbnailPath);
 
       return thumbnailPath;
-    } catch (__error) {
-      console.__error('Thumbnail generation failed:', __error);
+    } catch (_error) {
+      console._error('Thumbnail generation failed:', _error);
       return '';
     }
   }
@@ -424,14 +424,14 @@ export class FileManagementService {
       // Delete physical files
       try {
         await fs.unlink(attachment.filePath);
-      } catch (__error) {
+      } catch (_error) {
         console.warn('Failed to delete main file:', _error);
       }
 
       if (attachment.thumbnailPath) {
         try {
           await fs.unlink(attachment.thumbnailPath);
-        } catch (__error) {
+        } catch (_error) {
           console.warn('Failed to delete thumbnail:', _error);
         }
       }
@@ -440,11 +440,11 @@ export class FileManagementService {
       await storage.deleteAttachment(fileId);
 
       return { success: true };
-    } catch (__error) {
-      console.__error('Failed to delete file:', __error);
+    } catch (_error) {
+      console._error('Failed to delete file:', _error);
       return {
         success: false,
-        _error: __error instanceof Error ? _error.message : 'File deletion failed',
+        _error: _error instanceof Error ? _error.message : 'File deletion failed',
       };
     }
   }
@@ -506,8 +506,8 @@ export class FileManagementService {
     try {
       const stats = await storage.getFileUploadStatistics();
       return stats;
-    } catch (__error) {
-      console.__error('Failed to get upload statistics:', __error);
+    } catch (_error) {
+      console._error('Failed to get upload statistics:', _error);
       return {
         totalFiles: 0,
         totalSize: 0,

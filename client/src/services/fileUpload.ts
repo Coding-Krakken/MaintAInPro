@@ -131,7 +131,7 @@ export class FileUploadService {
             file.type,
             quality
           );
-        } catch (__error) {
+        } catch (_error) {
           reject(_error);
         }
       };
@@ -168,7 +168,7 @@ export class FileUploadService {
           ctx?.drawImage(img, 0, 0, newWidth, newHeight);
           const thumbnailDataUrl = canvas.toDataURL('image/jpeg', 0.8);
           resolve(thumbnailDataUrl);
-        } catch (__error) {
+        } catch (_error) {
           reject(_error);
         }
       };
@@ -244,7 +244,7 @@ export class FileUploadService {
     } catch (_error) {
       return {
         success: false,
-        error: _error instanceof Error ? __error.message : 'Upload failed',
+        error: _error instanceof Error ? _error.message : 'Upload failed',
       };
     }
   }
@@ -264,8 +264,8 @@ export class FileUploadService {
       });
 
       return response.ok;
-    } catch (__error) {
-      console.__error('Failed to delete file:', __error);
+    } catch (_error) {
+      console._error('Failed to delete file:', _error);
       return false;
     }
   }
@@ -340,7 +340,7 @@ export class FileUploadService {
     } catch (_error) {
       return {
         success: false,
-        error: _error instanceof Error ? __error.message : 'Failed to generate preview',
+        error: _error instanceof Error ? _error.message : 'Failed to generate preview',
       };
     }
   }

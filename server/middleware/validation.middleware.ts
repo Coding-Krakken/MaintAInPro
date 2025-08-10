@@ -87,8 +87,8 @@ export class ValidationMiddleware {
         req.body = result.data; // Keep backward compatibility
 
         next();
-      } catch (__error) {
-        console.__error('❌ Validation middleware _error:', _error);
+      } catch (_error) {
+        console._error('❌ Validation middleware _error:', _error);
         return res.status(500).json({
           type: 'INTERNAL_ERROR',
           message: 'Validation processing failed',
@@ -128,8 +128,8 @@ export class ValidationMiddleware {
 
         req.validatedQuery = result.data;
         next();
-      } catch (__error) {
-        console.__error('❌ Query validation _error:', _error);
+      } catch (_error) {
+        console._error('❌ Query validation _error:', _error);
         return res.status(500).json({
           type: 'INTERNAL_ERROR',
           message: 'Query validation failed',
@@ -169,8 +169,8 @@ export class ValidationMiddleware {
 
         req.validatedParams = result.data;
         next();
-      } catch (__error) {
-        console.__error('❌ Parameter validation _error:', _error);
+      } catch (_error) {
+        console._error('❌ Parameter validation _error:', _error);
         return res.status(500).json({
           type: 'INTERNAL_ERROR',
           message: 'Parameter validation failed',
@@ -226,8 +226,8 @@ export class ValidationMiddleware {
 
         req.organizationId = organizationId;
         next();
-      } catch (__error) {
-        console.__error('❌ Organization validation _error:', _error);
+      } catch (_error) {
+        console._error('❌ Organization validation _error:', _error);
         return res.status(500).json({
           type: 'INTERNAL_ERROR',
           message: 'Organization validation failed',
@@ -275,8 +275,8 @@ export class ValidationMiddleware {
           }
 
           return originalJson(data);
-        } catch (__error) {
-          console.__error('❌ Response transformation _error:', _error);
+        } catch (_error) {
+          console._error('❌ Response transformation _error:', _error);
           return originalJson({
             type: 'TRANSFORMATION_ERROR',
             message: 'Response transformation failed',

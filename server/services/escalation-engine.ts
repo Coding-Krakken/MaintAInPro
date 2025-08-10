@@ -94,8 +94,8 @@ export class EscalationEngine {
       console.log(
         `Initialized ${defaultRules.length} default escalation rules for warehouse ${warehouseId}`
       );
-    } catch (__error) {
-      console.__error('Error initializing default escalation rules:', _error);
+    } catch (_error) {
+      console._error('Error initializing default escalation rules:', _error);
     }
   }
 
@@ -132,8 +132,8 @@ export class EscalationEngine {
       }
 
       return actions;
-    } catch (__error) {
-      console.__error('Error checking for escalations:', _error);
+    } catch (_error) {
+      console._error('Error checking for escalations:', _error);
       return [];
     }
   }
@@ -198,8 +198,8 @@ export class EscalationEngine {
         );
 
       return rules[0] || null;
-    } catch (__error) {
-      console.__error('Error getting escalation rule:', _error);
+    } catch (_error) {
+      console._error('Error getting escalation rule:', _error);
       return null;
     }
   }
@@ -366,8 +366,8 @@ export class EscalationEngine {
         byLevel,
         byPriority,
       };
-    } catch (__error) {
-      console.__error('Error getting escalation stats:', _error);
+    } catch (_error) {
+      console._error('Error getting escalation stats:', _error);
       return {
         totalEscalated: 0,
         escalatedToday: 0,
@@ -441,8 +441,8 @@ export class EscalationEngine {
         reason: `Manual escalation: ${reason}`,
         previousAssignee: workOrder.assignedTo || undefined,
       };
-    } catch (__error) {
-      console.__error('Error manually escalating work order:', _error);
+    } catch (_error) {
+      console._error('Error manually escalating work order:', _error);
       return null;
     }
   }
@@ -457,8 +457,8 @@ export class EscalationEngine {
         .select()
         .from(escalationRules)
         .where(eq(escalationRules.warehouseId, warehouseId));
-    } catch (__error) {
-      console.__error('Error getting escalation rules:', _error);
+    } catch (_error) {
+      console._error('Error getting escalation rules:', _error);
       return [];
     }
   }
@@ -473,9 +473,9 @@ export class EscalationEngine {
     try {
       await db.update(escalationRules).set(updates).where(eq(escalationRules.id, ruleId));
       console.log(`Updated escalation rule ${ruleId}`);
-    } catch (__error) {
-      console.__error('Error updating escalation rule:', _error);
-      throw __error;
+    } catch (_error) {
+      console._error('Error updating escalation rule:', _error);
+      throw _error;
     }
   }
 
@@ -498,9 +498,9 @@ export class EscalationEngine {
       await db.insert(escalationRules).values(newRule);
       console.log(`Created new escalation rule ${ruleId}`);
       return ruleId;
-    } catch (__error) {
-      console.__error('Error creating escalation rule:', _error);
-      throw __error;
+    } catch (_error) {
+      console._error('Error creating escalation rule:', _error);
+      throw _error;
     }
   }
 
@@ -513,8 +513,8 @@ export class EscalationEngine {
         .select()
         .from(escalationHistory)
         .where(eq(escalationHistory.workOrderId, workOrderId));
-    } catch (__error) {
-      console.__error('Error getting escalation history:', _error);
+    } catch (_error) {
+      console._error('Error getting escalation history:', _error);
       return [];
     }
   }

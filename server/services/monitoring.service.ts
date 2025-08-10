@@ -141,8 +141,8 @@ class MonitoringService {
           pmCompliance,
         },
       };
-    } catch (__error) {
-      console.__error('Error fetching business metrics:', _error);
+    } catch (_error) {
+      console._error('Error fetching business metrics:', _error);
 
       return {
         memory: {

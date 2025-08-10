@@ -91,8 +91,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         await logout();
         return false;
       }
-    } catch (__error) {
-      console.error('Error occurred', __error);
+    } catch (_error) {
+      console.error('Error occurred', _error);
       await logout();
       return false;
     }
@@ -157,8 +157,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         localStorage.removeItem('userId');
         localStorage.removeItem('warehouseId');
       }
-    } catch (__error) {
-      console.error('Error occurred', __error);
+    } catch (_error) {
+      console.error('Error occurred', _error);
       // Clear potentially invalid token
       localStorage.removeItem('authToken');
       localStorage.removeItem('refreshToken');
@@ -344,8 +344,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       };
 
       return btoa(JSON.stringify(fingerprint));
-    } catch (__error) {
-      console.warn('Device fingerprinting failed:', __error);
+    } catch (_error) {
+      console.warn('Device fingerprinting failed:', _error);
       return 'fallback-fingerprint';
     }
   };

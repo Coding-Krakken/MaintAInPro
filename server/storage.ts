@@ -1282,8 +1282,8 @@ async function initializeStorage(): Promise<IStorage> {
       await dbStorage.initializeData();
       console.log('✅ PostgreSQL storage initialized successfully');
       return dbStorage;
-    } catch (__error) {
-      console.error('❌ Failed to initialize PostgreSQL storage:', __error);
+    } catch (_error) {
+      console.error('❌ Failed to initialize PostgreSQL storage:', _error);
       console.log('🔄 Falling back to in-memory storage');
       return new MemStorage();
     }

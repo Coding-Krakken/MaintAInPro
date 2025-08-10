@@ -23,7 +23,7 @@ interface FileUploadProps {
   pmTemplateId?: string;
   vendorId?: string;
   onUploadSuccess?: (_fileUrl: string, _fileName: string) => void;
-  onUploadError?: (error: string) => void;
+  onUploadError?: (_error: string) => void;
   maxFiles?: number;
   disabled?: boolean;
   className?: string;

@@ -38,8 +38,8 @@ export function registerLaborTimeRoutes(app: Express) {
       );
 
       res.json(enrichedEntries);
-    } catch (__error) {
-      console.__error('Error fetching labor time:', _error);
+    } catch (_error) {
+      console._error('Error fetching labor time:', _error);
       res.status(500).json({ message: 'Failed to fetch labor time' });
     }
   });
@@ -73,8 +73,8 @@ export function registerLaborTimeRoutes(app: Express) {
       } as any);
 
       res.status(201).json(laborTime);
-    } catch (__error) {
-      console.__error('Error starting time tracking:', _error);
+    } catch (_error) {
+      console._error('Error starting time tracking:', _error);
       res.status(500).json({ message: 'Failed to start time tracking' });
     }
   });
@@ -107,8 +107,8 @@ export function registerLaborTimeRoutes(app: Express) {
       } as any);
 
       res.json(updatedLaborTime);
-    } catch (__error) {
-      console.__error('Error stopping time tracking:', _error);
+    } catch (_error) {
+      console._error('Error stopping time tracking:', _error);
       res.status(500).json({ message: 'Failed to stop time tracking' });
     }
   });
@@ -139,7 +139,7 @@ export function registerLaborTimeRoutes(app: Express) {
       if (_error instanceof z.ZodError) {
         return res.status(400).json({
           message: 'Validation _error',
-          errors: __error.errors,
+          errors: _error.errors,
         });
       }
 
@@ -178,8 +178,8 @@ export function registerLaborTimeRoutes(app: Express) {
         await storage.deleteLaborTime(id);
 
         res.json({ message: 'Labor time entry deleted successfully' });
-      } catch (__error) {
-        console.__error('Error deleting labor time:', _error);
+      } catch (_error) {
+        console._error('Error deleting labor time:', _error);
         res.status(500).json({ message: 'Failed to delete labor time entry' });
       }
     }
@@ -217,8 +217,8 @@ export function registerLaborTimeRoutes(app: Express) {
       }
 
       res.json(summary);
-    } catch (__error) {
-      console.__error('Error generating labor time summary:', _error);
+    } catch (_error) {
+      console._error('Error generating labor time summary:', _error);
       res.status(500).json({ message: 'Failed to generate labor time summary' });
     }
   });
@@ -248,8 +248,8 @@ export function registerLaborTimeRoutes(app: Express) {
             : null,
         },
       });
-    } catch (__error) {
-      console.__error('Error checking active labor time:', _error);
+    } catch (_error) {
+      console._error('Error checking active labor time:', _error);
       res.status(500).json({ message: 'Failed to check active labor time' });
     }
   });

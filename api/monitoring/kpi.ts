@@ -66,11 +66,11 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
     };
 
     res.status(200).json(kpiMetrics);
-  } catch (__error) {
-    console.__error('Error fetching KPI metrics:', __error);
+  } catch (_error) {
+    console._error('Error fetching KPI metrics:', _error);
     res.status(500).json({
       _error: 'Failed to fetch KPI metrics',
-      message: __error instanceof Error ? __error.message : 'Unknown __error',
+      message: _error instanceof Error ? _error.message : 'Unknown _error',
     });
   }
 }

@@ -56,7 +56,7 @@ export class WebSocketService {
 
       this.setupEventListeners();
       console.log('WebSocket connection initiated');
-    } catch (__error) {
+    } catch (_error) {
       console.error('Failed to connect to WebSocket:', _error);
     }
   }

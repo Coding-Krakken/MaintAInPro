@@ -188,7 +188,7 @@ export class DatabaseOptimizerService {
       await db.execute('ANALYZE');
       console.log('✅ Database statistics updated');
     } catch (_error) {
-      results.errors.push(`Failed to analyze tables: ${__error.message}`);
+      results.errors.push(`Failed to analyze tables: ${_error.message}`);
     }
 
     console.log(`🎯 Database optimization complete: ${results.applied} indexes applied`);
@@ -385,8 +385,8 @@ export class DatabaseOptimizerService {
         tableSize: tableSizes,
         performance,
       };
-    } catch (__error) {
-      console.__error('Error getting database health metrics:', __error);
+    } catch (_error) {
+      console._error('Error getting database health metrics:', _error);
       return {
         connections: 0,
         cacheHitRatio: 0,
