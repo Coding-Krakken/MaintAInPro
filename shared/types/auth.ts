@@ -39,11 +39,11 @@ export interface AuditRequest extends Request {
  */
 export interface EnhancedRequest extends Request {
   user?: AuthenticatedUser & { sessionId: string };
-  validatedBody?: any;
-  validatedQuery?: any;
-  validatedParams?: any;
-  validatedData?: any;
-  validated?: any; // For backwards compatibility
+  validatedBody?: Record<string, unknown>;
+  validatedQuery?: Record<string, unknown>;
+  validatedParams?: Record<string, unknown>;
+  validatedData?: Record<string, unknown>;
+  validated?: Record<string, unknown>; // For backwards compatibility
   organizationId?: string;
   startTime?: number;
   auditContext?: {
@@ -65,7 +65,7 @@ export function isAuthenticated(req: Request): req is AuthenticatedRequest {
 /**
  * Type guard to check if user has required fields
  */
-export function hasCompleteUser(user: any): user is AuthenticatedUser {
+export function hasCompleteUser(user: unknown): user is AuthenticatedUser {
   return (
     user &&
     typeof user.id === 'string' &&

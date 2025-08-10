@@ -39,7 +39,7 @@ export interface OfflineAction {
   id: string;
   type: 'create' | 'update' | 'delete';
   table: string;
-  data: any;
+  data: Record<string, unknown>;
   timestamp: number;
 }
 

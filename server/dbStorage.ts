@@ -65,7 +65,7 @@ export class DatabaseStorage implements IStorage {
         operatingHoursEnd: '19:00',
         emergencyContact: '+1-555-0199',
         active: true,
-      } as any)
+      })
       .returning();
 
     // Create sample users
@@ -379,7 +379,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Work Orders
-  async getWorkOrders(warehouseId: string, filters?: any): Promise<WorkOrder[]> {
+  async getWorkOrders(warehouseId: string, _filters?: Record<string, unknown>): Promise<WorkOrder[]> {
     return await db.select().from(workOrders).where(eq(workOrders.warehouseId, warehouseId));
   }
 

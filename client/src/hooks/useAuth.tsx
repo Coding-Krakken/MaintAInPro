@@ -12,16 +12,16 @@ interface AuthContextType {
   user: AuthUser | null;
   loading: boolean;
   login: (
-    email: string,
-    password: string,
-    mfaToken?: string
+    _email: string,
+    _password: string,
+    _mfaToken?: string
   ) => Promise<{ success: boolean; requiresMFA?: boolean; error?: string }>;
   logout: () => Promise<void>;
   setupMFA: () => Promise<{ success: boolean; qrCode?: string; secret?: string; error?: string }>;
-  enableMFA: (token: string) => Promise<{ success: boolean; error?: string }>;
+  enableMFA: (_token: string) => Promise<{ success: boolean; error?: string }>;
   changePassword: (
-    currentPassword: string,
-    newPassword: string
+    _currentPassword: string,
+    _newPassword: string
   ) => Promise<{ success: boolean; error?: string }>;
   refreshToken: () => Promise<boolean>;
   isAuthenticated: boolean;
