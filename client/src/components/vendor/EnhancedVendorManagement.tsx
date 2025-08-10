@@ -11,7 +11,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
 import {
   Select,
@@ -29,16 +28,11 @@ import {
   Phone,
   Mail,
   MapPin,
-  Calendar,
   DollarSign,
   TrendingUp,
-  AlertTriangle,
-  CheckCircle,
-  Upload,
   Download,
   Eye,
   Edit,
-  Trash2,
   Plus,
 } from 'lucide-react';
 import { FileUpload } from '@/components/FileUpload';
@@ -110,7 +104,7 @@ const EnhancedVendorManagement: React.FC = () => {
   });
 
   // Fetch vendor performance data
-  const { data: vendorPerformance = [] } = useQuery<VendorPerformance[]>({
+  const { data: _vendorPerformance = [] } = useQuery<VendorPerformance[]>({
     queryKey: ['vendor-performance'],
     queryFn: () => fetch('/api/vendors/performance').then(res => res.json()),
   });
