@@ -92,18 +92,8 @@ export default [
       '@typescript-eslint': typescript,
     },
     rules: {
-      'no-unused-vars': ['error', { 
-        'argsIgnorePattern': '^_', 
-        'varsIgnorePattern': '^_', 
-        'caughtErrorsIgnorePattern': '^_',
-        'destructuredArrayIgnorePattern': '^_'
-      }],
-      '@typescript-eslint/no-unused-vars': ['error', { 
-        'argsIgnorePattern': '^_', 
-        'varsIgnorePattern': '^_', 
-        'caughtErrorsIgnorePattern': '^_',
-        'destructuredArrayIgnorePattern': '^_'
-      }],
+      'no-unused-vars': ['error', { 'argsIgnorePattern': '^_', 'varsIgnorePattern': '^_' }],
+      '@typescript-eslint/no-unused-vars': ['error', { 'argsIgnorePattern': '^_', 'varsIgnorePattern': '^_' }],
       'no-useless-escape': 'error',
       'no-case-declarations': 'error',
       'prefer-const': 'error',
@@ -278,18 +268,8 @@ export default [
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-non-null-assertion': 'off',
-      'no-unused-vars': ['error', { 
-        'argsIgnorePattern': '^_', 
-        'varsIgnorePattern': '^_', 
-        'caughtErrorsIgnorePattern': '^_',
-        'destructuredArrayIgnorePattern': '^_'
-      }],
-      '@typescript-eslint/no-unused-vars': ['error', { 
-        'argsIgnorePattern': '^_', 
-        'varsIgnorePattern': '^_', 
-        'caughtErrorsIgnorePattern': '^_',
-        'destructuredArrayIgnorePattern': '^_'
-      }],
+      'no-unused-vars': ['error', { 'argsIgnorePattern': '^_', 'varsIgnorePattern': '^_' }],
+      '@typescript-eslint/no-unused-vars': ['error', { 'argsIgnorePattern': '^_', 'varsIgnorePattern': '^_' }],
     },
     languageOptions: {
       globals: {
@@ -403,12 +383,7 @@ export default [
     rules: {
       'no-console': 'off',
       '@typescript-eslint/no-var-requires': 'off',
-      'no-unused-vars': ['error', { 
-        'argsIgnorePattern': '^_', 
-        'varsIgnorePattern': '^_', 
-        'caughtErrorsIgnorePattern': '^_',
-        'destructuredArrayIgnorePattern': '^_'
-      }],
+      'no-unused-vars': ['error', { 'argsIgnorePattern': '^_', 'varsIgnorePattern': '^_' }],
     },
   },
 
@@ -447,12 +422,7 @@ export default [
     },
     rules: {
       'no-console': 'off',
-      'no-unused-vars': ['error', { 
-        'argsIgnorePattern': '^_', 
-        'varsIgnorePattern': '^_', 
-        'caughtErrorsIgnorePattern': '^_',
-        'destructuredArrayIgnorePattern': '^_'
-      }],
+      'no-unused-vars': ['error', { 'argsIgnorePattern': '^_', 'varsIgnorePattern': '^_' }],
     },
   },
 ];

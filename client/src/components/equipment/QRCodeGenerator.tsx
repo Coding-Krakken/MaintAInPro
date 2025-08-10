@@ -17,7 +17,7 @@ import QRCode from 'qrcode';
 interface QRCodeGeneratorProps {
   equipmentId?: string;
   assetTag?: string;
-  onGenerate?: (qrData: string) => void;
+  onGenerate?: (_qrData: string) => void;
 }
 
 interface QROptions {

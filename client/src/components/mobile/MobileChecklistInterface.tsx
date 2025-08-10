@@ -14,7 +14,7 @@ import { useMobile } from '@/hooks/useMobile';
 interface MobileChecklistInterfaceProps {
   workOrderId: string;
   isReadOnly?: boolean;
-  onProgress?: (completed: number, total: number) => void;
+  onProgress?: (_completed: number, _total: number) => void;
 }
 
 interface ChecklistItemWithMobile extends WorkOrderChecklistItem {

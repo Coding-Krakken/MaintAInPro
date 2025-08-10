@@ -8,7 +8,7 @@ import { useState } from 'react';
 interface QRScannerProps {
   isOpen: boolean;
   onClose: () => void;
-  onScan: (result: string) => void;
+  onScan: (_result: string) => void;
 }
 
 export default function QRScanner({ isOpen, onClose, onScan }: QRScannerProps) {
