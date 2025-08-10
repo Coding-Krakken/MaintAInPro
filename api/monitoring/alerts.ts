@@ -52,7 +52,7 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
       }
 
       res.status(200).json(alerts);
-    } catch (error) {
+    } catch (_error) {
       console.error('Error fetching alerts:', error);
       res.status(500).json({
         error: 'Failed to fetch performance alerts',
@@ -68,7 +68,7 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
         message: 'Alert resolved successfully',
         alertId: alertId || 'unknown',
       });
-    } catch (error) {
+    } catch (_error) {
       console.error('Error resolving alert:', error);
       res.status(500).json({
         error: 'Failed to resolve alert',

@@ -141,7 +141,7 @@ const WorkOrderDetailView: React.FC<WorkOrderDetailViewProps> = ({ workOrderId, 
       });
 
       refetchAttachments();
-    } catch (error) {
+    } catch (_error) {
       toast({
         title: 'Error',
         description: 'Failed to delete attachment',

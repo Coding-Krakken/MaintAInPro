@@ -66,7 +66,7 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
     };
 
     res.status(200).json(kpiMetrics);
-  } catch (error) {
+  } catch (_error) {
     console.error('Error fetching KPI metrics:', error);
     res.status(500).json({
       error: 'Failed to fetch KPI metrics',

@@ -40,7 +40,7 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
     };
 
     res.status(200).json(health);
-  } catch (error) {
+  } catch (_error) {
     console.error('Error in health check:', error);
     res.status(500).json({
       status: 'error',

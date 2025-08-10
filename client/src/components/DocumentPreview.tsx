@@ -68,7 +68,7 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
       } else {
         setError(result.error || 'Failed to generate preview');
       }
-    } catch (error) {
+    } catch (_error) {
       setError(error instanceof Error ? error.message : 'Failed to generate preview');
     } finally {
       setIsLoading(false);

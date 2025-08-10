@@ -117,7 +117,7 @@ export function useQRInput() {
 
   const validateInput = useCallback((value: string) => {
     // Basic validation for asset tags (alphanumeric, 3-20 characters)
-    const assetTagPattern = /^[A-Z0-9\-]{3,20}$/i;
+    const assetTagPattern = /^[A-Z0-9-]{3,20}$/i;
     return assetTagPattern.test(value);
   }, []);
 

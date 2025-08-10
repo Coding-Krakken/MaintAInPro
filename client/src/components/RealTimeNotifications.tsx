@@ -68,7 +68,7 @@ export const RealTimeNotifications: React.FC = () => {
           const data = await response.json();
           setStats(data);
         }
-      } catch (error) {
+      } catch (_error) {
         console.error('Failed to fetch connection stats:', error);
       }
     };
