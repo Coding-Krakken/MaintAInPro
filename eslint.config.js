@@ -73,6 +73,7 @@ export default [
         MouseEvent: 'readonly',
         TouchEvent: 'readonly',
         CustomEvent: 'readonly',
+        NodeJS: 'readonly',
       },
     },
     plugins: {
