@@ -159,7 +159,7 @@ const RealTimePartsConsumption: React.FC<{ workOrderId?: string }> = ({ workOrde
       ) {
         toast({
           title: 'Low Stock Alert',
-          description: `${update.data.partName} is running low (${update.data.currentStock} remaining)`,
+          description: `${update.data.partName || 'Unknown part'} is running low (${update.data.newStock || 'unknown'} remaining)`,
           variant: 'destructive',
         });
       }

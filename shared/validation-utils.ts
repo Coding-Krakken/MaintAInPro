@@ -4,18 +4,25 @@ import { z } from 'zod';
 /**
  * Utility to transform camelCase keys to snake_case
  */
-export function camelToSnake(obj: Record<string, unknown>): Record<string, unknown> {
+/**
+ * Utility to transform camelCase keys to snake_case
+ */
+export function camelToSnake(obj: Record<string, unknown>): Record<string, unknown>;
+export function camelToSnake(obj: Record<string, unknown>[]): Record<string, unknown>[];
+export function camelToSnake(obj: Record<string, unknown> | Record<string, unknown>[]): Record<string, unknown> | Record<string, unknown>[] {
   if (!obj || typeof obj !== 'object' || obj instanceof Date) return obj;
 
   if (Array.isArray(obj)) {
-    return obj.map(item => camelToSnake(item));
+    return obj.map(item => camelToSnake(item as Record<string, unknown>));
   }
 
   const result: Record<string, unknown> = {};
 
   for (const [key, value] of Object.entries(obj)) {
     const snakeKey = key.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
-    result[snakeKey] = camelToSnake(value);
+    result[snakeKey] = typeof value === 'object' && value !== null && !Array.isArray(value) && !(value instanceof Date) 
+      ? camelToSnake(value as Record<string, unknown>) 
+      : value;
   }
 
   return result;
@@ -24,18 +31,25 @@ export function camelToSnake(obj: Record<string, unknown>): Record<string, unkno
 /**
  * Utility to transform snake_case keys to camelCase
  */
-export function snakeToCamel(obj: Record<string, unknown>): Record<string, unknown> {
+/**
+ * Utility to transform snake_case keys to camelCase
+ */
+export function snakeToCamel(obj: Record<string, unknown>): Record<string, unknown>;
+export function snakeToCamel(obj: Record<string, unknown>[]): Record<string, unknown>[];
+export function snakeToCamel(obj: Record<string, unknown> | Record<string, unknown>[]): Record<string, unknown> | Record<string, unknown>[] {
   if (!obj || typeof obj !== 'object' || obj instanceof Date) return obj;
 
   if (Array.isArray(obj)) {
-    return obj.map(item => snakeToCamel(item));
+    return obj.map(item => snakeToCamel(item as Record<string, unknown>));
   }
 
   const result: Record<string, unknown> = {};
 
   for (const [key, value] of Object.entries(obj)) {
     const camelKey = key.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase());
-    result[camelKey] = snakeToCamel(value);
+    result[camelKey] = typeof value === 'object' && value !== null && !Array.isArray(value) && !(value instanceof Date)
+      ? snakeToCamel(value as Record<string, unknown>)
+      : value;
   }
 
   return result;

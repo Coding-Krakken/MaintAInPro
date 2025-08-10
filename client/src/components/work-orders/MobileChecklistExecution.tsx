@@ -163,6 +163,16 @@ const MobileChecklistExecution: React.FC<MobileChecklistExecutionProps> = ({
     },
   });
 
+  // Navigation helpers
+  const getCurrentItem = useCallback(() => {
+    const item = checklistItems[currentItemIndex];
+    if (!item) return null;
+
+    // Merge with local updates
+    const localUpdate = localUpdates.get(item.id);
+    return localUpdate ? { ...item, ...localUpdate } : item;
+  }, [checklistItems, currentItemIndex, localUpdates]);
+
   // Voice-to-text with enhanced mobile support
   const startVoiceRecognition = useCallback(
     (itemId: string) => {
@@ -248,16 +258,6 @@ const MobileChecklistExecution: React.FC<MobileChecklistExecutionProps> = ({
     },
     [toast]
   );
-
-  // Navigation helpers
-  const getCurrentItem = useCallback(() => {
-    const item = checklistItems[currentItemIndex];
-    if (!item) return null;
-
-    // Merge with local updates
-    const localUpdate = localUpdates.get(item.id);
-    return localUpdate ? { ...item, ...localUpdate } : item;
-  }, [checklistItems, currentItemIndex, localUpdates]);
 
   const getCompletionStats = () => {
     const total = checklistItems.length;

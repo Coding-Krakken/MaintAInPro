@@ -267,8 +267,11 @@ export default function PMTemplateManager() {
                   <Label htmlFor='frequency'>Frequency</Label>
                   <Select
                     value={formData.frequency}
-                    onValueChange={(value: string) =>
-                      setFormData(prev => ({ ...prev, frequency: value }))
+                    onValueChange={(value) =>
+                      setFormData(prev => ({ 
+                        ...prev, 
+                        frequency: value as 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'annually'
+                      }))
                     }
                   >
                     <SelectTrigger>
