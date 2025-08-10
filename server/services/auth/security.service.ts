@@ -132,7 +132,7 @@ export class SecurityService {
       standardHeaders: true,
       legacyHeaders: false,
       // Custom key generator that can handle both IP and user-based limiting
-      keyGenerator: (req: any) => {
+      keyGenerator: (req: unknown) => {
         const userId = req.headers['x-user-id'] as string;
         if (userId) return `user:${userId}`;
         // Use express-rate-limit's ipKeyGenerator for IPv6 compatibility
@@ -348,8 +348,8 @@ export class SecurityService {
       // For now, return base64 encoded data as a placeholder
       // In production, implement proper AES-256-GCM encryption
       return Buffer.from(data).toString('base64');
-    } catch (error) {
-      console.error('Encryption failed:', error);
+    } catch (__error) {
+      console.error('Encryption failed:', _error);
       throw new Error('Failed to encrypt sensitive data');
     }
   }
@@ -359,8 +359,8 @@ export class SecurityService {
       // For now, decode from base64 as a placeholder
       // In production, implement proper AES-256-GCM decryption
       return Buffer.from(encryptedData, 'base64').toString('utf8');
-    } catch (error) {
-      console.error('Decryption failed:', error);
+    } catch (__error) {
+      console.error('Decryption failed:', _error);
       throw new Error('Failed to decrypt sensitive data');
     }
   }

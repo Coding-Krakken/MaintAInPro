@@ -23,7 +23,7 @@ import { formatDistance } from 'date-fns';
 interface LaborTimeTrackerProps {
   workOrderId: string;
   isReadOnly?: boolean;
-  onTimeUpdate?: (totalHours: number) => void;
+  onTimeUpdate?: (_totalHours: number) => void;
 }
 
 interface LaborEntry {

@@ -209,8 +209,8 @@ export class RBACService {
       }
 
       return true;
-    } catch (error) {
-      console.error('Permission check error:', error);
+    } catch (__error) {
+      console.error('Permission check error:', _error);
       return false;
     }
   }

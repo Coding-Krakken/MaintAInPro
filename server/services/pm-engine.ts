@@ -107,9 +107,9 @@ export class PMEngine {
       }
 
       return generatedWorkOrders;
-    } catch (error) {
+    } catch (_error) {
       // Don't log errors here - let the calling method handle them
-      throw error;
+      throw _error;
     }
   }
 
@@ -336,9 +336,9 @@ export class PMEngine {
         generated: generatedWorkOrders.length,
         errors: [],
       };
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      console.error('PM automation error:', errorMessage);
+    } catch (_error) {
+      const errorMessage = _error instanceof Error ? __error.message : 'Unknown _error';
+      console._error('PM automation _error:', errorMessage);
 
       return {
         generated: 0,

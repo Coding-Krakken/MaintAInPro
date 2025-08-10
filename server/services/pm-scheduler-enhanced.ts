@@ -131,8 +131,8 @@ class PMSchedulerEnhanced {
 
       this.schedulingRules.set(warehouseId, rules);
       return rules;
-    } catch (error) {
-      console.error('Error loading scheduling rules:', error);
+    } catch (__error) {
+      console.error('Error loading scheduling rules:', _error);
       throw error;
     }
   }
@@ -191,8 +191,8 @@ class PMSchedulerEnhanced {
 
       this.schedulingConfigs.set(warehouseId, config);
       return config;
-    } catch (error) {
-      console.error('Error loading scheduling config:', error);
+    } catch (__error) {
+      console.error('Error loading scheduling config:', _error);
       throw error;
     }
   }
@@ -284,8 +284,8 @@ class PMSchedulerEnhanced {
       );
 
       return result;
-    } catch (error) {
-      console.error('Error generating optimized schedule:', error);
+    } catch (__error) {
+      console.error('Error generating optimized schedule:', _error);
       throw error;
     }
   }
@@ -297,9 +297,9 @@ class PMSchedulerEnhanced {
     equipmentId: string,
     scheduledDate: Date,
     rule: PMSchedulingRule,
-    existingWorkOrders: any[]
+    existingWorkOrders: unknown[]
   ): Promise<any[]> {
-    const conflicts: any[] = [];
+    const conflicts: unknown[] = [];
 
     // Check for existing work orders on the same equipment
     const conflictingWOs = existingWorkOrders.filter(
@@ -345,7 +345,7 @@ class PMSchedulerEnhanced {
   /**
    * Calculate utilization rate
    */
-  private calculateUtilizationRate(scheduledPMs: any[], config: PMSchedulingConfig): number {
+  private calculateUtilizationRate(scheduledPMs: unknown[], config: PMSchedulingConfig): number {
     const totalDuration = scheduledPMs.reduce((sum, pm) => sum + pm.estimatedDuration, 0);
     const workingHours = 8; // 8 hours per day
     const workingDays = config.globalSettings.workingDays.length;
@@ -377,8 +377,8 @@ class PMSchedulerEnhanced {
           }
         }
       }
-    } catch (error) {
-      console.error('Error processing missed PM escalations:', error);
+    } catch (__error) {
+      console.error('Error processing missed PM escalations:', _error);
     }
   }
 
@@ -466,8 +466,8 @@ class PMSchedulerEnhanced {
               }
             }
           }
-        } catch (error) {
-          console.error('Error in automated scheduling:', error);
+        } catch (__error) {
+          console.error('Error in automated scheduling:', _error);
         }
       },
       intervalMinutes * 60 * 1000

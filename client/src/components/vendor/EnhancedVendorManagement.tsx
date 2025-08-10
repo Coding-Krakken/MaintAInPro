@@ -134,7 +134,7 @@ const EnhancedVendorManagement: React.FC = () => {
         description: selectedVendor ? 'Vendor updated successfully' : 'Vendor created successfully',
       });
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       toast({
         title: 'Error',
         description: error.message || 'Failed to save vendor',
@@ -275,7 +275,7 @@ const EnhancedVendorManagement: React.FC = () => {
             <CardTitle>Vendor Management</CardTitle>
             <div className='flex items-center space-x-4'>
               {/* Filters */}
-              <Select value={filterType} onValueChange={(value: any) => setFilterType(value)}>
+              <Select value={filterType} onValueChange={(value: unknown) => setFilterType(value)}>
                 <SelectTrigger className='w-32'>
                   <SelectValue />
                 </SelectTrigger>
@@ -286,7 +286,7 @@ const EnhancedVendorManagement: React.FC = () => {
                 </SelectContent>
               </Select>
 
-              <Select value={filterStatus} onValueChange={(value: any) => setFilterStatus(value)}>
+              <Select value={filterStatus} onValueChange={(value: unknown) => setFilterStatus(value)}>
                 <SelectTrigger className='w-32'>
                   <SelectValue />
                 </SelectTrigger>

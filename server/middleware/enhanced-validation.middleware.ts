@@ -232,13 +232,13 @@ export function validateSchema<T extends z.ZodSchema>(schema: T, options: Valida
       }
 
       next();
-    } catch (error) {
-      console.error(`[${enhancedReq.auditContext?.requestId}] Validation middleware error:`, error);
+    } catch (_error) {
+      console._error(`[${enhancedReq.auditContext?.requestId}] Validation middleware _error:`, _error);
 
       const serverError = {
         success: false,
-        error: 'VALIDATION_SERVER_ERROR',
-        message: 'Internal validation error',
+        _error: 'VALIDATION_SERVER_ERROR',
+        message: 'Internal validation _error',
         requestId: enhancedReq.auditContext?.requestId,
         timestamp: new Date().toISOString(),
       };
@@ -423,7 +423,7 @@ export function validationChain(
   },
   options?: ValidationOptions
 ) {
-  const middlewares: any[] = [];
+  const middlewares: unknown[] = [];
 
   if (validations.params) {
     middlewares.push(validateParams(validations.params, options));

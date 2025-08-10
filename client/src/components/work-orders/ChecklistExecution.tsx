@@ -20,7 +20,7 @@ import { FileUpload } from '@/components/FileUpload';
 interface ChecklistExecutionProps {
   workOrderId: string;
   isReadOnly?: boolean;
-  onProgress?: (completed: number, total: number) => void;
+  onProgress?: (_completed: number, _total: number) => void;
 }
 
 interface ChecklistItemWithActions extends WorkOrderChecklistItem {

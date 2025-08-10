@@ -87,8 +87,8 @@ export class ValidationMiddleware {
         req.body = result.data; // Keep backward compatibility
 
         next();
-      } catch (error) {
-        console.error('❌ Validation middleware error:', error);
+      } catch (__error) {
+        console.error('❌ Validation middleware error:', _error);
         return res.status(500).json({
           type: 'INTERNAL_ERROR',
           message: 'Validation processing failed',
@@ -128,8 +128,8 @@ export class ValidationMiddleware {
 
         req.validatedQuery = result.data;
         next();
-      } catch (error) {
-        console.error('❌ Query validation error:', error);
+      } catch (__error) {
+        console.error('❌ Query validation error:', _error);
         return res.status(500).json({
           type: 'INTERNAL_ERROR',
           message: 'Query validation failed',
@@ -169,8 +169,8 @@ export class ValidationMiddleware {
 
         req.validatedParams = result.data;
         next();
-      } catch (error) {
-        console.error('❌ Parameter validation error:', error);
+      } catch (__error) {
+        console.error('❌ Parameter validation error:', _error);
         return res.status(500).json({
           type: 'INTERNAL_ERROR',
           message: 'Parameter validation failed',
@@ -226,8 +226,8 @@ export class ValidationMiddleware {
 
         req.organizationId = organizationId;
         next();
-      } catch (error) {
-        console.error('❌ Organization validation error:', error);
+      } catch (__error) {
+        console.error('❌ Organization validation error:', _error);
         return res.status(500).json({
           type: 'INTERNAL_ERROR',
           message: 'Organization validation failed',
@@ -275,8 +275,8 @@ export class ValidationMiddleware {
           }
 
           return originalJson(data);
-        } catch (error) {
-          console.error('❌ Response transformation error:', error);
+        } catch (__error) {
+          console.error('❌ Response transformation error:', _error);
           return originalJson({
             type: 'TRANSFORMATION_ERROR',
             message: 'Response transformation failed',

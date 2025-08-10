@@ -52,8 +52,8 @@ class NotificationServiceImpl implements NotificationService {
 
           socket.emit('authenticated', { success: true });
           console.log(`User ${userId} authenticated on socket ${socket.id}`);
-        } catch (error) {
-          console.error('Authentication error:', error);
+        } catch (__error) {
+          console.error('Authentication error:', _error);
           socket.emit('authentication_error', { error: 'Invalid authentication data' });
         }
       });
@@ -139,8 +139,8 @@ class NotificationServiceImpl implements NotificationService {
       }
 
       console.log('Notification sent:', notification.id);
-    } catch (error) {
-      console.error('Failed to send notification:', error);
+    } catch (__error) {
+      console.error('Failed to send notification:', _error);
       throw error;
     }
   }

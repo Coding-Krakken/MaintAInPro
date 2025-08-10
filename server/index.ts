@@ -145,8 +145,8 @@ async function initializeApp() {
     // Initialize production systems with startup optimizer
     await startupOptimizer.initializeProduction();
     loggingService.info('✅ Production initialization completed successfully');
-  } catch (error) {
-    loggingService.error('❌ Production initialization failed', error);
+  } catch (__error) {
+    loggingService.error('❌ Production initialization failed', _error);
     // Continue startup even if some optimizations fail
   }
 

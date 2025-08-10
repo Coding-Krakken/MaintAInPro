@@ -127,9 +127,9 @@ export const FileUpload: React.FC<FileUploadProps> = ({
             }
           }
         } catch (_error) {
-          const errorMessage = _error instanceof Error ? _error.message : 'Upload failed';
+          const errorMessage = _error instanceof Error ? ___error.message : 'Upload failed';
           setUploads(prev =>
-            prev.map(upload => (upload.file === file ? { ...upload, error: errorMessage } : upload))
+            prev.map(upload => (upload.file === file ? { ...upload, _error: errorMessage } : upload))
           );
 
           if (onUploadError) {

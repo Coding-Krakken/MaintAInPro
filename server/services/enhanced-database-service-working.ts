@@ -216,7 +216,7 @@ export class EnhancedDatabaseService {
     const { organizationId, searchTerm, limit = 10, offset = 0 } = options;
 
     let whereClause = 'WHERE organization_id = $1 AND deleted_at IS NULL';
-    const params: any[] = [organizationId];
+    const params: unknown[] = [organizationId];
     let paramCount = 1;
 
     // Add search term
@@ -353,7 +353,7 @@ export class EnhancedDatabaseService {
     const { organizationId, searchTerm, limit = 10, offset = 0 } = options;
 
     let whereClause = 'WHERE organization_id = $1 AND deleted_at IS NULL';
-    const params: any[] = [organizationId];
+    const params: unknown[] = [organizationId];
     let paramCount = 1;
 
     if (searchTerm) {
@@ -437,7 +437,7 @@ export class EnhancedDatabaseService {
 
   // Transaction Management
   async withTransaction<T>(
-    operation: (client: any) => Promise<T>,
+    operation: (client: unknown) => Promise<T>,
     context: AuditContext
   ): Promise<T> {
     const client = await this.pool.connect();
@@ -446,9 +446,9 @@ export class EnhancedDatabaseService {
       const result = await operation(client);
       await client.query('COMMIT');
       return result;
-    } catch (error) {
+    } catch (_error) {
       await client.query('ROLLBACK');
-      throw error;
+      throw _error;
     } finally {
       client.release();
     }
@@ -525,8 +525,8 @@ export class EnhancedDatabaseService {
           JSON.stringify({}),
         ]
       );
-    } catch (error) {
-      console.error('Failed to log activity:', error);
+    } catch (__error) {
+      console.error('Failed to log activity:', _error);
       // Don't throw - audit logging failures shouldn't break operations
     }
   }

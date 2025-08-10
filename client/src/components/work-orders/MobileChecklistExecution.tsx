@@ -25,7 +25,7 @@ import { WorkOrderChecklistItem } from '@/types';
 interface MobileChecklistExecutionProps {
   workOrderId: string;
   isReadOnly?: boolean;
-  onProgress?: (completed: number, total: number) => void;
+  onProgress?: (_completed: number, _total: number) => void;
   onComplete?: () => void;
 }
 
@@ -61,7 +61,7 @@ const MobileChecklistExecution: React.FC<MobileChecklistExecutionProps> = ({
 
   // Network status monitoring
   useEffect(() => {
-    const handleNetworkChange = (event: any) => {
+    const handleNetworkChange = (event: unknown) => {
       setNetworkStatus(event.detail);
     };
 
@@ -94,7 +94,7 @@ const MobileChecklistExecution: React.FC<MobileChecklistExecutionProps> = ({
         // Cache in localStorage for offline access
         localStorage.setItem(`checklist_${workOrderId}`, JSON.stringify(items));
         return items;
-      } catch (error) {
+      } catch (_error) {
         // Try to load from cache if offline
         if (!networkStatus.isOnline) {
           const cached = localStorage.getItem(`checklist_${workOrderId}`);
@@ -102,7 +102,7 @@ const MobileChecklistExecution: React.FC<MobileChecklistExecutionProps> = ({
             return JSON.parse(cached) as ChecklistItemWithActions[];
           }
         }
-        throw error;
+        throw _error;
       }
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
@@ -201,10 +201,10 @@ const MobileChecklistExecution: React.FC<MobileChecklistExecutionProps> = ({
         }
       };
 
-      recognition.onresult = (event: any) => {
+      recognition.onresult = (event: unknown) => {
         const transcript = Array.from(event.results)
-          .map((result: any) => result[0])
-          .map((result: any) => result.transcript)
+          .map((result: unknown) => result[0])
+          .map((result: unknown) => result.transcript)
           .join('');
 
         const currentItem = getCurrentItem();

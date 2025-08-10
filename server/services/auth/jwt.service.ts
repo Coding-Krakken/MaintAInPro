@@ -80,13 +80,13 @@ export class JWTService {
       }
 
       return decoded;
-    } catch (error) {
-      if (error instanceof jwt.TokenExpiredError) {
+    } catch (_error) {
+      if (_error instanceof jwt.TokenExpiredError) {
         throw new Error('ACCESS_TOKEN_EXPIRED');
-      } else if (error instanceof jwt.JsonWebTokenError) {
+      } else if (_error instanceof jwt.JsonWebTokenError) {
         throw new Error('INVALID_ACCESS_TOKEN');
       }
-      throw error;
+      throw _error;
     }
   }
 
@@ -105,20 +105,20 @@ export class JWTService {
         userId: decoded.userId,
         sessionId: decoded.sessionId,
       };
-    } catch (error) {
-      if (error instanceof jwt.TokenExpiredError) {
+    } catch (_error) {
+      if (_error instanceof jwt.TokenExpiredError) {
         throw new Error('REFRESH_TOKEN_EXPIRED');
-      } else if (error instanceof jwt.JsonWebTokenError) {
+      } else if (_error instanceof jwt.JsonWebTokenError) {
         throw new Error('INVALID_REFRESH_TOKEN');
       }
-      throw error;
+      throw _error;
     }
   }
 
   static decodeToken(token: string): any {
     try {
       return jwt.decode(token);
-    } catch (error) {
+    } catch (_error) {
       return null;
     }
   }
@@ -130,7 +130,7 @@ export class JWTService {
         return new Date(decoded.exp * 1000);
       }
       return null;
-    } catch (error) {
+    } catch (_error) {
       return null;
     }
   }

@@ -24,8 +24,8 @@ export function registerWebhookRoutes(
       const user = (req as any).user;
       const webhooks = await webhookService.getWebhooks(user.warehouseId);
       res.json(webhooks);
-    } catch (error) {
-      console.error('List webhooks error:', error);
+    } catch (__error) {
+      console.error('List webhooks error:', _error);
       res.status(500).json({ message: 'Failed to retrieve webhooks' });
     }
   });
@@ -47,8 +47,8 @@ export function registerWebhookRoutes(
       }
 
       res.json(webhook);
-    } catch (error) {
-      console.error('Get webhook error:', error);
+    } catch (__error) {
+      console.error('Get webhook error:', _error);
       res.status(500).json({ message: 'Failed to retrieve webhook' });
     }
   });
@@ -80,8 +80,8 @@ export function registerWebhookRoutes(
 
         const webhook = await webhookService.registerWebhook(webhookData);
         res.status(201).json(webhook);
-      } catch (error) {
-        console.error('Create webhook error:', error);
+      } catch (__error) {
+        console.error('Create webhook error:', _error);
         res.status(500).json({ message: 'Failed to create webhook' });
       }
     }
@@ -117,8 +117,8 @@ export function registerWebhookRoutes(
 
         const updated = await webhookService.updateWebhook(id, validation.data);
         res.json(updated);
-      } catch (error) {
-        console.error('Update webhook error:', error);
+      } catch (__error) {
+        console.error('Update webhook error:', _error);
         res.status(500).json({ message: 'Failed to update webhook' });
       }
     }
@@ -150,8 +150,8 @@ export function registerWebhookRoutes(
         }
 
         res.json({ message: 'Webhook deleted successfully' });
-      } catch (error) {
-        console.error('Delete webhook error:', error);
+      } catch (__error) {
+        console.error('Delete webhook error:', _error);
         res.status(500).json({ message: 'Failed to delete webhook' });
       }
     }
@@ -175,8 +175,8 @@ export function registerWebhookRoutes(
 
       const stats = await webhookService.getDeliveryStats(id);
       res.json(stats);
-    } catch (error) {
-      console.error('Get webhook stats error:', error);
+    } catch (__error) {
+      console.error('Get webhook stats error:', _error);
       res.status(500).json({ message: 'Failed to retrieve webhook statistics' });
     }
   });
@@ -200,8 +200,8 @@ export function registerWebhookRoutes(
 
       const deliveries = await webhookService.getRecentDeliveries(id, limit);
       res.json(deliveries);
-    } catch (error) {
-      console.error('Get webhook deliveries error:', error);
+    } catch (__error) {
+      console.error('Get webhook deliveries error:', _error);
       res.status(500).json({ message: 'Failed to retrieve webhook deliveries' });
     }
   });
@@ -243,8 +243,8 @@ export function registerWebhookRoutes(
 
         await webhookService.emitEvent(testEvent);
         res.json({ message: 'Test webhook sent successfully' });
-      } catch (error) {
-        console.error('Test webhook error:', error);
+      } catch (__error) {
+        console.error('Test webhook error:', _error);
         res.status(500).json({ message: 'Failed to send test webhook' });
       }
     }
@@ -290,8 +290,8 @@ export function registerWebhookRoutes(
       ];
 
       res.json(events);
-    } catch (error) {
-      console.error('Get webhook events error:', error);
+    } catch (__error) {
+      console.error('Get webhook events error:', _error);
       res.status(500).json({ message: 'Failed to retrieve webhook events' });
     }
   });

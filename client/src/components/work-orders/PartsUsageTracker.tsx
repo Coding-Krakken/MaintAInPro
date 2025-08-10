@@ -28,7 +28,7 @@ import { Part } from '@/types';
 interface PartsUsageTrackerProps {
   workOrderId: string;
   isReadOnly?: boolean;
-  onCostUpdate?: (totalCost: number) => void;
+  onCostUpdate?: (_totalCost: number) => void;
 }
 
 interface PartUsageEntry {

@@ -63,8 +63,8 @@ export class PasswordService {
 
       // Verify password
       return await bcrypt.compare(pepperedPassword, hash);
-    } catch (error) {
-      console.error('Password verification error:', error);
+    } catch (__error) {
+      console.error('Password verification error:', _error);
       return false;
     }
   }
@@ -115,7 +115,7 @@ export class PasswordService {
     if (activePolicy.forbidUserInfo && userInfo) {
       const userInfoValues = [userInfo.email?.split('@')[0], userInfo.firstName, userInfo.lastName]
         .filter(Boolean)
-        .map(v => v!.toLowerCase());
+        .map(v => v?.toLowerCase());
 
       const passwordLower = password.toLowerCase();
       for (const info of userInfoValues) {

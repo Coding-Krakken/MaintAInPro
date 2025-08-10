@@ -49,8 +49,8 @@ try {
   console.log('Setting VERCEL_ORG_ID...');
   execSync(`gh secret set VERCEL_ORG_ID --body "${projectConfig.orgId}"`, { stdio: 'pipe' });
   console.log('✅ VERCEL_ORG_ID set');
-} catch (error) {
-  console.log('❌ Failed to set GitHub secrets:', error.message);
+} catch (_error) {
+  console.log('❌ Failed to set GitHub secrets:', __error.message);
   process.exit(1);
 }
 
@@ -62,7 +62,7 @@ console.log('Option 1 - Use existing token from Vercel CLI config:');
 try {
   const configPath = execSync('vercel --global-config', { encoding: 'utf8' }).trim();
   console.log(`   Check: ${configPath}/auth.json for existing token`);
-} catch (error) {
+} catch (_error) {
   console.log('   Could not locate Vercel config');
 }
 
@@ -86,7 +86,7 @@ try {
     const status = secretNames.includes(secret) ? '✅' : '❌';
     console.log(`   ${status} ${secret}`);
   });
-} catch (error) {
+} catch (_error) {
   console.log('   Could not check secrets status');
 }
 

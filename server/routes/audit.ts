@@ -42,8 +42,8 @@ export function registerAuditRoutes(
 
         const result = await auditTrailService.queryEvents(query);
         res.json(result);
-      } catch (error) {
-        console.error('Query audit events error:', error);
+      } catch (__error) {
+        console.error('Query audit events error:', _error);
         res.status(500).json({ message: 'Failed to query audit events' });
       }
     }
@@ -66,8 +66,8 @@ export function registerAuditRoutes(
         );
 
         res.json(stats);
-      } catch (error) {
-        console.error('Get audit statistics error:', error);
+      } catch (__error) {
+        console.error('Get audit statistics error:', _error);
         res.status(500).json({ message: 'Failed to get audit statistics' });
       }
     }
@@ -104,8 +104,8 @@ export function registerAuditRoutes(
         );
 
         res.json(report);
-      } catch (error) {
-        console.error('Generate compliance report error:', error);
+      } catch (__error) {
+        console.error('Generate compliance report error:', _error);
         res.status(500).json({ message: 'Failed to generate compliance report' });
       }
     }
@@ -127,8 +127,8 @@ export function registerAuditRoutes(
         }
 
         res.json(event);
-      } catch (error) {
-        console.error('Get audit event error:', error);
+      } catch (__error) {
+        console.error('Get audit event error:', _error);
         res.status(500).json({ message: 'Failed to get audit event' });
       }
     }
@@ -203,8 +203,8 @@ export function registerAuditRoutes(
           events,
         });
       }
-    } catch (error) {
-      console.error('Export audit data error:', error);
+    } catch (__error) {
+      console.error('Export audit data error:', _error);
       res.status(500).json({ message: 'Failed to export audit data' });
     }
   });
@@ -261,8 +261,8 @@ export function registerAuditRoutes(
         };
 
         res.json(complianceData);
-      } catch (error) {
-        console.error('Compliance dashboard error:', error);
+      } catch (__error) {
+        console.error('Compliance dashboard error:', _error);
         res.status(500).json({ message: 'Failed to get compliance dashboard data' });
       }
     }
@@ -303,8 +303,8 @@ export function registerAuditRoutes(
       });
 
       res.json({ message: 'Audit event logged successfully' });
-    } catch (error) {
-      console.error('Manual log event error:', error);
+    } catch (__error) {
+      console.error('Manual log event error:', _error);
       res.status(500).json({ message: 'Failed to log audit event' });
     }
   });

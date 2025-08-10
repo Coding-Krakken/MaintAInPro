@@ -19,7 +19,7 @@ import { storage } from '../storage';
 const router = Router();
 
 // Helper functions for analytics
-function calculateAverageResolutionTime(workOrders: any[]): number {
+function calculateAverageResolutionTime(workOrders: unknown[]): number {
   const completedOrders = workOrders.filter(
     wo => ['completed', 'verified', 'closed'].includes(wo.status) && wo.completedAt
   );
@@ -35,7 +35,7 @@ function calculateAverageResolutionTime(workOrders: any[]): number {
   return Math.round(totalResolutionTime / completedOrders.length / (1000 * 60 * 60)); // in hours
 }
 
-function calculateMTTR(workOrders: any[]): number {
+function calculateMTTR(workOrders: unknown[]): number {
   // Mean Time To Repair - similar to average resolution time but specific to corrective maintenance
   const correctiveOrders = workOrders.filter(
     wo =>
@@ -55,10 +55,10 @@ function calculateMTTR(workOrders: any[]): number {
   return Math.round(totalRepairTime / correctiveOrders.length / (1000 * 60 * 60)); // in hours
 }
 
-function generateTrendData(workOrders: any[], period: string, metric: string): any[] {
+function generateTrendData(workOrders: unknown[], period: string, metric: string): unknown[] {
   // Simplified trend generation - in a real implementation, this would be more sophisticated
   const now = new Date();
-  const periodData: any[] = [];
+  const periodData: unknown[] = [];
 
   for (let i = 6; i >= 0; i--) {
     const date = new Date(now);
@@ -274,8 +274,8 @@ router.get(
         },
         filters: filters,
       });
-    } catch (error) {
-      console.error('Get work orders error:', error);
+    } catch (__error) {
+      console.error('Get work orders error:', _error);
       res.status(500).json({
         success: false,
         error: 'FETCH_ERROR',
@@ -306,8 +306,8 @@ router.get(
         success: true,
         data: workOrder,
       });
-    } catch (error) {
-      console.error('Get work order error:', error);
+    } catch (__error) {
+      console.error('Get work order error:', _error);
       res.status(500).json({
         success: false,
         error: 'FETCH_ERROR',
@@ -385,8 +385,8 @@ router.post('/work-orders', validateSchema(insertWorkOrderSchema), async (req: a
       data: newWorkOrder,
       message: 'Work order created successfully',
     });
-  } catch (error) {
-    console.error('Create work order error:', error);
+  } catch (__error) {
+    console.error('Create work order error:', _error);
     res.status(500).json({
       success: false,
       error: 'CREATE_ERROR',
@@ -461,8 +461,8 @@ router.put(
         data: updatedWorkOrder,
         message: 'Work order updated successfully',
       });
-    } catch (error) {
-      console.error('Update work order error:', error);
+    } catch (__error) {
+      console.error('Update work order error:', _error);
       res.status(500).json({
         success: false,
         error: 'UPDATE_ERROR',
@@ -497,8 +497,8 @@ router.delete(
         success: true,
         message: 'Work order deleted successfully',
       });
-    } catch (error) {
-      console.error('Delete work order error:', error);
+    } catch (__error) {
+      console.error('Delete work order error:', _error);
       res.status(500).json({
         success: false,
         error: 'DELETE_ERROR',
@@ -583,8 +583,8 @@ router.get(
           totalPages: Math.ceil(filteredEquipment.length / filters.limit),
         },
       });
-    } catch (error) {
-      console.error('Get equipment error:', error);
+    } catch (__error) {
+      console.error('Get equipment error:', _error);
       res.status(500).json({
         success: false,
         error: 'FETCH_ERROR',
@@ -627,8 +627,8 @@ router.post('/equipment', validateSchema(insertEquipmentSchema), async (req: any
       data: newEquipment,
       message: 'Equipment created successfully',
     });
-  } catch (error) {
-    console.error('Create equipment error:', error);
+  } catch (__error) {
+    console.error('Create equipment error:', _error);
     res.status(500).json({
       success: false,
       error: 'CREATE_ERROR',
@@ -658,8 +658,8 @@ router.get(
         success: true,
         data: equipment,
       });
-    } catch (error) {
-      console.error('Get equipment error:', error);
+    } catch (__error) {
+      console.error('Get equipment error:', _error);
       res.status(500).json({
         success: false,
         error: 'FETCH_ERROR',
@@ -714,8 +714,8 @@ router.put(
         data: updatedEquipment,
         message: 'Equipment updated successfully',
       });
-    } catch (error) {
-      console.error('Update equipment error:', error);
+    } catch (__error) {
+      console.error('Update equipment error:', _error);
       res.status(500).json({
         success: false,
         error: 'UPDATE_ERROR',
@@ -799,8 +799,8 @@ router.get(
           totalPages: Math.ceil(filteredParts.length / filters.limit),
         },
       });
-    } catch (error) {
-      console.error('Get parts error:', error);
+    } catch (__error) {
+      console.error('Get parts error:', _error);
       res.status(500).json({
         success: false,
         error: 'FETCH_ERROR',
@@ -824,8 +824,8 @@ router.post('/parts', validateSchema(insertPartSchema), async (req: any, res) =>
       data: newPart,
       message: 'Part created successfully',
     });
-  } catch (error) {
-    console.error('Create part error:', error);
+  } catch (__error) {
+    console.error('Create part error:', _error);
     res.status(500).json({
       success: false,
       error: 'CREATE_ERROR',
@@ -855,8 +855,8 @@ router.get(
         success: true,
         data: part,
       });
-    } catch (error) {
-      console.error('Get part error:', error);
+    } catch (__error) {
+      console.error('Get part error:', _error);
       res.status(500).json({
         success: false,
         error: 'FETCH_ERROR',
@@ -942,8 +942,8 @@ router.put(
         data: updatedPart,
         message: 'Part updated successfully',
       });
-    } catch (error) {
-      console.error('Update part error:', error);
+    } catch (__error) {
+      console.error('Update part error:', _error);
       res.status(500).json({
         success: false,
         error: 'UPDATE_ERROR',
@@ -1065,8 +1065,8 @@ router.get(
         success: true,
         data: analytics,
       });
-    } catch (error) {
-      console.error('Get analytics error:', error);
+    } catch (__error) {
+      console.error('Get analytics error:', _error);
       res.status(500).json({
         success: false,
         error: 'FETCH_ERROR',
@@ -1105,8 +1105,8 @@ router.get(
           trends: trendData,
         },
       });
-    } catch (error) {
-      console.error('Get trends error:', error);
+    } catch (__error) {
+      console.error('Get trends error:', _error);
       res.status(500).json({
         success: false,
         error: 'FETCH_ERROR',
@@ -1151,10 +1151,10 @@ router.patch(
             id: workOrderId,
             status: updatedWorkOrder.status,
           });
-        } catch (error) {
+        } catch (_error) {
           results.failed.push({
             id: workOrderId,
-            error: error instanceof Error ? error.message : 'Unknown error',
+            _error: _error instanceof Error ? __error.message : 'Unknown _error',
           });
         }
       }
@@ -1164,8 +1164,8 @@ router.patch(
         data: results,
         message: `Bulk update completed. ${results.updated.length} updated, ${results.failed.length} failed.`,
       });
-    } catch (error) {
-      console.error('Bulk update error:', error);
+    } catch (__error) {
+      console.error('Bulk update error:', _error);
       res.status(500).json({
         success: false,
         error: 'BULK_UPDATE_ERROR',
@@ -1226,10 +1226,10 @@ router.patch(
           } catch (notifError) {
             console.warn('Failed to send assignment notification:', notifError);
           }
-        } catch (error) {
+        } catch (_error) {
           results.failed.push({
             id: workOrderId,
-            error: error instanceof Error ? error.message : 'Unknown error',
+            _error: _error instanceof Error ? __error.message : 'Unknown _error',
           });
         }
       }
@@ -1239,8 +1239,8 @@ router.patch(
         data: results,
         message: `Bulk assignment completed. ${results.assigned.length} assigned, ${results.failed.length} failed.`,
       });
-    } catch (error) {
-      console.error('Bulk assign error:', error);
+    } catch (__error) {
+      console.error('Bulk assign error:', _error);
       res.status(500).json({
         success: false,
         error: 'BULK_ASSIGN_ERROR',

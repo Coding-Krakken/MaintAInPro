@@ -114,8 +114,8 @@ export class CacheService {
       });
 
       await this.redisClient.connect();
-    } catch (error) {
-      console.error('[Cache] Failed to initialize Redis:', error);
+    } catch (__error) {
+      console.error('[Cache] Failed to initialize Redis:', _error);
       this.isRedisAvailable = false;
     }
   }
@@ -160,8 +160,8 @@ export class CacheService {
 
       this.cacheStats.misses++;
       return null;
-    } catch (error) {
-      console.error('[Cache] Get error:', error);
+    } catch (__error) {
+      console.error('[Cache] Get error:', _error);
       this.cacheStats.errors++;
       return null;
     }
@@ -190,8 +190,8 @@ export class CacheService {
       }
 
       this.cacheStats.sets++;
-    } catch (error) {
-      console.error('[Cache] Set error:', error);
+    } catch (__error) {
+      console.error('[Cache] Set error:', _error);
       this.cacheStats.errors++;
     }
   }
@@ -214,8 +214,8 @@ export class CacheService {
       }
 
       this.cacheStats.deletes++;
-    } catch (error) {
-      console.error('[Cache] Delete error:', error);
+    } catch (__error) {
+      console.error('[Cache] Delete error:', _error);
       this.cacheStats.errors++;
     }
   }
@@ -236,8 +236,8 @@ export class CacheService {
           console.warn('[Cache] Redis clear error:', redisError);
         }
       }
-    } catch (error) {
-      console.error('[Cache] Clear error:', error);
+    } catch (__error) {
+      console.error('[Cache] Clear error:', _error);
     }
   }
 
@@ -299,8 +299,8 @@ export class CacheService {
             }
           }
         }
-      } catch (error) {
-        console.warn('[Cache] Batch Redis get error:', error);
+      } catch (__error) {
+        console.warn('[Cache] Batch Redis get error:', _error);
       }
     }
 

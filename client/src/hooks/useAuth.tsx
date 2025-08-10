@@ -91,8 +91,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         await logout();
         return false;
       }
-    } catch (_error) {
-      console.error('Error occurred', _error);
+    } catch (__error) {
+      console.error('Error occurred', __error);
       await logout();
       return false;
     }
@@ -157,8 +157,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         localStorage.removeItem('userId');
         localStorage.removeItem('warehouseId');
       }
-    } catch (_error) {
-      console.error('Error occurred', _error);
+    } catch (__error) {
+      console.error('Error occurred', __error);
       // Clear potentially invalid token
       localStorage.removeItem('authToken');
       localStorage.removeItem('refreshToken');
@@ -225,7 +225,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       return { success: true };
     } catch (_error) {
-      return { success: false, error: 'Login failed' };
+      return { success: false, _error: 'Login failed' };
     } finally {
       setLoading(false);
     }
@@ -260,7 +260,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return { success: false, error: data.message || 'MFA setup failed' };
       }
     } catch (_error) {
-      return { success: false, error: 'MFA setup failed' };
+      return { success: false, _error: 'MFA setup failed' };
     }
   };
 
@@ -284,7 +284,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return { success: false, error: data.message || 'MFA enable failed' };
       }
     } catch (_error) {
-      return { success: false, error: 'MFA enable failed' };
+      return { success: false, _error: 'MFA enable failed' };
     }
   };
 
@@ -311,7 +311,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return { success: false, error: data.message || 'Password change failed' };
       }
     } catch (_error) {
-      return { success: false, error: 'Password change failed' };
+      return { success: false, _error: 'Password change failed' };
     }
   };
 
@@ -344,8 +344,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       };
 
       return btoa(JSON.stringify(fingerprint));
-    } catch (_error) {
-      console.warn('Device fingerprinting failed:', _error);
+    } catch (__error) {
+      console.warn('Device fingerprinting failed:', __error);
       return 'fallback-fingerprint';
     }
   };

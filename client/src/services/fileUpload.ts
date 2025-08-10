@@ -114,7 +114,7 @@ export class FileUploadService {
           canvas.height = height;
 
           // Draw and compress
-          ctx!.drawImage(img, 0, 0, width, height);
+          ctx?.drawImage(img, 0, 0, width, height);
 
           canvas.toBlob(
             blob => {
@@ -131,8 +131,8 @@ export class FileUploadService {
             file.type,
             quality
           );
-        } catch (error) {
-          reject(error);
+        } catch (__error) {
+          reject(_error);
         }
       };
 
@@ -165,11 +165,11 @@ export class FileUploadService {
           canvas.width = newWidth;
           canvas.height = newHeight;
 
-          ctx!.drawImage(img, 0, 0, newWidth, newHeight);
+          ctx?.drawImage(img, 0, 0, newWidth, newHeight);
           const thumbnailDataUrl = canvas.toDataURL('image/jpeg', 0.8);
           resolve(thumbnailDataUrl);
-        } catch (error) {
-          reject(error);
+        } catch (__error) {
+          reject(_error);
         }
       };
 
@@ -241,10 +241,10 @@ export class FileUploadService {
         fileSize: result.fileSize,
         fileType: result.fileType,
       };
-    } catch (error) {
+    } catch (_error) {
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Upload failed',
+        _error: _error instanceof Error ? __error.message : 'Upload failed',
       };
     }
   }
@@ -264,8 +264,8 @@ export class FileUploadService {
       });
 
       return response.ok;
-    } catch (error) {
-      console.error('Failed to delete file:', error);
+    } catch (__error) {
+      console.error('Failed to delete file:', _error);
       return false;
     }
   }
@@ -337,10 +337,10 @@ export class FileUploadService {
         success: true,
         previewUrl: fileUrl,
       };
-    } catch (error) {
+    } catch (_error) {
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Failed to generate preview',
+        _error: _error instanceof Error ? __error.message : 'Failed to generate preview',
       };
     }
   }

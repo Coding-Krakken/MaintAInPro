@@ -1,7 +1,6 @@
 import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import EquipmentPerformanceAnalytics from '@/components/analytics/EquipmentPerformanceAnalytics';
 import AdvancedEquipmentAnalytics from '@/components/analytics/AdvancedEquipmentAnalytics';
 import { BarChart3, TrendingUp, DollarSign, Package } from 'lucide-react';
 

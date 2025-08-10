@@ -207,7 +207,7 @@ class EnhancedLoggingService {
   /**
    * Error level logging
    */
-  error(message: string, error?: Error | any, context: LogContext = {}): void {
+  error(message: string, error?: Error | unknown, context: LogContext = {}): void {
     const errorContext: any = {};
 
     if (error) {
@@ -233,7 +233,7 @@ class EnhancedLoggingService {
   /**
    * Fatal level logging
    */
-  fatal(message: string, error?: Error | any, context: LogContext = {}): void {
+  fatal(message: string, error?: Error | unknown, context: LogContext = {}): void {
     const errorContext: any = {};
 
     if (error) {

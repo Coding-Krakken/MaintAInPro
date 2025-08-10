@@ -41,7 +41,7 @@ interface PartUsage {
 
 interface PartsConsumptionManagerProps {
   workOrderId: string;
-  onTotalCostChange?: (cost: number) => void;
+  onTotalCostChange?: (_cost: number) => void;
   isReadOnly?: boolean;
 }
 
@@ -479,7 +479,7 @@ const PartsConsumptionManager: React.FC<PartsConsumptionManagerProps> = ({
 // Component for individual part selection
 interface PartSelectionItemProps {
   part: Part;
-  onAdd: (part: Part, quantity: number, notes?: string) => void;
+  onAdd: (_part: Part, _quantity: number, _notes?: string) => void;
 }
 
 const PartSelectionItem: React.FC<PartSelectionItemProps> = ({ part, onAdd }) => {

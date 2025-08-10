@@ -325,7 +325,7 @@ export default function VendorsPage() {
           />
         </div>
         <div className='flex gap-2'>
-          <Select value={filterType} onValueChange={(value: any) => setFilterType(value)}>
+          <Select value={filterType} onValueChange={(value: unknown) => setFilterType(value)}>
             <SelectTrigger className='w-40'>
               <Filter className='w-4 h-4 mr-2' />
               <SelectValue />

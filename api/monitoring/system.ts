@@ -86,11 +86,11 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
     const systemMetrics = generateMetrics(dataPoints);
 
     res.status(200).json(systemMetrics);
-  } catch (_error) {
-    console.error('Error fetching system metrics:', _error);
+  } catch (__error) {
+    console.error('Error fetching system metrics:', __error);
     res.status(500).json({
       error: 'Failed to fetch system metrics',
-      message: _error instanceof Error ? _error.message : 'Unknown error',
+      message: _error instanceof Error ? __error.message : 'Unknown error',
     });
   }
 }

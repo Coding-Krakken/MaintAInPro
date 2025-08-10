@@ -17,7 +17,7 @@ interface UseWebSocketReturn {
   notifications: WebSocketNotification[];
   connectionStatus: 'connecting' | 'connected' | 'disconnected' | 'error';
   lastActivity: Date | null;
-  sendMessage: (event: string, data: Record<string, unknown>) => void;
+  sendMessage: (_event: string, _data: Record<string, unknown>) => void;
   clearNotifications: () => void;
 }
 

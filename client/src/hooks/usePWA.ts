@@ -5,7 +5,7 @@ export interface PWAActions {
   showInstallPrompt: () => Promise<boolean>;
   requestNotifications: () => Promise<NotificationPermission>;
   updateApp: () => Promise<void>;
-  showNotification: (title: string, options?: NotificationOptions) => Promise<void>;
+  showNotification: (_title: string, _options?: NotificationOptions) => Promise<void>;
 }
 
 export function usePWA() {
