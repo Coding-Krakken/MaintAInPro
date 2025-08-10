@@ -58,7 +58,7 @@ export default function PartFormModal({ isOpen, onClose }: PartFormModalProps) {
       setLocation('');
 
       onClose();
-    } catch (error) {
+    } catch (_error) {
       toast({
         title: 'Error',
         description: 'Failed to create part',

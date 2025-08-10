@@ -11,13 +11,13 @@ import {
 } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
-import { QrCode, Download, Printer, Copy, Settings, FileImage, Grid3X3, Zap } from 'lucide-react';
+import { QrCode, Download, Printer, Copy, Grid3X3, Zap } from 'lucide-react';
 import QRCode from 'qrcode';
 
 interface QRCodeGeneratorProps {
   equipmentId?: string;
   assetTag?: string;
-  onGenerate?: (qrData: string) => void;
+  onGenerate?: (_qrData: string) => void;
 }
 
 interface QROptions {
@@ -29,7 +29,7 @@ interface QROptions {
   format: 'PNG' | 'SVG';
 }
 
-const QRCodeGenerator: React.FC<QRCodeGeneratorProps> = ({ equipmentId, assetTag, onGenerate }) => {
+const QRCodeGenerator: React.FC<QRCodeGeneratorProps> = ({ equipmentId: _equipmentId, assetTag, onGenerate }) => {
   const { toast } = useToast();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [qrData, setQrData] = useState(assetTag || '');
@@ -85,18 +85,21 @@ const QRCodeGenerator: React.FC<QRCodeGeneratorProps> = ({ equipmentId, assetTag
             canvas.height = options.includeText ? options.size + 40 : options.size;
 
             // Clear canvas
-            ctx!.fillStyle = options.backgroundColor;
-            ctx!.fillRect(0, 0, canvas.width, canvas.height);
+            const context = ctx;
+            if (context) {
+              context.fillStyle = options.backgroundColor;
+              context.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Draw QR code
-            ctx!.drawImage(img, 0, 0, options.size, options.size);
+              // Draw QR code
+              context.drawImage(img, 0, 0, options.size, options.size);
 
-            // Add text label if enabled
-            if (options.includeText) {
-              ctx!.fillStyle = options.foregroundColor;
-              ctx!.font = '14px Arial, sans-serif';
-              ctx!.textAlign = 'center';
-              ctx!.fillText(qrData, options.size / 2, options.size + 25);
+              // Add text label if enabled
+              if (options.includeText) {
+                context.fillStyle = options.foregroundColor;
+                context.font = '14px Arial, sans-serif';
+                context.textAlign = 'center';
+                context.fillText(qrData, options.size / 2, options.size + 25);
+              }
             }
           };
 
@@ -121,8 +124,8 @@ const QRCodeGenerator: React.FC<QRCodeGeneratorProps> = ({ equipmentId, assetTag
         title: 'QR Code Generated',
         description: `Successfully generated ${options.format} QR code for ${qrData}`,
       });
-    } catch (error) {
-      console.error('QR Code generation error:', error);
+    } catch (_error) {
+      console.error('QR Code generation error:', _error);
       toast({
         title: 'Generation Failed',
         description: 'Failed to generate QR code. Please try again.',
@@ -162,8 +165,8 @@ const QRCodeGenerator: React.FC<QRCodeGeneratorProps> = ({ equipmentId, assetTag
         title: 'Copied to Clipboard',
         description: 'QR code image copied to clipboard',
       });
-    } catch (error) {
-      console.error('Copy failed:', error);
+    } catch (_error) {
+      console.error('Copy failed:', _error);
       toast({
         title: 'Copy Failed',
         description: 'Failed to copy QR code to clipboard',

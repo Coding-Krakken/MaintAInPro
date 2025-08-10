@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Play, Pause, RefreshCw, Settings, Clock } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
@@ -7,7 +7,6 @@ import { Badge } from '../ui/badge';
 import { Switch } from '../ui/switch';
 import { Label } from '../ui/label';
 import { useToast } from '../../hooks/use-toast';
-import { format } from 'date-fns';
 
 interface PMSchedulerStatus {
   isRunning: boolean;

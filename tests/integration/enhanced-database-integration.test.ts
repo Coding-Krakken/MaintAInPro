@@ -14,7 +14,6 @@
 // Load environment variables from .env.local FIRST
 import * as dotenv from 'dotenv';
 import * as path from 'path';
-import { v4 as uuidv4 } from 'uuid';
 
 // Load the .env.local file
 dotenv.config({ path: path.resolve(process.cwd(), '.env.local') });
@@ -31,13 +30,11 @@ import {
   insertTagSchema,
   type Organization,
   type WorkOrder,
-  type Equipment,
 } from '../shared/schema';
 
 describe('Enhanced Database Service - Production Integration Tests', () => {
   let enhancedDbService: EnhancedDatabaseService;
   let testOrganization: Organization;
-  let testUser: any;
   let testContext: any;
   let testWorkOrders: WorkOrder[] = [];
 
@@ -293,8 +290,6 @@ describe('Enhanced Database Service - Production Integration Tests', () => {
   });
 
   describe('⚙️ Equipment Management with Full-Text Search', () => {
-    const testEquipment: Equipment[] = [];
-
     beforeEach(async () => {
       const equipmentData = [
         {
@@ -329,7 +324,7 @@ describe('Enhanced Database Service - Production Integration Tests', () => {
         },
       ];
 
-      for (const eqData of equipmentData) {
+      for (const _eqData of equipmentData) {
         // Note: enhancedDbService doesn't have createEquipment yet, would need to implement
         // For now, we'll test the search structure
       }
@@ -390,7 +385,7 @@ describe('Enhanced Database Service - Production Integration Tests', () => {
   describe('🔄 Transaction Management', () => {
     it('should handle transactions with rollback on error', async () => {
       try {
-        await enhancedDbService.withTransaction(async client => {
+        await enhancedDbService.withTransaction(async _client => {
           // This would perform multiple operations in a transaction
           // Simulate an error to test rollback
           throw new Error('Simulated transaction error');

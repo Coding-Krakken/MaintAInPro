@@ -22,7 +22,7 @@ console.log(`   Project Name: ${projectConfig.projectName}\n`);
 try {
   const whoami = execSync('vercel whoami', { encoding: 'utf8' }).trim();
   console.log(`✅ Logged into Vercel as: ${whoami}`);
-} catch (error) {
+} catch (_error) {
   console.log('❌ Not logged into Vercel. Run: vercel login');
   process.exit(1);
 }
@@ -31,7 +31,7 @@ try {
 try {
   execSync('gh auth status', { stdio: 'pipe' });
   console.log('✅ GitHub CLI authenticated');
-} catch (error) {
+} catch (_error) {
   console.log('❌ GitHub CLI not authenticated. Run: gh auth login');
   process.exit(1);
 }

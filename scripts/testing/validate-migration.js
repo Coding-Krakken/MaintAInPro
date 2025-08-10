@@ -25,7 +25,7 @@ async function runMigrationTest() {
     try {
       await execAsync('npx tsc --noEmit --skipLibCheck');
       console.log('✅ TypeScript compilation successful');
-    } catch (error) {
+    } catch (_error) {
       console.log('⚠️  TypeScript compilation has warnings (proceeding...)');
     }
 
@@ -34,7 +34,7 @@ async function runMigrationTest() {
 
     // Import and test storage
     console.log('📦 Importing storage module...');
-    const storageModule = await import('./server/storage.js');
+    const _storageModule = await import('./server/storage.js');
     console.log('✅ Storage module imported successfully');
 
     // Check storage type

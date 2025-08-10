@@ -42,8 +42,8 @@ const OfflineIndicator: React.FC = () => {
     setIsSync(true);
     try {
       await forceSync();
-    } catch (error) {
-      console.error('Manual sync failed:', error);
+    } catch (_error) {
+      console.error('Manual sync failed:', _error);
     }
     setIsSync(false);
   };

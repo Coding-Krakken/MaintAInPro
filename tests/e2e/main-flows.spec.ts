@@ -1,5 +1,4 @@
 import { test, expect } from '@playwright/test';
-import { loginAs, logout } from '../helpers/auth';
 import { testData, testCredentials } from '../helpers/testData';
 
 // Test data - use local definitions to avoid conflicts

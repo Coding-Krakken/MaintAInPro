@@ -23,7 +23,7 @@ import {
   Search,
   Barcode,
 } from 'lucide-react';
-import { Part, PartsUsage } from '@/types';
+import { Part } from '@/types';
 
 interface PartsUsageTrackerProps {
   workOrderId: string;
@@ -66,7 +66,7 @@ const PartsUsageTracker: React.FC<PartsUsageTrackerProps> = ({
   });
 
   // Fetch available parts for selection
-  const { data: availableParts = [], isLoading: isLoadingParts } = useQuery({
+  const { data: availableParts = [] } = useQuery({
     queryKey: ['parts', 'available'],
     queryFn: async () => {
       const response = await fetch('/api/parts?available=true');

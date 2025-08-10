@@ -102,7 +102,7 @@ export function useCreatePartsUsage() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ workOrderId, data }: { workOrderId: string; data: any }) => {
+    mutationFn: async ({ workOrderId, data }: { workOrderId: string; data: Partial<PartsUsage> }) => {
       const response = await apiRequest(
         'POST',
         `/api/work-orders/${workOrderId}/parts-usage`,

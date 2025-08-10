@@ -14,7 +14,7 @@ import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { Progress } from '../ui/progress';
-import { format, subDays, isAfter } from 'date-fns';
+import { format } from 'date-fns';
 
 interface PMComplianceData {
   overallComplianceRate: number;
@@ -55,7 +55,7 @@ export default function PMComplianceDashboard() {
     },
   });
 
-  const { data: equipment = [] } = useQuery({
+  const { data: _equipment = [] } = useQuery({
     queryKey: ['/api/equipment'],
     queryFn: async () => {
       const response = await fetch('/api/equipment', {

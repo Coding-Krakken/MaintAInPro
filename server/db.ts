@@ -10,7 +10,6 @@ import * as schema from '../shared/schema';
 
 // Check if DATABASE_URL is set for production PostgreSQL usage
 let db: any = null;
-let Database: any = null;
 
 if (!process.env.DATABASE_URL) {
   console.log('DATABASE_URL not set - using in-memory storage for development');
@@ -25,7 +24,6 @@ if (!process.env.DATABASE_URL) {
   });
 
   db = drizzle(pool, { schema });
-  Database = typeof db;
 
   console.log('Database connection initialized successfully');
 }

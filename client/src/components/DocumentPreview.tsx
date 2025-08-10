@@ -19,8 +19,8 @@ import { Attachment } from '@/types';
 
 interface DocumentPreviewProps {
   attachments: Attachment[];
-  onDelete?: (attachmentId: string) => void;
-  onDownload?: (attachment: Attachment) => void;
+  onDelete?: (_attachmentId: string) => void;
+  onDownload?: (_attachment: Attachment) => void;
   showActions?: boolean;
   className?: string;
 }
@@ -68,7 +68,7 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
       } else {
         setError(result.error || 'Failed to generate preview');
       }
-    } catch (error) {
+    } catch (_error) {
       setError(error instanceof Error ? error.message : 'Failed to generate preview');
     } finally {
       setIsLoading(false);

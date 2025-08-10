@@ -3,8 +3,6 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
-import { Input } from '@/components/ui/input';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import {
@@ -13,8 +11,6 @@ import {
   AlertTriangle,
   Clock,
   Mic,
-  Camera,
-  Save,
   ChevronUp,
   ChevronDown,
 } from 'lucide-react';
@@ -104,7 +100,7 @@ const ChecklistExecution: React.FC<ChecklistExecutionProps> = ({
         setActiveItemId(itemId);
       };
 
-      recognition.onresult = event => {
+      recognition.onresult = (event) => {
         const transcript = Array.from(event.results)
           .map(result => result[0])
           .map(result => result.transcript)
@@ -120,7 +116,7 @@ const ChecklistExecution: React.FC<ChecklistExecutionProps> = ({
         }
       };
 
-      recognition.onerror = event => {
+      recognition.onerror = (_event) => {
         toast({
           title: 'Voice Recognition Error',
           description: 'Please try again or type manually',

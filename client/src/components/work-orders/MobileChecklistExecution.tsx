@@ -12,19 +12,15 @@ import {
   CheckCircle,
   XCircle,
   AlertTriangle,
-  Clock,
   Mic,
   Camera,
-  Save,
   WifiOff,
   RefreshCw,
   ChevronLeft,
   ChevronRight,
   RotateCcw,
-  ImageIcon,
 } from 'lucide-react';
 import { WorkOrderChecklistItem } from '@/types';
-import FileUpload from '@/components/FileUploadEnhanced';
 
 interface MobileChecklistExecutionProps {
   workOrderId: string;
@@ -50,7 +46,7 @@ const MobileChecklistExecution: React.FC<MobileChecklistExecutionProps> = ({
 }) => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  const isMobile = useIsMobile();
+  const _isMobile = useIsMobile();
   const { queueAction, getNetworkStatus, getPendingActionsCount, forceSync } = useOfflineService();
 
   // Mobile-specific state
@@ -84,7 +80,7 @@ const MobileChecklistExecution: React.FC<MobileChecklistExecutionProps> = ({
       window.removeEventListener('networkStatusChange', handleNetworkChange);
       window.removeEventListener('offlineSyncComplete', handleSyncComplete);
     };
-  }, [toast]);
+  }, [toast, getPendingActionsCount]);
 
   // Fetch checklist items with offline caching
   const { data: checklistItems = [], isLoading } = useQuery({
@@ -225,7 +221,7 @@ const MobileChecklistExecution: React.FC<MobileChecklistExecutionProps> = ({
 
       recognition.start();
     },
-    [updateChecklistItem, localUpdates, toast]
+    [updateChecklistItem, localUpdates, toast, getCurrentItem]
   );
 
   // Photo capture with mobile optimization
@@ -254,14 +250,14 @@ const MobileChecklistExecution: React.FC<MobileChecklistExecutionProps> = ({
   );
 
   // Navigation helpers
-  const getCurrentItem = () => {
+  const getCurrentItem = useCallback(() => {
     const item = checklistItems[currentItemIndex];
     if (!item) return null;
 
     // Merge with local updates
     const localUpdate = localUpdates.get(item.id);
     return localUpdate ? { ...item, ...localUpdate } : item;
-  };
+  }, [checklistItems, currentItemIndex, localUpdates]);
 
   const getCompletionStats = () => {
     const total = checklistItems.length;

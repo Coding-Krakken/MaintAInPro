@@ -14,7 +14,7 @@ describe('NotificationService', () => {
       for (const notification of allNotifications) {
         await storage.markNotificationRead(notification.id);
       }
-    } catch (error) {
+    } catch (_error) {
       // Ignore errors during cleanup
     }
   });

@@ -20,7 +20,7 @@ try {
 
 // Check authentication
 try {
-  const auth = execSync('gh auth status', { stdio: 'pipe', encoding: 'utf8' });
+  const _auth = execSync('gh auth status', { stdio: 'pipe', encoding: 'utf8' });
   console.log('✅ GitHub CLI authenticated');
 } catch (error) {
   console.log('❌ GitHub CLI not authenticated - run: gh auth login');
@@ -31,7 +31,7 @@ console.log('\n📋 Repository Configuration Status:\n');
 
 // Check branch protection
 try {
-  const protection = execSync('gh api repos/:owner/:repo/branches/main/protection', {
+  const _protection = execSync('gh api repos/:owner/:repo/branches/main/protection', {
     stdio: 'pipe',
     encoding: 'utf8',
   });

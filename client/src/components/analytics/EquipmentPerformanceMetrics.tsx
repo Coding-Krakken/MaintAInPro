@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -8,25 +8,28 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   TrendingUp,
-  TrendingDown,
   Activity,
   Clock,
-  Wrench,
   DollarSign,
-  AlertTriangle,
   CheckCircle,
   BarChart3,
   Download,
 } from 'lucide-react';
+
+interface Equipment {
+  id: string;
+  model: string;
+  assetTag: string;
+  serialNumber: string;
+  location: string;
+}
+
 import {
   LineChart,
   Line,
-  BarChart,
-  Bar,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -228,7 +231,7 @@ const EquipmentPerformanceMetrics: React.FC<EquipmentPerformanceMetricsProps> = 
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value='all'>All Equipment</SelectItem>
-                  {equipmentList.map((equipment: any) => (
+                  {equipmentList.map((equipment: Equipment) => (
                     <SelectItem key={equipment.id} value={equipment.id}>
                       {equipment.model}
                     </SelectItem>

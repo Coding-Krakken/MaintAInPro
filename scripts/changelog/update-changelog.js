@@ -9,9 +9,9 @@ function updateChangelog() {
   try {
     // Get the commit message and author
     const commitMessage = execSync('git log -1 --pretty=%B', { encoding: 'utf8' }).trim();
-    const commitAuthor = execSync('git log -1 --pretty=%an', { encoding: 'utf8' }).trim();
+    const _commitAuthor = execSync('git log -1 --pretty=%an', { encoding: 'utf8' }).trim();
     const commitSha = execSync('git log -1 --pretty=%h', { encoding: 'utf8' }).trim();
-    const commitDate = new Date().toISOString().split('T')[0];
+    const _commitDate = new Date().toISOString().split('T')[0];
 
     // Skip if this looks like a merge commit or docs-only change
     if (

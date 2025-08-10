@@ -267,7 +267,7 @@ export default function PMTemplateManager() {
                   <Label htmlFor='frequency'>Frequency</Label>
                   <Select
                     value={formData.frequency}
-                    onValueChange={(value: any) =>
+                    onValueChange={(value: string) =>
                       setFormData(prev => ({ ...prev, frequency: value }))
                     }
                   >

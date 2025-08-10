@@ -40,12 +40,12 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
     };
 
     res.status(200).json(health);
-  } catch (error) {
-    console.error('Error in health check:', error);
+  } catch (_error) {
+    console.error('Error in health check:', _error);
     res.status(500).json({
       status: 'error',
       timestamp: new Date().toISOString(),
-      error: error instanceof Error ? error.message : 'Unknown error',
+      error: _error instanceof Error ? _error.message : 'Unknown error',
     });
   }
 }

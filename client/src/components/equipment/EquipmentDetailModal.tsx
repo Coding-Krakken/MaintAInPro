@@ -5,7 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import { Equipment, WorkOrder } from '../../types';
 import { useQuery } from '@tanstack/react-query';
 import { formatDistanceToNow } from 'date-fns';
-import { Settings, Calendar, MapPin, Hash, FileText, Trash2 } from 'lucide-react';
+import { Settings, Calendar, MapPin, Hash, FileText } from 'lucide-react';
 import { useState } from 'react';
 import WorkOrderModal from '../work-orders/WorkOrderModal';
 import FileUpload from '../FileUpload';
@@ -76,7 +76,7 @@ export default function EquipmentDetailModal({
         title: 'Success',
         description: 'Attachment deleted successfully',
       });
-    } catch (error) {
+    } catch (_error) {
       toast({
         title: 'Error',
         description: 'Failed to delete attachment',

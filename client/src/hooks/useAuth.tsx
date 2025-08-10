@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 interface AuthUser {
   id: string;
   email: string;
@@ -12,16 +12,16 @@ interface AuthContextType {
   user: AuthUser | null;
   loading: boolean;
   login: (
-    email: string,
-    password: string,
-    mfaToken?: string
+    _email: string,
+    _password: string,
+    _mfaToken?: string
   ) => Promise<{ success: boolean; requiresMFA?: boolean; error?: string }>;
   logout: () => Promise<void>;
   setupMFA: () => Promise<{ success: boolean; qrCode?: string; secret?: string; error?: string }>;
-  enableMFA: (token: string) => Promise<{ success: boolean; error?: string }>;
+  enableMFA: (_token: string) => Promise<{ success: boolean; error?: string }>;
   changePassword: (
-    currentPassword: string,
-    newPassword: string
+    _currentPassword: string,
+    _newPassword: string
   ) => Promise<{ success: boolean; error?: string }>;
   refreshToken: () => Promise<boolean>;
   isAuthenticated: boolean;
@@ -50,7 +50,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     ); // Refresh every 14 minutes (before 15-minute expiry)
 
     return () => clearInterval(refreshInterval);
-  }, []);
+  }, [refreshToken]);
 
   const checkAuth = async () => {
     try {
@@ -94,8 +94,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         localStorage.removeItem('userId');
         localStorage.removeItem('warehouseId');
       }
-    } catch (error) {
-      console.error('Auth check failed:', error);
+    } catch (_error) {
+      console.error('Error occurred', _error);
       // Clear potentially invalid token
       localStorage.removeItem('authToken');
       localStorage.removeItem('refreshToken');
@@ -161,14 +161,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setMfaRequired(false);
 
       return { success: true };
-    } catch (error) {
+    } catch (_error) {
       return { success: false, error: 'Login failed' };
     } finally {
       setLoading(false);
     }
   };
 
-  const logout = async () => {
+  const logout = useCallback(async () => {
     try {
       const token = localStorage.getItem('authToken');
       if (token) {
@@ -180,8 +180,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           },
         });
       }
-    } catch (error) {
-      console.error('Logout error:', error);
+    } catch (_error) {
+      console.error('Error occurred', _error);
     } finally {
       // Clear local storage regardless of API call success
       localStorage.removeItem('authToken');
@@ -192,9 +192,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(null);
       setMfaRequired(false);
     }
-  };
+  }, []);
 
-  const refreshToken = async (): Promise<boolean> => {
+  const refreshToken = useCallback(async (): Promise<boolean> => {
     try {
       const refToken = localStorage.getItem('refreshToken');
       if (!refToken) {
@@ -219,12 +219,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         await logout();
         return false;
       }
-    } catch (error) {
-      console.error('Token refresh failed:', error);
+    } catch (_error) {
+      console.error('Error occurred', _error);
       await logout();
       return false;
     }
-  };
+  }, [logout]);
 
   const setupMFA = async (): Promise<{
     success: boolean;
@@ -254,7 +254,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       } else {
         return { success: false, error: data.message || 'MFA setup failed' };
       }
-    } catch (error) {
+    } catch (_error) {
       return { success: false, error: 'MFA setup failed' };
     }
   };
@@ -278,7 +278,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       } else {
         return { success: false, error: data.message || 'MFA enable failed' };
       }
-    } catch (error) {
+    } catch (_error) {
       return { success: false, error: 'MFA enable failed' };
     }
   };
@@ -305,7 +305,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       } else {
         return { success: false, error: data.message || 'Password change failed' };
       }
-    } catch (error) {
+    } catch (_error) {
       return { success: false, error: 'Password change failed' };
     }
   };
@@ -339,8 +339,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       };
 
       return btoa(JSON.stringify(fingerprint));
-    } catch (error) {
-      console.warn('Device fingerprinting failed:', error);
+    } catch (_error) {
+      console.warn('Device fingerprinting failed:', _error);
       return 'fallback-fingerprint';
     }
   };

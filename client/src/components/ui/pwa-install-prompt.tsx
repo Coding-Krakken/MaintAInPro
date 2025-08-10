@@ -37,7 +37,7 @@ export function PWAInstallPrompt() {
         });
         setIsVisible(false);
       }
-    } catch (error) {
+    } catch (_error) {
       toast({
         title: 'Installation Failed',
         description: 'Failed to install the app. Please try again.',
@@ -115,7 +115,7 @@ export function PWAUpdatePrompt() {
         description: 'The app has been updated. Reloading...',
       });
       // Reload will happen automatically
-    } catch (error) {
+    } catch (_error) {
       toast({
         title: 'Update Failed',
         description: 'Failed to update the app. Please try again.',
@@ -162,11 +162,11 @@ export function PWAOfflineIndicator() {
   const [pendingActions, setPendingActions] = useState(0);
 
   useEffect(() => {
-    const handleNetworkChange = (event: any) => {
+    const handleNetworkChange = (event: CustomEvent<{ isOnline: boolean }>) => {
       setIsOnline(event.detail.isOnline);
     };
 
-    const handleSyncProgress = (event: any) => {
+    const handleSyncProgress = (event: CustomEvent<{ pendingCount?: number }>) => {
       setPendingActions(event.detail.pendingCount || 0);
     };
 

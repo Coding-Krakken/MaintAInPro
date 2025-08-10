@@ -10,7 +10,7 @@ import { useCreateWorkOrder } from '../../hooks/useWorkOrders';
 import { useEquipment } from '../../hooks/useEquipment';
 import { useAuth } from '../../hooks/useAuth';
 import { useToast } from '../../hooks/use-toast';
-import { QrCode, Upload } from 'lucide-react';
+import { QrCode } from 'lucide-react';
 import { useState } from 'react';
 import QRScanner from '../qr/QRScanner';
 import FileUpload from '../FileUpload';
@@ -85,7 +85,7 @@ export default function WorkOrderForm({ onSuccess, onCancel, initialData }: Work
       });
 
       onSuccess?.();
-    } catch (error) {
+    } catch (_error) {
       toast({
         title: 'Error',
         description: 'Failed to create work order',

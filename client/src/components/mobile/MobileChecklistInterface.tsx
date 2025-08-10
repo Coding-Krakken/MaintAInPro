@@ -6,7 +6,7 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { CheckCircle, XCircle, AlertTriangle, Clock, Camera, Mic, Zap } from 'lucide-react';
+import { CheckCircle, XCircle, AlertTriangle, Clock, Camera, Mic } from 'lucide-react';
 import { WorkOrderChecklistItem } from '@/types';
 import { FileUpload } from '@/components/FileUpload';
 import { useMobile } from '@/hooks/useMobile';
@@ -14,7 +14,7 @@ import { useMobile } from '@/hooks/useMobile';
 interface MobileChecklistInterfaceProps {
   workOrderId: string;
   isReadOnly?: boolean;
-  onProgress?: (completed: number, total: number) => void;
+  onProgress?: (_completed: number, _total: number) => void;
 }
 
 interface ChecklistItemWithMobile extends WorkOrderChecklistItem {
@@ -25,6 +25,19 @@ interface ChecklistItemWithMobile extends WorkOrderChecklistItem {
   priority: 'low' | 'medium' | 'high' | 'critical';
 }
 
+interface SpeechRecognitionEvent {
+  resultIndex: number;
+  results: {
+    length: number;
+    [index: number]: {
+      [index: number]: {
+        transcript: string;
+      };
+      isFinal: boolean;
+    };
+  };
+}
+
 const MobileChecklistInterface: React.FC<MobileChecklistInterfaceProps> = ({
   workOrderId,
   isReadOnly = false,
@@ -32,10 +45,10 @@ const MobileChecklistInterface: React.FC<MobileChecklistInterfaceProps> = ({
 }) => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  const { isMobile, isTablet, isTouchDevice } = useMobile();
+  const { isTouchDevice } = useMobile();
 
   const [currentItemIndex, setCurrentItemIndex] = useState(0);
-  const [isVoiceMode, setIsVoiceMode] = useState(false);
+  const [_isVoiceMode, setIsVoiceMode] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [tempNotes, setTempNotes] = useState<Record<string, string>>({});
 
@@ -60,7 +73,7 @@ const MobileChecklistInterface: React.FC<MobileChecklistInterfaceProps> = ({
         description: 'Checklist item updated successfully',
       });
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       toast({
         title: 'Update Failed',
         description: error.message || 'Failed to update checklist item',
@@ -70,7 +83,7 @@ const MobileChecklistInterface: React.FC<MobileChecklistInterfaceProps> = ({
   });
 
   const currentItem: ChecklistItemWithMobile | undefined = checklistItems[currentItemIndex];
-  const completedCount = checklistItems.filter((item: any) => item.status === 'done').length;
+  const completedCount = checklistItems.filter((item: ChecklistItemWithMobile) => item.status === 'done').length;
   const totalCount = checklistItems.length;
   const progressPercentage = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
 
@@ -98,8 +111,8 @@ const MobileChecklistInterface: React.FC<MobileChecklistInterfaceProps> = ({
       setIsVoiceMode(true);
     };
 
-    recognition.onresult = (event: any) => {
-      let interimTranscript = '';
+    recognition.onresult = (event: SpeechRecognitionEvent) => {
+      let _interimTranscript = '';
       let finalTranscript = '';
 
       for (let i = event.resultIndex; i < event.results.length; i++) {
@@ -107,7 +120,7 @@ const MobileChecklistInterface: React.FC<MobileChecklistInterfaceProps> = ({
         if (event.results[i].isFinal) {
           finalTranscript += transcript;
         } else {
-          interimTranscript += transcript;
+          _interimTranscript += transcript;
         }
       }
 
@@ -403,7 +416,7 @@ const MobileChecklistInterface: React.FC<MobileChecklistInterfaceProps> = ({
       <Card className='rounded-none border-x-0 border-b-0 shadow-sm'>
         <CardContent className='p-4'>
           <div className='flex items-center space-x-2 overflow-x-auto'>
-            {checklistItems.map((item: any, index: number) => (
+            {checklistItems.map((item: ChecklistItemWithMobile, index: number) => (
               <Button
                 key={item.id}
                 variant={index === currentItemIndex ? 'default' : 'outline'}

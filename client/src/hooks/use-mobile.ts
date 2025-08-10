@@ -106,7 +106,7 @@ export function useMobileFeatures() {
           const devices = await navigator.mediaDevices.enumerateDevices();
           hasCamera = devices.some(device => device.kind === 'videoinput');
         }
-      } catch (error) {
+      } catch (_error) {
         // Camera not available or permission denied
       }
 

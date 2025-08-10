@@ -74,7 +74,7 @@ class HealthServiceImpl implements HealthService {
 
   // Original method for backward compatibility
   async getHealth(): Promise<HealthData> {
-    const startTime = Date.now();
+    const _startTime = Date.now();
     
     const response = await fetch('/api/health', {
       headers: {

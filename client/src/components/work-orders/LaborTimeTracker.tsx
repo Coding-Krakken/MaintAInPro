@@ -5,13 +5,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import {
   Clock,
   Play,
-  Pause,
   Square,
   Plus,
   Trash2,
@@ -109,7 +107,7 @@ const LaborTimeTracker: React.FC<LaborTimeTrackerProps> = ({
       if (!response.ok) throw new Error('Failed to start time tracking');
       return response.json();
     },
-    onSuccess: data => {
+    onSuccess: (_data) => {
       setIsTracking(true);
       setCurrentSession({
         startTime: new Date(),

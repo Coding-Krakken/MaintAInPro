@@ -8,7 +8,7 @@ interface WebSocketNotification {
   message: string;
   severity: 'info' | 'warning' | 'error' | 'success';
   timestamp: string;
-  data?: any;
+  data?: Record<string, unknown>;
 }
 
 interface UseWebSocketReturn {
@@ -17,7 +17,7 @@ interface UseWebSocketReturn {
   notifications: WebSocketNotification[];
   connectionStatus: 'connecting' | 'connected' | 'disconnected' | 'error';
   lastActivity: Date | null;
-  sendMessage: (event: string, data: any) => void;
+  sendMessage: (event: string, data: Record<string, unknown>) => void;
   clearNotifications: () => void;
 }
 
@@ -164,7 +164,7 @@ export const useWebSocket = (): UseWebSocketReturn => {
     };
   }, []);
 
-  const sendMessage = (event: string, data: any) => {
+  const sendMessage = (event: string, data: Record<string, unknown>) => {
     if (socket && socket.connected) {
       socket.emit(event, data);
       setLastActivity(new Date());

@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi, MockedFunction } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { PMEngine } from '../../../server/services/pm-engine';
 import { storage } from '../../../server/storage';
 
