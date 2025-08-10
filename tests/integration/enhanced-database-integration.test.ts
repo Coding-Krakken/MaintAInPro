@@ -30,7 +30,6 @@ import {
   insertTagSchema,
   type Organization,
   type WorkOrder,
-  type Equipment,
 } from '../shared/schema';
 
 describe('Enhanced Database Service - Production Integration Tests', () => {

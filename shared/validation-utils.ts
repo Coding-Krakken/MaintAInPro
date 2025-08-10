@@ -4,14 +4,14 @@ import { z } from 'zod';
 /**
  * Utility to transform camelCase keys to snake_case
  */
-export function camelToSnake(obj: any): any {
+export function camelToSnake(obj: Record<string, unknown>): Record<string, unknown> {
   if (!obj || typeof obj !== 'object' || obj instanceof Date) return obj;
 
   if (Array.isArray(obj)) {
     return obj.map(item => camelToSnake(item));
   }
 
-  const result: Record<string, any> = {};
+  const result: Record<string, unknown> = {};
 
   for (const [key, value] of Object.entries(obj)) {
     const snakeKey = key.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
@@ -24,14 +24,14 @@ export function camelToSnake(obj: any): any {
 /**
  * Utility to transform snake_case keys to camelCase
  */
-export function snakeToCamel(obj: any): any {
+export function snakeToCamel(obj: Record<string, unknown>): Record<string, unknown> {
   if (!obj || typeof obj !== 'object' || obj instanceof Date) return obj;
 
   if (Array.isArray(obj)) {
     return obj.map(item => snakeToCamel(item));
   }
 
-  const result: Record<string, any> = {};
+  const result: Record<string, unknown> = {};
 
   for (const [key, value] of Object.entries(obj)) {
     const camelKey = key.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase());
@@ -47,11 +47,11 @@ export function snakeToCamel(obj: any): any {
 export const createFlexibleSchema = <T extends z.ZodRawShape>(shape: T) => {
   const schema = z.object(shape);
 
-  return z.preprocess((data: any) => {
+  return z.preprocess((data: unknown) => {
     if (!data || typeof data !== 'object') return data;
 
     // Handle both camelCase and snake_case inputs
-    const normalizedData: Record<string, any> = {};
+    const normalizedData: Record<string, unknown> = {};
     const shapeKeys = Object.keys(shape);
 
     for (const [key, value] of Object.entries(data)) {
