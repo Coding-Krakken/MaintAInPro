@@ -107,7 +107,7 @@ const LaborTimeTracker: React.FC<LaborTimeTrackerProps> = ({
       if (!response.ok) throw new Error('Failed to start time tracking');
       return response.json();
     },
-    onSuccess: data => {
+    onSuccess: (_data) => {
       setIsTracking(true);
       setCurrentSession({
         startTime: new Date(),

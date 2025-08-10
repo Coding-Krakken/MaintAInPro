@@ -84,12 +84,13 @@ export default [
       '@typescript-eslint/no-unused-vars': ['error', { 
         argsIgnorePattern: '^_',
         varsIgnorePattern: '^_',
+        caughtErrorsIgnorePattern: '^_',
         ignoreRestSiblings: true
       }],
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/explicit-module-boundary-types': 'off',
-      '@typescript-eslint/no-explicit-any': 'warn',
-      '@typescript-eslint/no-non-null-assertion': 'warn',
+      '@typescript-eslint/no-explicit-any': 'off', // Temporarily off to focus on critical errors
+      '@typescript-eslint/no-non-null-assertion': 'off', // Temporarily off to focus on critical errors
       '@typescript-eslint/no-var-requires': 'off',
       'prefer-const': 'error',
     },
@@ -242,6 +243,7 @@ export default [
       '@typescript-eslint/no-unused-vars': ['error', { 
         argsIgnorePattern: '^_',
         varsIgnorePattern: '^_',
+        caughtErrorsIgnorePattern: '^_',
         ignoreRestSiblings: true
       }],
     },

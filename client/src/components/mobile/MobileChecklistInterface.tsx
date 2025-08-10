@@ -48,7 +48,7 @@ const MobileChecklistInterface: React.FC<MobileChecklistInterfaceProps> = ({
   const { isTouchDevice } = useMobile();
 
   const [currentItemIndex, setCurrentItemIndex] = useState(0);
-  const [isVoiceMode, setIsVoiceMode] = useState(false);
+  const [_isVoiceMode, setIsVoiceMode] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [tempNotes, setTempNotes] = useState<Record<string, string>>({});
 

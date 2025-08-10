@@ -12,19 +12,15 @@ import {
   CheckCircle,
   XCircle,
   AlertTriangle,
-  Clock,
   Mic,
   Camera,
-  Save,
   WifiOff,
   RefreshCw,
   ChevronLeft,
   ChevronRight,
   RotateCcw,
-  ImageIcon,
 } from 'lucide-react';
 import { WorkOrderChecklistItem } from '@/types';
-import FileUpload from '@/components/FileUploadEnhanced';
 
 interface MobileChecklistExecutionProps {
   workOrderId: string;
@@ -50,7 +46,7 @@ const MobileChecklistExecution: React.FC<MobileChecklistExecutionProps> = ({
 }) => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  const isMobile = useIsMobile();
+  const _isMobile = useIsMobile();
   const { queueAction, getNetworkStatus, getPendingActionsCount, forceSync } = useOfflineService();
 
   // Mobile-specific state
