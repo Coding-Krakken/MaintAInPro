@@ -15,7 +15,6 @@ import {
   Download,
   Printer,
   BarChart3,
-  FileText,
   Sparkles,
 } from 'lucide-react';
 import { Link } from 'wouter';

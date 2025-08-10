@@ -6,7 +6,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Upload, Camera, FileImage, X, CheckCircle, AlertCircle, File } from 'lucide-react';
 
 interface FileUploadEnhancedProps {
-  onFilesSelected?: (files: File[]) => void;
+  onFilesSelected?: (_files: File[]) => void;
   multiple?: boolean;
   accept?: string;
   maxSize?: number; // in bytes

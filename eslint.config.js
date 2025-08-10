@@ -63,6 +63,7 @@ export default [
       '@typescript-eslint': typescript,
     },
     rules: {
+      'no-unused-vars': 'off', // Disabled in favor of @typescript-eslint/no-unused-vars
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/explicit-module-boundary-types': 'off',
@@ -102,6 +103,7 @@ export default [
         Event: 'readonly',
         DataTransfer: 'readonly',
         performance: 'readonly',
+        CustomEvent: 'readonly',
       },
     },
     plugins: {

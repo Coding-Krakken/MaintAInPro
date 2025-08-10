@@ -19,8 +19,8 @@ import { Attachment } from '@/types';
 
 interface DocumentPreviewProps {
   attachments: Attachment[];
-  onDelete?: (attachmentId: string) => void;
-  onDownload?: (attachment: Attachment) => void;
+  onDelete?: (_attachmentId: string) => void;
+  onDownload?: (_attachment: Attachment) => void;
   showActions?: boolean;
   className?: string;
 }

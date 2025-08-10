@@ -69,9 +69,6 @@ const EquipmentPerformanceAnalytics: React.FC<EquipmentPerformanceAnalyticsProps
   const [selectedEquipment, setSelectedEquipment] = useState<string>(equipmentId || 'all');
   const [selectedTimeRange, setSelectedTimeRange] = useState(timeRange);
 
-  const [_selectedMetric, _setSelectedMetric] = useState<'mtbf' | 'mttr' | 'availability' | 'cost'>('availability');
-
-
   // Fetch equipment list
   const { data: equipment = [] } = useQuery({
     queryKey: ['equipment', 'analytics'],

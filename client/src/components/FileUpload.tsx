@@ -22,8 +22,8 @@ interface FileUploadProps {
   equipmentId?: string;
   pmTemplateId?: string;
   vendorId?: string;
-  onUploadSuccess?: (fileUrl: string, fileName: string) => void;
-  onUploadError?: (error: string) => void;
+  onUploadSuccess?: (_fileUrl: string, _fileName: string) => void;
+  onUploadError?: (_error: string) => void;
   maxFiles?: number;
   disabled?: boolean;
   className?: string;

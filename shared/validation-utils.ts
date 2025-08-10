@@ -111,7 +111,7 @@ export const passwordSchema = z
     'Password must contain at least one lowercase, one uppercase, and one number'
   )
   .regex(
-    /^(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])/,
+    /^(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?])/,
     'Password must contain at least one special character'
   );
 
@@ -263,7 +263,7 @@ export const fieldValidators = {
   password: passwordSchema,
   phoneNumber: z
     .string()
-    .regex(/^\+?[\d\s\-\(\)\.]+$/, 'Invalid phone number format')
+    .regex(/^\+?[\d\s\-().]+$/, 'Invalid phone number format')
     .optional(),
 
   // Array validations

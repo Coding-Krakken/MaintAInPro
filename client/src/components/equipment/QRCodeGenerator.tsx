@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
-import { QrCode, Download, Printer, Copy, Settings, FileImage, Grid3X3, Zap } from 'lucide-react';
+import { QrCode, Download, Printer, Copy, Grid3X3, Zap } from 'lucide-react';
 import QRCode from 'qrcode';
 
 interface QRCodeGeneratorProps {

@@ -53,7 +53,7 @@ export default function EquipmentFormModal({ isOpen, onClose }: EquipmentFormMod
       });
 
       onClose();
-    } catch (error) {
+    } catch (_error) {
       toast({
         title: 'Error',
         description: 'Failed to create equipment',
