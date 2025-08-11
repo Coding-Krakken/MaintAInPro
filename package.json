@@ -209,6 +209,6 @@
     "vitest-axe": "^0.1.0"
   },
   "optionalDependencies": {
-    "bufferutil": "^4.0.8"
+    "bufferutil": "^4.0.9"
   }
 }
