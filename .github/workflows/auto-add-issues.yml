@@ -1,0 +1,25 @@
+name: Auto Add Issues to GitHub Project
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'issues/**'
+
+jobs:
+  add-issues:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Install GitHub CLI
+        run: sudo apt-get update && sudo apt-get install -y gh
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
+      - name: Sync issues and project
+        run: |
+          chmod +x scripts/project-management/sync_issues_and_project.sh
+          ./scripts/project-management/sync_issues_and_project.sh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
