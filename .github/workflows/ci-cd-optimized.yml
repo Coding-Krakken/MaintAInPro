@@ -1,11 +1,36 @@
-name: ⚡ CI/CD Pipeline - Optimized
 
+# MaintAInPro CI/CD Pipeline - Optimized
+# Purpose: Full build, test, security, and deployment pipeline for PRs and pushes to main/stable branches.
+# Triggers: Only runs for code changes, not docs-only edits.
+name: ⚡ CI/CD Pipeline - Optimized
 on:
   pull_request:
     types: [opened, synchronize, ready_for_review]
     branches: [main, Replit]
+    paths:
+      - '**/*.ts'
+      - '**/*.js'
+      - 'client/**'
+      - 'server/**'
+      - 'shared/**'
+      - 'api/**'
+    paths-ignore:
+      - 'Documentation/**'
+      - '**/*.md'
+      - 'CHANGELOG.md'
   push:
     branches: [main, Replit, stable]
+    paths:
+      - '**/*.ts'
+      - '**/*.js'
+      - 'client/**'
+      - 'server/**'
+      - 'shared/**'
+      - 'api/**'
+    paths-ignore:
+      - 'Documentation/**'
+      - '**/*.md'
+      - 'CHANGELOG.md'
 
 permissions:
   contents: read
@@ -67,28 +92,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: 🔧 Setup Node.js with cache
-        uses: actions/setup-node@v4
+      - name: 🔧 Setup Node.js with Caching
+        uses: ./.github/actions/setup-node
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-
-      - name: 📦 Cache dependencies
-        id: cache-deps
-        uses: actions/cache@v4
-        with:
-          path: |
-            node_modules
-            ~/.npm
-          key: deps-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            deps-${{ runner.os }}-
-
-      - name: 🚀 Install dependencies
-        run: |
-          echo "Installing dependencies..."
-          npm ci --prefer-offline --no-audit
-          echo "✅ Dependencies installed successfully"
 
       - name: 🔍 Type check
         run: |
@@ -318,11 +325,10 @@ jobs:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
 
-      - name: 🔧 Setup Node.js
-        uses: actions/setup-node@v4
+      - name: 🔧 Setup Node.js with Caching
+        uses: ./.github/actions/setup-node
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
 
       - name: 📦 Install Vercel CLI
         run: npm install -g vercel@latest

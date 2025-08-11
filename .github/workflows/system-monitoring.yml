@@ -1,5 +1,8 @@
-name: 📊 System Monitoring & Status
 
+# MaintAInPro System Monitoring & Status
+# Purpose: Scheduled and manual health checks for production/staging/API/CI/CD.
+# Triggers: Only runs for code changes, not docs-only edits.
+name: 📊 System Monitoring & Status
 on:
   workflow_dispatch:
     inputs:
@@ -8,6 +11,17 @@ on:
         required: false
         default: false
         type: boolean
+    paths:
+      - '**/*.ts'
+      - '**/*.js'
+      - 'client/**'
+      - 'server/**'
+      - 'shared/**'
+      - 'api/**'
+    paths-ignore:
+      - 'Documentation/**'
+      - '**/*.md'
+      - 'CHANGELOG.md'
 
   schedule:
     # Run every 30 minutes
@@ -32,6 +46,11 @@ jobs:
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
+
+      - name: 🛠️ Setup Node.js with Caching
+        uses: ./.github/actions/setup-node
+        with:
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: 🏥 Comprehensive health check
         id: health-check

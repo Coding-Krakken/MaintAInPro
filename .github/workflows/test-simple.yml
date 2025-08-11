@@ -1,10 +1,35 @@
-name: Test Workflow
 
+# MaintAInPro Simple Test Workflow
+# Purpose: Manual and push-triggered test for basic CI validation.
+# Triggers: Only runs for code changes, not docs-only edits.
+name: Test Workflow
 on:
   workflow_dispatch:
+    paths:
+      - '**/*.ts'
+      - '**/*.js'
+      - 'client/**'
+      - 'server/**'
+      - 'shared/**'
+      - 'api/**'
+    paths-ignore:
+      - 'Documentation/**'
+      - '**/*.md'
+      - 'CHANGELOG.md'
   push:
     branches:
       - Replit
+    paths:
+      - '**/*.ts'
+      - '**/*.js'
+      - 'client/**'
+      - 'server/**'
+      - 'shared/**'
+      - 'api/**'
+    paths-ignore:
+      - 'Documentation/**'
+      - '**/*.md'
+      - 'CHANGELOG.md'
 
 jobs:
   test:
