@@ -7,22 +7,13 @@
 
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { Pool } from 'pg';
-import { sql, count } from 'drizzle-orm';
 import { v4 as uuidv4 } from 'uuid';
 import {
-  organizations,
-  workOrders,
-  equipment,
-  activityLogs,
-  tags,
-  entityTags,
   type Organization,
   type InsertOrganization,
   type WorkOrder,
   type InsertWorkOrder,
   type Equipment,
-  type Tag,
-  type EntityTag,
 } from '../../shared/schema';
 
 // Audit Context Interface
@@ -348,7 +339,7 @@ export class EnhancedDatabaseService {
       limit?: number;
       offset?: number;
     },
-    context: AuditContext
+    _context: AuditContext
   ): Promise<{ equipment: Equipment[]; total: number }> {
     const { organizationId, searchTerm, limit = 10, offset = 0 } = options;
 
@@ -437,8 +428,8 @@ export class EnhancedDatabaseService {
 
   // Transaction Management
   async withTransaction<T>(
-    operation: (client: unknown) => Promise<T>,
-    context: AuditContext
+    operation: (_client: unknown) => Promise<T>,
+    _context: AuditContext
   ): Promise<T> {
     const client = await this.pool.connect();
     try {

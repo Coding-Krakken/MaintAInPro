@@ -384,7 +384,7 @@ export class EscalationEngine {
     workOrderId: string,
     escalateToUserId: string,
     reason: string,
-    escalatedByUserId: string
+    _escalatedByUserId: string
   ): Promise<EscalationAction | null> {
     try {
       const workOrder = await storage.getWorkOrder(workOrderId);

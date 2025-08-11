@@ -349,7 +349,7 @@ export class FileManagementService {
     }
   }
 
-  private async compressImage(filePath: string, mimeType: string): Promise<string> {
+  private async compressImage(filePath: string, _mimeType: string): Promise<string> {
     try {
       const outputPath = filePath.replace(/(\.[^.]+)$/, '_compressed$1');
 
