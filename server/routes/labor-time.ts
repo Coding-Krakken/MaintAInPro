@@ -1,9 +1,7 @@
 import type { Express } from 'express';
 import { z } from 'zod';
 import { storage } from '../storage';
-import { insertLaborTimeSchema, profiles } from '@shared/schema';
-import { eq, and } from 'drizzle-orm';
-import { db } from '../db';
+import { insertLaborTimeSchema } from '@shared/schema';
 
 const authenticateRequest = (req: any, res: any, next: any) => {
   // Basic authentication check - replace with actual auth logic
@@ -38,8 +36,8 @@ export function registerLaborTimeRoutes(app: Express) {
       );
 
       res.json(enrichedEntries);
-    } catch (error) {
-      console.error('Error fetching labor time:', error);
+    } catch (_error) {
+      console.error('Error fetching labor time:', _error);
       res.status(500).json({ message: 'Failed to fetch labor time' });
     }
   });
@@ -73,8 +71,8 @@ export function registerLaborTimeRoutes(app: Express) {
       } as any);
 
       res.status(201).json(laborTime);
-    } catch (error) {
-      console.error('Error starting time tracking:', error);
+    } catch (_error) {
+      console.error('Error starting time tracking:', _error);
       res.status(500).json({ message: 'Failed to start time tracking' });
     }
   });
@@ -107,8 +105,8 @@ export function registerLaborTimeRoutes(app: Express) {
       } as any);
 
       res.json(updatedLaborTime);
-    } catch (error) {
-      console.error('Error stopping time tracking:', error);
+    } catch (_error) {
+      console.error('Error stopping time tracking:', _error);
       res.status(500).json({ message: 'Failed to stop time tracking' });
     }
   });
@@ -135,15 +133,15 @@ export function registerLaborTimeRoutes(app: Express) {
       const laborTime = await storage.createLaborTime(validatedData as any);
 
       res.status(201).json(laborTime);
-    } catch (error) {
-      if (error instanceof z.ZodError) {
+    } catch (_error) {
+      if (_error instanceof z.ZodError) {
         return res.status(400).json({
-          message: 'Validation error',
-          errors: error.errors,
+          message: 'Validation _error',
+          errors: _error.errors,
         });
       }
 
-      console.error('Error creating labor time:', error);
+      console.error('Error creating labor time:', _error);
       res.status(500).json({ message: 'Failed to create labor time entry' });
     }
   });
@@ -178,8 +176,8 @@ export function registerLaborTimeRoutes(app: Express) {
         await storage.deleteLaborTime(id);
 
         res.json({ message: 'Labor time entry deleted successfully' });
-      } catch (error) {
-        console.error('Error deleting labor time:', error);
+      } catch (_error) {
+        console.error('Error deleting labor time:', _error);
         res.status(500).json({ message: 'Failed to delete labor time entry' });
       }
     }
@@ -217,8 +215,8 @@ export function registerLaborTimeRoutes(app: Express) {
       }
 
       res.json(summary);
-    } catch (error) {
-      console.error('Error generating labor time summary:', error);
+    } catch (_error) {
+      console.error('Error generating labor time summary:', _error);
       res.status(500).json({ message: 'Failed to generate labor time summary' });
     }
   });
@@ -248,8 +246,8 @@ export function registerLaborTimeRoutes(app: Express) {
             : null,
         },
       });
-    } catch (error) {
-      console.error('Error checking active labor time:', error);
+    } catch (_error) {
+      console.error('Error checking active labor time:', _error);
       res.status(500).json({ message: 'Failed to check active labor time' });
     }
   });

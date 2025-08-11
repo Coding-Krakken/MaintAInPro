@@ -1,16 +1,14 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import request from 'supertest';
-import express from 'express';
-import { createApp } from '../../server/index';
+import { app } from '../../server/index';
 import { MemoryStorage } from '../../server/storage';
 
 describe('Security Tests', () => {
-  let app: express.Application;
-  let storage: MemoryStorage;
+  let storage: InstanceType<typeof MemoryStorage>;
 
   beforeEach(async () => {
-    storage = new MemoryStorage();
-    app = await createApp(storage);
+  storage = new MemoryStorage();
+  // app is imported from server/index
   });
 
   describe('Authentication Security', () => {
@@ -169,13 +167,11 @@ describe('Security Tests', () => {
       };
 
       // Make multiple failed login attempts
-      const attempts = [];
+      const responses: request.Response[] = [];
       for (let i = 0; i < 10; i++) {
-        attempts.push(request(app).post('/api/auth/login').send(credentials));
+        const res = await request(app).post('/api/auth/login').send(credentials);
+        responses.push(res);
       }
-
-      const responses = await Promise.all(attempts);
-
       // Should eventually start rate limiting (429 status)
       const rateLimitedResponses = responses.filter(r => r.status === 429);
       expect(rateLimitedResponses.length).toBeGreaterThan(0);
@@ -199,13 +195,11 @@ describe('Security Tests', () => {
       const token = loginResponse.body.token;
 
       // Make many requests quickly
-      const requests = [];
+      const responses: request.Response[] = [];
       for (let i = 0; i < 100; i++) {
-        requests.push(request(app).get('/api/equipment').set('Authorization', `Bearer ${token}`));
+        const res = await request(app).get('/api/equipment').set('Authorization', `Bearer ${token}`);
+        responses.push(res);
       }
-
-      const responses = await Promise.all(requests);
-
       // Should eventually rate limit
       const rateLimitedResponses = responses.filter(r => r.status === 429);
       expect(rateLimitedResponses.length).toBeGreaterThan(0);
@@ -221,7 +215,7 @@ describe('Security Tests', () => {
         { email: 'admin@example.com', role: 'admin' },
       ];
 
-      const tokens = {};
+      const tokens: Record<string, string> = {};
 
       for (const user of users) {
         await request(app)
@@ -251,14 +245,13 @@ describe('Security Tests', () => {
 
       for (const endpoint of adminEndpoints) {
         // Technician should be denied
-        const techResponse = await request(app)[endpoint.method](endpoint.path)
-          .set('Authorization', `Bearer ${tokens.technician}`);
+  const techResponse = await request(app)[endpoint.method](endpoint.path).set('Authorization', `Bearer ${tokens.technician}`);
 
-        expect([403, 404]).toContain(techResponse.status);
 
-        // Admin should be allowed
-        const adminResponse = await request(app)[endpoint.method](endpoint.path)
-          .set('Authorization', `Bearer ${tokens.admin}`);
+  expect([403, 404]).toContain(techResponse.status);
+
+  // Admin should be allowed
+  const adminResponse = await request(app)[endpoint.method](endpoint.path).set('Authorization', `Bearer ${tokens.admin}`);
 
         expect(adminResponse.status).not.toBe(403);
       }
@@ -351,8 +344,8 @@ describe('Security Tests', () => {
         warehouse_id: 'warehouse-1',
       });
 
-      const users = await storage.users.getAll();
-      const user = users.find(u => u.email === 'test@example.com');
+  const users = await storage.getProfiles();
+  const user = users.find(u => u.email === 'test@example.com');
 
       expect(user?.password).not.toBe(password);
       expect(user?.password).toMatch(/^\$2[aby]\$/); // bcrypt format
@@ -395,8 +388,9 @@ describe('Security Tests', () => {
 
     it('should handle database errors securely', async () => {
       // Mock a database error
-      const originalGetAll = storage.equipment.getAll;
-      storage.equipment.getAll = vi.fn().mockRejectedValue(new Error('Database connection failed'));
+  // Mock getEquipment to throw error
+  const originalGetEquipment = storage.getEquipment;
+  storage.getEquipment = vi.fn().mockRejectedValue(new Error('Database connection failed'));
 
       await request(app).post('/api/auth/register').send({
         email: 'test@example.com',
@@ -419,8 +413,8 @@ describe('Security Tests', () => {
       expect(response.body.message).not.toContain('Database connection failed');
       expect(response.body.message).not.toContain('stack');
 
-      // Restore original method
-      storage.equipment.getAll = originalGetAll;
+  // Restore original method
+  storage.getEquipment = originalGetEquipment;
     });
   });
 });

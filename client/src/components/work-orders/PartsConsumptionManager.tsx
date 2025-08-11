@@ -6,14 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
-import {
-  Package,
-  Plus,
-  Minus,
-  AlertTriangle,
-  Search,
-  ShoppingCart,
-} from 'lucide-react';
+import { Package, Plus, Minus, AlertTriangle, Search, ShoppingCart } from 'lucide-react';
 
 interface Part {
   id: string;
@@ -41,7 +34,7 @@ interface PartUsage {
 
 interface PartsConsumptionManagerProps {
   workOrderId: string;
-  onTotalCostChange?: (cost: number) => void;
+  onTotalCostChange?: (_cost: number) => void;
   isReadOnly?: boolean;
 }
 
@@ -479,7 +472,7 @@ const PartsConsumptionManager: React.FC<PartsConsumptionManagerProps> = ({
 // Component for individual part selection
 interface PartSelectionItemProps {
   part: Part;
-  onAdd: (part: Part, quantity: number, notes?: string) => void;
+  onAdd: (_part: Part, _quantity: number, _notes?: string) => void;
 }
 
 const PartSelectionItem: React.FC<PartSelectionItemProps> = ({ part, onAdd }) => {

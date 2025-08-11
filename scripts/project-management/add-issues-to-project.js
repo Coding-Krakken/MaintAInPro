@@ -5,8 +5,8 @@
  * This script uses GitHub's GraphQL API for Projects v2
  */
 
-import { Octokit } from "@octokit/rest";
-import { graphql } from "@octokit/graphql";
+import { Octokit } from '@octokit/rest';
+import { graphql } from '@octokit/graphql';
 
 // Configuration
 const OWNER = 'Coding-Krakken';
@@ -15,7 +15,7 @@ const PROJECT_TITLE = 'MaintAInPro Roadmap';
 
 // Initialize GitHub clients
 const octokit = new Octokit({
-  auth: process.env.GITHUB_TOKEN
+  auth: process.env.GITHUB_TOKEN,
 });
 
 const graphqlWithAuth = graphql.defaults({
@@ -29,33 +29,33 @@ const graphqlWithAuth = graphql.defaults({
  */
 async function getOpenIssues() {
   console.log('🔍 Fetching open issues...');
-  
+
   try {
     const issues = [];
     let page = 1;
     const perPage = 100;
-    
+
     while (true) {
       const response = await octokit.rest.issues.listForRepo({
         owner: OWNER,
         repo: REPO,
         state: 'open',
         page: page,
-        per_page: perPage
+        per_page: perPage,
       });
-      
+
       if (response.data.length === 0) break;
-      
+
       // Filter out pull requests (GitHub API returns both issues and PRs)
       const actualIssues = response.data.filter(issue => !issue.pull_request);
       issues.push(...actualIssues);
-      
+
       console.log(`   Found ${actualIssues.length} issues on page ${page}`);
-      
+
       if (response.data.length < perPage) break;
       page++;
     }
-    
+
     console.log(`✅ Total open issues found: ${issues.length}`);
     return issues;
   } catch (error) {
@@ -69,16 +69,16 @@ async function getOpenIssues() {
  */
 async function findOrCreateProject() {
   console.log('🔍 Looking for MaintAInPro Roadmap project...');
-  
+
   try {
     // First, get the organization/user info
     const { data: orgData } = await octokit.rest.repos.get({
       owner: OWNER,
-      repo: REPO
+      repo: REPO,
     });
-    
+
     const isOrg = orgData.owner.type === 'Organization';
-    
+
     // Query to find existing projects
     const findProjectQuery = `
       query($owner: String!) {
@@ -93,25 +93,25 @@ async function findOrCreateProject() {
         }
       }
     `;
-    
+
     const findResult = await graphqlWithAuth(findProjectQuery, {
-      owner: OWNER
+      owner: OWNER,
     });
-    
-    const projects = isOrg 
-      ? findResult.organization.projectsV2.nodes 
+
+    const projects = isOrg
+      ? findResult.organization.projectsV2.nodes
       : findResult.user.projectsV2.nodes;
-    
+
     // Look for existing project
     const existingProject = projects.find(p => p.title === PROJECT_TITLE);
-    
+
     if (existingProject) {
       console.log(`✅ Found existing project: ${PROJECT_TITLE} (${existingProject.number})`);
       return existingProject;
     }
-    
+
     console.log(`📝 Creating new project: ${PROJECT_TITLE}...`);
-    
+
     // Create new project
     const createProjectQuery = `
       mutation($ownerId: ID!, $title: String!) {
@@ -127,27 +127,30 @@ async function findOrCreateProject() {
         }
       }
     `;
-    
-    const ownerResult = await graphqlWithAuth(`
+
+    const ownerResult = await graphqlWithAuth(
+      `
       query($owner: String!) {
         ${isOrg ? 'organization' : 'user'}(login: $owner) {
           id
         }
       }
-    `, {
-      owner: OWNER
-    });
-    
+    `,
+      {
+        owner: OWNER,
+      }
+    );
+
     const ownerId = isOrg ? ownerResult.organization.id : ownerResult.user.id;
-    
+
     const createResult = await graphqlWithAuth(createProjectQuery, {
       ownerId: ownerId,
-      title: PROJECT_TITLE
+      title: PROJECT_TITLE,
     });
-    
+
     const newProject = createResult.createProjectV2.projectV2;
     console.log(`✅ Created new project: ${PROJECT_TITLE} (${newProject.number})`);
-    
+
     return newProject;
   } catch (error) {
     console.error('❌ Error finding/creating project:', error.message);
@@ -160,11 +163,11 @@ async function findOrCreateProject() {
  */
 async function addIssuesToProject(project, issues) {
   console.log(`📝 Adding ${issues.length} issues to project...`);
-  
+
   try {
     let addedCount = 0;
     let skippedCount = 0;
-    
+
     for (const issue of issues) {
       try {
         // Get the issue node ID (required for GraphQL)
@@ -178,15 +181,15 @@ async function addIssuesToProject(project, issues) {
             }
           }
         `;
-        
+
         const issueResult = await graphqlWithAuth(issueQuery, {
           owner: OWNER,
           repo: REPO,
-          number: issue.number
+          number: issue.number,
         });
-        
+
         const issueNodeId = issueResult.repository.issue.id;
-        
+
         // Add issue to project
         const addItemQuery = `
           mutation($projectId: ID!, $contentId: ID!) {
@@ -200,18 +203,17 @@ async function addIssuesToProject(project, issues) {
             }
           }
         `;
-        
+
         await graphqlWithAuth(addItemQuery, {
           projectId: project.id,
-          contentId: issueNodeId
+          contentId: issueNodeId,
         });
-        
+
         console.log(`   ✅ Added issue #${issue.number}: ${issue.title}`);
         addedCount++;
-        
+
         // Rate limiting - be nice to the API
         await new Promise(resolve => setTimeout(resolve, 100));
-        
       } catch (error) {
         if (error.message.includes('already exists')) {
           console.log(`   ⏭️  Issue #${issue.number} already in project`);
@@ -221,12 +223,11 @@ async function addIssuesToProject(project, issues) {
         }
       }
     }
-    
+
     console.log(`\n📊 Summary:`);
     console.log(`   - Added: ${addedCount} issues`);
     console.log(`   - Skipped: ${skippedCount} issues`);
     console.log(`   - Total: ${issues.length} issues processed`);
-    
   } catch (error) {
     console.error('❌ Error adding issues to project:', error.message);
     throw error;
@@ -239,29 +240,28 @@ async function addIssuesToProject(project, issues) {
 async function main() {
   try {
     console.log('🚀 Starting GitHub Project Issue Management...\n');
-    
+
     // Validate environment
     if (!process.env.GITHUB_TOKEN) {
       throw new Error('GITHUB_TOKEN environment variable is required');
     }
-    
+
     // Step 1: Get all open issues
     const issues = await getOpenIssues();
-    
+
     if (issues.length === 0) {
       console.log('ℹ️  No open issues found. Nothing to do.');
       return;
     }
-    
+
     // Step 2: Find or create the project
     const project = await findOrCreateProject();
-    
+
     // Step 3: Add issues to project
     await addIssuesToProject(project, issues);
-    
+
     console.log('\n🎉 Successfully completed GitHub Project management!');
     console.log(`   Project: https://github.com/${OWNER}/${REPO}/projects/${project.number}`);
-    
   } catch (error) {
     console.error('\n💥 Script failed:', error.message);
     process.exit(1);

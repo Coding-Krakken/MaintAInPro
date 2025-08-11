@@ -34,7 +34,7 @@ export const RealTimeNotifications: React.FC = () => {
   useEffect(() => {
     // Subscribe to notifications
     const unsubscribeNotifications = webSocketService.subscribeToNotifications(notification => {
-      setNotifications(prev => [notification, ...prev.slice(0, 9)]); // Keep last 10
+      setNotifications(prev => [notification as NotificationData, ...prev.slice(0, 9)]); // Keep last 10
     });
 
     // Subscribe to work order updates

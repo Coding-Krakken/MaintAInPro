@@ -1,6 +1,7 @@
 # 🔗 API Reference
 
-Complete API documentation for MaintAInPro CMMS. This guide covers all endpoints, request/response formats, authentication, and integration examples.
+Complete API documentation for MaintAInPro CMMS. This guide covers all
+endpoints, request/response formats, authentication, and integration examples.
 
 ## 📋 Table of Contents
 
@@ -26,7 +27,8 @@ Development: http://localhost:5000/api
 
 ### Overview
 
-MaintAInPro uses JWT-based authentication with Bearer tokens. All API requests (except auth endpoints) require a valid JWT token.
+MaintAInPro uses JWT-based authentication with Bearer tokens. All API requests
+(except auth endpoints) require a valid JWT token.
 
 ### Headers
 
@@ -41,6 +43,7 @@ X-Organization-ID: <organization_uuid>
 Authenticate user and receive JWT token.
 
 **Request:**
+
 ```json
 {
   "email": "user@example.com",
@@ -49,6 +52,7 @@ Authenticate user and receive JWT token.
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -72,6 +76,7 @@ Authenticate user and receive JWT token.
 Register a new user account.
 
 **Request:**
+
 ```json
 {
   "email": "newuser@example.com",
@@ -87,6 +92,7 @@ Register a new user account.
 Refresh an expired JWT token.
 
 **Request:**
+
 ```json
 {
   "refreshToken": "refresh_token_here"
@@ -104,6 +110,7 @@ Invalidate the current JWT token.
 Retrieve work orders with filtering and pagination.
 
 **Query Parameters:**
+
 - `status` - Filter by status (open, in_progress, completed, cancelled)
 - `priority` - Filter by priority (low, medium, high, critical)
 - `assignedTo` - Filter by assigned user ID
@@ -113,11 +120,13 @@ Retrieve work orders with filtering and pagination.
 - `search` - Search in title and description
 
 **Example Request:**
+
 ```bash
 GET /api/work-orders?status=open&priority=high&limit=25
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -163,6 +172,7 @@ GET /api/work-orders?status=open&priority=high&limit=25
 Create a new work order.
 
 **Request:**
+
 ```json
 {
   "title": "Replace worn bearing",
@@ -183,6 +193,7 @@ Create a new work order.
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -201,6 +212,7 @@ Create a new work order.
 Get detailed work order information.
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -269,6 +281,7 @@ Get detailed work order information.
 Update work order fields.
 
 **Request:**
+
 ```json
 {
   "status": "completed",
@@ -288,6 +301,7 @@ Delete a work order (soft delete).
 Retrieve equipment with hierarchy and filtering.
 
 **Query Parameters:**
+
 - `area` - Filter by area/location
 - `status` - Filter by status (active, maintenance, decommissioned)
 - `criticality` - Filter by criticality (low, medium, high, critical)
@@ -295,6 +309,7 @@ Retrieve equipment with hierarchy and filtering.
 - `search` - Search in asset tag, model, description
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -335,6 +350,7 @@ Retrieve equipment with hierarchy and filtering.
 Create new equipment.
 
 **Request:**
+
 ```json
 {
   "assetTag": "COMP-001",
@@ -356,6 +372,7 @@ Create new equipment.
 Generate QR code for equipment.
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -371,6 +388,7 @@ Generate QR code for equipment.
 Get maintenance history for equipment.
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -400,12 +418,14 @@ Get maintenance history for equipment.
 Retrieve parts inventory.
 
 **Query Parameters:**
+
 - `category` - Filter by part category
 - `supplier` - Filter by supplier
 - `lowStock` - Show only low stock items (boolean)
 - `search` - Search in part number, description
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -435,13 +455,14 @@ Retrieve parts inventory.
 Add new part to inventory.
 
 **Request:**
+
 ```json
 {
   "partNumber": "BRG-003",
   "description": "Ball bearing 6205-2RS",
   "category": "Bearings",
   "supplier": "SKF",
-  "unitPrice": 28.50,
+  "unitPrice": 28.5,
   "stockQuantity": 20,
   "minStockLevel": 3,
   "maxStockLevel": 30,
@@ -455,6 +476,7 @@ Add new part to inventory.
 Record parts consumption from work order.
 
 **Request:**
+
 ```json
 {
   "quantity": 2,
@@ -470,6 +492,7 @@ Record parts consumption from work order.
 Retrieve users within organization.
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -494,6 +517,7 @@ Retrieve users within organization.
 Get organization details.
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -525,6 +549,7 @@ Get organization details.
 Get dashboard metrics and KPIs.
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -548,9 +573,9 @@ Get dashboard metrics and KPIs.
       "scheduledCompliance": 87.3
     },
     "costs": {
-      "totalThisMonth": 18750.50,
-      "laborCosts": 12500.00,
-      "partsCosts": 6250.50,
+      "totalThisMonth": 18750.5,
+      "laborCosts": 12500.0,
+      "partsCosts": 6250.5,
       "previousMonth": 16200.25
     }
   }
@@ -562,11 +587,13 @@ Get dashboard metrics and KPIs.
 Get work order analytics with time-based filtering.
 
 **Query Parameters:**
+
 - `startDate` - Start date (ISO 8601)
 - `endDate` - End date (ISO 8601)
 - `groupBy` - Group by period (day, week, month)
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -606,6 +633,7 @@ Get work order analytics with time-based filtering.
 Upload files (images, documents, etc.).
 
 **Request:** (multipart/form-data)
+
 ```
 file: [binary data]
 workOrderId: wo-uuid (optional)
@@ -614,6 +642,7 @@ description: "Before repair photo" (optional)
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -660,15 +689,15 @@ Delete uploaded file.
 
 ### Common Error Codes
 
-| Code | Status | Description |
-|------|--------|-------------|
-| `VALIDATION_ERROR` | 400 | Invalid request data |
-| `UNAUTHORIZED` | 401 | Authentication required |
-| `FORBIDDEN` | 403 | Insufficient permissions |
-| `NOT_FOUND` | 404 | Resource not found |
-| `CONFLICT` | 409 | Resource already exists |
-| `RATE_LIMITED` | 429 | Too many requests |
-| `INTERNAL_ERROR` | 500 | Server error |
+| Code               | Status | Description              |
+| ------------------ | ------ | ------------------------ |
+| `VALIDATION_ERROR` | 400    | Invalid request data     |
+| `UNAUTHORIZED`     | 401    | Authentication required  |
+| `FORBIDDEN`        | 403    | Insufficient permissions |
+| `NOT_FOUND`        | 404    | Resource not found       |
+| `CONFLICT`         | 409    | Resource already exists  |
+| `RATE_LIMITED`     | 429    | Too many requests        |
+| `INTERNAL_ERROR`   | 500    | Server error             |
 
 ## 🚦 Rate Limiting
 
@@ -694,7 +723,7 @@ X-RateLimit-Reset: 1642694400
 const client = new MaintAInProClient({
   baseURL: 'https://maintainpro.vercel.app/api',
   token: 'your-jwt-token',
-  organizationId: 'your-org-id'
+  organizationId: 'your-org-id',
 });
 
 // Create a work order
@@ -703,20 +732,20 @@ const workOrder = await client.workOrders.create({
   description: 'Belt is slipping, needs adjustment',
   priority: 'high',
   equipmentId: 'conveyor-001',
-  assignedTo: ['technician-uuid']
+  assignedTo: ['technician-uuid'],
 });
 
 // Get work orders with filtering
 const openWorkOrders = await client.workOrders.list({
   status: 'open',
   priority: 'high',
-  limit: 25
+  limit: 25,
 });
 
 // Update work order status
 await client.workOrders.update(workOrder.id, {
   status: 'completed',
-  completedAt: new Date().toISOString()
+  completedAt: new Date().toISOString(),
 });
 ```
 
@@ -733,7 +762,7 @@ class MaintAInProAPI:
             'Content-Type': 'application/json',
             'X-Organization-ID': org_id
         }
-    
+
     def create_work_order(self, data):
         response = requests.post(
             f'{self.base_url}/work-orders',
@@ -741,7 +770,7 @@ class MaintAInProAPI:
             headers=self.headers
         )
         return response.json()
-    
+
     def get_equipment(self, equipment_id):
         response = requests.get(
             f'{self.base_url}/equipment/{equipment_id}',
@@ -766,6 +795,7 @@ work_order = api.create_work_order({
 ### cURL Examples
 
 **Create work order:**
+
 ```bash
 curl -X POST https://maintainpro.vercel.app/api/work-orders \
   -H "Authorization: Bearer your-token" \
@@ -779,6 +809,7 @@ curl -X POST https://maintainpro.vercel.app/api/work-orders \
 ```
 
 **Get dashboard analytics:**
+
 ```bash
 curl -X GET https://maintainpro.vercel.app/api/analytics/dashboard \
   -H "Authorization: Bearer your-token" \
@@ -820,11 +851,13 @@ WebSocket connection for live updates:
 
 ```javascript
 const ws = new WebSocket('wss://maintainpro.vercel.app/ws');
-ws.send(JSON.stringify({
-  type: 'subscribe',
-  channel: 'work-orders',
-  token: 'your-jwt-token'
-}));
+ws.send(
+  JSON.stringify({
+    type: 'subscribe',
+    channel: 'work-orders',
+    token: 'your-jwt-token',
+  })
+);
 ```
 
 ---
@@ -832,19 +865,24 @@ ws.send(JSON.stringify({
 ## 📞 Support
 
 ### Documentation
+
 - **[[Developer Guide]]** - Complete development documentation
 - **[[Getting Started]]** - Quick start guide
 - **[[Troubleshooting]]** - Common issues and solutions
 
 ### Community
-- **[GitHub Issues](https://github.com/Coding-Krakken/MaintAInPro/issues)** - Bug reports and feature requests
-- **[GitHub Discussions](https://github.com/Coding-Krakken/MaintAInPro/discussions)** - Questions and community help
+
+- **[GitHub Issues](https://github.com/Coding-Krakken/MaintAInPro/issues)** -
+  Bug reports and feature requests
+- **[GitHub Discussions](https://github.com/Coding-Krakken/MaintAInPro/discussions)** -
+  Questions and community help
 
 ### Professional Support
+
 - Email: api-support@maintainpro.com
 - Response time: 24 hours for technical issues
 
 ---
 
-*API Reference last updated: January 2025*  
-*API Version: v1.0.0*
+_API Reference last updated: January 2025_  
+_API Version: v1.0.0_

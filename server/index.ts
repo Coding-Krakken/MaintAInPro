@@ -10,7 +10,7 @@ import { pmScheduler } from './services/pm-scheduler';
 import { backgroundJobScheduler } from './services/background-jobs';
 import { CacheService } from './services/cache.service';
 import { performanceService } from './services/performance.service';
-import { databaseOptimizer } from './services/database-optimizer.service';
+
 import { startupOptimizer } from './services/startup-optimizer.service';
 import {
   loggingService,
@@ -27,7 +27,7 @@ import {
 const app = express();
 
 // Initialize services
-const cacheService = CacheService.getInstance({
+const _cacheService = CacheService.getInstance({
   // Use memory cache only - simple and effective for development
   defaultTTL: 300, // 5 minutes
   enableMemoryCache: true,
@@ -145,8 +145,8 @@ async function initializeApp() {
     // Initialize production systems with startup optimizer
     await startupOptimizer.initializeProduction();
     loggingService.info('✅ Production initialization completed successfully');
-  } catch (error) {
-    loggingService.error('❌ Production initialization failed', error);
+  } catch (_error) {
+    loggingService.error('❌ Production initialization failed', _error);
     // Continue startup even if some optimizations fail
   }
 

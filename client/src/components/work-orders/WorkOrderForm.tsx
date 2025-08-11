@@ -67,8 +67,8 @@ export default function WorkOrderForm({ onSuccess, onCancel, initialData }: Work
       // Convert dueDate string to Date if provided and estimatedHours to number
       const submitData = {
         ...data,
-        requestedBy: user!.id,
-        warehouseId: user!.warehouseId,
+        requestedBy: user?.id,
+        warehouseId: user?.warehouseId,
         status: 'new',
         escalated: false,
         escalationLevel: 0,

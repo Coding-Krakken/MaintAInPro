@@ -9,7 +9,7 @@ import {
   snakeToCamel,
   fieldValidators,
 } from '@shared/validation-utils';
-import { EnhancedRequest, AuthenticatedUser, AuthenticatedRequest } from '../../shared/types/auth';
+import { EnhancedRequest } from '../../shared/types/auth';
 
 /**
  * Enhanced validation middleware with comprehensive error handling and audit logging
@@ -21,10 +21,10 @@ export interface ValidationOptions {
   transformFields?: boolean;
   stripUnknown?: boolean;
   errorHandler?: (
-    error: any,
-    req: Request | EnhancedRequest,
-    res: Response,
-    next: NextFunction
+    _error: any,
+    _req: Request | EnhancedRequest,
+    _res: Response,
+    _next: NextFunction
   ) => void;
   // Enhanced options
   auditValidation?: boolean;
@@ -32,7 +32,7 @@ export interface ValidationOptions {
   fieldMapping?: 'camelToSnake' | 'snakeToCamel' | 'none';
 }
 
-interface AuditOptions {
+interface _AuditOptions {
   action: string;
   entityType: string;
   entityId?: string;
@@ -124,7 +124,7 @@ export function validateSchema<T extends z.ZodSchema>(schema: T, options: Valida
   const {
     source = 'body',
     transformFields = true,
-    stripUnknown = true,
+    stripUnknown: _stripUnknown = true,
     errorHandler,
     auditValidation = false,
     requireOrganization = false,
@@ -215,7 +215,7 @@ export function validateSchema<T extends z.ZodSchema>(schema: T, options: Valida
       if (transformFields && typeof validatedData === 'object' && fieldMapping === 'snakeToCamel') {
         // Keep both formats for flexibility
         enhancedReq.validatedData = validatedData; // camelCase for API
-        enhancedReq.validated = camelToSnake(validatedData); // snake_case for DB
+        enhancedReq.validated = camelToSnake(validatedData) as Record<string, unknown>; // snake_case for DB
       } else {
         enhancedReq.validatedData = validatedData;
         enhancedReq.validated = validatedData;
@@ -232,13 +232,16 @@ export function validateSchema<T extends z.ZodSchema>(schema: T, options: Valida
       }
 
       next();
-    } catch (error) {
-      console.error(`[${enhancedReq.auditContext?.requestId}] Validation middleware error:`, error);
+    } catch (_error) {
+      console.error(
+        `[${enhancedReq.auditContext?.requestId}] Validation middleware error:`,
+        _error
+      );
 
       const serverError = {
         success: false,
         error: 'VALIDATION_SERVER_ERROR',
-        message: 'Internal validation error',
+        message: 'Internal validation _error',
         requestId: enhancedReq.auditContext?.requestId,
         timestamp: new Date().toISOString(),
       };
@@ -259,7 +262,7 @@ export const enhancedErrorHandler = (
   error: Error,
   req: EnhancedRequest,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ) => {
   const requestId = req.auditContext?.requestId || 'unknown';
   const correlationId = req.auditContext?.correlationId || 'unknown';
@@ -422,8 +425,8 @@ export function validationChain(
     headers?: z.ZodSchema;
   },
   options?: ValidationOptions
-) {
-  const middlewares: any[] = [];
+): Array<(_req: Request, _res: Response, _next: NextFunction) => void> {
+  const middlewares: Array<(_req: Request, _res: Response, _next: NextFunction) => void> = [];
 
   if (validations.params) {
     middlewares.push(validateParams(validations.params, options));

@@ -14,8 +14,6 @@ import {
   HardDrive,
   Server,
   Zap,
-  TrendingUp,
-  TrendingDown,
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -108,7 +106,7 @@ function SystemDashboard() {
       } else {
         throw new Error('Failed to resolve alert');
       }
-    } catch (error) {
+    } catch (_error) {
       toast({
         title: 'Failed to resolve alert',
         description: 'Please try again later',

@@ -24,7 +24,7 @@ export class PWAService {
   private static instance: PWAService;
   private installPromptEvent: InstallPromptEvent | null = null;
   private registration: ServiceWorkerRegistration | null = null;
-  private listeners: Map<string, ((data: any) => void)[]> = new Map();
+  private listeners: Map<string, ((_data: unknown) => void)[]> = new Map();
   private status: PWAStatus = {
     isInstallable: false,
     isInstalled: false,
@@ -60,8 +60,8 @@ export class PWAService {
       this.setupPushNotifications();
 
       console.log('PWA service initialized successfully');
-    } catch (error) {
-      console.error('Failed to initialize PWA service:', error);
+    } catch (_error) {
+      console.error('Failed to initialize PWA service:', _error);
     }
   }
 
@@ -81,7 +81,7 @@ export class PWAService {
 
       // Handle service worker updates
       this.registration.addEventListener('updatefound', () => {
-        const newWorker = this.registration!.installing;
+        const newWorker = this.registration?.installing;
         if (newWorker) {
           newWorker.addEventListener('statechange', () => {
             if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
@@ -101,8 +101,8 @@ export class PWAService {
       // Notify when service worker is ready
       await navigator.serviceWorker.ready;
       console.log('Service worker is ready');
-    } catch (error) {
-      console.error('Service worker registration failed:', error);
+    } catch (_error) {
+      console.error('Service worker registration failed:', _error);
     }
   }
 
@@ -162,8 +162,8 @@ export class PWAService {
 
           // Send subscription to server
           await this.sendSubscriptionToServer(subscription);
-        } catch (error) {
-          console.log('Push subscription failed:', error);
+        } catch (_error) {
+          console.log('Push subscription failed:', _error);
         }
       }
     }
@@ -192,8 +192,8 @@ export class PWAService {
         console.log('User dismissed install prompt');
         return false;
       }
-    } catch (error) {
-      console.error('Install prompt failed:', error);
+    } catch (_error) {
+      console.error('Install prompt failed:', _error);
       return false;
     }
   }
@@ -246,8 +246,8 @@ export class PWAService {
       try {
         await (this.registration as any).sync.register(tag);
         console.log(`Background sync registered: ${tag}`);
-      } catch (error) {
-        console.error('Background sync registration failed:', error);
+      } catch (_error) {
+        console.error('Background sync registration failed:', _error);
       }
     }
   }
@@ -300,8 +300,8 @@ export class PWAService {
       try {
         await this.registration.update();
         window.location.reload();
-      } catch (error) {
-        console.error('Service worker update failed:', error);
+      } catch (_error) {
+        console.error('Service worker update failed:', _error);
       }
     }
   }
@@ -316,7 +316,7 @@ export class PWAService {
   /**
    * Add event listener
    */
-  addEventListener(event: string, callback: (data: any) => void): () => void {
+  addEventListener(event: string, callback: (_data: unknown) => void): () => void {
     if (!this.listeners.has(event)) {
       this.listeners.set(event, []);
     }
@@ -388,8 +388,8 @@ export class PWAService {
         body: JSON.stringify(subscription),
       });
       console.log('Push subscription sent to server');
-    } catch (error) {
-      console.error('Failed to send subscription to server:', error);
+    } catch (_error) {
+      console.error('Failed to send subscription to server:', _error);
     }
   }
 
@@ -410,7 +410,7 @@ export class PWAService {
   /**
    * Remove event listener
    */
-  removeEventListener(event: string, callback: (data: any) => void): void {
+  removeEventListener(event: string, callback: (_data: unknown) => void): void {
     const callbacks = this.listeners.get(event);
     if (callbacks) {
       const index = callbacks.indexOf(callback);

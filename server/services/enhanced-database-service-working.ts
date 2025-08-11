@@ -7,22 +7,13 @@
 
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { Pool } from 'pg';
-import { eq, and, isNull, ilike, or, desc, asc, sql, count } from 'drizzle-orm';
 import { v4 as uuidv4 } from 'uuid';
 import {
-  organizations,
-  workOrders,
-  equipment,
-  activityLogs,
-  tags,
-  entityTags,
   type Organization,
   type InsertOrganization,
   type WorkOrder,
   type InsertWorkOrder,
   type Equipment,
-  type Tag,
-  type EntityTag,
 } from '../../shared/schema';
 
 // Audit Context Interface
@@ -216,7 +207,7 @@ export class EnhancedDatabaseService {
     const { organizationId, searchTerm, limit = 10, offset = 0 } = options;
 
     let whereClause = 'WHERE organization_id = $1 AND deleted_at IS NULL';
-    const params: any[] = [organizationId];
+    const params: unknown[] = [organizationId];
     let paramCount = 1;
 
     // Add search term
@@ -348,12 +339,12 @@ export class EnhancedDatabaseService {
       limit?: number;
       offset?: number;
     },
-    context: AuditContext
+    _context: AuditContext
   ): Promise<{ equipment: Equipment[]; total: number }> {
     const { organizationId, searchTerm, limit = 10, offset = 0 } = options;
 
     let whereClause = 'WHERE organization_id = $1 AND deleted_at IS NULL';
-    const params: any[] = [organizationId];
+    const params: unknown[] = [organizationId];
     let paramCount = 1;
 
     if (searchTerm) {
@@ -437,8 +428,8 @@ export class EnhancedDatabaseService {
 
   // Transaction Management
   async withTransaction<T>(
-    operation: (client: any) => Promise<T>,
-    context: AuditContext
+    operation: (_client: unknown) => Promise<T>,
+    _context: AuditContext
   ): Promise<T> {
     const client = await this.pool.connect();
     try {
@@ -446,9 +437,9 @@ export class EnhancedDatabaseService {
       const result = await operation(client);
       await client.query('COMMIT');
       return result;
-    } catch (error) {
+    } catch (_error) {
       await client.query('ROLLBACK');
-      throw error;
+      throw _error;
     } finally {
       client.release();
     }
@@ -525,8 +516,8 @@ export class EnhancedDatabaseService {
           JSON.stringify({}),
         ]
       );
-    } catch (error) {
-      console.error('Failed to log activity:', error);
+    } catch (_error) {
+      console.error('Failed to log activity:', _error);
       // Don't throw - audit logging failures shouldn't break operations
     }
   }

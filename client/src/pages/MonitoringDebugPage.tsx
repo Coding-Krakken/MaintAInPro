@@ -28,12 +28,12 @@ function MonitoringDebugPage() {
           headers: Object.fromEntries(response.headers.entries()),
         },
       }));
-    } catch (error) {
-      console.error(`Error testing ${endpoint}:`, error);
+    } catch (_error) {
+      console.error(`Error testing ${endpoint}:`, _error);
       setTestResults(prev => ({
         ...prev,
         [endpoint]: {
-          error: error.message,
+          error: _error.message,
           success: false,
         },
       }));

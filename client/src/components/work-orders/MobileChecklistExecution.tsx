@@ -25,7 +25,7 @@ import { WorkOrderChecklistItem } from '@/types';
 interface MobileChecklistExecutionProps {
   workOrderId: string;
   isReadOnly?: boolean;
-  onProgress?: (completed: number, total: number) => void;
+  onProgress?: (_completed: number, _total: number) => void;
   onComplete?: () => void;
 }
 
@@ -61,8 +61,8 @@ const MobileChecklistExecution: React.FC<MobileChecklistExecutionProps> = ({
 
   // Network status monitoring
   useEffect(() => {
-    const handleNetworkChange = (event: any) => {
-      setNetworkStatus(event.detail);
+    const handleNetworkChange = (event: unknown) => {
+      setNetworkStatus((event as any).detail as any);
     };
 
     const handleSyncComplete = () => {
@@ -94,7 +94,7 @@ const MobileChecklistExecution: React.FC<MobileChecklistExecutionProps> = ({
         // Cache in localStorage for offline access
         localStorage.setItem(`checklist_${workOrderId}`, JSON.stringify(items));
         return items;
-      } catch (error) {
+      } catch (_error) {
         // Try to load from cache if offline
         if (!networkStatus.isOnline) {
           const cached = localStorage.getItem(`checklist_${workOrderId}`);
@@ -102,7 +102,7 @@ const MobileChecklistExecution: React.FC<MobileChecklistExecutionProps> = ({
             return JSON.parse(cached) as ChecklistItemWithActions[];
           }
         }
-        throw error;
+        throw _error;
       }
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
@@ -163,6 +163,16 @@ const MobileChecklistExecution: React.FC<MobileChecklistExecutionProps> = ({
     },
   });
 
+  // Navigation helpers
+  const getCurrentItem = useCallback(() => {
+    const item = checklistItems[currentItemIndex];
+    if (!item) return null;
+
+    // Merge with local updates
+    const localUpdate = localUpdates.get(item.id);
+    return localUpdate ? { ...item, ...localUpdate } : item;
+  }, [checklistItems, currentItemIndex, localUpdates]);
+
   // Voice-to-text with enhanced mobile support
   const startVoiceRecognition = useCallback(
     (itemId: string) => {
@@ -191,10 +201,10 @@ const MobileChecklistExecution: React.FC<MobileChecklistExecutionProps> = ({
         }
       };
 
-      recognition.onresult = (event: any) => {
-        const transcript = Array.from(event.results)
-          .map((result: any) => result[0])
-          .map((result: any) => result.transcript)
+      recognition.onresult = (event: unknown) => {
+        const transcript = Array.from((event as any).results as any)
+          .map((result: unknown) => (result as any)[0])
+          .map((result: unknown) => (result as any).transcript as any)
           .join('');
 
         const currentItem = getCurrentItem();
@@ -248,16 +258,6 @@ const MobileChecklistExecution: React.FC<MobileChecklistExecutionProps> = ({
     },
     [toast]
   );
-
-  // Navigation helpers
-  const getCurrentItem = useCallback(() => {
-    const item = checklistItems[currentItemIndex];
-    if (!item) return null;
-
-    // Merge with local updates
-    const localUpdate = localUpdates.get(item.id);
-    return localUpdate ? { ...item, ...localUpdate } : item;
-  }, [checklistItems, currentItemIndex, localUpdates]);
 
   const getCompletionStats = () => {
     const total = checklistItems.length;

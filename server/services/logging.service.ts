@@ -97,7 +97,12 @@ export class LoggingService {
   /**
    * Log with level check
    */
-  private log(level: number, levelName: string, message: string, meta?: Record<string, unknown>): void {
+  private log(
+    level: number,
+    levelName: string,
+    message: string,
+    meta?: Record<string, unknown>
+  ): void {
     if (level > this.logLevel) return;
 
     const logEntry = this.createLogEntry(levelName, message, meta);
@@ -353,7 +358,7 @@ export class LoggingService {
       duration,
       ip: req.ip,
       userAgent: req.get('User-Agent'),
-  userId: (req as LoggingRequest).user?.id,
+      userId: (req as LoggingRequest).user?.id,
       error: error
         ? {
             name: error.name,

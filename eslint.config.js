@@ -7,7 +7,7 @@ import reactHooks from 'eslint-plugin-react-hooks';
 export default [
   // Base JavaScript configuration
   js.configs.recommended,
-  
+
   // Global ignores
   {
     ignores: [
@@ -23,7 +23,7 @@ export default [
       'client/public/sw.js',
     ],
   },
-  
+
   // TypeScript files configuration
   {
     files: ['**/*.{ts,tsx}'],
@@ -92,18 +92,24 @@ export default [
       '@typescript-eslint': typescript,
     },
     rules: {
-      'no-unused-vars': ['error', { 
-        'argsIgnorePattern': '^_', 
-        'varsIgnorePattern': '^_', 
-        'caughtErrorsIgnorePattern': '^_',
-        'destructuredArrayIgnorePattern': '^_'
-      }],
-      '@typescript-eslint/no-unused-vars': ['error', { 
-        'argsIgnorePattern': '^_', 
-        'varsIgnorePattern': '^_', 
-        'caughtErrorsIgnorePattern': '^_',
-        'destructuredArrayIgnorePattern': '^_'
-      }],
+      'no-unused-vars': [
+        'error',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
+          destructuredArrayIgnorePattern: '^_',
+        },
+      ],
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
+          destructuredArrayIgnorePattern: '^_',
+        },
+      ],
       'no-useless-escape': 'error',
       'no-case-declarations': 'error',
       'prefer-const': 'error',
@@ -116,7 +122,7 @@ export default [
       '@typescript-eslint/no-var-requires': 'off',
     },
   },
-  
+
   // React/JSX files configuration
   {
     files: ['**/*.{jsx,tsx}'],
@@ -268,7 +274,7 @@ export default [
       'react-hooks/exhaustive-deps': 'error',
     },
   },
-  
+
   // Test files configuration
   {
     files: ['**/*.{test,spec}.{js,jsx,ts,tsx}', '**/tests/**/*.{js,jsx,ts,tsx}'],
@@ -278,18 +284,24 @@ export default [
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-non-null-assertion': 'off',
-      'no-unused-vars': ['error', { 
-        'argsIgnorePattern': '^_', 
-        'varsIgnorePattern': '^_', 
-        'caughtErrorsIgnorePattern': '^_',
-        'destructuredArrayIgnorePattern': '^_'
-      }],
-      '@typescript-eslint/no-unused-vars': ['error', { 
-        'argsIgnorePattern': '^_', 
-        'varsIgnorePattern': '^_', 
-        'caughtErrorsIgnorePattern': '^_',
-        'destructuredArrayIgnorePattern': '^_'
-      }],
+      'no-unused-vars': [
+        'error',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
+          destructuredArrayIgnorePattern: '^_',
+        },
+      ],
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
+          destructuredArrayIgnorePattern: '^_',
+        },
+      ],
     },
     languageOptions: {
       globals: {
@@ -349,7 +361,7 @@ export default [
       },
     },
   },
-  
+
   // K6 performance test files configuration
   {
     files: ['tests/performance/**/*.js'],
@@ -368,7 +380,7 @@ export default [
       'no-console': 'off',
     },
   },
-  
+
   // Server/Node.js files configuration
   {
     files: ['server/**/*.{js,ts,mjs}', 'scripts/**/*.{js,ts,mjs}', '*.config.{js,ts}'],
@@ -403,16 +415,19 @@ export default [
     rules: {
       'no-console': 'off',
       '@typescript-eslint/no-var-requires': 'off',
-      'no-unused-vars': ['error', { 
-        'argsIgnorePattern': '^_', 
-        'varsIgnorePattern': '^_', 
-        'caughtErrorsIgnorePattern': '^_',
-        'destructuredArrayIgnorePattern': '^_'
-      }],
+      'no-unused-vars': [
+        'error',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
+          destructuredArrayIgnorePattern: '^_',
+        },
+      ],
     },
   },
 
-  // ES Module files configuration  
+  // ES Module files configuration
   {
     files: ['**/*.mjs'],
     languageOptions: {
@@ -447,12 +462,15 @@ export default [
     },
     rules: {
       'no-console': 'off',
-      'no-unused-vars': ['error', { 
-        'argsIgnorePattern': '^_', 
-        'varsIgnorePattern': '^_', 
-        'caughtErrorsIgnorePattern': '^_',
-        'destructuredArrayIgnorePattern': '^_'
-      }],
+      'no-unused-vars': [
+        'error',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
+          destructuredArrayIgnorePattern: '^_',
+        },
+      ],
     },
   },
 ];

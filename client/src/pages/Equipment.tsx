@@ -12,7 +12,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import { Badge } from '../components/ui/badge';
 import { Search, QrCode, Plus, Settings } from 'lucide-react';
 import { useEquipment } from '../hooks/useEquipment';
-import { Equipment } from '../types';
 import EquipmentDetailModal from '../components/equipment/EquipmentDetailModal';
 import EquipmentFormModal from '../components/equipment/EquipmentFormModal';
 import QRScanner from '../components/qr/QRScanner';

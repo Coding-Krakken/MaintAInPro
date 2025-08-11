@@ -29,7 +29,7 @@ describe('HealthService Mutation Testing', () => {
   it('should make API call to health endpoint', async () => {
     // Import here to ensure mocks are set up
     const { healthService } = await import('@/services/healthService');
-    
+
     const mockHealthData = {
       status: 'ok',
       timestamp: '2024-01-01T00:00:00.000Z',
@@ -71,12 +71,12 @@ describe('HealthService Mutation Testing', () => {
 
   it('should get system health metrics', async () => {
     const { healthService } = await import('@/services/healthService');
-    
+
     const mockHealthData = {
       status: 'ok',
       uptime: 3600,
       websocket: { activeConnections: 10 },
-      features: { database: 'enabled' }
+      features: { database: 'enabled' },
     };
 
     mockFetch.mockResolvedValueOnce({
@@ -95,7 +95,7 @@ describe('HealthService Mutation Testing', () => {
 
   it('should handle errors gracefully', async () => {
     const { healthService } = await import('@/services/healthService');
-    
+
     mockFetch.mockRejectedValueOnce(new Error('Network error'));
 
     await expect(healthService.getSystemHealth()).rejects.toThrow();
@@ -103,12 +103,12 @@ describe('HealthService Mutation Testing', () => {
 
   it('should refresh health metrics', async () => {
     const { healthService } = await import('@/services/healthService');
-    
+
     const mockHealthData = {
       status: 'ok',
       uptime: 7200,
       websocket: { activeConnections: 5 },
-      features: { database: 'enabled' }
+      features: { database: 'enabled' },
     };
 
     mockFetch.mockResolvedValueOnce({

@@ -233,7 +233,7 @@ export class SessionService {
     const sessions = Array.from(userSessionSet)
       .map(sessionId => this.activeSessions.get(sessionId))
       .filter(Boolean)
-      .sort((a, b) => a!.lastAccessedAt.getTime() - b!.lastAccessedAt.getTime());
+      .sort((a, b) => a?.lastAccessedAt.getTime() - b?.lastAccessedAt.getTime());
 
     // Remove oldest sessions to make room
     const sessionsToRemove = sessions.length - this.MAX_SESSIONS_PER_USER + 1;

@@ -9,7 +9,6 @@ import { AlertTriangle, TrendingUp, Database, Server, Globe, RefreshCw } from 'l
 
 import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 
-
 interface PerformanceData {
   requests: {
     totalRequests: number;

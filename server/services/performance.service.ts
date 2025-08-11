@@ -250,7 +250,7 @@ export class PerformanceService {
       });
 
       return result;
-    } catch (error) {
+    } catch (_error) {
       const queryTime = Date.now() - startTime;
 
       this.recordDatabaseQuery({
@@ -260,7 +260,7 @@ export class PerformanceService {
         affectedRows: 0,
       });
 
-      throw error;
+      throw _error;
     }
   }
 

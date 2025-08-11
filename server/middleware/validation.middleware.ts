@@ -14,13 +14,7 @@ import type { Request, Response, NextFunction } from 'express';
 import { z } from 'zod';
 import { rateLimit } from 'express-rate-limit';
 import helmet from 'helmet';
-import {
-  validateAndTransform,
-  snakeToCamel,
-  camelToSnake,
-  fieldValidators,
-  createFlexibleSchema,
-} from '../../shared/validation-utils';
+import { snakeToCamel, fieldValidators, createFlexibleSchema } from '../../shared/validation-utils';
 
 // =============================================================================
 // TYPE EXTENSIONS
@@ -87,8 +81,8 @@ export class ValidationMiddleware {
         req.body = result.data; // Keep backward compatibility
 
         next();
-      } catch (error) {
-        console.error('❌ Validation middleware error:', error);
+      } catch (_error) {
+        console.error('❌ Validation middleware _error:', _error);
         return res.status(500).json({
           type: 'INTERNAL_ERROR',
           message: 'Validation processing failed',
@@ -128,8 +122,8 @@ export class ValidationMiddleware {
 
         req.validatedQuery = result.data;
         next();
-      } catch (error) {
-        console.error('❌ Query validation error:', error);
+      } catch (_error) {
+        console.error('❌ Query validation _error:', _error);
         return res.status(500).json({
           type: 'INTERNAL_ERROR',
           message: 'Query validation failed',
@@ -169,8 +163,8 @@ export class ValidationMiddleware {
 
         req.validatedParams = result.data;
         next();
-      } catch (error) {
-        console.error('❌ Parameter validation error:', error);
+      } catch (_error) {
+        console.error('❌ Parameter validation _error:', _error);
         return res.status(500).json({
           type: 'INTERNAL_ERROR',
           message: 'Parameter validation failed',
@@ -226,8 +220,8 @@ export class ValidationMiddleware {
 
         req.organizationId = organizationId;
         next();
-      } catch (error) {
-        console.error('❌ Organization validation error:', error);
+      } catch (_error) {
+        console.error('❌ Organization validation _error:', _error);
         return res.status(500).json({
           type: 'INTERNAL_ERROR',
           message: 'Organization validation failed',
@@ -275,8 +269,8 @@ export class ValidationMiddleware {
           }
 
           return originalJson(data);
-        } catch (error) {
-          console.error('❌ Response transformation error:', error);
+        } catch (_error) {
+          console.error('❌ Response transformation _error:', _error);
           return originalJson({
             type: 'TRANSFORMATION_ERROR',
             message: 'Response transformation failed',
@@ -647,7 +641,7 @@ export const sanitizeRequest = (req: Request, res: Response, next: NextFunction)
 /**
  * Enhanced error handling middleware
  */
-export const errorHandler = (error: any, req: Request, res: Response, next: NextFunction) => {
+export const errorHandler = (error: any, req: Request, res: Response, _next: NextFunction) => {
   console.error('API Error:', {
     path: req.path,
     method: req.method,

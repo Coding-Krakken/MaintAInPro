@@ -24,14 +24,14 @@ jobs:
             const title = issue.title.toLowerCase();
             const body = issue.body ? issue.body.toLowerCase() : '';
             const labels = [];
-            
+
             // Priority labels
             if (title.includes('urgent') || title.includes('critical') || body.includes('urgent') || body.includes('critical')) {
               labels.push('🔥 critical');
             } else if (title.includes('important') || body.includes('important')) {
               labels.push('⚡ high-priority');
             }
-            
+
             // Type labels
             if (title.includes('bug') || title.includes('error') || title.includes('issue') || body.includes('error')) {
               labels.push('🐛 bug');
@@ -54,7 +54,7 @@ jobs:
             if (title.includes('performance') || body.includes('performance') || body.includes('slow')) {
               labels.push('⚡ performance');
             }
-            
+
             // Component labels
             if (body.includes('frontend') || body.includes('client') || body.includes('ui')) {
               labels.push('🎨 frontend');
@@ -65,17 +65,17 @@ jobs:
             if (body.includes('database') || body.includes('sql') || body.includes('postgres')) {
               labels.push('🗄️ database');
             }
-            
+
             // Auto-generated issues
             if (issue.user.login.includes('bot') || body.includes('auto-generated')) {
               labels.push('🤖 automated');
             }
-            
+
             // Agent-ready issues (from planner)
             if (body.includes('auto-generated from Blueprint') || title.includes('Task:')) {
               labels.push('agent-ok');
             }
-            
+
             if (labels.length > 0) {
               await github.rest.issues.addLabels({
                 owner: context.repo.owner,
@@ -95,17 +95,17 @@ jobs:
             const pr = context.payload.pull_request;
             const title = pr.title.toLowerCase();
             const labels = [];
-            
+
             // Get list of files changed
             const files = await github.rest.pulls.listFiles({
               owner: context.repo.owner,
               repo: context.repo.repo,
               pull_number: pr.number
             });
-            
+
             const changedFiles = files.data.map(file => file.filename);
             console.log('Changed files:', changedFiles);
-            
+
             // Analyze file patterns
             const hasClientChanges = changedFiles.some(file => file.startsWith('client/'));
             const hasServerChanges = changedFiles.some(file => file.startsWith('server/'));
@@ -114,7 +114,7 @@ jobs:
             const hasCIChanges = changedFiles.some(file => file.includes('.github/') || file.includes('ci'));
             const hasConfigChanges = changedFiles.some(file => file.includes('config') || file.includes('.json') || file.includes('.yml'));
             const hasSchemaChanges = changedFiles.some(file => file.includes('schema') || file.includes('migration'));
-            
+
             // Add component labels
             if (hasClientChanges) labels.push('🎨 frontend');
             if (hasServerChanges) labels.push('⚙️ backend');
@@ -123,7 +123,7 @@ jobs:
             if (hasDocsChanges) labels.push('📚 documentation');
             if (hasCIChanges) labels.push('🚀 ci/cd');
             if (hasConfigChanges) labels.push('⚙️ configuration');
-            
+
             // Type labels based on title
             if (title.includes('fix') || title.includes('bug')) {
               labels.push('🐛 bug');
@@ -140,7 +140,7 @@ jobs:
             } else if (title.includes('perf')) {
               labels.push('⚡ performance');
             }
-            
+
             // Size labels based on changes
             const totalChanges = pr.additions + pr.deletions;
             if (totalChanges < 10) {
@@ -154,13 +154,13 @@ jobs:
             } else {
               labels.push('🦣 huge');
             }
-            
+
             // Dependabot PRs
             if (pr.user.login === 'dependabot[bot]') {
               labels.push('🤖 dependabot');
               labels.push('dependencies');
             }
-            
+
             if (labels.length > 0) {
               await github.rest.issues.addLabels({
                 owner: context.repo.owner,

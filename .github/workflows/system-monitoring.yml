@@ -28,7 +28,7 @@ jobs:
     outputs:
       status: ${{ steps.health-check.outputs.status }}
       services: ${{ steps.health-check.outputs.services }}
-    
+
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
@@ -37,11 +37,11 @@ jobs:
         id: health-check
         run: |
           echo "🔍 Checking system health..."
-          
+
           # Initialize status tracking
           declare -A services
           overall_status="healthy"
-          
+
           # Check production (main branch)
           echo "Testing production environment..."
           PROD_CODE=$(curl -s -o /dev/null -w "%{http_code}" "https://unitedautosupply.org/" --max-time 10 || echo "000")
@@ -53,7 +53,7 @@ jobs:
             overall_status="degraded"
             echo "❌ Production: unhealthy (HTTP $PROD_CODE)"
           fi
-          
+
           # Check staging (stable branch)
           echo "Testing staging environment..."
           STAGING_CODE=$(curl -s -o /dev/null -w "%{http_code}" "https://uasmaintenance.com/" --max-time 10 || echo "000")
@@ -65,7 +65,7 @@ jobs:
             overall_status="degraded"
             echo "❌ Staging: unhealthy (HTTP $STAGING_CODE)"
           fi
-          
+
           # Check API endpoints
           echo "Testing API endpoints..."
           PROD_API_CODE=$(curl -s -o /dev/null -w "%{http_code}" "https://unitedautosupply.org/api/health" --max-time 10 || echo "000")
@@ -77,16 +77,16 @@ jobs:
             overall_status="degraded"
             echo "❌ API: unhealthy (HTTP $PROD_API_CODE)"
           fi
-          
+
           # Check if CI/CD pipeline is working (recent successful runs)
           echo "Checking CI/CD pipeline status..."
           # This is a simplified check - in real implementation, you'd check GitHub API
           services["cicd"]="✅ operational"
-          
+
           # Format output for next steps
           echo "status=$overall_status" >> $GITHUB_OUTPUT
           echo "services=$(echo "${services[@]}" | tr ' ' '\n' | jq -R . | jq -s .)" >> $GITHUB_OUTPUT
-          
+
           echo "📊 Overall system status: $overall_status"
 
       - name: 📈 Generate status report
@@ -113,7 +113,7 @@ jobs:
             }
           }
           EOF
-          
+
           echo "📊 Status report generated"
           cat status-report.json
 
@@ -125,25 +125,25 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "| Service | Status | Response |" >> $GITHUB_STEP_SUMMARY
           echo "|---------|--------|----------|" >> $GITHUB_STEP_SUMMARY
-          
+
           # Production
           PROD_CODE=$(curl -s -o /dev/null -w "%{http_code}" "https://unitedautosupply.org/" --max-time 5 || echo "000")
           PROD_TIME=$(curl -s -o /dev/null -w "%{time_total}" "https://unitedautosupply.org/" --max-time 5 || echo "0")
           PROD_STATUS=$([[ "$PROD_CODE" == "200" || "$PROD_CODE" == "401" ]] && echo "🟢 Healthy" || echo "🔴 Unhealthy")
           echo "| 🌐 Production | $PROD_STATUS | ${PROD_CODE} (${PROD_TIME}s) |" >> $GITHUB_STEP_SUMMARY
-          
+
           # Staging
           STAGING_CODE=$(curl -s -o /dev/null -w "%{http_code}" "https://uasmaintenance.com/" --max-time 5 || echo "000")
           STAGING_TIME=$(curl -s -o /dev/null -w "%{time_total}" "https://uasmaintenance.com/" --max-time 5 || echo "0")
           STAGING_STATUS=$([[ "$STAGING_CODE" == "200" || "$STAGING_CODE" == "401" ]] && echo "🟢 Healthy" || echo "🔴 Unhealthy")
           echo "| 🧪 Staging | $STAGING_STATUS | ${STAGING_CODE} (${STAGING_TIME}s) |" >> $GITHUB_STEP_SUMMARY
-          
+
           # API
           API_CODE=$(curl -s -o /dev/null -w "%{http_code}" "https://unitedautosupply.org/api/health" --max-time 5 || echo "000")
           API_TIME=$(curl -s -o /dev/null -w "%{time_total}" "https://unitedautosupply.org/api/health" --max-time 5 || echo "0")
           API_STATUS=$([[ "$API_CODE" == "200" ]] && echo "🟢 Healthy" || echo "🔴 Unhealthy")
           echo "| 🔌 API | $API_STATUS | ${API_CODE} (${API_TIME}s) |" >> $GITHUB_STEP_SUMMARY
-          
+
           # CI/CD
           echo "| 🚀 CI/CD | 🟢 Operational | Active |" >> $GITHUB_STEP_SUMMARY
 
@@ -158,7 +158,7 @@ jobs:
     needs: system-health-check
     if: needs.system-health-check.outputs.status != 'healthy'
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: 🚨 Create system alert issue
         uses: actions/github-script@v7
@@ -171,7 +171,7 @@ jobs:
               labels: ['🚨 system-alert', '🤖 automated'],
               state: 'open'
             });
-            
+
             if (issues.data.length > 0) {
               console.log('System alert issue already exists, updating it...');
               
@@ -264,7 +264,7 @@ jobs:
     needs: system-health-check
     if: needs.system-health-check.outputs.status == 'healthy'
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: ✅ Close resolved system alerts
         uses: actions/github-script@v7
@@ -277,7 +277,7 @@ jobs:
               labels: ['🚨 system-alert', '🤖 automated'],
               state: 'open'
             });
-            
+
             for (const issue of issues.data) {
               console.log(`Closing resolved alert issue #${issue.number}`);
               

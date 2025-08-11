@@ -26,7 +26,7 @@ export class WebSocketService {
   private reconnectAttempts = 0;
   private maxReconnectAttempts = 5;
   private reconnectDelay = 1000;
-  private subscriptions = new Map<string, (data: any) => void>();
+  private subscriptions = new Map<string, (_data: unknown) => void>();
 
   constructor() {
     this.connect();
@@ -56,8 +56,8 @@ export class WebSocketService {
 
       this.setupEventListeners();
       console.log('WebSocket connection initiated');
-    } catch (error) {
-      console.error('Failed to connect to WebSocket:', error);
+    } catch (_error) {
+      console.error('Failed to connect to WebSocket:', _error);
     }
   }
 
@@ -219,7 +219,7 @@ export class WebSocketService {
     return this.isConnected && this.socket?.connected === true;
   }
 
-  public subscribe(event: string, callback: (data: any) => void): () => void {
+  public subscribe(event: string, callback: (_data: unknown) => void): () => void {
     this.subscriptions.set(event, callback);
 
     // Return unsubscribe function
@@ -238,28 +238,28 @@ export class WebSocketService {
         'x-user-id': localStorage.getItem('userId') || '',
         'x-warehouse-id': localStorage.getItem('warehouseId') || '',
       },
-    }).catch(error => {
-      console.error('Failed to send test notification:', error);
+    }).catch(_error => {
+      console.error('Failed to send test notification:', _error);
     });
   }
 
-  public subscribeToWorkOrders(callback: (data: any) => void): () => void {
+  public subscribeToWorkOrders(callback: (_data: unknown) => void): () => void {
     return this.subscribe('work_order_update', callback);
   }
 
-  public subscribeToEquipment(callback: (data: any) => void): () => void {
+  public subscribeToEquipment(callback: (_data: unknown) => void): () => void {
     return this.subscribe('equipment_update', callback);
   }
 
-  public subscribeToInventory(callback: (data: any) => void): () => void {
+  public subscribeToInventory(callback: (_data: unknown) => void): () => void {
     return this.subscribe('inventory_update', callback);
   }
 
-  public subscribeToPM(callback: (data: any) => void): () => void {
+  public subscribeToPM(callback: (_data: unknown) => void): () => void {
     return this.subscribe('pm_update', callback);
   }
 
-  public subscribeToNotifications(callback: (data: NotificationData) => void): () => void {
+  public subscribeToNotifications(callback: (_data: unknown) => void): () => void {
     return this.subscribe('notification', callback);
   }
 

@@ -6,7 +6,10 @@
 
 ## 🚀 Enterprise-Grade Computerized Maintenance Management System (CMMS)
 
-MaintAInPro is a next-generation, fully autonomous, multi-tenant CMMS platform engineered for operational excellence, security, and scalability. It leverages AI automation, real-time collaboration, and advanced analytics to deliver best-in-class maintenance management for enterprises.
+MaintAInPro is a next-generation, fully autonomous, multi-tenant CMMS platform
+engineered for operational excellence, security, and scalability. It leverages
+AI automation, real-time collaboration, and advanced analytics to deliver
+best-in-class maintenance management for enterprises.
 
 ---
 
@@ -14,11 +17,13 @@ MaintAInPro is a next-generation, fully autonomous, multi-tenant CMMS platform e
 
 - **Frontend**: React 18, TypeScript, Vite, TailwindCSS ([client/](client/))
 - **Backend**: Express.js, TypeScript, Drizzle ORM ([server/](server/))
-- **Database**: PostgreSQL, strategic indexing, multi-tenant ([shared/](shared/))
+- **Database**: PostgreSQL, strategic indexing, multi-tenant
+  ([shared/](shared/))
 - **Shared**: Common schemas, types, validation ([shared/](shared/))
 - **DevOps**: Vercel, Docker, CI/CD, edge functions
 
 ### Directory Structure
+
 ```
 MaintAInPro/
 ├── client/           # Frontend (React, Vite, Tailwind)
@@ -97,12 +102,16 @@ graph LR
 
 ## 📚 Documentation & Blueprint
 
-- **Blueprint Framework**: Strategic, technical, feature, UX, traceability, operations ([Documentation/Blueprint/](Documentation/Blueprint/))
+- **Blueprint Framework**: Strategic, technical, feature, UX, traceability,
+  operations ([Documentation/Blueprint/](Documentation/Blueprint/))
 - **API Reference**: [Documentation/API/](Documentation/API/)
-- **DevOps Guides**: Vercel, Docker, CI/CD ([Documentation/Development/](Documentation/Development/))
-- **Security & Compliance**: [Documentation/Blueprint/3-Architecture/SecurityArchitecture.md](Documentation/Blueprint/3-Architecture/SecurityArchitecture.md)
+- **DevOps Guides**: Vercel, Docker, CI/CD
+  ([Documentation/Development/](Documentation/Development/))
+- **Security & Compliance**:
+  [Documentation/Blueprint/3-Architecture/SecurityArchitecture.md](Documentation/Blueprint/3-Architecture/SecurityArchitecture.md)
 - **User Guides**: [Wiki/](Wiki/)
-- **Changelog**: [Documentation/Development/CHANGELOG.md](Documentation/Development/CHANGELOG.md)
+- **Changelog**:
+  [Documentation/Development/CHANGELOG.md](Documentation/Development/CHANGELOG.md)
 
 ---
 
@@ -161,7 +170,8 @@ vercel --prod       # Deploy to production
 
 ## 🤝 Contributing & Community
 
-- **Contributing Guide**: [Documentation/CONTRIBUTING.md](Documentation/CONTRIBUTING.md)
+- **Contributing Guide**:
+  [Documentation/CONTRIBUTING.md](Documentation/CONTRIBUTING.md)
 - **Issues**: [issues/](issues/)
 - **Discussions**: [Wiki/](Wiki/)
 - **Security**: Report vulnerabilities privately
@@ -193,4 +203,5 @@ MaintAInPro is MIT licensed. See [LICENSE](LICENSE) for details.
 
 ---
 
-> _MaintAInPro: Autonomous, secure, and scalable CMMS for the modern enterprise._
+> _MaintAInPro: Autonomous, secure, and scalable CMMS for the modern
+> enterprise._

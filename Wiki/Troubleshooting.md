@@ -36,13 +36,13 @@ npm run quality
 
 ### Common Status Indicators
 
-| Symptom | Likely Cause | Quick Fix |
-|---------|--------------|-----------|
-| 🔴 Server won't start | Port in use, missing env vars | Check port, verify `.env` |
-| 🟡 Slow responses | Database queries, memory leak | Check logs, restart app |
-| 🟠 Build fails | Dependencies, TypeScript errors | `npm install`, fix TS errors |
-| ⚫ Database errors | Connection, permissions, schema | Check DB status, run migrations |
-| 🟣 Auth failures | JWT secret, token expiry | Verify secrets, check tokens |
+| Symptom               | Likely Cause                    | Quick Fix                       |
+| --------------------- | ------------------------------- | ------------------------------- |
+| 🔴 Server won't start | Port in use, missing env vars   | Check port, verify `.env`       |
+| 🟡 Slow responses     | Database queries, memory leak   | Check logs, restart app         |
+| 🟠 Build fails        | Dependencies, TypeScript errors | `npm install`, fix TS errors    |
+| ⚫ Database errors    | Connection, permissions, schema | Check DB status, run migrations |
+| 🟣 Auth failures      | JWT secret, token expiry        | Verify secrets, check tokens    |
 
 ## 🚀 Installation Issues
 
@@ -51,6 +51,7 @@ npm run quality
 **Error**: `node: command not found` or version mismatch
 
 **Solution**:
+
 ```bash
 # Check Node.js version
 node --version
@@ -70,6 +71,7 @@ npm --version   # Should be v8.x.x or higher
 **Error**: `npm install` fails with permission errors
 
 **Solution**:
+
 ```bash
 # Fix npm permissions (Linux/macOS)
 sudo chown -R $(whoami) ~/.npm
@@ -87,6 +89,7 @@ npm cache clean --force
 **Error**: `ENOENT: no such file or directory, scandir`
 
 **Solution**:
+
 ```bash
 # Delete node_modules and package-lock.json
 rm -rf node_modules package-lock.json
@@ -103,6 +106,7 @@ npm install --no-optional
 **Error**: `Cannot find module` or type errors
 
 **Solution**:
+
 ```bash
 # Install TypeScript globally
 npm install -g typescript
@@ -123,6 +127,7 @@ rm -rf dist
 **Error**: `Environment variable not found`
 
 **Solution**:
+
 ```bash
 # Create environment file
 cp .env.example .env.local
@@ -135,6 +140,7 @@ node -e "require('dotenv').config({path: '.env.local'}); console.log(process.env
 ```
 
 **Required Environment Variables**:
+
 ```bash
 DATABASE_URL="postgresql://username:password@localhost:5432/maintainpro"
 SESSION_SECRET="your-session-secret"
@@ -149,6 +155,7 @@ NODE_ENV="development"
 **Error**: `Error: connect ECONNREFUSED`
 
 **Diagnosis**:
+
 ```bash
 # Check if PostgreSQL is running
 sudo systemctl status postgresql
@@ -161,6 +168,7 @@ netstat -tulpn | grep :5432
 ```
 
 **Solutions**:
+
 ```bash
 # Start PostgreSQL (Linux)
 sudo systemctl start postgresql
@@ -181,6 +189,7 @@ sudo nano /etc/postgresql/15/main/postgresql.conf
 **Error**: `Migration failed` or schema mismatch
 
 **Solution**:
+
 ```bash
 # Check current database schema
 npm run db:studio
@@ -203,6 +212,7 @@ npm run seed
 **Error**: `permission denied for relation`
 
 **Solution**:
+
 ```sql
 -- Connect as superuser
 sudo -u postgres psql
@@ -223,6 +233,7 @@ ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO your_user;
 **Error**: Slow database queries
 
 **Diagnosis**:
+
 ```sql
 -- Enable query logging
 ALTER SYSTEM SET log_statement = 'all';
@@ -231,22 +242,23 @@ SELECT pg_reload_conf();
 
 -- Check slow queries
 SELECT query, mean_time, calls, total_time
-FROM pg_stat_statements 
-ORDER BY mean_time DESC 
+FROM pg_stat_statements
+ORDER BY mean_time DESC
 LIMIT 10;
 
 -- Check table sizes
-SELECT 
+SELECT
     schemaname,
     tablename,
     attname,
     n_distinct,
     correlation
-FROM pg_stats 
+FROM pg_stats
 WHERE tablename = 'work_orders';
 ```
 
 **Solutions**:
+
 ```sql
 -- Add missing indexes
 CREATE INDEX idx_work_orders_status ON work_orders(status);
@@ -268,6 +280,7 @@ VACUUM ANALYZE work_orders;
 **Error**: `JsonWebTokenError: invalid token`
 
 **Diagnosis**:
+
 ```bash
 # Decode JWT token (without verification)
 node -e "
@@ -278,6 +291,7 @@ console.log(jwt.decode(token, {complete: true}));
 ```
 
 **Solutions**:
+
 ```bash
 # Verify JWT secret is correct
 echo $JWT_SECRET
@@ -300,6 +314,7 @@ console.log('Now:', new Date());
 **Error**: Session not persisting or login loops
 
 **Solution**:
+
 ```bash
 # Check session configuration
 echo $SESSION_SECRET
@@ -319,6 +334,7 @@ redis-cli flushdb
 **Error**: Reset emails not sending or links invalid
 
 **Solution**:
+
 ```bash
 # Check email configuration
 echo $SMTP_HOST
@@ -345,21 +361,26 @@ transporter.verify().then(console.log).catch(console.error);
 **Error**: `Access-Control-Allow-Origin` errors
 
 **Solution**:
+
 ```typescript
 // server/index.ts
 import cors from 'cors';
 
-app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
-  credentials: true,
-  optionsSuccessStatus: 200
-}));
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+    credentials: true,
+    optionsSuccessStatus: 200,
+  })
+);
 
 // For development, temporarily allow all origins:
-app.use(cors({
-  origin: true,
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: true,
+    credentials: true,
+  })
+);
 ```
 
 ## ⚡ Performance Problems
@@ -367,6 +388,7 @@ app.use(cors({
 ### Slow Page Loading
 
 **Diagnosis**:
+
 ```bash
 # Check bundle sizes
 npm run build
@@ -377,6 +399,7 @@ npx webpack-bundle-analyzer dist/assets/
 ```
 
 **Solutions**:
+
 ```typescript
 // Implement code splitting
 const WorkOrdersPage = lazy(() => import('./pages/WorkOrdersPage'));
@@ -392,6 +415,7 @@ import { FixedSizeList as List } from 'react-window';
 ### Memory Leaks
 
 **Diagnosis**:
+
 ```bash
 # Monitor memory usage
 node --inspect server/index.js
@@ -405,6 +429,7 @@ node -e "console.log(process.memoryUsage())"
 ```
 
 **Solutions**:
+
 ```typescript
 // Fix common memory leaks
 
@@ -413,7 +438,7 @@ useEffect(() => {
   const interval = setInterval(() => {
     // Do something
   }, 1000);
-  
+
   return () => clearInterval(interval); // Cleanup
 }, []);
 
@@ -422,7 +447,7 @@ useEffect(() => {
   const handleResize = () => {
     // Handle resize
   };
-  
+
   window.addEventListener('resize', handleResize);
   return () => window.removeEventListener('resize', handleResize);
 }, []);
@@ -430,11 +455,11 @@ useEffect(() => {
 // 3. Cancel pending requests
 useEffect(() => {
   const abortController = new AbortController();
-  
+
   fetch('/api/data', { signal: abortController.signal })
     .then(response => response.json())
     .then(data => setData(data));
-  
+
   return () => abortController.abort();
 }, []);
 ```
@@ -442,6 +467,7 @@ useEffect(() => {
 ### High CPU Usage
 
 **Diagnosis**:
+
 ```bash
 # Check process CPU usage
 top -p $(pgrep node)
@@ -453,6 +479,7 @@ node --prof-process isolate-*.log > profile.txt
 ```
 
 **Solutions**:
+
 ```typescript
 // Optimize expensive operations
 
@@ -461,22 +488,22 @@ const ExpensiveComponent = memo(({ data }) => {
   const processedData = useMemo(() => {
     return data.map(item => expensiveTransformation(item));
   }, [data]);
-  
+
   return <div>{/* Render */}</div>;
 });
 
 // 2. Debounce user input
 const useDebounce = (value: string, delay: number) => {
   const [debouncedValue, setDebouncedValue] = useState(value);
-  
+
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedValue(value);
     }, delay);
-    
+
     return () => clearTimeout(handler);
   }, [value, delay]);
-  
+
   return debouncedValue;
 };
 
@@ -502,6 +529,7 @@ const getWorkOrdersOptimized = async () => {
 **Error**: API endpoints returning 404
 
 **Diagnosis**:
+
 ```bash
 # Check route registration
 curl -v http://localhost:5000/api/health
@@ -512,6 +540,7 @@ npm run dev
 ```
 
 **Solutions**:
+
 ```typescript
 // Ensure routes are properly registered
 // server/index.ts
@@ -527,8 +556,8 @@ app.use('/api/*', (req, res) => {
     success: false,
     error: {
       code: 'NOT_FOUND',
-      message: `API endpoint not found: ${req.method} ${req.path}`
-    }
+      message: `API endpoint not found: ${req.method} ${req.path}`,
+    },
   });
 });
 ```
@@ -536,6 +565,7 @@ app.use('/api/*', (req, res) => {
 ### 500 Internal Server Error
 
 **Diagnosis**:
+
 ```bash
 # Check server logs
 tail -f logs/error.log
@@ -548,21 +578,22 @@ npm run db:studio
 ```
 
 **Solutions**:
+
 ```typescript
 // Add proper error handling
 app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
   console.error('Unhandled error:', error);
-  
+
   res.status(500).json({
     success: false,
     error: {
       code: 'INTERNAL_ERROR',
       message: 'An internal server error occurred',
-      ...(process.env.NODE_ENV === 'development' && { 
+      ...(process.env.NODE_ENV === 'development' && {
         details: error.message,
-        stack: error.stack 
-      })
-    }
+        stack: error.stack,
+      }),
+    },
   });
 });
 
@@ -573,10 +604,13 @@ const asyncHandler = (fn: Function) => {
   };
 };
 
-app.get('/api/work-orders', asyncHandler(async (req, res) => {
-  const workOrders = await workOrderService.getAll();
-  res.json({ success: true, data: workOrders });
-}));
+app.get(
+  '/api/work-orders',
+  asyncHandler(async (req, res) => {
+    const workOrders = await workOrderService.getAll();
+    res.json({ success: true, data: workOrders });
+  })
+);
 ```
 
 ### Rate Limiting Issues
@@ -584,6 +618,7 @@ app.get('/api/work-orders', asyncHandler(async (req, res) => {
 **Error**: `Too Many Requests` (429)
 
 **Solution**:
+
 ```typescript
 // Adjust rate limits for development
 const rateLimit = require('express-rate-limit');
@@ -595,9 +630,9 @@ const limiter = rateLimit({
     success: false,
     error: {
       code: 'RATE_LIMITED',
-      message: 'Too many requests, please try again later'
-    }
-  }
+      message: 'Too many requests, please try again later',
+    },
+  },
 });
 
 // Skip rate limiting for health checks
@@ -615,6 +650,7 @@ app.use('/api/', limiter);
 **Error**: TypeScript compilation errors
 
 **Solution**:
+
 ```bash
 # Check TypeScript configuration
 npx tsc --noEmit
@@ -634,6 +670,7 @@ npm ls
 **Error**: Hydration mismatch or `Warning: Text content did not match`
 
 **Solution**:
+
 ```typescript
 // Fix date/time rendering differences
 const formatDate = (date: Date) => {
@@ -664,6 +701,7 @@ return <div>{clientOnlyContent}</div>;
 **Error**: State not updating or infinite re-renders
 
 **Solution**:
+
 ```typescript
 // Fix dependency arrays
 useEffect(() => {
@@ -671,10 +709,13 @@ useEffect(() => {
 }, []); // Empty dependency array for mount-only
 
 // Memoize objects/functions passed as dependencies
-const memoizedConfig = useMemo(() => ({
-  apiKey: 'key',
-  endpoint: '/api/data'
-}), []);
+const memoizedConfig = useMemo(
+  () => ({
+    apiKey: 'key',
+    endpoint: '/api/data',
+  }),
+  []
+);
 
 useEffect(() => {
   fetchWithConfig(memoizedConfig);
@@ -689,6 +730,7 @@ setCount(prevCount => prevCount + 1);
 **Error**: Routes not working or 404 on refresh
 
 **Solution**:
+
 ```typescript
 // Ensure browser router is configured correctly
 import { BrowserRouter } from 'react-router-dom';
@@ -718,6 +760,7 @@ try_files $uri $uri/ /index.html;
 **Error**: Files not uploading or timeout errors
 
 **Diagnosis**:
+
 ```bash
 # Check upload directory permissions
 ls -la uploads/
@@ -731,6 +774,7 @@ curl -X POST -F "file=@test.jpg" http://localhost:5000/api/upload
 ```
 
 **Solutions**:
+
 ```typescript
 // Increase upload limits
 import multer from 'multer';
@@ -739,20 +783,20 @@ const upload = multer({
   dest: 'uploads/',
   limits: {
     fileSize: 10 * 1024 * 1024, // 10MB
-    files: 5 // Max 5 files
+    files: 5, // Max 5 files
   },
   fileFilter: (req, file, cb) => {
     // Accept only specific file types
     const allowedTypes = /jpeg|jpg|png|pdf|doc|docx/;
     const extname = allowedTypes.test(file.originalname.toLowerCase());
     const mimetype = allowedTypes.test(file.mimetype);
-    
+
     if (mimetype && extname) {
       cb(null, true);
     } else {
       cb(new Error('Only images and documents are allowed'));
     }
-  }
+  },
 });
 
 // Handle upload errors
@@ -760,17 +804,17 @@ app.post('/api/upload', upload.single('file'), (req, res, next) => {
   if (!req.file) {
     return res.status(400).json({
       success: false,
-      error: { message: 'No file uploaded' }
+      error: { message: 'No file uploaded' },
     });
   }
-  
+
   res.json({
     success: true,
     data: {
       filename: req.file.filename,
       originalName: req.file.originalname,
-      size: req.file.size
-    }
+      size: req.file.size,
+    },
   });
 });
 
@@ -780,7 +824,7 @@ app.use((error: any, req: Request, res: Response, next: NextFunction) => {
     if (error.code === 'LIMIT_FILE_SIZE') {
       return res.status(400).json({
         success: false,
-        error: { message: 'File too large' }
+        error: { message: 'File too large' },
       });
     }
   }
@@ -793,6 +837,7 @@ app.use((error: any, req: Request, res: Response, next: NextFunction) => {
 **Error**: Cannot read/write files
 
 **Solution**:
+
 ```bash
 # Fix directory permissions
 sudo chown -R $USER:$USER uploads/
@@ -810,11 +855,13 @@ chmod -R 644 uploads/
 **Error**: PWA not working offline or updates not loading
 
 **Solution**:
+
 ```typescript
 // Register service worker correctly
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js')
+    navigator.serviceWorker
+      .register('/sw.js')
       .then(registration => {
         console.log('SW registered: ', registration);
       })
@@ -837,6 +884,7 @@ navigator.serviceWorker.getRegistrations().then(registrations => {
 **Error**: Notifications not working
 
 **Solution**:
+
 ```typescript
 // Request notification permission
 const requestPermission = async () => {
@@ -860,15 +908,16 @@ if (!('Notification' in window)) {
 **Error**: PWA not installing on iOS
 
 **Solution**:
+
 ```html
 <!-- Add proper meta tags -->
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="MaintAInPro">
-<link rel="apple-touch-icon" href="/icon-192x192.png">
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="MaintAInPro" />
+<link rel="apple-touch-icon" href="/icon-192x192.png" />
 
 <!-- Manifest must be served with correct MIME type -->
-<link rel="manifest" href="/manifest.json">
+<link rel="manifest" href="/manifest.json" />
 ```
 
 ## 🚀 Production Issues
@@ -878,6 +927,7 @@ if (!('Notification' in window)) {
 **Error**: Vercel deployment failing
 
 **Diagnosis**:
+
 ```bash
 # Check build locally
 npm run build
@@ -890,6 +940,7 @@ vercel env ls
 ```
 
 **Solutions**:
+
 ```bash
 # Fix build issues
 npm run clean
@@ -917,6 +968,7 @@ vercel env add SESSION_SECRET
 **Error**: SSL certificate invalid or expired
 
 **Solution**:
+
 ```bash
 # Check certificate status
 openssl s_client -connect your-domain.com:443 -servername your-domain.com
@@ -933,6 +985,7 @@ openssl x509 -in /etc/letsencrypt/live/your-domain.com/cert.pem -text -noout | g
 **Error**: High response times or timeouts
 
 **Solution**:
+
 ```bash
 # Check application health
 curl -f http://localhost:5000/api/health || exit 1
@@ -962,14 +1015,16 @@ const logger = winston.createLogger({
   ),
   transports: [
     new winston.transports.File({ filename: 'error.log', level: 'error' }),
-    new winston.transports.File({ filename: 'combined.log' })
-  ]
+    new winston.transports.File({ filename: 'combined.log' }),
+  ],
 });
 
 if (process.env.NODE_ENV !== 'production') {
-  logger.add(new winston.transports.Console({
-    format: winston.format.simple()
-  }));
+  logger.add(
+    new winston.transports.Console({
+      format: winston.format.simple(),
+    })
+  );
 }
 
 // Usage
@@ -983,12 +1038,12 @@ logger.error('Database connection failed', { error: error.message });
 // Add request timing
 app.use((req, res, next) => {
   const start = Date.now();
-  
+
   res.on('finish', () => {
     const duration = Date.now() - start;
     console.log(`${req.method} ${req.url} - ${res.statusCode} - ${duration}ms`);
   });
-  
+
   next();
 });
 
@@ -998,7 +1053,7 @@ setInterval(() => {
   console.log('Memory usage:', {
     rss: Math.round(usage.rss / 1024 / 1024) + 'MB',
     heapTotal: Math.round(usage.heapTotal / 1024 / 1024) + 'MB',
-    heapUsed: Math.round(usage.heapUsed / 1024 / 1024) + 'MB'
+    heapUsed: Math.round(usage.heapUsed / 1024 / 1024) + 'MB',
   });
 }, 30000); // Every 30 seconds
 ```
@@ -1012,7 +1067,11 @@ if (process.env.NODE_ENV === 'development') {
     user: () => store.getState().user,
     workOrders: () => store.getState().workOrders,
     clearCache: () => queryClient.clear(),
-    logs: () => console.log('Available debug commands:', Object.keys((window as any).debug))
+    logs: () =>
+      console.log(
+        'Available debug commands:',
+        Object.keys((window as any).debug)
+      ),
   };
 }
 ```
@@ -1026,7 +1085,7 @@ ALTER SYSTEM SET log_min_duration_statement = 0;
 SELECT pg_reload_conf();
 
 -- Check current connections
-SELECT 
+SELECT
     pid,
     usename,
     application_name,
@@ -1038,7 +1097,7 @@ FROM pg_stat_activity
 WHERE state != 'idle';
 
 -- Check locks
-SELECT 
+SELECT
     blocked_locks.pid AS blocked_pid,
     blocking_locks.pid AS blocking_pid,
     blocked_activity.usename AS blocked_user,
@@ -1055,16 +1114,21 @@ WHERE NOT blocked_locks.granted;
 ## 📞 Getting Additional Help
 
 ### Documentation Resources
+
 - **[[Getting Started]]** - Initial setup and configuration
 - **[[Developer Guide]]** - Development environment setup
 - **[[API Reference]]** - API endpoint documentation
 - **[[Deployment Guide]]** - Production deployment issues
 
 ### Community Support
-- **[GitHub Issues](https://github.com/Coding-Krakken/MaintAInPro/issues)** - Report bugs and request features
-- **[GitHub Discussions](https://github.com/Coding-Krakken/MaintAInPro/discussions)** - Ask questions and get help
+
+- **[GitHub Issues](https://github.com/Coding-Krakken/MaintAInPro/issues)** -
+  Report bugs and request features
+- **[GitHub Discussions](https://github.com/Coding-Krakken/MaintAInPro/discussions)** -
+  Ask questions and get help
 
 ### Professional Support
+
 - **Email**: support@maintainpro.com
 - **Priority Support**: Available for enterprise customers
 - **Response Time**: 24-48 hours for technical issues
@@ -1074,6 +1138,7 @@ WHERE NOT blocked_locks.granted;
 When creating a support request, include:
 
 1. **Environment Information**:
+
    ```bash
    node --version
    npm --version
@@ -1095,18 +1160,21 @@ When creating a support request, include:
 ## 🎯 Prevention Tips
 
 ### Regular Maintenance
+
 - **Weekly**: Check logs for errors and warnings
 - **Monthly**: Update dependencies and security patches
 - **Quarterly**: Performance review and optimization
 - **Annually**: Security audit and infrastructure review
 
 ### Monitoring Setup
+
 - **Application**: Health checks and error tracking
 - **Database**: Query performance and connection monitoring
 - **Infrastructure**: CPU, memory, and disk usage alerts
 - **User Experience**: Core Web Vitals and error rates
 
 ### Best Practices
+
 - **Code Quality**: Use TypeScript, ESLint, and Prettier
 - **Testing**: Maintain high test coverage
 - **Documentation**: Keep documentation updated
@@ -1115,4 +1183,4 @@ When creating a support request, include:
 
 ---
 
-*Troubleshooting guide last updated: January 2025*
+_Troubleshooting guide last updated: January 2025_

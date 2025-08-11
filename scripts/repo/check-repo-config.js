@@ -13,7 +13,7 @@ console.log('🔍 Checking GitHub Repository Configuration...\n');
 try {
   execSync('gh --version', { stdio: 'pipe' });
   console.log('✅ GitHub CLI is available');
-} catch (error) {
+} catch (_error) {
   console.log('❌ GitHub CLI not found - install with: sudo apt install gh');
   process.exit(1);
 }
@@ -22,7 +22,7 @@ try {
 try {
   const _auth = execSync('gh auth status', { stdio: 'pipe', encoding: 'utf8' });
   console.log('✅ GitHub CLI authenticated');
-} catch (error) {
+} catch (_error) {
   console.log('❌ GitHub CLI not authenticated - run: gh auth login');
   process.exit(1);
 }
@@ -36,7 +36,7 @@ try {
     encoding: 'utf8',
   });
   console.log('✅ Branch protection configured');
-} catch (error) {
+} catch (_error) {
   console.log('❌ Branch protection not configured');
 }
 
@@ -59,7 +59,7 @@ try {
       console.log(`❌ Label "${label}" missing`);
     }
   });
-} catch (error) {
+} catch (_error) {
   console.log('❌ Could not check labels');
 }
 
@@ -82,7 +82,7 @@ try {
       console.log(`❌ Secret "${secret}" missing`);
     }
   });
-} catch (error) {
+} catch (_error) {
   console.log('❌ Could not check secrets');
 }
 
@@ -90,7 +90,7 @@ try {
 try {
   execSync('gh api repos/:owner/:repo/actions/permissions', { stdio: 'pipe' });
   console.log('✅ GitHub Actions enabled');
-} catch (error) {
+} catch (_error) {
   console.log('❌ GitHub Actions not enabled or accessible');
 }
 

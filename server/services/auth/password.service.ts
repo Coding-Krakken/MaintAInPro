@@ -56,15 +56,15 @@ export class PasswordService {
     return { hash, salt };
   }
 
-  static async verifyPassword(password: string, hash: string, salt?: string): Promise<boolean> {
+  static async verifyPassword(password: string, hash: string, _salt?: string): Promise<boolean> {
     try {
       // Add pepper for verification
       const pepperedPassword = password + this.PEPPER;
 
       // Verify password
       return await bcrypt.compare(pepperedPassword, hash);
-    } catch (error) {
-      console.error('Password verification error:', error);
+    } catch (_error) {
+      console.error('Password verification _error:', _error);
       return false;
     }
   }
@@ -72,7 +72,7 @@ export class PasswordService {
   static validatePassword(
     password: string,
     userInfo?: { email?: string; firstName?: string; lastName?: string },
-    previousPasswords: string[] = [],
+    _previousPasswords: string[] = [],
     policy: Partial<PasswordPolicy> = {}
   ): PasswordValidationResult {
     const activePolicy = { ...this.DEFAULT_POLICY, ...policy };
@@ -96,10 +96,7 @@ export class PasswordService {
     if (activePolicy.requireNumbers && !/\d/.test(password)) {
       errors.push('Password must contain at least one number');
     }
-    if (
-      activePolicy.requireSpecialChars &&
-      !/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)
-    ) {
+    if (activePolicy.requireSpecialChars && !/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password)) {
       errors.push('Password must contain at least one special character');
     }
 
@@ -115,7 +112,7 @@ export class PasswordService {
     if (activePolicy.forbidUserInfo && userInfo) {
       const userInfoValues = [userInfo.email?.split('@')[0], userInfo.firstName, userInfo.lastName]
         .filter(Boolean)
-        .map(v => v!.toLowerCase());
+        .map(v => v?.toLowerCase());
 
       const passwordLower = password.toLowerCase();
       for (const info of userInfoValues) {

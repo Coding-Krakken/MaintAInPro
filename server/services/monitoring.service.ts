@@ -1,4 +1,3 @@
-import { performance } from 'perf_hooks';
 import { storage } from '../storage';
 
 export interface SystemMetrics {
@@ -141,8 +140,8 @@ class MonitoringService {
           pmCompliance,
         },
       };
-    } catch (error) {
-      console.error('Error fetching business metrics:', error);
+    } catch (_error) {
+      console.error('Error fetching business metrics:', _error);
 
       return {
         memory: {

@@ -4,7 +4,7 @@ export const supabase = null; // Placeholder for Supabase client
 
 // Since we're using the existing backend structure,
 // we'll export utility functions that work with our API
-export async function uploadFile(file: File, bucket: string, path: string): Promise<string> {
+export async function uploadFile(file: File, bucket: string, _path: string): Promise<string> {
   // In a real implementation, this would upload to Supabase Storage
   // For now, we'll simulate file upload
   const formData = new FormData();

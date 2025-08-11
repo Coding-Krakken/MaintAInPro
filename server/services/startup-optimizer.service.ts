@@ -51,9 +51,9 @@ export class StartupOptimizationService {
 
       // Log system readiness
       await this.logSystemReadiness();
-    } catch (error) {
-      loggingService.error('❌ Production initialization failed', error);
-      throw error;
+    } catch (_error) {
+      loggingService.error('❌ Production initialization failed', _error);
+      throw _error;
     }
   }
 
@@ -74,9 +74,9 @@ export class StartupOptimizationService {
       if (result.errors.length > 0) {
         loggingService.warn('Database optimization had errors', { errors: result.errors });
       }
-    } catch (error) {
-      loggingService.error('Database optimization failed', error);
-      throw error;
+    } catch (_error) {
+      loggingService.error('Database optimization failed', _error);
+      throw _error;
     }
   }
 
@@ -88,7 +88,7 @@ export class StartupOptimizationService {
 
     try {
       // Initialize cache service
-      const cacheService = CacheService.getInstance({
+      const _cacheService = CacheService.getInstance({
         redis: {
           url: process.env.REDIS_URL,
           host: process.env.REDIS_HOST,
@@ -106,9 +106,9 @@ export class StartupOptimizationService {
       // Performance monitoring setup
       performanceService.startMonitoring();
       loggingService.info('Performance monitoring started');
-    } catch (error) {
-      loggingService.error('Performance systems initialization failed', error);
-      throw error;
+    } catch (_error) {
+      loggingService.error('Performance systems initialization failed', _error);
+      throw _error;
     }
   }
 
@@ -129,9 +129,9 @@ export class StartupOptimizationService {
 
       // Security health check
       await this.performSecurityHealthCheck();
-    } catch (error) {
-      loggingService.error('Security systems initialization failed', error);
-      throw error;
+    } catch (_error) {
+      loggingService.error('Security systems initialization failed', _error);
+      throw _error;
     }
   }
 
@@ -147,9 +147,9 @@ export class StartupOptimizationService {
 
       // Background jobs will be started by main app
       loggingService.info('Background job scheduler configured for startup');
-    } catch (error) {
-      loggingService.error('Background services initialization failed', error);
-      throw error;
+    } catch (_error) {
+      loggingService.error('Background services initialization failed', _error);
+      throw _error;
     }
   }
 
@@ -222,8 +222,8 @@ export class StartupOptimizationService {
           errorRate: performanceMetrics.requests.errorRate || 0,
         });
       }
-    } catch (error) {
-      loggingService.error('Failed to generate system readiness report', error);
+    } catch (_error) {
+      loggingService.error('Failed to generate system readiness report', _error);
     }
   }
 
@@ -257,9 +257,9 @@ export class StartupOptimizationService {
         memory: process.memoryUsage(),
         timestamp: new Date().toISOString(),
       };
-    } catch (error) {
-      loggingService.error('Health check failed', error);
-      throw error;
+    } catch (_error) {
+      loggingService.error('Health check failed', _error);
+      throw _error;
     }
   }
 }

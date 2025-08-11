@@ -3,11 +3,13 @@
 ## Installation Verification
 
 ✅ **Dependencies Installed**:
+
 - @stryker-mutator/core@9.0.1
-- @stryker-mutator/vitest-runner@9.0.1  
+- @stryker-mutator/vitest-runner@9.0.1
 - @stryker-mutator/typescript-checker@9.0.1
 
 ✅ **Configuration File**: `stryker.conf.mjs`
+
 ```javascript
 export default {
   packageManager: 'npm',
@@ -15,15 +17,17 @@ export default {
   testRunner: 'vitest',
   coverageAnalysis: 'perTest',
   mutate: ['client/src/services/healthService.ts'],
-  thresholds: { high: 80, low: 60, break: 50 }
+  thresholds: { high: 80, low: 60, break: 50 },
 };
 ```
 
 ✅ **NPM Scripts Added**:
+
 - `npm run test:mutation` - Run mutation tests
 - `npm run test:mutation:debug` - Run with debug logging
 
 ✅ **Integration Confirmed**:
+
 - Stryker successfully targets healthService.ts
 - Detects 100 potential mutations
 - Integrates with existing Vitest setup
@@ -35,7 +39,7 @@ export default {
 # Run mutation testing
 npm run test:mutation
 
-# Run with debug output  
+# Run with debug output
 npm run test:mutation:debug
 
 # Test configuration only (dry run)

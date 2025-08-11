@@ -36,14 +36,14 @@ jobs:
           echo "Event: ${{ github.event_name }}"
           echo "Draft: ${{ github.event.pull_request.draft }}"
           echo "Branch: ${{ github.ref_name }}"
-          
+
           # Skip draft PRs unless explicitly requested
           if [[ "${{ github.event_name }}" == "pull_request" && "${{ github.event.pull_request.draft }}" == "true" ]]; then
             echo "should-run=false" >> $GITHUB_OUTPUT
             echo "🔄 Skipping draft PR - add 'ready for review' to run pipeline"
             exit 0
           fi
-          
+
           echo "should-run=true" >> $GITHUB_OUTPUT
           echo "is-pr=${{ github.event_name == 'pull_request' }}" >> $GITHUB_OUTPUT
           echo "is-push=${{ github.event_name == 'push' }}" >> $GITHUB_OUTPUT
@@ -60,7 +60,7 @@ jobs:
       cache-key: ${{ steps.cache-deps.outputs.cache-primary-key }}
       build-success: ${{ steps.build.outcome == 'success' }}
       test-results: ${{ steps.tests.outputs.results }}
-    
+
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
@@ -119,7 +119,7 @@ jobs:
           echo "Building project..."
           npm run build
           echo "✅ Build completed successfully"
-          
+
           # Analyze bundle size
           if [ -f "dist/public/assets/index.*.js" ]; then
             BUNDLE_SIZE=$(find dist/public/assets -name "index.*.js" -exec stat -c%s {} \; | awk '{sum+=$1} END {print sum}')
@@ -136,21 +136,21 @@ jobs:
         id: tests
         run: |
           echo "Running test suites..."
-          
+
           # Unit tests
           echo "🔸 Running unit tests..."
           npm run test:unit 2>&1 | tee test-unit-results.txt
-          
+
           # Integration tests
           echo "🔸 Running integration tests..."
           npm run test:integration 2>&1 | tee test-integration-results.txt || {
             echo "⚠️ Some integration tests failed, but continuing..."
           }
-          
+
           # Generate coverage
           echo "🔸 Generating test coverage..."
           npm run test:coverage 2>&1 | tee test-coverage-results.txt || echo "Coverage generation failed"
-          
+
           echo "✅ Test suite completed"
           echo "results=completed" >> $GITHUB_OUTPUT
 
@@ -168,7 +168,7 @@ jobs:
           echo "## 📦 Bundle Analysis" >> $GITHUB_STEP_SUMMARY
           echo "| File | Size |" >> $GITHUB_STEP_SUMMARY
           echo "|------|------|" >> $GITHUB_STEP_SUMMARY
-          
+
           if [ -d "dist/public" ]; then
             find dist/public -name "*.js" -o -name "*.css" | while read file; do
               size=$(stat -c%s "$file" | numfmt --to=iec)
@@ -182,7 +182,7 @@ jobs:
     if: needs.workflow-control.outputs.should-run == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    
+
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
@@ -210,7 +210,7 @@ jobs:
       - name: 🔍 Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
         with:
-          category: "/language:javascript"
+          category: '/language:javascript'
 
       - name: 🛡️ Security audit
         run: |
@@ -236,7 +236,7 @@ jobs:
     timeout-minutes: 10
     outputs:
       preview-url: ${{ steps.deploy.outputs.preview-url }}
-    
+
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
@@ -267,7 +267,7 @@ jobs:
         run: |
           URL="${{ steps.deploy.outputs.preview-url }}"
           echo "🔍 Testing deployment health at: $URL"
-          
+
           for i in {1..3}; do
             echo "Attempt $i/3..."
             HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "$URL/" || echo "000")
@@ -291,16 +291,16 @@ jobs:
           script: |
             const deploymentUrl = '${{ steps.deploy.outputs.preview-url }}';
             const commitSha = context.sha.substring(0, 7);
-            
+
             const comment = `## 🚀 Preview Deployment Ready
-            
+
             | 🔗 **Preview URL** | ${deploymentUrl} |
             |:---|:---|
             | 📝 **Commit** | ${commitSha} |
             | 🔄 **Status** | ✅ Ready for testing |
-            
+
             > Click the preview URL above to test your changes!`;
-            
+
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
@@ -313,7 +313,7 @@ jobs:
     if: needs.workflow-control.outputs.is-push == 'true' && contains(fromJson('["main", "stable"]'), needs.workflow-control.outputs.branch)
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    
+
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
@@ -345,7 +345,7 @@ jobs:
         run: |
           URL="${{ steps.deploy.outputs.production-url }}"
           echo "🔍 Testing production deployment at: $URL"
-          
+
           for i in {1..5}; do
             echo "Attempt $i/5..."
             HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "$URL/" || echo "000")
@@ -359,7 +359,7 @@ jobs:
             echo "⏳ Waiting 15s before retry..."
             sleep 15
           done
-          
+
           echo "❌ Production health check failed after 5 attempts"
           exit 1
 
@@ -369,7 +369,7 @@ jobs:
           echo "🔄 Updating domain aliases for ${{ needs.workflow-control.outputs.branch }}..."
           DEPLOYMENT_URL="${{ steps.deploy.outputs.production-url }}"
           DEPLOYMENT_ID=$(echo "$DEPLOYMENT_URL" | grep -o '[^/]*\.vercel\.app' | head -1)
-          
+
           if [ "${{ needs.workflow-control.outputs.branch }}" = "main" ]; then
             echo "Updating main branch domains..."
             vercel alias set "$DEPLOYMENT_ID" unitedautosupply.org --scope coding-krakken-projects --token=${{ secrets.VERCEL_TOKEN }} || echo "Failed to update unitedautosupply.org"
@@ -379,7 +379,7 @@ jobs:
             vercel alias set "$DEPLOYMENT_ID" uasmaintenance.com --scope coding-krakken-projects --token=${{ secrets.VERCEL_TOKEN }} || echo "Failed to update uasmaintenance.com"
             vercel alias set "$DEPLOYMENT_ID" www.uasmaintenance.com --scope coding-krakken-projects --token=${{ secrets.VERCEL_TOKEN }} || echo "Failed to update www.uasmaintenance.com"
           fi
-          
+
           echo "✅ Domain aliases updated successfully"
 
       - name: 🚨 Create issue on deployment failure
@@ -389,25 +389,25 @@ jobs:
           script: |
             const title = `🚨 Production Deployment Failed - ${context.sha.substring(0, 7)}`;
             const body = `## Deployment Failure Report
-            
+
             **Branch:** \`${{ needs.workflow-control.outputs.branch }}\`  
             **Commit:** \`${context.sha}\`  
             **Actor:** @${context.actor}  
             **Workflow:** [${context.workflow}](${context.payload.repository.html_url}/actions/runs/${context.runId})
-            
+
             **Failed Components:**
             - Deployment URL: ${{ steps.deploy.outputs.production-url || 'N/A' }}
             - Health Check: ${{ steps.health-check.outcome || 'N/A' }}
-            
+
             **Next Steps:**
             1. 🔍 [Check workflow logs](${context.payload.repository.html_url}/actions/runs/${context.runId})
             2. 🔧 Verify Vercel deployment status  
             3. 🩺 Check application health endpoints
             4. 📝 Review changes in commit ${context.sha.substring(0, 7)}
             5. 🔄 Consider rollback if critical
-            
+
             **Auto-created by CI/CD pipeline** 🤖`;
-            
+
             await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -421,14 +421,14 @@ jobs:
     needs: [workflow-control, build-and-quality, security-scan]
     if: always() && needs.workflow-control.outputs.should-run == 'true'
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: 📊 Quality Gate Summary
         run: |
           echo "## 🎯 Quality Gate Results" >> $GITHUB_STEP_SUMMARY
           echo "| Check | Status | Details |" >> $GITHUB_STEP_SUMMARY
           echo "|-------|--------|---------|" >> $GITHUB_STEP_SUMMARY
-          
+
           # Build and Quality
           BUILD_STATUS="${{ needs.build-and-quality.result }}"
           if [ "$BUILD_STATUS" = "success" ]; then
@@ -436,7 +436,7 @@ jobs:
           else
             echo "| 🔨 Build & Tests | ❌ Fail | Check logs for details |" >> $GITHUB_STEP_SUMMARY
           fi
-          
+
           # Security
           SECURITY_STATUS="${{ needs.security-scan.result }}"
           if [ "$SECURITY_STATUS" = "success" ]; then
@@ -444,14 +444,14 @@ jobs:
           else
             echo "| 🔒 Security Scan | ❌ Fail | Security issues detected |" >> $GITHUB_STEP_SUMMARY
           fi
-          
+
           # Auto-merge eligibility
           AUTO_MERGE_ELIGIBLE="${{ contains(github.event.pull_request.labels.*.name, 'automerge') }}"
           ALL_PASSED=$([ "$BUILD_STATUS" = "success" ] && [ "$SECURITY_STATUS" = "success" ] && echo "true" || echo "false")
-          
+
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### 🚀 Deployment Status" >> $GITHUB_STEP_SUMMARY
-          
+
           if [ "${{ needs.workflow-control.outputs.is-pr }}" = "true" ]; then
             if [ "$AUTO_MERGE_ELIGIBLE" = "true" ] && [ "$ALL_PASSED" = "true" ]; then
               echo "🤖 **Auto-merge**: Ready to merge automatically" >> $GITHUB_STEP_SUMMARY
@@ -463,7 +463,7 @@ jobs:
           else
             echo "🚀 **Production**: Deployment initiated for \`${{ needs.workflow-control.outputs.branch }}\` branch" >> $GITHUB_STEP_SUMMARY
           fi
-          
+
           # Overall status
           if [ "$ALL_PASSED" = "true" ]; then
             echo "🎉 **Overall Status**: All quality gates passed!" >> $GITHUB_STEP_SUMMARY
@@ -483,7 +483,6 @@ jobs:
       needs.security-scan.result == 'success' && 
       contains(github.event.pull_request.labels.*.name, 'automerge')
     runs-on: ubuntu-latest
-    
     steps:
       - name: 🤖 Enable auto-merge
         uses: peter-evans/enable-pull-request-automerge@v3

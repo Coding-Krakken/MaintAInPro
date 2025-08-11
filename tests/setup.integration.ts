@@ -1,4 +1,4 @@
-import { beforeAll } from 'vitest'
+import { beforeAll } from 'vitest';
 // import { server } from './mocks/server'
 
 // Mock environment variables for integration tests

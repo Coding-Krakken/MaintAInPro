@@ -207,15 +207,15 @@ class EnhancedLoggingService {
   /**
    * Error level logging
    */
-  error(message: string, error?: Error | any, context: LogContext = {}): void {
+  error(message: string, error?: Error | unknown, context: LogContext = {}): void {
     const errorContext: any = {};
 
     if (error) {
       errorContext.error = {
-        name: error.name || 'Error',
-        message: error.message || String(error),
-        stack: error.stack,
-        code: error.code,
+        name: (error as any).name || 'Error',
+        message: (error as any).message || String(error),
+        stack: (error as any).stack,
+        code: (error as any).code,
       };
     }
 
@@ -233,15 +233,15 @@ class EnhancedLoggingService {
   /**
    * Fatal level logging
    */
-  fatal(message: string, error?: Error | any, context: LogContext = {}): void {
+  fatal(message: string, error?: Error | unknown, context: LogContext = {}): void {
     const errorContext: any = {};
 
     if (error) {
       errorContext.error = {
-        name: error.name || 'FatalError',
-        message: error.message || String(error),
-        stack: error.stack,
-        code: error.code,
+        name: (error as any).name || 'FatalError',
+        message: (error as any).message || String(error),
+        stack: (error as any).stack,
+        code: (error as any).code,
       };
     }
 

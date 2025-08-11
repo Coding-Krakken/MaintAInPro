@@ -77,8 +77,8 @@ class OfflineService {
       if (stored) {
         this.actions = JSON.parse(stored);
       }
-    } catch (error) {
-      console.error('Failed to load offline actions:', error);
+    } catch (_error) {
+      console.error('Failed to load offline actions:', _error);
       this.actions = [];
     }
   }
@@ -86,8 +86,8 @@ class OfflineService {
   private saveActionsToStorage() {
     try {
       localStorage.setItem(this.storageKey, JSON.stringify(this.actions));
-    } catch (error) {
-      console.error('Failed to save offline actions:', error);
+    } catch (_error) {
+      console.error('Failed to save offline actions:', _error);
     }
   }
 
@@ -186,8 +186,8 @@ class OfflineService {
         try {
           await this.performAction(action);
           syncedCount++;
-        } catch (error) {
-          console.error('Failed to sync action:', action, error);
+        } catch (_error) {
+          console.error('Failed to sync action:', action, _error);
           failedActions.push(action);
         }
       }
@@ -202,8 +202,8 @@ class OfflineService {
       }
 
       return failedActions.length === 0;
-    } catch (error) {
-      console.error('Sync process failed:', error);
+    } catch (_error) {
+      console.error('Sync process failed:', _error);
       return false;
     } finally {
       this.syncInProgress = false;
