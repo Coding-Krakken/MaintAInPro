@@ -19,6 +19,23 @@ on:
         required: false
         default: false
         type: boolean
+  push:
+    branches:
+      - main
+    paths:
+      - '**/*.ts'
+      - '**/*.js'
+      - 'client/**'
+      - 'server/**'
+      - 'shared/**'
+      - 'api/**'
+    paths-ignore:
+      - 'Documentation/**'
+      - '**/*.md'
+      - 'CHANGELOG.md'
+  pull_request:
+    branches:
+      - main
     paths:
       - '**/*.ts'
       - '**/*.js'
@@ -169,7 +186,7 @@ jobs:
 
             **Timestamp:** ${new Date().toISOString()}
             **Trigger:** ${context.eventName}
-            **Environment(s):** ${{ join(matrix.environment) }}
+            **Environment(s):** ${{ toJson(matrix.environment) }}
             **Workflow:** [${context.workflow}](${context.payload.repository.html_url}/actions/runs/${context.runId})
 
             **Failed Tests:**

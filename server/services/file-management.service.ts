@@ -318,7 +318,6 @@ export class FileManagementService {
         vendorId: context.vendorId || null,
         uploadedBy: context.userId,
         warehouseId: context.warehouseId,
-        createdAt: new Date(),
       };
 
       const attachment = await storage.createAttachment(attachmentData);
