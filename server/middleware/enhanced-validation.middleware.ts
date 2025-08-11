@@ -422,8 +422,8 @@ export function validationChain(
     headers?: z.ZodSchema;
   },
   options?: ValidationOptions
-) {
-  const middlewares: unknown[] = [];
+): Array<(req: Request, res: Response, next: NextFunction) => void> {
+  const middlewares: Array<(req: Request, res: Response, next: NextFunction) => void> = [];
 
   if (validations.params) {
     middlewares.push(validateParams(validations.params, options));
