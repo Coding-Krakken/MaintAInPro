@@ -730,8 +730,8 @@ export const insertNotificationSchema = createFlexibleSchema({
 
 // Enhanced vendor schema with proper validation
 export const insertVendorSchema = createInsertSchema(vendors, {
-  type: z.enum(['supplier', 'contractor']),
-  name: z.string().min(1, 'Name is required'),
+  type: () => z.enum(['supplier', 'contractor']),
+  name: () => z.string().min(1, 'Name is required'),
 });
 
 export const insertPmTemplateSchema = createInsertSchema(pmTemplates);
@@ -740,16 +740,16 @@ export const insertAttachmentSchema = createInsertSchema(attachments);
 
 // Escalation rule schema
 export const insertEscalationRuleSchema = createInsertSchema(escalationRules, {
-  workOrderType: z.enum(['corrective', 'preventive', 'emergency']),
-  priority: z.enum(['low', 'medium', 'high', 'critical']),
-  escalationAction: z.enum(['notify_supervisor', 'notify_manager', 'auto_reassign']),
-  timeoutHours: z.number().min(1, 'Timeout must be at least 1 hour'),
+  workOrderType: () => z.enum(['corrective', 'preventive', 'emergency']),
+  priority: () => z.enum(['low', 'medium', 'high', 'critical']),
+  escalationAction: () => z.enum(['notify_supervisor', 'notify_manager', 'auto_reassign']),
+  timeoutHours: () => z.number().min(1, 'Timeout must be at least 1 hour'),
 });
 
 export const insertEscalationHistorySchema = createInsertSchema(escalationHistory);
 
 export const insertJobQueueSchema = createInsertSchema(jobQueue, {
-  jobType: z.enum(['escalation_check', 'pm_generation', 'notification_send']),
+  jobType: () => z.enum(['escalation_check', 'pm_generation', 'notification_send']),
 });
 
 export const insertLaborTimeSchema = createInsertSchema(laborTime).extend({

@@ -57,16 +57,16 @@ export const jobQueue = pgTable('job_queue', {
 
 // Schema exports
 export const insertEscalationRuleSchema = createInsertSchema(escalationRules, {
-  workOrderType: z.enum(['corrective', 'preventive', 'emergency']),
-  priority: z.enum(['low', 'medium', 'high', 'critical']),
-  escalationAction: z.enum(['notify_supervisor', 'notify_manager', 'auto_reassign']),
-  timeoutHours: z.number().min(1, 'Timeout must be at least 1 hour'),
+  workOrderType: () => z.enum(['corrective', 'preventive', 'emergency']),
+  priority: () => z.enum(['low', 'medium', 'high', 'critical']),
+  escalationAction: () => z.enum(['notify_supervisor', 'notify_manager', 'auto_reassign']),
+  timeoutHours: () => z.number().min(1, 'Timeout must be at least 1 hour'),
 });
 
 export const insertEscalationHistorySchema = createInsertSchema(escalationHistory);
 
 export const insertJobQueueSchema = createInsertSchema(jobQueue, {
-  jobType: z.enum(['escalation_check', 'pm_generation', 'notification_send']),
+  jobType: () => z.enum(['escalation_check', 'pm_generation', 'notification_send']),
 });
 
 // Type exports
