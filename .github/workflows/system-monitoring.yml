@@ -102,6 +102,10 @@ jobs:
           services["cicd"]="✅ operational"
 
           # Format output for next steps
+          # Ensure overall_status is never empty
+          if [ -z "$overall_status" ]; then
+            overall_status="unknown"
+          fi
           echo "status=$overall_status" >> $GITHUB_OUTPUT
           echo "services=$(echo "${services[@]}" | tr ' ' '\n' | jq -R . | jq -s .)" >> $GITHUB_OUTPUT
 
