@@ -252,10 +252,10 @@ export class AuthService {
         sessionId: session.id,
       };
     } catch (_error) {
-      console.error('Login _error:', _error);
+      console.error('Login error:', _error);
       await AuditService.logLogin('', ipAddress, userAgent, false, {
         reason: 'system_error',
-        _error: _error.message,
+        error: _error.message,
       });
       return {
         success: false,
@@ -283,7 +283,7 @@ export class AuthService {
 
       return { success: true };
     } catch (_error) {
-      console.error('Logout _error:', _error);
+      console.error('Logout error:', _error);
       return { success: false };
     }
   }
@@ -346,10 +346,10 @@ export class AuthService {
         tokens,
       };
     } catch (_error) {
-      console.error('Token refresh _error:', _error);
+      console.error('Token refresh error:', _error);
       return {
         success: false,
-        _error: 'Failed to refresh token',
+        error: 'Failed to refresh token',
       };
     }
   }
@@ -448,10 +448,10 @@ export class AuthService {
         userId,
       };
     } catch (_error) {
-      console.error('Registration _error:', _error);
+      console.error('Registration error:', _error);
       return {
         success: false,
-        _error: 'Registration failed',
+        error: 'Registration failed',
       };
     }
   }
@@ -500,10 +500,10 @@ export class AuthService {
 
       return { success: true };
     } catch (_error) {
-      console.error('Password reset request _error:', _error);
+      console.error('Password reset request error:', _error);
       return {
         success: false,
-        _error: 'Failed to process password reset request',
+        error: 'Failed to process password reset request',
       };
     }
   }
@@ -578,10 +578,10 @@ export class AuthService {
 
       return { success: true };
     } catch (_error) {
-      console.error('Password reset confirmation _error:', _error);
+      console.error('Password reset confirmation error:', _error);
       return {
         success: false,
-        _error: 'Failed to reset password',
+        error: 'Failed to reset password',
       };
     }
   }
@@ -651,10 +651,10 @@ export class AuthService {
         setup,
       };
     } catch (_error) {
-      console.error('MFA setup _error:', _error);
+      console.error('MFA setup error:', _error);
       return {
         success: false,
-        _error: 'Failed to setup MFA',
+        error: 'Failed to setup MFA',
       };
     }
   }
@@ -693,10 +693,10 @@ export class AuthService {
 
       return { success: true };
     } catch (_error) {
-      console.error('MFA enable _error:', _error);
+      console.error('MFA enable error:', _error);
       return {
         success: false,
-        _error: 'Failed to enable MFA',
+        error: 'Failed to enable MFA',
       };
     }
   }
@@ -772,10 +772,10 @@ export class AuthService {
         user: allowed ? user : undefined,
       };
     } catch (_error) {
-      console.error('Access validation _error:', _error);
+      console.error('Access validation error:', _error);
       return {
         allowed: false,
-        _error: 'Access validation failed',
+        error: 'Access validation failed',
       };
     }
   }

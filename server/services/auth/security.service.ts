@@ -133,10 +133,10 @@ export class SecurityService {
       legacyHeaders: false,
       // Custom key generator that can handle both IP and user-based limiting
       keyGenerator: (req: unknown) => {
-        const userId = req.headers['x-user-id'] as string;
+        const userId = (req as any).headers['x-user-id'] as string;
         if (userId) return `user:${userId}`;
         // Use express-rate-limit's ipKeyGenerator for IPv6 compatibility
-        return `ip:${ipKeyGenerator(req)}`;
+        return `ip:${ipKeyGenerator(req as any)}`;
       },
     });
   }

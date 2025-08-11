@@ -143,7 +143,7 @@ export function registerLaborTimeRoutes(app: Express) {
         });
       }
 
-      console.error('Error creating labor time:', error);
+      console.error('Error creating labor time:', _error);
       res.status(500).json({ message: 'Failed to create labor time entry' });
     }
   });

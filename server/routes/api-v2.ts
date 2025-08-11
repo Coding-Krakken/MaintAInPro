@@ -18,14 +18,14 @@ const router = Router();
 // Helper functions for analytics
 function calculateAverageResolutionTime(workOrders: unknown[]): number {
   const completedOrders = workOrders.filter(
-    wo => ['completed', 'verified', 'closed'].includes(wo.status) && wo.completedAt
+    wo => ['completed', 'verified', 'closed'].includes((wo as any).status) && (wo as any).completedAt
   );
 
   if (completedOrders.length === 0) return 0;
 
-  const totalResolutionTime = completedOrders.reduce((sum, wo) => {
-    const created = new Date(wo.createdAt);
-    const completed = new Date(wo.completedAt);
+  const totalResolutionTime = completedOrders.reduce((sum: number, wo) => {
+    const created = new Date((wo as any).createdAt);
+    const completed = new Date((wo as any).completedAt);
     return sum + (completed.getTime() - created.getTime());
   }, 0);
 
@@ -36,16 +36,16 @@ function calculateMTTR(workOrders: unknown[]): number {
   // Mean Time To Repair - similar to average resolution time but specific to corrective maintenance
   const correctiveOrders = workOrders.filter(
     wo =>
-      wo.type === 'corrective' &&
-      ['completed', 'verified', 'closed'].includes(wo.status) &&
-      wo.completedAt
+      (wo as any).type === 'corrective' &&
+      ['completed', 'verified', 'closed'].includes((wo as any).status) &&
+      (wo as any).completedAt
   );
 
   if (correctiveOrders.length === 0) return 0;
 
-  const totalRepairTime = correctiveOrders.reduce((sum, wo) => {
-    const created = new Date(wo.createdAt);
-    const completed = new Date(wo.completedAt);
+  const totalRepairTime = correctiveOrders.reduce((sum: number, wo) => {
+    const created = new Date((wo as any).createdAt);
+    const completed = new Date((wo as any).completedAt);
     return sum + (completed.getTime() - created.getTime());
   }, 0);
 
@@ -76,7 +76,7 @@ function generateTrendData(workOrders: unknown[], period: string, metric: string
     }
 
     const periodWorkOrders = workOrders.filter(wo => {
-      const woDate = new Date(wo.createdAt);
+      const woDate = new Date((wo as any).createdAt);
       const nextPeriod = new Date(date);
 
       switch (period) {
@@ -106,7 +106,7 @@ function generateTrendData(workOrders: unknown[], period: string, metric: string
         value = calculateAverageResolutionTime(periodWorkOrders);
         break;
       case 'priority_distribution':
-        value = periodWorkOrders.filter(wo => ['high', 'critical'].includes(wo.priority)).length;
+        value = periodWorkOrders.filter(wo => ['high', 'critical'].includes((wo as any).priority)).length;
         break;
     }
 

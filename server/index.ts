@@ -27,7 +27,7 @@ import {
 const app = express();
 
 // Initialize services
-const cacheService = CacheService.getInstance({
+const _cacheService = CacheService.getInstance({
   // Use memory cache only - simple and effective for development
   defaultTTL: 300, // 5 minutes
   enableMemoryCache: true,
