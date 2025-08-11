@@ -7,17 +7,34 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Progress } from '@/components/ui/progress';
-import { 
-  LineChart, Line, AreaChart, Area, XAxis, YAxis, 
-  CartesianGrid, Tooltip, ResponsiveContainer, 
-  ComposedChart, RadarChart, PolarGrid,
-  PolarAngleAxis, PolarRadiusAxis, Radar
+import {
+  LineChart,
+  Line,
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  ComposedChart,
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
+  Radar,
 } from 'recharts';
 import {
-  Activity, TrendingUp, TrendingDown, AlertTriangle, 
-  Clock, Users, Cpu, 
-  HardDrive, Download, RefreshCw
-
+  Activity,
+  TrendingUp,
+  TrendingDown,
+  AlertTriangle,
+  Clock,
+  Users,
+  Cpu,
+  HardDrive,
+  Download,
+  RefreshCw,
 } from 'lucide-react';
 
 interface SystemMetrics {

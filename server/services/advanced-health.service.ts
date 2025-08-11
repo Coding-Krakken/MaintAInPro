@@ -27,7 +27,11 @@ export class AdvancedHealthService {
   private dependencies: SystemDependency[];
   private lastHealthCheck: Date | null = null;
   private healthCheckInterval: NodeJS.Timeout | null = null;
-  private healthHistory: Array<{ timestamp: Date; status: string; details: Record<string, unknown> }> = [];
+  private healthHistory: Array<{
+    timestamp: Date;
+    status: string;
+    details: Record<string, unknown>;
+  }> = [];
   private readonly HEALTH_HISTORY_LIMIT = 100;
 
   constructor() {
@@ -269,7 +273,11 @@ export class AdvancedHealthService {
       const responseTime = Date.now() - startTime;
       const stats = enhancedCache.getStats();
 
-  const isWorking = retrieved !== null && typeof retrieved === 'object' && 'test' in retrieved && (retrieved as Record<string, unknown>).test === true;
+      const isWorking =
+        retrieved !== null &&
+        typeof retrieved === 'object' &&
+        'test' in retrieved &&
+        (retrieved as Record<string, unknown>).test === true;
 
       return {
         name: 'cache_service',

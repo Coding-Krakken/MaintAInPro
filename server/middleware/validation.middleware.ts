@@ -14,11 +14,7 @@ import type { Request, Response, NextFunction } from 'express';
 import { z } from 'zod';
 import { rateLimit } from 'express-rate-limit';
 import helmet from 'helmet';
-import {
-  snakeToCamel,
-  fieldValidators,
-  createFlexibleSchema,
-} from '../../shared/validation-utils';
+import { snakeToCamel, fieldValidators, createFlexibleSchema } from '../../shared/validation-utils';
 
 // =============================================================================
 // TYPE EXTENSIONS

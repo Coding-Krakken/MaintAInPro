@@ -6,14 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
-import {
-  Package,
-  Plus,
-  Minus,
-  AlertTriangle,
-  Search,
-  ShoppingCart,
-} from 'lucide-react';
+import { Package, Plus, Minus, AlertTriangle, Search, ShoppingCart } from 'lucide-react';
 
 interface Part {
   id: string;

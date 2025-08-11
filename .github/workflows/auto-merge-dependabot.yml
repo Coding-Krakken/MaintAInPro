@@ -19,7 +19,7 @@ jobs:
           echo "PR title: ${{ github.event.pull_request.title }}"
           echo "PR author: ${{ github.event.pull_request.user.login }}"
           echo "PR labels: ${{ join(github.event.pull_request.labels.*.name) }}"
-          
+
           # Check if this is a security update or patch/minor update
           if [[ "${{ github.event.pull_request.title }}" == *"security"* ]] || \
              [[ "${{ github.event.pull_request.title }}" == *"patch"* ]] || \
@@ -70,19 +70,19 @@ jobs:
         with:
           script: |
             const comment = `## 👀 Manual Review Required
-            
+
             This Dependabot PR contains major version updates or other changes that require manual review.
-            
+
             **Next Steps:**
             1. 📝 Review the changelog and breaking changes
             2. 🧪 Test the changes locally if needed
             3. ✅ Approve the PR if changes look good
             4. 🏷️ Add the \`automerge\` label to enable auto-merge
-            
+
             **Files changed:** ${context.payload.pull_request.changed_files}
             **Additions:** +${context.payload.pull_request.additions}
             **Deletions:** -${context.payload.pull_request.deletions}`;
-            
+
             await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,

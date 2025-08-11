@@ -1,9 +1,4 @@
-import {
-  PmTemplate,
-  Equipment,
-  WorkOrder,
-  InsertWorkOrder,
-} from '@shared/schema';
+import { PmTemplate, Equipment, WorkOrder, InsertWorkOrder } from '@shared/schema';
 import { storage } from '../storage';
 
 export interface PMSchedule {

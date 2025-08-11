@@ -1,6 +1,7 @@
 # 🚀 Deployment Guide
 
-Complete guide for deploying MaintAInPro CMMS to production environments including Vercel, Railway, Docker, and on-premises installations.
+Complete guide for deploying MaintAInPro CMMS to production environments
+including Vercel, Railway, Docker, and on-premises installations.
 
 ## 📋 Table of Contents
 
@@ -17,18 +18,20 @@ Complete guide for deploying MaintAInPro CMMS to production environments includi
 
 ## 🎯 Overview
 
-MaintAInPro supports multiple deployment options to fit different organizational needs:
+MaintAInPro supports multiple deployment options to fit different organizational
+needs:
 
-| Platform | Best For | Complexity | Scaling | Cost |
-|----------|----------|------------|---------|------|
-| **Vercel** | Quick deployment, global CDN | Low | Automatic | Free tier available |
-| **Railway** | Full-stack hosting | Medium | Manual | Pay-as-you-go |
-| **Docker** | Containerized environments | Medium | Manual | Infrastructure costs |
-| **On-Premises** | Air-gapped, compliance | High | Manual | Hardware + maintenance |
+| Platform        | Best For                     | Complexity | Scaling   | Cost                   |
+| --------------- | ---------------------------- | ---------- | --------- | ---------------------- |
+| **Vercel**      | Quick deployment, global CDN | Low        | Automatic | Free tier available    |
+| **Railway**     | Full-stack hosting           | Medium     | Manual    | Pay-as-you-go          |
+| **Docker**      | Containerized environments   | Medium     | Manual    | Infrastructure costs   |
+| **On-Premises** | Air-gapped, compliance       | High       | Manual    | Hardware + maintenance |
 
 ### System Requirements
 
 **Minimum Production Requirements:**
+
 - **CPU**: 2 cores
 - **RAM**: 4GB
 - **Storage**: 20GB SSD
@@ -36,6 +39,7 @@ MaintAInPro supports multiple deployment options to fit different organizational
 - **Database**: PostgreSQL 14+
 
 **Recommended Production:**
+
 - **CPU**: 4+ cores
 - **RAM**: 8GB+
 - **Storage**: 50GB+ SSD
@@ -44,7 +48,8 @@ MaintAInPro supports multiple deployment options to fit different organizational
 
 ## 🌐 Vercel Deployment (Recommended)
 
-Vercel provides the easiest deployment with global CDN, automatic scaling, and zero configuration.
+Vercel provides the easiest deployment with global CDN, automatic scaling, and
+zero configuration.
 
 ### Prerequisites
 
@@ -123,6 +128,7 @@ npm run seed
    - Add your custom domain
 
 2. **Configure DNS**:
+
    ```
    Type: CNAME
    Name: your-domain.com (or subdomain)
@@ -134,6 +140,7 @@ npm run seed
 ### Vercel Configuration
 
 **vercel.json:**
+
 ```json
 {
   "version": 2,
@@ -168,7 +175,8 @@ npm run seed
 
 ## 🚂 Railway Deployment
 
-Railway provides a simple platform for full-stack applications with integrated database hosting.
+Railway provides a simple platform for full-stack applications with integrated
+database hosting.
 
 ### Step 1: Railway Setup
 
@@ -224,6 +232,7 @@ railway status
 ### Railway Configuration
 
 **railway.json:**
+
 ```json
 {
   "deploy": {
@@ -250,6 +259,7 @@ docker build --platform linux/amd64 -t maintainpro:latest .
 ### Step 2: Docker Compose Setup
 
 **docker-compose.yml:**
+
 ```yaml
 version: '3.8'
 
@@ -257,7 +267,7 @@ services:
   app:
     build: .
     ports:
-      - "5000:5000"
+      - '5000:5000'
     environment:
       - NODE_ENV=production
       - DATABASE_URL=postgresql://postgres:password@db:5432/maintainpro
@@ -277,14 +287,14 @@ services:
       - postgres_data:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
-      - "5432:5432"
+      - '5432:5432'
     restart: unless-stopped
 
   nginx:
     image: nginx:alpine
     ports:
-      - "80:80"
-      - "443:443"
+      - '80:80'
+      - '443:443'
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
       - ./ssl:/etc/nginx/ssl
@@ -312,6 +322,7 @@ docker-compose down
 ### Step 4: Nginx Configuration
 
 **nginx.conf:**
+
 ```nginx
 events {
     worker_connections 1024;
@@ -410,23 +421,26 @@ npm run seed
 ### Step 4: Process Management
 
 **ecosystem.config.js:**
+
 ```javascript
 module.exports = {
-  apps: [{
-    name: 'maintainpro',
-    script: 'server/index.js',
-    env: {
-      NODE_ENV: 'production',
-      PORT: 5000
+  apps: [
+    {
+      name: 'maintainpro',
+      script: 'server/index.js',
+      env: {
+        NODE_ENV: 'production',
+        PORT: 5000,
+      },
+      instances: 'max',
+      exec_mode: 'cluster',
+      max_memory_restart: '1G',
+      restart_delay: 4000,
+      error_file: '/var/log/maintainpro/error.log',
+      out_file: '/var/log/maintainpro/out.log',
+      log_file: '/var/log/maintainpro/combined.log',
     },
-    instances: 'max',
-    exec_mode: 'cluster',
-    max_memory_restart: '1G',
-    restart_delay: 4000,
-    error_file: '/var/log/maintainpro/error.log',
-    out_file: '/var/log/maintainpro/out.log',
-    log_file: '/var/log/maintainpro/combined.log'
-  }]
+  ],
 };
 ```
 
@@ -449,6 +463,7 @@ sudo nano /etc/nginx/sites-available/maintainpro
 ```
 
 **maintainpro nginx config:**
+
 ```nginx
 server {
     listen 80;
@@ -552,17 +567,20 @@ openssl rand -hex 32
 ### PostgreSQL Installation
 
 **Ubuntu/Debian:**
+
 ```bash
 sudo apt-get install postgresql postgresql-contrib
 ```
 
 **CentOS/RHEL:**
+
 ```bash
 sudo yum install postgresql-server postgresql-contrib
 sudo postgresql-setup initdb
 ```
 
 **macOS:**
+
 ```bash
 brew install postgresql
 brew services start postgresql
@@ -571,6 +589,7 @@ brew services start postgresql
 ### Database Configuration
 
 **Create database and user:**
+
 ```sql
 -- Connect as postgres user
 sudo -u postgres psql
@@ -591,6 +610,7 @@ CREATE EXTENSION IF NOT EXISTS "pg_stat_statements";
 ```
 
 **Performance tuning (postgresql.conf):**
+
 ```bash
 # Memory
 shared_buffers = 256MB
@@ -627,6 +647,7 @@ npm run db:studio
 ### SSL Certificate Setup
 
 **Option 1: Let's Encrypt (Recommended)**
+
 ```bash
 # Install Certbot
 sudo apt-get install certbot python3-certbot-nginx
@@ -640,6 +661,7 @@ sudo crontab -e
 ```
 
 **Option 2: Commercial Certificate**
+
 ```bash
 # Generate private key
 openssl genrsa -out private.key 2048
@@ -654,6 +676,7 @@ openssl req -new -key private.key -out certificate.csr
 ### Security Headers
 
 **nginx.conf security additions:**
+
 ```nginx
 # Security headers
 add_header X-Frame-Options DENY;
@@ -669,6 +692,7 @@ server_tokens off;
 ### Application Security
 
 **Rate limiting:**
+
 ```javascript
 // Express rate limiting
 const rateLimit = require('express-rate-limit');
@@ -676,13 +700,14 @@ const rateLimit = require('express-rate-limit');
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // limit each IP to 100 requests per windowMs
-  message: 'Too many requests from this IP'
+  message: 'Too many requests from this IP',
 });
 
 app.use('/api/', limiter);
 ```
 
 **Input validation:**
+
 ```javascript
 // Zod validation for all inputs
 const { z } = require('zod');
@@ -690,7 +715,7 @@ const { z } = require('zod');
 const workOrderSchema = z.object({
   title: z.string().min(1).max(255),
   description: z.string().max(2000),
-  priority: z.enum(['low', 'medium', 'high', 'critical'])
+  priority: z.enum(['low', 'medium', 'high', 'critical']),
 });
 ```
 
@@ -716,6 +741,7 @@ The application includes a health check endpoint at `/api/health`:
 ### Application Monitoring
 
 **PM2 Monitoring:**
+
 ```bash
 # Monitor processes
 pm2 monit
@@ -728,6 +754,7 @@ pm2 restart maintainpro
 ```
 
 **Log Management:**
+
 ```bash
 # Set up log rotation
 sudo nano /etc/logrotate.d/maintainpro
@@ -747,18 +774,19 @@ sudo nano /etc/logrotate.d/maintainpro
 ### Database Monitoring
 
 **PostgreSQL monitoring:**
+
 ```sql
 -- Check connections
 SELECT count(*) FROM pg_stat_activity;
 
 -- Check slow queries
-SELECT query, mean_time, calls 
-FROM pg_stat_statements 
-ORDER BY mean_time DESC 
+SELECT query, mean_time, calls
+FROM pg_stat_statements
+ORDER BY mean_time DESC
 LIMIT 10;
 
 -- Check database size
-SELECT 
+SELECT
     datname,
     pg_size_pretty(pg_database_size(datname)) AS size
 FROM pg_database;
@@ -767,6 +795,7 @@ FROM pg_database;
 ### Uptime Monitoring
 
 Set up external monitoring with services like:
+
 - **Pingdom**: Website monitoring
 - **UptimeRobot**: Free uptime monitoring
 - **StatusCake**: Comprehensive monitoring
@@ -777,18 +806,21 @@ Set up external monitoring with services like:
 ### Regular Maintenance Tasks
 
 **Daily:**
+
 - Check application logs for errors
 - Monitor system resources (CPU, memory, disk)
 - Verify backup completion
 - Review security alerts
 
 **Weekly:**
+
 - Update system packages
 - Review performance metrics
 - Check disk space usage
 - Test backup restoration
 
 **Monthly:**
+
 - Update Node.js and npm packages
 - Review and update SSL certificates
 - Analyze user access logs
@@ -823,6 +855,7 @@ curl http://localhost:5000/api/health
 ### Backup Strategy
 
 **Database Backup:**
+
 ```bash
 # Create backup script
 #!/bin/bash
@@ -835,6 +868,7 @@ find $BACKUP_DIR -name "maintainpro_*.sql" -mtime +30 -delete
 ```
 
 **File Backup:**
+
 ```bash
 # Backup uploaded files
 rsync -av /var/uploads/ /var/backups/uploads/
@@ -846,6 +880,7 @@ tar -czf /var/backups/app/maintainpro_$(date +%Y%m%d).tar.gz /path/to/MaintAInPr
 ### Rollback Procedures
 
 **Application Rollback:**
+
 ```bash
 # 1. Stop current application
 pm2 stop maintainpro
@@ -866,6 +901,7 @@ pm2 start maintainpro
 ### Common Issues
 
 **Application won't start:**
+
 ```bash
 # Check logs
 pm2 logs maintainpro
@@ -878,6 +914,7 @@ pm2 env maintainpro
 ```
 
 **Database connection issues:**
+
 ```bash
 # Test database connection
 psql $DATABASE_URL
@@ -887,6 +924,7 @@ sudo tail -f /var/log/postgresql/postgresql-*.log
 ```
 
 **High memory usage:**
+
 ```bash
 # Check memory usage
 free -h
@@ -899,18 +937,20 @@ pm2 restart maintainpro
 ### Performance Issues
 
 **Slow database queries:**
+
 ```sql
 -- Enable query logging
 ALTER SYSTEM SET log_statement = 'all';
 SELECT pg_reload_conf();
 
 -- Find slow queries
-SELECT query, mean_time, calls 
-FROM pg_stat_statements 
+SELECT query, mean_time, calls
+FROM pg_stat_statements
 ORDER BY mean_time DESC;
 ```
 
 **High CPU usage:**
+
 ```bash
 # Check CPU usage
 top
@@ -926,7 +966,8 @@ For additional troubleshooting, see **[[Troubleshooting]]** guide.
 
 ## 🎉 Deployment Success
 
-Following this guide should result in a production-ready MaintAInPro deployment with:
+Following this guide should result in a production-ready MaintAInPro deployment
+with:
 
 - ✅ **High Availability**: Proper load balancing and failover
 - ✅ **Security**: SSL encryption and security headers
@@ -935,6 +976,7 @@ Following this guide should result in a production-ready MaintAInPro deployment 
 - ✅ **Backup**: Automated backup and recovery procedures
 
 **Next Steps:**
+
 1. Review **[[Security Guide]]** for additional hardening
 2. Set up **[[Operations Guide]]** monitoring procedures
 3. Train users with **[[User Guide]]**
@@ -942,4 +984,4 @@ Following this guide should result in a production-ready MaintAInPro deployment 
 
 ---
 
-*Deployment Guide last updated: January 2025*
+_Deployment Guide last updated: January 2025_

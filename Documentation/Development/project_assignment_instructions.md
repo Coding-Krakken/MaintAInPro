@@ -1,26 +1,34 @@
 # Adding Issues to MaintAInPro Roadmap Project
 
 ## GitHub CLI Limitation
-The GitHub CLI doesn't have the necessary permissions to manage GitHub Projects (Projects V2). This is a common limitation with the `gh` CLI tool for project management.
+
+The GitHub CLI doesn't have the necessary permissions to manage GitHub Projects
+(Projects V2). This is a common limitation with the `gh` CLI tool for project
+management.
 
 ## Manual Assignment Steps
 
 To add all 40 strategic issues (#27-66) to your "MaintAInPro Roadmap" project:
 
 ### Option 1: Bulk Selection (Fastest)
+
 1. Go to: https://github.com/Coding-Krakken/MaintAInPro/issues
 2. Use the checkboxes to select issues #27-66
 3. Click "Projects" dropdown at the top
 4. Select "MaintAInPro Roadmap"
 
 ### Option 2: Individual Assignment
+
 For each issue #27-66:
+
 1. Open the issue
 2. Click the gear icon next to "Projects" in the right sidebar
 3. Select "MaintAInPro Roadmap"
 
 ### Option 3: Project Board View
-1. Go to your project: https://github.com/users/Coding-Krakken/projects/[PROJECT_NUMBER]
+
+1. Go to your project:
+   https://github.com/users/Coding-Krakken/projects/[PROJECT_NUMBER]
 2. Click "Add item"
 3. Search for and add issues #27-66
 
@@ -29,6 +37,7 @@ For each issue #27-66:
 The following 40 strategic issues need to be added:
 
 ### Phase 1 - Foundation (Issues #27-36)
+
 - #27: Fix Failing Health Check Tests
 - #28: Implement Basic Health Monitoring
 - #29: Install and Configure Zod Validation
@@ -41,6 +50,7 @@ The following 40 strategic issues need to be added:
 - #36: Implement Basic Offline Mode
 
 ### Phase 2 - Security & Performance (Issues #37-46)
+
 - #37: Create ML Data Pipeline Foundation
 - #38: Implement CSRF Token Protection
 - #39: Create Input Sanitization Framework
@@ -53,6 +63,7 @@ The following 40 strategic issues need to be added:
 - #46: Add Conflict Resolution for Sync
 
 ### Phase 3 - Advanced Features (Issues #47-56)
+
 - #47: Implement Basic File Upload System
 - #48: Create Simple Anomaly Detection
 - #49: Add Equipment Performance Monitoring
@@ -65,6 +76,7 @@ The following 40 strategic issues need to be added:
 - #56: Implement Database Query Optimization
 
 ### Phase 4 - Enterprise Features (Issues #57-66)
+
 - #57: Create Security Scanning Pipeline
 - #58: Add Rate Limiting and DDoS Protection
 - #59: Implement Advanced Audit Trail
@@ -80,9 +92,9 @@ The following 40 strategic issues need to be added:
 
 Once added to the project, consider organizing by:
 
-1. **Status Columns**: 
+1. **Status Columns**:
    - 📋 Backlog
-   - 🚧 In Progress  
+   - 🚧 In Progress
    - 👀 In Review
    - ✅ Done
 
@@ -101,4 +113,5 @@ Once added to the project, consider organizing by:
    - Sprint 6: Issues #57-62 (Enterprise Security)
    - Sprint 7: Issues #63-66 (Analytics & Optimization)
 
-All issues are labeled with `agent-ok` and ready for autonomous development work.
+All issues are labeled with `agent-ok` and ready for autonomous development
+work.

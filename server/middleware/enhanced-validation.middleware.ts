@@ -233,7 +233,10 @@ export function validateSchema<T extends z.ZodSchema>(schema: T, options: Valida
 
       next();
     } catch (_error) {
-      console.error(`[${enhancedReq.auditContext?.requestId}] Validation middleware error:`, _error);
+      console.error(
+        `[${enhancedReq.auditContext?.requestId}] Validation middleware error:`,
+        _error
+      );
 
       const serverError = {
         success: false,

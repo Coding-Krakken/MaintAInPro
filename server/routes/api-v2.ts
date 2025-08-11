@@ -6,11 +6,7 @@ import {
   commonSchemas,
 } from '../middleware/enhanced-validation.middleware';
 
-import {
-  insertWorkOrderSchema,
-  insertEquipmentSchema,
-  insertPartSchema,
-} from '@shared/schema';
+import { insertWorkOrderSchema, insertEquipmentSchema, insertPartSchema } from '@shared/schema';
 import { storage } from '../storage';
 
 const router = Router();
@@ -18,7 +14,8 @@ const router = Router();
 // Helper functions for analytics
 function calculateAverageResolutionTime(workOrders: unknown[]): number {
   const completedOrders = workOrders.filter(
-    wo => ['completed', 'verified', 'closed'].includes((wo as any).status) && (wo as any).completedAt
+    wo =>
+      ['completed', 'verified', 'closed'].includes((wo as any).status) && (wo as any).completedAt
   );
 
   if (completedOrders.length === 0) return 0;
@@ -106,7 +103,9 @@ function generateTrendData(workOrders: unknown[], period: string, metric: string
         value = calculateAverageResolutionTime(periodWorkOrders);
         break;
       case 'priority_distribution':
-        value = periodWorkOrders.filter(wo => ['high', 'critical'].includes((wo as any).priority)).length;
+        value = periodWorkOrders.filter(wo =>
+          ['high', 'critical'].includes((wo as any).priority)
+        ).length;
         break;
     }
 

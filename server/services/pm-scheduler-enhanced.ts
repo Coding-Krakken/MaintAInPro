@@ -307,7 +307,8 @@ class PMSchedulerEnhanced {
         (wo as any).equipmentId === equipmentId &&
         (wo as any).status !== 'completed' &&
         (wo as any).status !== 'closed' &&
-        Math.abs(new Date((wo as any).dueDate).getTime() - scheduledDate.getTime()) < 24 * 60 * 60 * 1000
+        Math.abs(new Date((wo as any).dueDate).getTime() - scheduledDate.getTime()) <
+          24 * 60 * 60 * 1000
     );
 
     if (conflictingWOs.length > 0) {
@@ -326,7 +327,8 @@ class PMSchedulerEnhanced {
           rule.assignedTechnicians.includes((wo as any).assignedTo || '') &&
           (wo as any).status !== 'completed' &&
           (wo as any).status !== 'closed' &&
-          Math.abs(new Date((wo as any).dueDate).getTime() - scheduledDate.getTime()) < 4 * 60 * 60 * 1000
+          Math.abs(new Date((wo as any).dueDate).getTime() - scheduledDate.getTime()) <
+            4 * 60 * 60 * 1000
       );
 
       if (techWorkOrders.length > 0) {
@@ -346,7 +348,10 @@ class PMSchedulerEnhanced {
    * Calculate utilization rate
    */
   private calculateUtilizationRate(scheduledPMs: unknown[], config: PMSchedulingConfig): number {
-    const totalDuration = scheduledPMs.reduce((sum: number, pm) => sum + (pm as any).estimatedDuration, 0);
+    const totalDuration = scheduledPMs.reduce(
+      (sum: number, pm) => sum + (pm as any).estimatedDuration,
+      0
+    );
     const workingHours = 8; // 8 hours per day
     const workingDays = config.globalSettings.workingDays.length;
     const maxCapacity = workingHours * workingDays * 7; // Weekly capacity

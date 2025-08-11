@@ -96,10 +96,7 @@ export class PasswordService {
     if (activePolicy.requireNumbers && !/\d/.test(password)) {
       errors.push('Password must contain at least one number');
     }
-    if (
-      activePolicy.requireSpecialChars &&
-      !/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password)
-    ) {
+    if (activePolicy.requireSpecialChars && !/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password)) {
       errors.push('Password must contain at least one special character');
     }
 

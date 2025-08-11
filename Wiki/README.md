@@ -1,10 +1,13 @@
 # 📚 MaintAInPro Wiki
 
-This directory contains the complete Wiki content for the MaintAInPro CMMS repository. These markdown files are designed to be copied to GitHub Wiki pages to create a comprehensive documentation system.
+This directory contains the complete Wiki content for the MaintAInPro CMMS
+repository. These markdown files are designed to be copied to GitHub Wiki pages
+to create a comprehensive documentation system.
 
 ## 🎯 Wiki Overview
 
 The MaintAInPro Wiki provides comprehensive documentation for:
+
 - **Users**: Complete guides for using the CMMS system
 - **Developers**: Technical documentation for contributing and extending
 - **Administrators**: Deployment and operational guidance
@@ -14,26 +17,26 @@ The MaintAInPro Wiki provides comprehensive documentation for:
 
 ### 🏠 Main Pages
 
-| Page | File | Description |
-|------|------|-------------|
-| **Home** | `Home.md` | Welcome page and navigation hub |
-| **Getting Started** | `Getting-Started.md` | Quick start guide for all user types |
-| **User Guide** | `User-Guide.md` | Complete user manual for CMMS operations |
+| Page                | File                 | Description                              |
+| ------------------- | -------------------- | ---------------------------------------- |
+| **Home**            | `Home.md`            | Welcome page and navigation hub          |
+| **Getting Started** | `Getting-Started.md` | Quick start guide for all user types     |
+| **User Guide**      | `User-Guide.md`      | Complete user manual for CMMS operations |
 | **Developer Guide** | `Developer-Guide.md` | Development setup and contribution guide |
 
 ### 📖 Reference Documentation
 
-| Page | File | Description |
-|------|------|-------------|
-| **API Reference** | `API-Reference.md` | Complete API documentation with examples |
-| **Architecture** | `Architecture.md` | Technical architecture and design decisions |
-| **Deployment Guide** | `Deployment-Guide.md` | Production deployment instructions |
-| **Troubleshooting** | `Troubleshooting.md` | Common issues and debugging guide |
+| Page                 | File                  | Description                                 |
+| -------------------- | --------------------- | ------------------------------------------- |
+| **API Reference**    | `API-Reference.md`    | Complete API documentation with examples    |
+| **Architecture**     | `Architecture.md`     | Technical architecture and design decisions |
+| **Deployment Guide** | `Deployment-Guide.md` | Production deployment instructions          |
+| **Troubleshooting**  | `Troubleshooting.md`  | Common issues and debugging guide           |
 
 ### 📅 Project Information
 
-| Page | File | Description |
-|------|------|-------------|
+| Page          | File           | Description                       |
+| ------------- | -------------- | --------------------------------- |
 | **Changelog** | `Changelog.md` | Version history and release notes |
 
 ## 🚀 Setting Up GitHub Wiki
@@ -76,13 +79,16 @@ GitHub Wiki uses a different link format. Update internal links in each page:
 
 ```markdown
 <!-- Current format in files -->
+
 [[Page Name]]
 
 <!-- GitHub Wiki format -->
+
 [[Page-Name]]
 ```
 
 **Example link conversions**:
+
 - `[[Getting Started]]` → `[[Getting-Started]]`
 - `[[User Guide]]` → `[[User-Guide]]`
 - `[[API Reference]]` → `[[API-Reference]]`
@@ -144,13 +150,13 @@ Always include complete, runnable examples:
 // ✅ Good: Complete example with context
 const api = new MaintAInProClient({
   baseURL: 'https://your-app.vercel.app/api',
-  token: 'your-jwt-token'
+  token: 'your-jwt-token',
 });
 
 const workOrder = await api.workOrders.create({
   title: 'Fix broken pump',
   priority: 'high',
-  equipmentId: 'pump-001'
+  equipmentId: 'pump-001',
 });
 
 // ❌ Bad: Incomplete example
@@ -228,6 +234,7 @@ Use consistent formatting for callouts:
 ### Version Control
 
 While GitHub Wiki has its own git repository, maintain source files here for:
+
 - **Version Control**: Track changes alongside code
 - **Backup**: Ensure documentation is never lost
 - **Collaboration**: Enable pull request reviews for documentation
@@ -238,6 +245,7 @@ While GitHub Wiki has its own git repository, maintain source files here for:
 ### Tracking Usage
 
 Monitor Wiki usage through:
+
 - GitHub Wiki analytics (if available)
 - User feedback and support tickets
 - Developer onboarding surveys
@@ -246,6 +254,7 @@ Monitor Wiki usage through:
 ### Content Optimization
 
 Continuously improve based on:
+
 - **Most Viewed Pages**: Enhance popular content
 - **Search Queries**: Address common questions
 - **Support Tickets**: Create guides for common issues
@@ -280,6 +289,7 @@ Continuously improve based on:
 ### Reporting Problems
 
 When reporting documentation issues, include:
+
 - **Page/Section**: Specific location of the problem
 - **Issue Type**: Outdated, incorrect, unclear, or missing information
 - **Suggested Fix**: If possible, provide suggested improvements
@@ -289,10 +299,13 @@ When reporting documentation issues, include:
 
 ## 🎉 Thank You!
 
-Quality documentation is essential for project success. By maintaining comprehensive, accurate, and user-friendly documentation, we help ensure MaintAInPro can be successfully adopted and used by organizations worldwide.
+Quality documentation is essential for project success. By maintaining
+comprehensive, accurate, and user-friendly documentation, we help ensure
+MaintAInPro can be successfully adopted and used by organizations worldwide.
 
-**Contributors to this documentation effort are helping build something valuable for the entire community!**
+**Contributors to this documentation effort are helping build something valuable
+for the entire community!**
 
 ---
 
-*Wiki README last updated: January 2025*
+_Wiki README last updated: January 2025_

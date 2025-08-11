@@ -2,7 +2,9 @@
 
 ## Overview
 
-This script (`scripts/add-issues-to-project.js`) automatically adds all open issues from the MaintAInPro repository to the "MaintAInPro Roadmap" GitHub Project.
+This script (`scripts/add-issues-to-project.js`) automatically adds all open
+issues from the MaintAInPro repository to the "MaintAInPro Roadmap" GitHub
+Project.
 
 ## Features
 
@@ -105,6 +107,7 @@ The script uses GitHub's Projects v2 GraphQL API, which provides:
 ### Rate Limiting
 
 The script implements appropriate rate limiting:
+
 - 100ms delay between issue additions
 - Handles API errors gracefully
 - Skips already-added issues
@@ -119,14 +122,17 @@ The script implements appropriate rate limiting:
 ## Troubleshooting
 
 ### Permission Errors
+
 - Ensure your GitHub token has `repo` and `project` scopes
 - Check that you have admin access to the repository
 
 ### API Rate Limits
+
 - The script implements delays to avoid rate limiting
 - If you hit limits, wait and retry later
 
 ### Project Not Found
+
 - The script will create the project if it doesn't exist
 - Ensure your token has project creation permissions
 
@@ -135,12 +141,14 @@ The script implements appropriate rate limiting:
 This script complements the existing blueprint planner workflow:
 
 1. **Blueprint Planner** (`planner.yml`) creates issues from documentation
-2. **Project Manager** (this script) organizes all issues into the roadmap project
+2. **Project Manager** (this script) organizes all issues into the roadmap
+   project
 3. **Agents** work on issues labeled with `agent-ok`
 
 ## Maintenance
 
 The script is designed to be idempotent - you can run it multiple times safely:
+
 - Won't create duplicate projects
 - Won't add duplicate issues
 - Provides clear status reporting

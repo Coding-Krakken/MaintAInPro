@@ -83,7 +83,9 @@ const MobileChecklistInterface: React.FC<MobileChecklistInterfaceProps> = ({
   });
 
   const currentItem: ChecklistItemWithMobile | undefined = checklistItems[currentItemIndex];
-  const completedCount = checklistItems.filter((item: ChecklistItemWithMobile) => item.status === 'done').length;
+  const completedCount = checklistItems.filter(
+    (item: ChecklistItemWithMobile) => item.status === 'done'
+  ).length;
   const totalCount = checklistItems.length;
   const progressPercentage = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
 

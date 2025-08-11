@@ -119,7 +119,7 @@ const RealTimePartsConsumption: React.FC<{ workOrderId?: string }> = ({ workOrde
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       }),
-    onSuccess: (_response) => {
+    onSuccess: _response => {
       queryClient.invalidateQueries({ queryKey: ['parts-inventory'] });
       queryClient.invalidateQueries({ queryKey: ['parts-usage', workOrderId] });
       setIsDialogOpen(false);

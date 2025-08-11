@@ -25,11 +25,7 @@ import {
   performanceMiddleware,
   errorTrackingMiddleware,
 } from './middleware/performance.middleware';
-import {
-  securityHeaders,
-  sanitizeInput,
-  validateRequest,
-} from './middleware/security.middleware';
+import { securityHeaders, sanitizeInput, validateRequest } from './middleware/security.middleware';
 import performanceMonitoringRoutes from './routes/monitoring';
 import path from 'path';
 
@@ -292,7 +288,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const _generalRateLimit = createRateLimiter(15 * 60 * 1000, 100); // 100 requests per 15 minutes
 
   const getCurrentUser = (req: unknown) => {
-    return (req as any).user?.id || (req as any).headers['x-user-id'] || '00000000-0000-0000-0000-000000000001';
+    return (
+      (req as any).user?.id ||
+      (req as any).headers['x-user-id'] ||
+      '00000000-0000-0000-0000-000000000001'
+    );
   };
 
   const getCurrentWarehouse = (req: unknown) => {
@@ -2040,7 +2040,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(201).json({ success: true });
     } catch (_error) {
       if (_error instanceof z.ZodError) {
-        return res.status(400).json({ message: 'Invalid notification data', errors: _error.errors });
+        return res
+          .status(400)
+          .json({ message: 'Invalid notification data', errors: _error.errors });
       }
       res.status(500).json({ message: 'Failed to send notification' });
     }
