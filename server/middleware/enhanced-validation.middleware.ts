@@ -21,10 +21,10 @@ export interface ValidationOptions {
   transformFields?: boolean;
   stripUnknown?: boolean;
   errorHandler?: (
-    error: any,
-    req: Request | EnhancedRequest,
-    res: Response,
-    next: NextFunction
+    _error: any,
+    _req: Request | EnhancedRequest,
+    _res: Response,
+    _next: NextFunction
   ) => void;
   // Enhanced options
   auditValidation?: boolean;
@@ -32,7 +32,7 @@ export interface ValidationOptions {
   fieldMapping?: 'camelToSnake' | 'snakeToCamel' | 'none';
 }
 
-interface AuditOptions {
+interface _AuditOptions {
   action: string;
   entityType: string;
   entityId?: string;
@@ -124,7 +124,7 @@ export function validateSchema<T extends z.ZodSchema>(schema: T, options: Valida
   const {
     source = 'body',
     transformFields = true,
-    stripUnknown = true,
+    stripUnknown: _stripUnknown = true,
     errorHandler,
     auditValidation = false,
     requireOrganization = false,
@@ -259,7 +259,7 @@ export const enhancedErrorHandler = (
   error: Error,
   req: EnhancedRequest,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ) => {
   const requestId = req.auditContext?.requestId || 'unknown';
   const correlationId = req.auditContext?.correlationId || 'unknown';
