@@ -35,6 +35,69 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [mfaRequired, setMfaRequired] = useState(false);
 
+  const logout = useCallback(async () => {
+    if (user?.id) {
+      // Attempt to logout on server
+      try {
+        const token = localStorage.getItem('authToken');
+        if (token) {
+          await fetch('/api/auth/logout', {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          });
+        }
+      } catch (error) {
+        console.warn('Logout request failed, proceeding with local cleanup:', error);
+      }
+    }
+
+    // Clear local storage
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('userRole');
+    localStorage.removeItem('organizationId');
+    localStorage.removeItem('warehouseId');
+    localStorage.removeItem('sessionId');
+    setUser(null);
+    setMfaRequired(false);
+  }, [user?.id]);
+
+  const refreshToken = useCallback(async (): Promise<boolean> => {
+    try {
+      const refToken = localStorage.getItem('refreshToken');
+      if (!refToken) {
+        return false;
+      }
+
+      const response = await fetch('/api/auth/refresh', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ refreshToken: refToken }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        localStorage.setItem('authToken', data.accessToken);
+        localStorage.setItem('refreshToken', data.refreshToken);
+        return true;
+      } else {
+        // Refresh failed, logout user
+        await logout();
+        return false;
+      }
+    } catch (_error) {
+      console.error('Error occurred', _error);
+      await logout();
+      return false;
+    }
+  }, [logout]);
+
   useEffect(() => {
     // Check for existing session
     checkAuth();
@@ -167,64 +230,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(false);
     }
   };
-
-  const logout = useCallback(async () => {
-    try {
-      const token = localStorage.getItem('authToken');
-      if (token) {
-        await fetch('/api/auth/logout', {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        });
-      }
-    } catch (_error) {
-      console.error('Error occurred', _error);
-    } finally {
-      // Clear local storage regardless of API call success
-      localStorage.removeItem('authToken');
-      localStorage.removeItem('refreshToken');
-      localStorage.removeItem('userId');
-      localStorage.removeItem('warehouseId');
-      localStorage.removeItem('sessionId');
-      setUser(null);
-      setMfaRequired(false);
-    }
-  }, []);
-
-  const refreshToken = useCallback(async (): Promise<boolean> => {
-    try {
-      const refToken = localStorage.getItem('refreshToken');
-      if (!refToken) {
-        return false;
-      }
-
-      const response = await fetch('/api/auth/refresh', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ refreshToken: refToken }),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        localStorage.setItem('authToken', data.accessToken);
-        localStorage.setItem('refreshToken', data.refreshToken);
-        return true;
-      } else {
-        // Refresh failed, logout user
-        await logout();
-        return false;
-      }
-    } catch (_error) {
-      console.error('Error occurred', _error);
-      await logout();
-      return false;
-    }
-  }, [logout]);
 
   const setupMFA = async (): Promise<{
     success: boolean;

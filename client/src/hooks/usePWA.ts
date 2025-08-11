@@ -5,7 +5,7 @@ export interface PWAActions {
   showInstallPrompt: () => Promise<boolean>;
   requestNotifications: () => Promise<NotificationPermission>;
   updateApp: () => Promise<void>;
-  showNotification: (title: string, options?: NotificationOptions) => Promise<void>;
+  showNotification: (_title: string, _options?: NotificationOptions) => Promise<void>;
 }
 
 export function usePWA() {
@@ -29,7 +29,7 @@ export function usePWA() {
 
     // Setup event listeners
     const unsubscribeStatus = pwaService.addEventListener('statusChange', newStatus => {
-      setStatus(newStatus);
+      setStatus(newStatus as PWAStatus);
     });
 
     const unsubscribeInstallable = pwaService.addEventListener('installable', () => {
@@ -41,7 +41,7 @@ export function usePWA() {
     });
 
     const unsubscribeNetwork = pwaService.addEventListener('networkChange', data => {
-      setStatus(prev => ({ ...prev, isOnline: data.isOnline }));
+      setStatus(prev => ({ ...prev, isOnline: (data as any).isOnline }));
     });
 
     const unsubscribeUpdate = pwaService.addEventListener('updateAvailable', () => {

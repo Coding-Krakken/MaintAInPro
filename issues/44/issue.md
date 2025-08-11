@@ -1,36 +1,51 @@
 # Implement Offline-First Mobile Architecture with IndexedDB
 
 ## 📋 Priority & Classification
+
 **Priority**: P0 (Critical) - Mobile Excellence Foundation  
 **Type**: Architecture Implementation  
 **Phase**: 2.1 Mobile Excellence and Offline Capabilities  
 **Epic**: Offline-First Architecture Implementation  
-**Assignee**: AI Agent  
+**Assignee**: AI Agent
 
 ## 🎯 Executive Summary
-Implement comprehensive offline-first architecture enabling technicians to work seamlessly without internet connectivity, automatically synchronizing data when connection is restored. This capability is essential for industrial environments where connectivity is unreliable and continuous operation is critical.
 
-**Strategic Impact**: Enables 100% field operation continuity, improving technician productivity by 40% and ensuring zero work stoppage due to connectivity issues.
+Implement comprehensive offline-first architecture enabling technicians to work
+seamlessly without internet connectivity, automatically synchronizing data when
+connection is restored. This capability is essential for industrial environments
+where connectivity is unreliable and continuous operation is critical.
+
+**Strategic Impact**: Enables 100% field operation continuity, improving
+technician productivity by 40% and ensuring zero work stoppage due to
+connectivity issues.
 
 ## 🔍 Problem Statement
-Current mobile application requires constant internet connectivity, creating operational disruptions:
+
+Current mobile application requires constant internet connectivity, creating
+operational disruptions:
+
 - Work cannot continue during network outages
 - Data loss risk when connectivity is intermittent
 - Technician productivity reduced in low-connectivity environments
 - Critical maintenance tasks delayed due to sync dependencies
 
-**Operational Gap**: No offline capability prevents continuous field operations in industrial environments.
+**Operational Gap**: No offline capability prevents continuous field operations
+in industrial environments.
 
 ## ✅ Acceptance Criteria
 
 ### 🎯 Primary Success Criteria
-- [ ] **AC-1**: Complete offline functionality for work order execution and equipment management
-- [ ] **AC-2**: Intelligent data synchronization with conflict resolution capabilities
+
+- [ ] **AC-1**: Complete offline functionality for work order execution and
+      equipment management
+- [ ] **AC-2**: Intelligent data synchronization with conflict resolution
+      capabilities
 - [ ] **AC-3**: IndexedDB caching system with 500MB+ capacity for offline data
 - [ ] **AC-4**: Real-time sync status indicators and queue management
 - [ ] **AC-5**: 100% data integrity during offline/online transitions
 
 ### 🔧 Technical Implementation Requirements
+
 - [ ] **T-1**: IndexedDB data layer with comprehensive offline storage
 - [ ] **T-2**: Background synchronization service with conflict resolution
 - [ ] **T-3**: Service Worker implementation for offline asset caching
@@ -38,6 +53,7 @@ Current mobile application requires constant internet connectivity, creating ope
 - [ ] **T-5**: Offline-first UI components with sync state management
 
 ### 📊 Quality Gates
+
 - [ ] **Q-1**: 100% offline functionality for critical user journeys
 - [ ] **Q-2**: <5 second sync time for typical offline session
 - [ ] **Q-3**: Zero data loss during connectivity transitions
@@ -47,6 +63,7 @@ Current mobile application requires constant internet connectivity, creating ope
 ## 🔧 Technical Specification
 
 ### IndexedDB Schema & Data Layer
+
 ```typescript
 // Offline database schema
 interface OfflineDatabase {
@@ -88,7 +105,7 @@ class OfflineDataService {
         resolve();
       };
 
-      request.onupgradeneeded = (event) => {
+      request.onupgradeneeded = event => {
         const db = (event.target as IDBOpenDBRequest).result;
         this.createStores(db);
       };
@@ -98,16 +115,22 @@ class OfflineDataService {
   private createStores(db: IDBDatabase): void {
     // Work Orders store
     if (!db.objectStoreNames.contains('workOrders')) {
-      const workOrderStore = db.createObjectStore('workOrders', { keyPath: 'id' });
+      const workOrderStore = db.createObjectStore('workOrders', {
+        keyPath: 'id',
+      });
       workOrderStore.createIndex('status', 'status', { unique: false });
       workOrderStore.createIndex('assignedTo', 'assignedTo', { unique: false });
-      workOrderStore.createIndex('equipmentId', 'equipmentId', { unique: false });
+      workOrderStore.createIndex('equipmentId', 'equipmentId', {
+        unique: false,
+      });
       workOrderStore.createIndex('syncStatus', 'syncStatus', { unique: false });
     }
 
     // Equipment store
     if (!db.objectStoreNames.contains('equipment')) {
-      const equipmentStore = db.createObjectStore('equipment', { keyPath: 'id' });
+      const equipmentStore = db.createObjectStore('equipment', {
+        keyPath: 'id',
+      });
       equipmentStore.createIndex('assetTag', 'assetTag', { unique: true });
       equipmentStore.createIndex('status', 'status', { unique: false });
       equipmentStore.createIndex('area', 'area', { unique: false });
@@ -122,7 +145,9 @@ class OfflineDataService {
 
     // Sync queue store
     if (!db.objectStoreNames.contains('syncQueue')) {
-      const syncQueueStore = db.createObjectStore('syncQueue', { keyPath: 'id' });
+      const syncQueueStore = db.createObjectStore('syncQueue', {
+        keyPath: 'id',
+      });
       syncQueueStore.createIndex('operation', 'operation', { unique: false });
       syncQueueStore.createIndex('priority', 'priority', { unique: false });
       syncQueueStore.createIndex('timestamp', 'timestamp', { unique: false });
@@ -130,25 +155,34 @@ class OfflineDataService {
 
     // Attachments store for offline files
     if (!db.objectStoreNames.contains('attachments')) {
-      const attachmentStore = db.createObjectStore('attachments', { keyPath: 'id' });
-      attachmentStore.createIndex('workOrderId', 'workOrderId', { unique: false });
-      attachmentStore.createIndex('equipmentId', 'equipmentId', { unique: false });
+      const attachmentStore = db.createObjectStore('attachments', {
+        keyPath: 'id',
+      });
+      attachmentStore.createIndex('workOrderId', 'workOrderId', {
+        unique: false,
+      });
+      attachmentStore.createIndex('equipmentId', 'equipmentId', {
+        unique: false,
+      });
     }
   }
 
   // Generic CRUD operations
-  async save<T extends { id: string }>(storeName: string, data: T): Promise<void> {
+  async save<T extends { id: string }>(
+    storeName: string,
+    data: T
+  ): Promise<void> {
     if (!this.db) throw new Error('Database not initialized');
 
     return new Promise((resolve, reject) => {
       const transaction = this.db!.transaction([storeName], 'readwrite');
       const store = transaction.objectStore(storeName);
-      
+
       // Add sync metadata
       const dataWithSync = {
         ...data,
         lastModified: new Date().toISOString(),
-        syncStatus: 'pending'
+        syncStatus: 'pending',
       };
 
       const request = store.put(dataWithSync);
@@ -170,13 +204,17 @@ class OfflineDataService {
     });
   }
 
-  async getAll<T>(storeName: string, indexName?: string, value?: any): Promise<T[]> {
+  async getAll<T>(
+    storeName: string,
+    indexName?: string,
+    value?: any
+  ): Promise<T[]> {
     if (!this.db) throw new Error('Database not initialized');
 
     return new Promise((resolve, reject) => {
       const transaction = this.db!.transaction([storeName], 'readonly');
       const store = transaction.objectStore(storeName);
-      
+
       let request: IDBRequest;
       if (indexName && value !== undefined) {
         const index = store.index(indexName);
@@ -206,6 +244,7 @@ class OfflineDataService {
 ```
 
 ### Synchronization Engine
+
 ```typescript
 interface SyncOperation {
   id: string;
@@ -235,23 +274,25 @@ class SynchronizationService {
     this.offlineDataService = offlineDataService;
     this.apiService = apiService;
     this.connectionMonitor = connectionMonitor;
-    
+
     // Start sync when connection is restored
     this.connectionMonitor.onOnline(() => this.startSync());
   }
 
   // Queue operation for sync when online
-  async queueOperation(operation: Omit<SyncOperation, 'id' | 'timestamp' | 'retryCount' | 'status'>): Promise<void> {
+  async queueOperation(
+    operation: Omit<SyncOperation, 'id' | 'timestamp' | 'retryCount' | 'status'>
+  ): Promise<void> {
     const syncOperation: SyncOperation = {
       ...operation,
       id: uuidv4(),
       timestamp: new Date().toISOString(),
       retryCount: 0,
-      status: 'pending'
+      status: 'pending',
     };
 
     await this.offlineDataService.save('syncQueue', syncOperation);
-    
+
     // If online, start sync immediately
     if (this.connectionMonitor.isOnline && !this.isSyncing) {
       this.startSync();
@@ -263,14 +304,15 @@ class SynchronizationService {
     if (this.isSyncing || !this.connectionMonitor.isOnline) return;
 
     this.isSyncing = true;
-    
+
     try {
       // Get pending sync operations
-      const pendingOperations = await this.offlineDataService.getAll<SyncOperation>(
-        'syncQueue',
-        'status',
-        'pending'
-      );
+      const pendingOperations =
+        await this.offlineDataService.getAll<SyncOperation>(
+          'syncQueue',
+          'status',
+          'pending'
+        );
 
       // Sort by priority and timestamp
       const sortedOperations = this.sortOperationsByPriority(pendingOperations);
@@ -282,7 +324,6 @@ class SynchronizationService {
 
       // Download latest data from server
       await this.downloadLatestData();
-
     } catch (error) {
       console.error('Sync process failed:', error);
     } finally {
@@ -298,13 +339,23 @@ class SynchronizationService {
       let result: any;
       switch (operation.operation) {
         case 'create':
-          result = await this.apiService.create(operation.entity, operation.data);
+          result = await this.apiService.create(
+            operation.entity,
+            operation.data
+          );
           break;
         case 'update':
-          result = await this.apiService.update(operation.entity, operation.entityId, operation.data);
+          result = await this.apiService.update(
+            operation.entity,
+            operation.entityId,
+            operation.data
+          );
           break;
         case 'delete':
-          result = await this.apiService.delete(operation.entity, operation.entityId);
+          result = await this.apiService.delete(
+            operation.entity,
+            operation.entityId
+          );
           break;
       }
 
@@ -316,13 +367,15 @@ class SynchronizationService {
       // Mark operation as completed
       await this.updateOperationStatus(operation.id, 'completed');
       await this.offlineDataService.delete('syncQueue', operation.id);
-
     } catch (error) {
       await this.handleSyncError(operation, error);
     }
   }
 
-  private async handleSyncError(operation: SyncOperation, error: any): Promise<void> {
+  private async handleSyncError(
+    operation: SyncOperation,
+    error: any
+  ): Promise<void> {
     operation.retryCount++;
 
     if (operation.retryCount >= operation.maxRetries) {
@@ -336,8 +389,13 @@ class SynchronizationService {
   }
 
   // Conflict resolution for concurrent modifications
-  private async resolveConflict(localData: any, serverData: any, entity: string): Promise<any> {
-    const conflictResolutionStrategy = this.getConflictResolutionStrategy(entity);
+  private async resolveConflict(
+    localData: any,
+    serverData: any,
+    entity: string
+  ): Promise<any> {
+    const conflictResolutionStrategy =
+      this.getConflictResolutionStrategy(entity);
 
     switch (conflictResolutionStrategy) {
       case 'server-wins':
@@ -396,7 +454,6 @@ class SynchronizationService {
 
       // Update last sync timestamp
       await this.updateLastSyncTimestamp(new Date().toISOString());
-
     } catch (error) {
       console.error('Failed to download latest data:', error);
     }
@@ -405,6 +462,7 @@ class SynchronizationService {
 ```
 
 ### Service Worker for Asset Caching
+
 ```typescript
 // service-worker.ts
 const CACHE_NAME = 'maintainpro-offline-v1';
@@ -419,13 +477,13 @@ const API_CACHE_URLS = [
   '/api/work-orders',
   '/api/equipment',
   '/api/parts',
-  '/api/users/profile'
+  '/api/users/profile',
 ];
 
 // Install event - cache static assets
 self.addEventListener('install', (event: ExtendableEvent) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
+    caches.open(CACHE_NAME).then(cache => {
       return cache.addAll(STATIC_CACHE_URLS);
     })
   );
@@ -434,7 +492,7 @@ self.addEventListener('install', (event: ExtendableEvent) => {
 // Fetch event - serve from cache when offline
 self.addEventListener('fetch', (event: FetchEvent) => {
   const request = event.request;
-  
+
   // Handle API requests
   if (request.url.includes('/api/')) {
     event.respondWith(handleApiRequest(request));
@@ -449,27 +507,27 @@ async function handleApiRequest(request: Request): Promise<Response> {
   try {
     // Try network first
     const networkResponse = await fetch(request);
-    
+
     // Cache successful GET requests
     if (request.method === 'GET' && networkResponse.ok) {
       const cache = await caches.open(CACHE_NAME);
       cache.put(request, networkResponse.clone());
     }
-    
+
     return networkResponse;
   } catch (error) {
     // Network failed, try cache
     const cachedResponse = await caches.match(request);
-    
+
     if (cachedResponse) {
       return cachedResponse;
     }
-    
+
     // Return offline response for failed requests
-    return new Response(
-      JSON.stringify({ error: 'Offline', cached: false }),
-      { status: 503, headers: { 'Content-Type': 'application/json' } }
-    );
+    return new Response(JSON.stringify({ error: 'Offline', cached: false }), {
+      status: 503,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
 }
 
@@ -480,27 +538,28 @@ async function handleStaticRequest(request: Request): Promise<Response> {
     if (cachedResponse) {
       return cachedResponse;
     }
-    
+
     // Try network
     const networkResponse = await fetch(request);
-    
+
     // Cache the response
     const cache = await caches.open(CACHE_NAME);
     cache.put(request, networkResponse.clone());
-    
+
     return networkResponse;
   } catch (error) {
     // Return offline page for navigation requests
     if (request.destination === 'document') {
       return caches.match('/offline.html') || new Response('Offline');
     }
-    
+
     throw error;
   }
 }
 ```
 
 ### Offline-First React Components
+
 ```typescript
 // Offline status hook
 const useOfflineStatus = () => {
@@ -572,14 +631,14 @@ const OfflineWorkOrderComponent: React.FC = () => {
   return (
     <div className="work-order-container">
       {/* Offline status indicator */}
-      <OfflineStatusBar 
+      <OfflineStatusBar
         isOnline={isOnline}
         syncStatus={syncStatus}
         pendingChanges={pendingChanges}
       />
 
       {/* Work order list */}
-      <WorkOrderList 
+      <WorkOrderList
         workOrders={workOrders}
         onUpdate={updateWorkOrder}
         isOffline={!isOnline}
@@ -603,13 +662,13 @@ const OfflineStatusBar: React.FC<{
           <span className="status-offline">🔴 Offline</span>
         )}
       </div>
-      
+
       {syncStatus === 'syncing' && (
         <div className="sync-indicator">
           <span>⏳ Syncing...</span>
         </div>
       )}
-      
+
       {pendingChanges > 0 && (
         <div className="pending-changes">
           <span>{pendingChanges} changes pending sync</span>
@@ -623,6 +682,7 @@ const OfflineStatusBar: React.FC<{
 ## 📊 Performance & Storage Management
 
 ### Storage Optimization
+
 ```typescript
 class StorageManager {
   private maxStorageSize = 500 * 1024 * 1024; // 500MB
@@ -633,13 +693,13 @@ class StorageManager {
     return {
       available: estimate.quota || 0,
       used: estimate.usage || 0,
-      remaining: (estimate.quota || 0) - (estimate.usage || 0)
+      remaining: (estimate.quota || 0) - (estimate.usage || 0),
     };
   }
 
   async optimizeStorage(): Promise<void> {
     const quota = await this.checkStorageQuota();
-    
+
     if (quota.used > this.maxStorageSize * 0.8) {
       // Clean up old cached data
       await this.cleanupOldData();
@@ -668,6 +728,7 @@ class StorageManager {
 ## 🧪 Testing Strategy
 
 ### Offline Functionality Testing
+
 ```typescript
 describe('Offline Data Layer', () => {
   it('should save and retrieve work orders offline');
@@ -693,19 +754,23 @@ describe('Service Worker Caching', () => {
 ## 📊 Success Metrics & KPIs
 
 ### Technical Metrics
+
 - **Offline Functionality**: 100% critical features available offline
 - **Sync Performance**: <5 second sync for typical session
 - **Data Integrity**: 99.99% data consistency
 - **Storage Efficiency**: <500MB total storage usage
 
 ### Business Impact Metrics
+
 - **Technician Productivity**: 40% improvement in completion times
 - **Work Continuity**: 100% uptime regardless of connectivity
 - **User Satisfaction**: >4.5/5 rating for mobile experience
 - **Data Loss Prevention**: Zero critical data loss incidents
 
 ## 🏷️ Labels & Classification
-`agent-ok`, `priority-p0`, `phase-2`, `mobile`, `offline`, `architecture`, `indexeddb`, `pwa`
+
+`agent-ok`, `priority-p0`, `phase-2`, `mobile`, `offline`, `architecture`,
+`indexeddb`, `pwa`
 
 ## 📊 Effort Estimation
 
@@ -715,32 +780,37 @@ describe('Service Worker Caching', () => {
 **Complexity**: Very High (advanced offline architecture)
 
 ### Breakdown
+
 - IndexedDB Data Layer: 30% effort
-- Synchronization Engine: 35% effort  
+- Synchronization Engine: 35% effort
 - Service Worker Implementation: 20% effort
 - UI Integration & Testing: 15% effort
 
 ## ✅ Definition of Done
 
 ### Technical Implementation
+
 - [ ] Complete offline data storage with IndexedDB
 - [ ] Intelligent synchronization with conflict resolution
 - [ ] Service Worker caching for assets
 - [ ] Real-time sync status indicators
 
 ### Quality Validation
+
 - [ ] 100% offline functionality for critical features
 - [ ] Performance requirements met
 - [ ] Data integrity tests passed
 - [ ] Cross-device sync validation
 
 ### Documentation & Training
+
 - [ ] Offline architecture documentation
 - [ ] User guides for offline usage
 - [ ] Troubleshooting procedures
 - [ ] Performance optimization guide
 
 ### Production Readiness
+
 - [ ] Storage monitoring and alerts
 - [ ] Sync failure recovery procedures
 - [ ] Performance benchmarks established

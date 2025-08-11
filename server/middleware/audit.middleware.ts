@@ -65,8 +65,8 @@ export function auditMiddleware() {
             errorMessage: success ? undefined : extractErrorMessage(responseBody),
           });
         }
-      } catch (error) {
-        console.error('Audit logging error:', error);
+      } catch (_error) {
+        console.error('Audit logging _error:', _error);
         // Don't fail the request due to audit logging errors
       }
     });

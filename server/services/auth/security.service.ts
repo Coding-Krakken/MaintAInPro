@@ -1,4 +1,4 @@
-import { randomBytes, createHash, scryptSync } from 'node:crypto';
+import { randomBytes, createHash } from 'node:crypto';
 import rateLimit, { ipKeyGenerator } from 'express-rate-limit';
 import { Request, Response, NextFunction } from 'express';
 
@@ -132,11 +132,11 @@ export class SecurityService {
       standardHeaders: true,
       legacyHeaders: false,
       // Custom key generator that can handle both IP and user-based limiting
-      keyGenerator: (req: any) => {
-        const userId = req.headers['x-user-id'] as string;
+      keyGenerator: (req: unknown) => {
+        const userId = (req as any).headers['x-user-id'] as string;
         if (userId) return `user:${userId}`;
         // Use express-rate-limit's ipKeyGenerator for IPv6 compatibility
-        return `ip:${ipKeyGenerator(req)}`;
+        return `ip:${ipKeyGenerator(req as any)}`;
       },
     });
   }
@@ -343,24 +343,24 @@ export class SecurityService {
     return createHash('sha256').update(data).digest('hex');
   }
 
-  static encryptSensitiveData(data: string, encryptionKey: string): string {
+  static encryptSensitiveData(data: string, _encryptionKey: string): string {
     try {
       // For now, return base64 encoded data as a placeholder
       // In production, implement proper AES-256-GCM encryption
       return Buffer.from(data).toString('base64');
-    } catch (error) {
-      console.error('Encryption failed:', error);
+    } catch (_error) {
+      console.error('Encryption failed:', _error);
       throw new Error('Failed to encrypt sensitive data');
     }
   }
 
-  static decryptSensitiveData(encryptedData: string, key?: string): string {
+  static decryptSensitiveData(encryptedData: string, _key?: string): string {
     try {
       // For now, decode from base64 as a placeholder
       // In production, implement proper AES-256-GCM decryption
       return Buffer.from(encryptedData, 'base64').toString('utf8');
-    } catch (error) {
-      console.error('Decryption failed:', error);
+    } catch (_error) {
+      console.error('Decryption failed:', _error);
       throw new Error('Failed to decrypt sensitive data');
     }
   }

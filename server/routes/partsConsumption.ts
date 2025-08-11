@@ -107,8 +107,8 @@ router.post('/work-orders/:id/parts-usage', async (req, res) => {
       ...partsUsage,
       inventoryImpact,
     });
-  } catch (error) {
-    console.error('Error creating parts usage:', error);
+  } catch (_error) {
+    console.error('Error creating parts usage:', _error);
     res.status(500).json({ message: 'Failed to create parts usage' });
   }
 });
@@ -191,8 +191,8 @@ router.post('/work-orders/:id/consume-parts', async (req, res) => {
       lowStockAlerts: lowStockAlerts.length,
       message: `Successfully consumed ${consumedCount} parts from inventory`,
     });
-  } catch (error) {
-    console.error('Error consuming parts:', error);
+  } catch (_error) {
+    console.error('Error consuming parts:', _error);
     res.status(500).json({ message: 'Failed to consume parts' });
   }
 });
@@ -258,8 +258,8 @@ router.get('/analytics/parts-consumption', async (req, res) => {
       topParts,
       rawData: partsUsage,
     });
-  } catch (error) {
-    console.error('Error getting parts consumption analytics:', error);
+  } catch (_error) {
+    console.error('Error getting parts consumption analytics:', _error);
     res.status(500).json({ message: 'Failed to get analytics' });
   }
 });
@@ -293,8 +293,8 @@ router.get('/work-orders/:id/inventory-impact', async (req, res) => {
     }
 
     res.json(impacts);
-  } catch (error) {
-    console.error('Error getting inventory impact:', error);
+  } catch (_error) {
+    console.error('Error getting inventory impact:', _error);
     res.status(500).json({ message: 'Failed to get inventory impact' });
   }
 });

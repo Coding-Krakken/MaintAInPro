@@ -175,8 +175,8 @@ export class DatabaseOptimizerService {
         await db.execute(query);
         results.applied++;
         console.log(`✅ Applied: ${query.substring(0, 50)}...`);
-      } catch (error) {
-        const errorMessage = `Failed to apply index: ${query} - Error: ${error.message}`;
+      } catch (_error) {
+        const errorMessage = `Failed to apply index: ${query} - Error: ${_error.message}`;
         results.errors.push(errorMessage);
         console.error(`❌ ${errorMessage}`);
         results.success = false;
@@ -187,8 +187,8 @@ export class DatabaseOptimizerService {
     try {
       await db.execute('ANALYZE');
       console.log('✅ Database statistics updated');
-    } catch (error) {
-      results.errors.push(`Failed to analyze tables: ${error.message}`);
+    } catch (_error) {
+      results.errors.push(`Failed to analyze tables: ${_error.message}`);
     }
 
     console.log(`🎯 Database optimization complete: ${results.applied} indexes applied`);
@@ -237,7 +237,7 @@ export class DatabaseOptimizerService {
       `);
 
       return slowQueries || [];
-    } catch (error) {
+    } catch (_error) {
       console.log('Query performance stats not available (pg_stat_statements extension required)');
       return [];
     }
@@ -279,7 +279,7 @@ export class DatabaseOptimizerService {
       `);
 
       return indexStats || [];
-    } catch (error) {
+    } catch (_error) {
       console.log('Index usage stats not available');
       return [];
     }
@@ -325,8 +325,8 @@ export class DatabaseOptimizerService {
         // VACUUM ANALYZE for each table
         await db.execute(`VACUUM ANALYZE ${table}`);
         console.log(`✅ Maintained table: ${table}`);
-      } catch (error) {
-        console.error(`❌ Failed to maintain table ${table}: ${error.message}`);
+      } catch (_error) {
+        console.error(`❌ Failed to maintain table ${table}: ${_error.message}`);
       }
     }
 
@@ -347,7 +347,7 @@ export class DatabaseOptimizerService {
    * - Cache hit ratio (60% weight) + Index usage ratio (40% weight)
    * - Excellent: 90%+, Good: 75-89%, Fair: 60-74%, Needs Improvement: <60%
    *
-   * @returns {Promise<{connections: number, cacheHitRatio: number, indexUsage: number, tableSize: any[], performance: string}>}
+   * @returns {Promise<{connections: number, cacheHitRatio: number, indexUsage: number, tableSize: unknown[], performance: string}>}
    *   Complete health metrics object
    *
    * @example
@@ -365,7 +365,7 @@ export class DatabaseOptimizerService {
     connections: number;
     cacheHitRatio: number;
     indexUsage: number;
-    tableSize: any[];
+    tableSize: unknown[];
     performance: string;
   }> {
     try {
@@ -385,8 +385,8 @@ export class DatabaseOptimizerService {
         tableSize: tableSizes,
         performance,
       };
-    } catch (error) {
-      console.error('Error getting database health metrics:', error);
+    } catch (_error) {
+      console.error('Error getting database health metrics:', _error);
       return {
         connections: 0,
         cacheHitRatio: 0,

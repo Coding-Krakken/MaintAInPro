@@ -142,11 +142,11 @@ export function useUpdateChecklistItem() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ id, data }: { id: string; data: any }) => {
-      const response = await apiRequest('PATCH', `/api/checklist-items/${id}`, data);
+    mutationFn: async ({ id: _id, data }: { id: string; data: any }) => {
+      const response = await apiRequest('PATCH', `/api/checklist-items/${_id}`, data);
       return response.json();
     },
-    onSuccess: (_, { id }) => {
+    onSuccess: (_, { id: _id }) => {
       // Invalidate all checklist queries since we don't know which work order this belongs to
       queryClient.invalidateQueries({ queryKey: ['/api/work-orders'] });
     },

@@ -75,7 +75,7 @@ class HealthServiceImpl implements HealthService {
   // Original method for backward compatibility
   async getHealth(): Promise<HealthData> {
     const _startTime = Date.now();
-    
+
     const response = await fetch('/api/health', {
       headers: {
         Authorization: 'Bearer demo-token',
@@ -83,23 +83,23 @@ class HealthServiceImpl implements HealthService {
         'x-warehouse-id': localStorage.getItem('warehouseId') || 'default-warehouse-id',
       },
     });
-    
+
     if (!response.ok) throw new Error('Failed to fetch health data');
-    
+
     const healthData = await response.json();
     this.lastHealthData = healthData;
-    
+
     return healthData;
   }
 
   // New method as per interface requirements
   async getSystemHealth(): Promise<HealthMetrics> {
     const startTime = Date.now();
-    
+
     try {
       const healthData = await this.getHealth();
       const responseTime = Date.now() - startTime;
-      
+
       // Transform HealthData to HealthMetrics
       const metrics: HealthMetrics = {
         systemStatus: this.mapStatusToSystemStatus(healthData.status),
@@ -110,7 +110,7 @@ class HealthServiceImpl implements HealthService {
         uptime: healthData.uptime,
         lastCheck: new Date(),
       };
-      
+
       this.lastHealthMetrics = metrics;
       return metrics;
     } catch (error) {
@@ -124,7 +124,7 @@ class HealthServiceImpl implements HealthService {
         uptime: 0,
         lastCheck: new Date(),
       };
-      
+
       this.lastHealthMetrics = metrics;
       throw error;
     }
@@ -168,7 +168,7 @@ class HealthServiceImpl implements HealthService {
   private calculateErrorRate(healthData: HealthData): number {
     // Basic error rate calculation based on system health
     const systemStatus = this.mapStatusToSystemStatus(healthData.status);
-    
+
     switch (systemStatus) {
       case 'healthy':
         return 0;

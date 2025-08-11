@@ -1,10 +1,12 @@
 # 💻 Developer Guide
 
-Welcome to the MaintAInPro developer documentation! This guide covers everything you need to know to contribute to and extend the platform.
+Welcome to the MaintAInPro developer documentation! This guide covers everything
+you need to know to contribute to and extend the platform.
 
 ## 🏗️ Architecture Overview
 
-MaintAInPro follows a modern full-stack architecture optimized for maintainability, scalability, and developer experience.
+MaintAInPro follows a modern full-stack architecture optimized for
+maintainability, scalability, and developer experience.
 
 ### Tech Stack
 
@@ -16,26 +18,26 @@ graph TB
         C[TailwindCSS]
         D[Radix UI Components]
     end
-    
+
     subgraph "Backend"
         E[Express.js + TypeScript]
         F[Drizzle ORM]
         G[Zod Validation]
         H[JWT Authentication]
     end
-    
+
     subgraph "Database"
         I[PostgreSQL]
         J[Multi-tenant Design]
         K[Strategic Indexing]
     end
-    
+
     subgraph "Infrastructure"
         L[Vercel Deployment]
         M[Edge Functions]
         N[WebSocket Support]
     end
-    
+
     A --> E
     E --> I
     E --> L
@@ -162,6 +164,7 @@ git push origin feature/work-order-notifications
 ### 2. Coding Standards
 
 #### TypeScript Standards
+
 - **Strict mode**: All code must pass `tsc --noEmit`
 - **No `any` types**: Use proper typing or `unknown`
 - **Interface over type**: Prefer interfaces for object shapes
@@ -176,7 +179,9 @@ interface WorkOrder {
   createdAt: Date;
 }
 
-const createWorkOrder = async (data: CreateWorkOrderInput): Promise<WorkOrder> => {
+const createWorkOrder = async (
+  data: CreateWorkOrderInput
+): Promise<WorkOrder> => {
   // Implementation
 };
 
@@ -187,6 +192,7 @@ const createWorkOrder = (data: any) => {
 ```
 
 #### React Standards
+
 - **Functional components**: Use hooks instead of class components
 - **Custom hooks**: Extract complex logic into reusable hooks
 - **Prop interfaces**: Define props with TypeScript interfaces
@@ -199,9 +205,9 @@ interface WorkOrderFormProps {
   onSubmit: (data: WorkOrderInput) => Promise<void>;
 }
 
-const WorkOrderForm: React.FC<WorkOrderFormProps> = ({ 
-  initialData, 
-  onSubmit 
+const WorkOrderForm: React.FC<WorkOrderFormProps> = ({
+  initialData,
+  onSubmit,
 }) => {
   // Implementation
 };
@@ -210,14 +216,15 @@ const WorkOrderForm: React.FC<WorkOrderFormProps> = ({
 const useWorkOrders = (filters?: WorkOrderFilters) => {
   const [workOrders, setWorkOrders] = useState<WorkOrder[]>([]);
   const [loading, setLoading] = useState(false);
-  
+
   // Implementation
-  
+
   return { workOrders, loading, refetch };
 };
 ```
 
 #### API Development Standards
+
 - **Schema-first**: Define Zod schemas for all inputs/outputs
 - **Error handling**: Use structured error responses
 - **Validation**: Validate all inputs with Zod
@@ -237,28 +244,28 @@ app.post('/api/work-orders', async (req, res) => {
   try {
     // Validate input
     const data = createWorkOrderSchema.parse(req.body);
-    
+
     // Check permissions
     if (!req.user?.organizationId) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
-    
+
     // Create work order
     const workOrder = await workOrderService.create({
       ...data,
       organizationId: req.user.organizationId,
       createdBy: req.user.id,
     });
-    
+
     res.status(201).json(workOrder);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         error: 'Validation failed',
-        details: error.errors 
+        details: error.errors,
       });
     }
-    
+
     console.error('Failed to create work order:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
@@ -268,6 +275,7 @@ app.post('/api/work-orders', async (req, res) => {
 ### 3. Testing Standards
 
 #### Unit Tests
+
 - **Coverage target**: >95% for new code
 - **Test naming**: Descriptive test names
 - **Mocking**: Mock external dependencies
@@ -283,32 +291,33 @@ describe('WorkOrderService', () => {
         equipmentId: 'equipment-123',
         organizationId: 'org-123',
       };
-      
+
       const result = await workOrderService.create(mockData);
-      
+
       expect(result).toMatchObject({
         id: expect.any(String),
         title: mockData.title,
         status: 'open',
       });
     });
-    
+
     it('should throw error when equipment not found', async () => {
       const mockData = {
         title: 'Fix broken pump',
         equipmentId: 'invalid-id',
         organizationId: 'org-123',
       };
-      
-      await expect(workOrderService.create(mockData))
-        .rejects
-        .toThrow('Equipment not found');
+
+      await expect(workOrderService.create(mockData)).rejects.toThrow(
+        'Equipment not found'
+      );
     });
   });
 });
 ```
 
 #### Integration Tests
+
 - **API testing**: Test complete request/response cycles
 - **Database tests**: Use test database with cleanup
 - **Authentication**: Test auth flows and permissions
@@ -318,7 +327,7 @@ describe('WorkOrderService', () => {
 describe('POST /api/work-orders', () => {
   it('should create work order when authenticated', async () => {
     const token = await createTestUser();
-    
+
     const response = await request(app)
       .post('/api/work-orders')
       .set('Authorization', `Bearer ${token}`)
@@ -326,7 +335,7 @@ describe('POST /api/work-orders', () => {
         title: 'Test work order',
         equipmentId: testEquipment.id,
       });
-    
+
     expect(response.status).toBe(201);
     expect(response.body).toMatchObject({
       id: expect.any(String),
@@ -337,6 +346,7 @@ describe('POST /api/work-orders', () => {
 ```
 
 #### E2E Tests
+
 - **User flows**: Test complete user journeys
 - **Cross-browser**: Test in multiple browsers
 - **Mobile**: Test responsive behavior
@@ -349,13 +359,13 @@ test('user can create and complete work order', async ({ page }) => {
   await page.fill('[data-testid=email]', 'test@example.com');
   await page.fill('[data-testid=password]', 'password');
   await page.click('[data-testid=login-button]');
-  
+
   // Create work order
   await page.goto('/work-orders');
   await page.click('[data-testid=create-work-order]');
   await page.fill('[data-testid=title]', 'Test work order');
   await page.click('[data-testid=submit]');
-  
+
   // Verify creation
   await expect(page.locator('text=Test work order')).toBeVisible();
 });
@@ -374,7 +384,10 @@ export const workOrders = pgTable('work_orders', {
   title: varchar('title', { length: 255 }).notNull(),
   description: text('description'),
   status: varchar('status').$type<WorkOrderStatus>().notNull().default('open'),
-  priority: varchar('priority').$type<WorkOrderPriority>().notNull().default('medium'),
+  priority: varchar('priority')
+    .$type<WorkOrderPriority>()
+    .notNull()
+    .default('medium'),
   organizationId: uuid('organization_id').notNull(),
   equipmentId: uuid('equipment_id'),
   assignedTo: uuid('assigned_to'),
@@ -406,7 +419,8 @@ Always include organization-level isolation:
 ```typescript
 // ✅ Good - includes organization filter
 const getWorkOrders = async (organizationId: string) => {
-  return db.select()
+  return db
+    .select()
     .from(workOrders)
     .where(eq(workOrders.organizationId, organizationId));
 };
@@ -425,11 +439,11 @@ const getWorkOrders = async () => {
 // Middleware for protected routes
 const requireAuth = async (req: Request, res: Response, next: NextFunction) => {
   const token = req.headers.authorization?.replace('Bearer ', '');
-  
+
   if (!token) {
     return res.status(401).json({ error: 'Authentication required' });
   }
-  
+
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET!) as JWTPayload;
     req.user = await getUserById(payload.userId);
@@ -482,7 +496,7 @@ const ExpensiveComponent = memo(({ data }) => {
   const processedData = useMemo(() => {
     return data.map(item => expensiveTransformation(item));
   }, [data]);
-  
+
   return <div>{/* Render */}</div>;
 });
 
@@ -506,14 +520,15 @@ const WorkOrderList = ({ workOrders }) => (
 ```typescript
 // Database query optimization
 const getWorkOrdersWithEquipment = async (organizationId: string) => {
-  return db.select({
-    workOrder: workOrders,
-    equipment: equipment,
-  })
-  .from(workOrders)
-  .leftJoin(equipment, eq(workOrders.equipmentId, equipment.id))
-  .where(eq(workOrders.organizationId, organizationId))
-  .limit(50); // Pagination
+  return db
+    .select({
+      workOrder: workOrders,
+      equipment: equipment,
+    })
+    .from(workOrders)
+    .leftJoin(equipment, eq(workOrders.equipmentId, equipment.id))
+    .where(eq(workOrders.organizationId, organizationId))
+    .limit(50); // Pagination
 };
 
 // Caching
@@ -522,13 +537,13 @@ const getCachedData = async (key: string, fetcher: () => Promise<any>) => {
   if (cache.has(key)) {
     return cache.get(key);
   }
-  
+
   const data = await fetcher();
   cache.set(key, data);
-  
+
   // Auto-expire after 5 minutes
   setTimeout(() => cache.delete(key), 5 * 60 * 1000);
-  
+
   return data;
 };
 ```
@@ -559,6 +574,7 @@ const getCachedData = async (key: string, fetcher: () => Promise<any>) => {
 **Types**: feat, fix, docs, style, refactor, test, chore
 
 **Examples**:
+
 ```
 feat(work-orders): add email notifications
 fix(auth): resolve token expiration issue
@@ -580,6 +596,7 @@ test(equipment): add unit tests for QR code generation
 ### Common Development Issues
 
 **TypeScript Errors**
+
 ```bash
 # Clear TypeScript cache
 rm -rf node_modules/.cache
@@ -587,6 +604,7 @@ npm run check
 ```
 
 **Database Connection Issues**
+
 ```bash
 # Check PostgreSQL status
 sudo systemctl status postgresql
@@ -596,6 +614,7 @@ psql $DATABASE_URL
 ```
 
 **Test Failures**
+
 ```bash
 # Run specific test
 npm run test -- --grep "work order creation"
@@ -607,17 +626,19 @@ npm run test -- --inspect-brk
 ### Debugging Tools
 
 **Server-side debugging**
+
 ```typescript
 import debug from 'debug';
 const log = debug('maintainpro:work-orders');
 
-const createWorkOrder = async (data) => {
+const createWorkOrder = async data => {
   log('Creating work order with data:', data);
   // Implementation
 };
 ```
 
 **Client-side debugging**
+
 ```typescript
 // React DevTools
 // Redux DevTools (if using Redux)
@@ -630,12 +651,14 @@ console.log('Component state:', { workOrders, loading });
 ## 📚 Additional Resources
 
 ### Documentation
+
 - **[[API Reference]]** - Complete API documentation
 - **[[Architecture]]** - Detailed technical architecture
 - **[[Testing Guide]]** - Comprehensive testing strategies
 - **[[Security Guide]]** - Security implementation details
 
 ### External Resources
+
 - **[React Documentation](https://react.dev/)**
 - **[TypeScript Handbook](https://www.typescriptlang.org/docs/)**
 - **[Drizzle ORM](https://orm.drizzle.team/)**
@@ -646,10 +669,11 @@ console.log('Component state:', { workOrders, loading });
 
 ## 🎉 Happy Coding!
 
-You're now equipped with everything you need to contribute to MaintAInPro. Remember to:
+You're now equipped with everything you need to contribute to MaintAInPro.
+Remember to:
 
 - Follow coding standards
-- Write comprehensive tests  
+- Write comprehensive tests
 - Document your changes
 - Ask questions when needed
 
@@ -657,4 +681,4 @@ You're now equipped with everything you need to contribute to MaintAInPro. Remem
 
 ---
 
-*Developer Guide last updated: January 2025*
+_Developer Guide last updated: January 2025_

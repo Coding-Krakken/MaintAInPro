@@ -131,9 +131,9 @@ class PMSchedulerEnhanced {
 
       this.schedulingRules.set(warehouseId, rules);
       return rules;
-    } catch (error) {
-      console.error('Error loading scheduling rules:', error);
-      throw error;
+    } catch (__error) {
+      console.error('Error loading scheduling rules:', __error);
+      throw __error;
     }
   }
 
@@ -191,9 +191,9 @@ class PMSchedulerEnhanced {
 
       this.schedulingConfigs.set(warehouseId, config);
       return config;
-    } catch (error) {
-      console.error('Error loading scheduling config:', error);
-      throw error;
+    } catch (__error) {
+      console.error('Error loading scheduling config:', __error);
+      throw __error;
     }
   }
 
@@ -284,9 +284,9 @@ class PMSchedulerEnhanced {
       );
 
       return result;
-    } catch (error) {
-      console.error('Error generating optimized schedule:', error);
-      throw error;
+    } catch (__error) {
+      console.error('Error generating optimized schedule:', __error);
+      throw __error;
     }
   }
 
@@ -297,17 +297,18 @@ class PMSchedulerEnhanced {
     equipmentId: string,
     scheduledDate: Date,
     rule: PMSchedulingRule,
-    existingWorkOrders: any[]
+    existingWorkOrders: unknown[]
   ): Promise<any[]> {
-    const conflicts: any[] = [];
+    const conflicts: unknown[] = [];
 
     // Check for existing work orders on the same equipment
     const conflictingWOs = existingWorkOrders.filter(
       wo =>
-        wo.equipmentId === equipmentId &&
-        wo.status !== 'completed' &&
-        wo.status !== 'closed' &&
-        Math.abs(new Date(wo.dueDate).getTime() - scheduledDate.getTime()) < 24 * 60 * 60 * 1000
+        (wo as any).equipmentId === equipmentId &&
+        (wo as any).status !== 'completed' &&
+        (wo as any).status !== 'closed' &&
+        Math.abs(new Date((wo as any).dueDate).getTime() - scheduledDate.getTime()) <
+          24 * 60 * 60 * 1000
     );
 
     if (conflictingWOs.length > 0) {
@@ -323,10 +324,11 @@ class PMSchedulerEnhanced {
     if (rule.assignedTechnicians.length > 0) {
       const techWorkOrders = existingWorkOrders.filter(
         wo =>
-          rule.assignedTechnicians.includes(wo.assignedTo || '') &&
-          wo.status !== 'completed' &&
-          wo.status !== 'closed' &&
-          Math.abs(new Date(wo.dueDate).getTime() - scheduledDate.getTime()) < 4 * 60 * 60 * 1000
+          rule.assignedTechnicians.includes((wo as any).assignedTo || '') &&
+          (wo as any).status !== 'completed' &&
+          (wo as any).status !== 'closed' &&
+          Math.abs(new Date((wo as any).dueDate).getTime() - scheduledDate.getTime()) <
+            4 * 60 * 60 * 1000
       );
 
       if (techWorkOrders.length > 0) {
@@ -345,8 +347,11 @@ class PMSchedulerEnhanced {
   /**
    * Calculate utilization rate
    */
-  private calculateUtilizationRate(scheduledPMs: any[], config: PMSchedulingConfig): number {
-    const totalDuration = scheduledPMs.reduce((sum, pm) => sum + pm.estimatedDuration, 0);
+  private calculateUtilizationRate(scheduledPMs: unknown[], config: PMSchedulingConfig): number {
+    const totalDuration = scheduledPMs.reduce(
+      (sum: number, pm) => sum + (pm as any).estimatedDuration,
+      0
+    );
     const workingHours = 8; // 8 hours per day
     const workingDays = config.globalSettings.workingDays.length;
     const maxCapacity = workingHours * workingDays * 7; // Weekly capacity
@@ -361,7 +366,7 @@ class PMSchedulerEnhanced {
     try {
       const config = await this.loadSchedulingConfig(warehouseId);
       const equipment = await storage.getEquipment(warehouseId);
-      const now = new Date();
+      const _now = new Date();
 
       for (const equip of equipment) {
         const complianceStatus = await pmEngine.checkComplianceStatus(equip.id, warehouseId);
@@ -377,15 +382,15 @@ class PMSchedulerEnhanced {
           }
         }
       }
-    } catch (error) {
-      console.error('Error processing missed PM escalations:', error);
+    } catch (__error) {
+      console.error('Error processing missed PM escalations:', __error);
     }
   }
 
   /**
    * Determine escalation level based on compliance
    */
-  private determineEscalationLevel(complianceStatus: any, config: PMSchedulingConfig): number {
+  private determineEscalationLevel(complianceStatus: any, _config: PMSchedulingConfig): number {
     if (complianceStatus.missedPMCount > 5) return 3;
     if (complianceStatus.missedPMCount > 2) return 2;
     if (complianceStatus.missedPMCount > 0) return 1;
@@ -466,8 +471,8 @@ class PMSchedulerEnhanced {
               }
             }
           }
-        } catch (error) {
-          console.error('Error in automated scheduling:', error);
+        } catch (__error) {
+          console.error('Error in automated scheduling:', __error);
         }
       },
       intervalMinutes * 60 * 1000

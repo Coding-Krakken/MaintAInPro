@@ -1,6 +1,7 @@
 # 👤 User Guide
 
-Complete guide for using MaintAInPro CMMS to manage maintenance operations, equipment, and inventory.
+Complete guide for using MaintAInPro CMMS to manage maintenance operations,
+equipment, and inventory.
 
 ## 📋 Table of Contents
 
@@ -26,16 +27,17 @@ Complete guide for using MaintAInPro CMMS to manage maintenance operations, equi
 
 ### User Roles Overview
 
-| Role | Permissions | Typical Responsibilities |
-|------|-------------|-------------------------|
-| **Admin** | Full system access | System configuration, user management, reporting |
-| **Manager** | View all data, manage work orders | Work order oversight, resource planning, reporting |
-| **Technician** | Assigned work orders, equipment access | Execute maintenance tasks, update work orders |
-| **Requester** | Create requests, view own submissions | Submit maintenance requests, track progress |
+| Role           | Permissions                            | Typical Responsibilities                           |
+| -------------- | -------------------------------------- | -------------------------------------------------- |
+| **Admin**      | Full system access                     | System configuration, user management, reporting   |
+| **Manager**    | View all data, manage work orders      | Work order oversight, resource planning, reporting |
+| **Technician** | Assigned work orders, equipment access | Execute maintenance tasks, update work orders      |
+| **Requester**  | Create requests, view own submissions  | Submit maintenance requests, track progress        |
 
 ### Navigation
 
 The main navigation includes:
+
 - **🏠 Dashboard** - Overview and key metrics
 - **🔧 Work Orders** - Maintenance task management
 - **⚙️ Equipment** - Asset and equipment management
@@ -51,24 +53,28 @@ The dashboard provides a real-time overview of your maintenance operations.
 ### Key Metrics Cards
 
 **Work Orders Summary**
+
 - Total open work orders
 - Overdue tasks requiring attention
 - Work orders completed this week
 - Average completion time
 
 **Equipment Status**
+
 - Total equipment count
 - Equipment requiring maintenance
 - Critical equipment alerts
 - Equipment availability percentage
 
 **Parts Inventory**
+
 - Low stock alerts
 - Parts consumed this month
 - Pending orders
 - Inventory value
 
 **Team Performance**
+
 - Active technicians
 - Work orders per technician
 - Completion rate
@@ -77,6 +83,7 @@ The dashboard provides a real-time overview of your maintenance operations.
 ### Quick Actions
 
 From the dashboard, you can quickly:
+
 - **Create new work order** with the "+" button
 - **View overdue tasks** by clicking the overdue count
 - **Access critical alerts** from the notifications panel
@@ -85,6 +92,7 @@ From the dashboard, you can quickly:
 ### Recent Activity Feed
 
 The activity feed shows:
+
 - Recent work order updates
 - Equipment status changes
 - Parts transactions
@@ -137,6 +145,7 @@ graph LR
 ```
 
 **Status Definitions:**
+
 - **Open**: Newly created, awaiting assignment or start
 - **In Progress**: Technician is actively working on the task
 - **On Hold**: Work paused due to missing parts, approval, etc.
@@ -149,17 +158,20 @@ graph LR
 #### Viewing Work Orders
 
 **List View:**
+
 - Filter by status, priority, assignee, or equipment
 - Sort by due date, priority, or creation date
 - Search by work order number or description
 - Bulk actions for multiple work orders
 
 **Card View:**
+
 - Visual representation with status colors
 - Quick status updates
 - Key information at a glance
 
 **Kanban Board:**
+
 - Drag-and-drop status updates
 - Visual workflow management
 - Team workload overview
@@ -167,6 +179,7 @@ graph LR
 #### Updating Work Orders
 
 **For Technicians:**
+
 1. **Start Work**: Change status to "In Progress"
 2. **Log Time**: Record start and end times
 3. **Update Checklist**: Mark completed tasks
@@ -176,6 +189,7 @@ graph LR
 7. **Complete Work**: Change status to "Completed"
 
 **For Managers:**
+
 1. **Review Completed Work**: Verify work quality
 2. **Approve or Request Changes**: Provide feedback
 3. **Close Work Order**: Final approval and closure
@@ -183,12 +197,14 @@ graph LR
 #### Time Tracking
 
 Accurate time tracking helps with:
+
 - Labor cost calculation
 - Performance analysis
 - Future time estimation
 - Productivity reporting
 
 **How to log time:**
+
 1. Open the work order
 2. Click **"Log Time"**
 3. Enter start and end times
@@ -200,18 +216,21 @@ Accurate time tracking helps with:
 Checklists ensure consistent, thorough work completion.
 
 **Benefits:**
+
 - Standardized procedures
 - Quality assurance
 - Compliance documentation
 - Training tool for new technicians
 
 **Creating Checklists:**
+
 1. Add checklist items when creating work orders
 2. Include specific components and actions
 3. Mark items as required or optional
 4. Add notes and instructions
 
 **Using Checklists:**
+
 1. Review all items before starting work
 2. Check off completed items progressively
 3. Add notes for any deviations or findings
@@ -219,7 +238,8 @@ Checklists ensure consistent, thorough work completion.
 
 ## ⚙️ Equipment & Asset Management
 
-Effective equipment management is crucial for maintenance planning and execution.
+Effective equipment management is crucial for maintenance planning and
+execution.
 
 ### Equipment Hierarchy
 
@@ -243,6 +263,7 @@ Facility
 Each equipment record includes:
 
 **Basic Information:**
+
 - Asset tag (unique identifier)
 - Equipment number
 - Description
@@ -252,12 +273,14 @@ Each equipment record includes:
 - Warranty information
 
 **Location & Status:**
+
 - Physical location/area
 - Current status (Active, Maintenance, Decommissioned)
 - Criticality level (Critical, High, Medium, Low)
 - Parent/child relationships
 
 **Technical Details:**
+
 - Specifications
 - Operating parameters
 - Safety information
@@ -289,12 +312,14 @@ Each equipment record includes:
 Each equipment automatically gets a QR code for easy mobile access.
 
 **Using QR Codes:**
+
 1. **Generate**: QR codes are automatically created
 2. **Print**: Download and print QR code labels
 3. **Attach**: Place labels on physical equipment
 4. **Scan**: Use mobile device to access equipment information
 
 **QR Code Benefits:**
+
 - Instant equipment identification
 - Quick work order creation
 - Mobile-friendly equipment access
@@ -305,6 +330,7 @@ Each equipment automatically gets a QR code for easy mobile access.
 Track all maintenance activities for each piece of equipment:
 
 **History Includes:**
+
 - All work orders (completed and ongoing)
 - Preventive maintenance schedules
 - Parts consumed
@@ -313,6 +339,7 @@ Track all maintenance activities for each piece of equipment:
 - Performance trends
 
 **Viewing History:**
+
 1. Open equipment record
 2. Click **"Maintenance History"** tab
 3. Filter by date range or work order type
@@ -321,12 +348,14 @@ Track all maintenance activities for each piece of equipment:
 ### Equipment Status Management
 
 **Status Types:**
+
 - **Active**: Equipment is operational and available
 - **Maintenance**: Equipment is under maintenance
 - **Decommissioned**: Equipment is no longer in service
 - **Retired**: Equipment has reached end of life
 
 **Changing Status:**
+
 1. Open equipment record
 2. Click **"Change Status"**
 3. Select new status
@@ -335,13 +364,15 @@ Track all maintenance activities for each piece of equipment:
 
 ## 📦 Parts & Inventory
 
-Efficient parts management ensures maintenance work can be completed without delays.
+Efficient parts management ensures maintenance work can be completed without
+delays.
 
 ### Parts Catalog
 
 The parts catalog includes:
 
 **Part Information:**
+
 - Part number (unique identifier)
 - Description
 - Category (Bearings, Seals, Filters, etc.)
@@ -350,6 +381,7 @@ The parts catalog includes:
 - Lead time for ordering
 
 **Stock Information:**
+
 - Current quantity on hand
 - Location (bin/shelf location)
 - Minimum stock level
@@ -380,6 +412,7 @@ The parts catalog includes:
 #### Receiving Stock
 
 When new parts arrive:
+
 1. Find the part in inventory
 2. Click **"Receive Stock"**
 3. Enter quantity received
@@ -390,8 +423,9 @@ When new parts arrive:
 #### Consuming Parts
 
 When parts are used in maintenance:
+
 1. **From Work Order**: Parts can be consumed directly from work order
-2. **Manual Consumption**: 
+2. **Manual Consumption**:
    - Find part in inventory
    - Click **"Consume"**
    - Enter quantity used
@@ -401,6 +435,7 @@ When parts are used in maintenance:
 #### Adjustments
 
 For corrections or cycle counts:
+
 1. Find the part
 2. Click **"Adjust Stock"**
 3. Enter new quantity
@@ -412,11 +447,13 @@ For corrections or cycle counts:
 The system automatically alerts when parts fall below minimum levels:
 
 **Alert Types:**
+
 - Dashboard notifications
 - Email alerts (if configured)
 - Reports showing low stock items
 
 **Managing Alerts:**
+
 1. Review low stock dashboard
 2. Determine reorder quantities
 3. Create purchase orders
@@ -427,6 +464,7 @@ The system automatically alerts when parts fall below minimum levels:
 Track parts usage and costs:
 
 **Reports Available:**
+
 - Parts consumption by period
 - Stock levels and movements
 - Costs by category or equipment
@@ -435,21 +473,25 @@ Track parts usage and costs:
 
 ## 🔄 Preventive Maintenance
 
-Preventive maintenance helps avoid unexpected failures and extends equipment life.
+Preventive maintenance helps avoid unexpected failures and extends equipment
+life.
 
 ### PM Schedule Types
 
 **Time-Based:**
+
 - Daily, weekly, monthly, quarterly, yearly
 - Specific calendar dates
 - Custom intervals
 
 **Usage-Based:**
+
 - Operating hours
 - Cycles or production counts
 - Distance (for vehicles)
 
 **Condition-Based:**
+
 - Sensor readings
 - Visual inspection results
 - Performance parameters
@@ -473,6 +515,7 @@ Preventive maintenance helps avoid unexpected failures and extends equipment lif
 The system automatically creates work orders based on PM schedules:
 
 **Generation Process:**
+
 - System checks schedules daily
 - Creates work orders based on lead time
 - Assigns to designated technicians
@@ -480,6 +523,7 @@ The system automatically creates work orders based on PM schedules:
 - Sets appropriate due dates
 
 **Manual Generation:**
+
 - Generate PM work orders on demand
 - Override automatic scheduling
 - Create one-time PM work orders
@@ -489,6 +533,7 @@ The system automatically creates work orders based on PM schedules:
 Monitor PM program effectiveness:
 
 **Key Metrics:**
+
 - PM completion rate
 - Schedule compliance
 - PM vs. corrective work ratio
@@ -502,12 +547,14 @@ Make data-driven maintenance decisions with comprehensive reporting.
 ### Dashboard Analytics
 
 **Real-Time Metrics:**
+
 - Work order status summary
 - Equipment performance indicators
 - Parts inventory status
 - Team productivity measures
 
 **Trend Analysis:**
+
 - Work order volume trends
 - Completion time trends
 - Cost trends
@@ -518,18 +565,21 @@ Make data-driven maintenance decisions with comprehensive reporting.
 #### Work Order Reports
 
 **Completion Report:**
+
 - Work orders completed by period
 - Average completion time
 - On-time completion percentage
 - Backlog analysis
 
 **Cost Report:**
+
 - Labor costs by technician
 - Parts costs by equipment
 - Total maintenance costs
 - Budget vs. actual spending
 
 **Performance Report:**
+
 - Technician productivity
 - Equipment downtime
 - Response times
@@ -538,12 +588,14 @@ Make data-driven maintenance decisions with comprehensive reporting.
 #### Equipment Reports
 
 **Reliability Report:**
+
 - Mean time between failures (MTBF)
 - Mean time to repair (MTTR)
 - Equipment availability
 - Failure analysis
 
 **Maintenance History:**
+
 - All maintenance activities
 - Costs by equipment
 - Parts consumption
@@ -552,12 +604,14 @@ Make data-driven maintenance decisions with comprehensive reporting.
 #### Parts Reports
 
 **Inventory Report:**
+
 - Current stock levels
 - Stock movements
 - Low stock items
 - Inventory value
 
 **Usage Report:**
+
 - Parts consumption by period
 - High-usage items
 - Cost analysis
@@ -577,6 +631,7 @@ Create custom reports for specific needs:
 ### Exporting Data
 
 Export reports in multiple formats:
+
 - **PDF**: For printing and sharing
 - **Excel**: For further analysis
 - **CSV**: For data import to other systems
@@ -589,16 +644,19 @@ MaintAInPro is optimized for mobile devices to support field technicians.
 ### Mobile Features
 
 **Offline Support:**
+
 - Download work orders for offline access
 - Record work performed without internet
 - Sync data when connection is restored
 
 **QR Code Scanning:**
+
 - Scan equipment QR codes
 - Instant access to equipment information
 - Create work orders from equipment scan
 
 **Photo Capture:**
+
 - Take before/after photos
 - Attach to work orders automatically
 - Document work progress
@@ -633,17 +691,20 @@ MaintAInPro is optimized for mobile devices to support field technicians.
 ### Mobile Best Practices
 
 **Preparation:**
+
 - Download work orders before going offline
 - Ensure device is charged
 - Have backup power source for long jobs
 
 **During Work:**
+
 - Take clear, well-lit photos
 - Add detailed notes while fresh in memory
 - Update status regularly
 - Save work frequently
 
 **After Work:**
+
 - Sync data as soon as possible
 - Review work order for completeness
 - Follow up on any issues found
@@ -655,7 +716,9 @@ Administrators can manage users, roles, and permissions.
 ### User Roles
 
 #### Admin
+
 **Permissions:**
+
 - Full system access
 - User management
 - System configuration
@@ -663,13 +726,16 @@ Administrators can manage users, roles, and permissions.
 - Data export capabilities
 
 **Responsibilities:**
+
 - System setup and maintenance
 - User onboarding and training
 - Data backup and security
 - System monitoring
 
 #### Manager
+
 **Permissions:**
+
 - View all work orders and equipment
 - Create and assign work orders
 - Approve completed work
@@ -677,13 +743,16 @@ Administrators can manage users, roles, and permissions.
 - Manage parts inventory
 
 **Responsibilities:**
+
 - Work order oversight and planning
 - Resource allocation
 - Performance monitoring
 - Reporting to leadership
 
 #### Technician
+
 **Permissions:**
+
 - View assigned work orders
 - Update work order status
 - Access equipment information
@@ -691,19 +760,23 @@ Administrators can manage users, roles, and permissions.
 - Upload photos and documents
 
 **Responsibilities:**
+
 - Execute maintenance tasks
 - Provide accurate updates
 - Follow safety procedures
 - Document work performed
 
 #### Requester
+
 **Permissions:**
+
 - Create maintenance requests
 - View own submissions
 - Track request progress
 - Basic equipment lookup
 
 **Responsibilities:**
+
 - Submit clear, detailed requests
 - Provide accurate information
 - Follow up as needed
@@ -726,16 +799,19 @@ Administrators can manage users, roles, and permissions.
 ### Managing User Access
 
 **Activating/Deactivating Users:**
+
 - Deactivate users who no longer need access
 - Reactivate users returning to work
 - Maintain audit trail of access changes
 
 **Password Management:**
+
 - Users can reset their own passwords
 - Admins can force password resets
 - Set password complexity requirements
 
 **Session Management:**
+
 - Monitor active user sessions
 - Force logout for security reasons
 - Set session timeout periods
@@ -747,18 +823,21 @@ Configure MaintAInPro to match your organization's needs.
 ### Organization Settings
 
 **Basic Information:**
+
 - Organization name
 - Address and contact information
 - Logo and branding
 - Time zone settings
 
 **Work Order Configuration:**
+
 - Work order numbering format
 - Default priorities and types
 - Status workflow customization
 - Approval requirements
 
 **Equipment Configuration:**
+
 - Asset tag format
 - Equipment categories
 - Criticality levels
@@ -767,12 +846,14 @@ Configure MaintAInPro to match your organization's needs.
 ### Notification Settings
 
 **Email Notifications:**
+
 - Work order assignments
 - Due date reminders
 - Overdue alerts
 - Completion notifications
 
 **System Notifications:**
+
 - In-app alerts
 - Dashboard notifications
 - Mobile push notifications
@@ -781,12 +862,14 @@ Configure MaintAInPro to match your organization's needs.
 ### Integration Settings
 
 **External Systems:**
+
 - ERP system connections
 - SCADA system integration
 - Asset management systems
 - Procurement systems
 
 **API Configuration:**
+
 - Webhook endpoints
 - API key management
 - Rate limiting settings
@@ -795,12 +878,14 @@ Configure MaintAInPro to match your organization's needs.
 ### Backup and Security
 
 **Data Backup:**
+
 - Automated backup schedules
 - Backup retention policies
 - Disaster recovery procedures
 - Data export capabilities
 
 **Security Settings:**
+
 - Password policies
 - Two-factor authentication
 - Session timeout
@@ -831,24 +916,28 @@ Configure MaintAInPro to match your organization's needs.
 ### Best Practices
 
 **Work Order Management:**
+
 - Create clear, specific work order titles
 - Include detailed descriptions
 - Set realistic due dates
 - Assign appropriate priority levels
 
 **Equipment Management:**
+
 - Use consistent naming conventions
 - Keep equipment information current
 - Regularly update maintenance history
 - Plan preventive maintenance schedules
 
 **Parts Management:**
+
 - Maintain accurate stock levels
 - Set appropriate reorder points
 - Track parts consumption accurately
 - Regular inventory audits
 
 **Team Coordination:**
+
 - Communicate status changes promptly
 - Document work thoroughly
 - Share knowledge and best practices
@@ -866,8 +955,9 @@ Following this user guide will help you maximize the benefits of MaintAInPro:
 - **Cost Control**: Accurate tracking and analysis
 - **Compliance**: Documentation and audit trails
 
-**Remember**: The key to success is consistent, accurate data entry and active use of the system's features.
+**Remember**: The key to success is consistent, accurate data entry and active
+use of the system's features.
 
 ---
 
-*User Guide last updated: January 2025*
+_User Guide last updated: January 2025_

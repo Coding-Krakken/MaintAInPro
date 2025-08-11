@@ -152,7 +152,7 @@ export function sanitizeInput(req: Request, res: Response, next: NextFunction): 
         .replace(/javascript:/gi, '')
         .replace(/on\w+\s*=/gi, '')
         .replace(/['"`;]/g, '') // Remove SQL injection characters
-        .replace(/\x00/g, '') // Remove null bytes
+        .replace(/\0/g, '') // Remove null bytes
         .trim();
     }
 
@@ -273,10 +273,10 @@ export async function enhancedAuth(req: any, res: Response, next: NextFunction):
     }
 
     next();
-  } catch (error) {
-    console.error('Authentication error:', error);
+  } catch (_error) {
+    console.error('Authentication _error:', _error);
     res.status(500).json({
-      error: 'Authentication system error',
+      _error: 'Authentication system _error',
       code: 'AUTH_ERROR',
     });
   }
@@ -324,10 +324,10 @@ export function requireRole(allowedRoles: string[]) {
       }
 
       next();
-    } catch (error) {
-      console.error('Authorization error:', error);
+    } catch (_error) {
+      console.error('Authorization _error:', _error);
       res.status(500).json({
-        error: 'Authorization system error',
+        _error: 'Authorization system _error',
         code: 'AUTH_ERROR',
       });
     }
@@ -365,10 +365,10 @@ export function validateRequestSchema(schema: z.ZodSchema) {
       req.params = result.data.params || req.params;
 
       next();
-    } catch (error) {
-      console.error('Validation error:', error);
+    } catch (_error) {
+      console.error('Validation _error:', _error);
       res.status(500).json({
-        error: 'Validation system error',
+        _error: 'Validation system _error',
         code: 'VALIDATION_SYSTEM_ERROR',
       });
     }
@@ -538,10 +538,10 @@ export async function validateSession(req: any, res: Response, next: NextFunctio
     }
 
     next();
-  } catch (error) {
-    console.error('Session validation error:', error);
+  } catch (_error) {
+    console.error('Session validation _error:', _error);
     res.status(500).json({
-      error: 'Internal Server Error',
+      _error: 'Internal Server Error',
       message: 'Session validation failed',
     });
   }

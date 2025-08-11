@@ -62,8 +62,8 @@ export class EnhancedCacheService {
       });
 
       await this.redisClient.connect();
-    } catch (error) {
-      console.log('[Cache] Failed to connect to Redis, using memory cache only:', error.message);
+    } catch (_error) {
+      console.log('[Cache] Failed to connect to Redis, using memory cache only:', _error.message);
       this.isRedisConnected = false;
     }
   }
@@ -98,8 +98,8 @@ export class EnhancedCacheService {
 
       this.cacheStats.misses++;
       return null;
-    } catch (error) {
-      console.error('[Cache] Get error:', error);
+    } catch (_error) {
+      console.error('[Cache] Get _error:', _error);
       this.cacheStats.errors++;
       return null;
     }
@@ -119,8 +119,8 @@ export class EnhancedCacheService {
       }
 
       return true;
-    } catch (error) {
-      console.error('[Cache] Set error:', error);
+    } catch (_error) {
+      console.error('[Cache] Set _error:', _error);
       this.cacheStats.errors++;
       return false;
     }
@@ -140,8 +140,8 @@ export class EnhancedCacheService {
       }
 
       return true;
-    } catch (error) {
-      console.error('[Cache] Delete error:', error);
+    } catch (_error) {
+      console.error('[Cache] Delete _error:', _error);
       this.cacheStats.errors++;
       return false;
     }
@@ -159,8 +159,8 @@ export class EnhancedCacheService {
       if (this.isRedisConnected && this.redisClient) {
         await this.redisClient.flushDb();
       }
-    } catch (error) {
-      console.error('[Cache] Clear error:', error);
+    } catch (_error) {
+      console.error('[Cache] Clear _error:', _error);
       this.cacheStats.errors++;
     }
   }
@@ -204,9 +204,9 @@ export class EnhancedCacheService {
       const result = await fetchFunction();
       await this.set(key, result, ttlSeconds);
       return result;
-    } catch (error) {
-      console.error(`[Cache] Error executing cached function for key ${key}:`, error);
-      throw error;
+    } catch (_error) {
+      console.error(`[Cache] Error executing cached function for key ${key}:`, _error);
+      throw _error;
     }
   }
 
@@ -233,8 +233,8 @@ export class EnhancedCacheService {
           invalidated += keys.length;
         }
       }
-    } catch (error) {
-      console.error('[Cache] Pattern invalidation error:', error);
+    } catch (_error) {
+      console.error('[Cache] Pattern invalidation _error:', _error);
       this.cacheStats.errors++;
     }
 
@@ -277,8 +277,8 @@ export class EnhancedCacheService {
           }
         }
       }
-    } catch (error) {
-      console.error('[Cache] Batch get error:', error);
+    } catch (_error) {
+      console.error('[Cache] Batch get _error:', _error);
       this.cacheStats.errors++;
     }
 
@@ -365,8 +365,8 @@ export class EnhancedCacheService {
       }
       this.memoryCache.clear();
       console.log('[Cache] Cache service shutdown complete');
-    } catch (error) {
-      console.error('[Cache] Shutdown error:', error);
+    } catch (_error) {
+      console.error('[Cache] Shutdown _error:', _error);
     }
   }
 }

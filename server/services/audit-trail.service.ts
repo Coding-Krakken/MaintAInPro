@@ -91,9 +91,8 @@ class AuditTrailService {
   async logEvent(event: Omit<AuditEvent, 'id' | 'timestamp'>): Promise<void> {
     const auditEvent: AuditEvent = {
       ...event,
-  id: randomUUID(),
-      timestamp: new Date()
-
+      id: randomUUID(),
+      timestamp: new Date(),
     };
 
     // Store in memory cache
@@ -112,7 +111,7 @@ class AuditTrailService {
     action: 'login' | 'logout' | 'login_failed' | 'password_reset' | 'mfa_setup',
     success: boolean,
     metadata: AuditEvent['metadata'],
-  details: Record<string, unknown> = {}
+    details: Record<string, unknown> = {}
   ): Promise<void> {
     await this.logEvent({
       userId,
@@ -138,7 +137,7 @@ class AuditTrailService {
     action: 'view' | 'search' | 'export' | 'download',
     metadata: AuditEvent['metadata'],
     warehouseId?: string,
-  details: Record<string, unknown> = {}
+    details: Record<string, unknown> = {}
   ): Promise<void> {
     await this.logEvent({
       userId,
@@ -160,7 +159,7 @@ class AuditTrailService {
     entityType: string,
     entityId: string,
     action: 'create' | 'update' | 'delete',
-  changes: Record<string, unknown>,
+    changes: Record<string, unknown>,
     metadata: AuditEvent['metadata'],
     warehouseId?: string,
     success = true
@@ -186,7 +185,7 @@ class AuditTrailService {
   async logSystemEvent(
     userId: string,
     action: string,
-  details: Record<string, unknown>,
+    details: Record<string, unknown>,
     metadata: AuditEvent['metadata'],
     severity: AuditEvent['severity'] = 'medium',
     success = true
@@ -207,7 +206,7 @@ class AuditTrailService {
   async logSecurityEvent(
     userId: string,
     action: string,
-  details: Record<string, unknown>,
+    details: Record<string, unknown>,
     metadata: AuditEvent['metadata'],
     severity: AuditEvent['severity'] = 'high',
     success = false
@@ -221,7 +220,11 @@ class AuditTrailService {
       severity,
       category: 'security',
       success,
-  errorMessage: success ? undefined : (typeof details.error === 'string' ? details.error : undefined),
+      errorMessage: success
+        ? undefined
+        : typeof details.error === 'string'
+          ? details.error
+          : undefined,
     });
   }
 
@@ -305,16 +308,16 @@ class AuditTrailService {
       const dataAccessEvents = events.filter(e => e.category === 'data_access').length;
 
       // Calculate compliance score
-  const complianceScore = this.calculateComplianceScore(events);
+      const complianceScore = this.calculateComplianceScore(events);
 
       // Generate findings
-  const findings = this.generateComplianceFindings(events);
+      const findings = this.generateComplianceFindings(events);
 
       // Generate recommendations
       const recommendations = this.generateComplianceRecommendations(findings, reportType);
 
       return {
-  id: randomUUID(),
+        id: randomUUID(),
         reportType,
         generatedAt: new Date(),
         period: { start: startDate, end: endDate },
@@ -447,8 +450,8 @@ class AuditTrailService {
   }
 
   private generateComplianceFindings(
-    events: AuditEvent[],
-  // ...existing code...
+    events: AuditEvent[]
+    // ...existing code...
   ): ComplianceFinding[] {
     const findings: ComplianceFinding[] = [];
 
@@ -457,7 +460,7 @@ class AuditTrailService {
 
     if (failedAuth.length > 0) {
       findings.push({
-  id: randomUUID(),
+        id: randomUUID(),
         severity: failedAuth.length > 10 ? 'high' : 'medium',
         category: 'Authentication Security',
         description: `${failedAuth.length} failed authentication attempts detected`,
@@ -476,7 +479,7 @@ class AuditTrailService {
 
     if (criticalSecurity.length > 0) {
       findings.push({
-  id: randomUUID(),
+        id: randomUUID(),
         severity: 'critical',
         category: 'Security Incidents',
         description: `${criticalSecurity.length} critical security events recorded`,
@@ -494,7 +497,7 @@ class AuditTrailService {
 
     if (privilegedAccess.length > 100) {
       findings.push({
-  id: randomUUID(),
+        id: randomUUID(),
         severity: 'medium',
         category: 'Access Control',
         description: `${privilegedAccess.length} privileged access events`,

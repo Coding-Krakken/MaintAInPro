@@ -35,7 +35,7 @@ jobs:
     strategy:
       matrix:
         environment: ${{ github.event.inputs.environment && fromJson(format('["{0}"]', github.event.inputs.environment)) || fromJson('["staging", "production"]') }}
-    
+
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
@@ -52,7 +52,7 @@ jobs:
       - name: 🔧 Setup test environment
         run: |
           echo "Setting up smoke tests for ${{ matrix.environment }}"
-          
+
           if [ "${{ matrix.environment }}" = "production" ]; then
             echo "BASE_URL=https://unitedautosupply.org" >> $GITHUB_ENV
           else
@@ -62,67 +62,67 @@ jobs:
       - name: 🏥 Basic Health Checks
         run: |
           echo "Running basic health checks against ${{ env.BASE_URL }}"
-          
+
           # Test main page
           echo "Testing main page..."
           HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "${{ env.BASE_URL }}/" || echo "000")
           echo "Main page HTTP code: $HTTP_CODE"
-          
+
           if [ "$HTTP_CODE" != "200" ] && [ "$HTTP_CODE" != "401" ]; then
             echo "❌ Main page health check failed (HTTP $HTTP_CODE)"
             exit 1
           fi
-          
+
           # Test API health endpoint
           echo "Testing API health..."
           HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "${{ env.BASE_URL }}/api/health" || echo "000")
           echo "API health HTTP code: $HTTP_CODE"
-          
+
           if [ "$HTTP_CODE" != "200" ]; then
             echo "❌ API health check failed (HTTP $HTTP_CODE)"
             exit 1
           fi
-          
+
           echo "✅ Basic health checks passed"
 
       - name: 🧪 Run critical path tests
         if: github.event.inputs.quick_test != 'true'
         run: |
           echo "Running critical path smoke tests..."
-          
+
           # Test authentication endpoints
           echo "Testing auth endpoints..."
           AUTH_CODE=$(curl -s -o /dev/null -w "%{http_code}" "${{ env.BASE_URL }}/api/auth/me" || echo "000")
           echo "Auth endpoint HTTP code: $AUTH_CODE"
-          
+
           if [ "$AUTH_CODE" != "401" ]; then
             echo "⚠️ Auth endpoint unexpected response (expected 401, got $AUTH_CODE)"
           fi
-          
+
           # Test API endpoints that should be protected
           echo "Testing protected endpoints..."
           WORKORDERS_CODE=$(curl -s -o /dev/null -w "%{http_code}" "${{ env.BASE_URL }}/api/work-orders" || echo "000")
           echo "Work orders endpoint HTTP code: $WORKORDERS_CODE"
-          
+
           if [ "$WORKORDERS_CODE" != "401" ]; then
             echo "⚠️ Work orders endpoint unexpected response (expected 401, got $WORKORDERS_CODE)"
           fi
-          
+
           echo "✅ Critical path tests completed"
 
       - name: 🎯 Performance checks
         if: github.event.inputs.quick_test != 'true'
         run: |
           echo "Running performance checks..."
-          
+
           # Test page load time
           START_TIME=$(date +%s%N)
           curl -s "${{ env.BASE_URL }}/" > /dev/null
           END_TIME=$(date +%s%N)
           LOAD_TIME=$(( (END_TIME - START_TIME) / 1000000 ))
-          
+
           echo "Page load time: ${LOAD_TIME}ms"
-          
+
           if [ $LOAD_TIME -gt 5000 ]; then
             echo "⚠️ Page load time is slow (${LOAD_TIME}ms > 5000ms)"
           else
@@ -156,31 +156,31 @@ jobs:
           script: |
             const title = `🚨 Smoke Tests Failed - ${new Date().toISOString().split('T')[0]}`;
             const body = `## Smoke Test Failure Report
-            
+
             **Timestamp:** ${new Date().toISOString()}
             **Trigger:** ${context.eventName}
             **Environment(s):** ${{ join(matrix.environment) }}
             **Workflow:** [${context.workflow}](${context.payload.repository.html_url}/actions/runs/${context.runId})
-            
+
             **Failed Tests:**
             - Check the [workflow run](${context.payload.repository.html_url}/actions/runs/${context.runId}) for detailed logs
-            
+
             **Immediate Actions Needed:**
             1. 🔍 Check application health and availability
             2. 🩺 Verify all critical services are running
             3. 📊 Check monitoring dashboards for alerts
             4. 🔄 Consider rollback if this is related to a recent deployment
-            
+
             **Next Steps:**
             1. Investigate the root cause
             2. Fix the underlying issue
             3. Re-run smoke tests to verify the fix
             4. Close this issue once resolved
-            
+
             **Auto-created by smoke test failure** 🤖
-            
+
             /cc @Coding-Krakken`;
-            
+
             await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,

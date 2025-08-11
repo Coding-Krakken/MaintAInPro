@@ -280,9 +280,9 @@ class DatabasePerformanceService {
       });
 
       return metrics;
-    } catch (error) {
-      logger.error('Failed to get database health metrics', error, { service: this.serviceName });
-      throw error;
+    } catch (_error) {
+      logger.error('Failed to get database health metrics', _error, { service: this.serviceName });
+      throw _error;
     }
   }
 
@@ -315,7 +315,7 @@ class DatabasePerformanceService {
       });
 
       return stats;
-    } catch (error) {
+    } catch (_error) {
       logger.warn('pg_stat_statements not available, using fallback', {
         service: this.serviceName,
       });
@@ -393,7 +393,7 @@ class DatabasePerformanceService {
       `);
 
       return result.rows[0]?.slow_queries || 0;
-    } catch (error) {
+    } catch (_error) {
       return 0;
     }
   }

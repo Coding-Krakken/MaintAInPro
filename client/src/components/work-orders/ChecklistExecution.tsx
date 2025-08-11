@@ -20,7 +20,7 @@ import { FileUpload } from '@/components/FileUpload';
 interface ChecklistExecutionProps {
   workOrderId: string;
   isReadOnly?: boolean;
-  onProgress?: (completed: number, total: number) => void;
+  onProgress?: (_completed: number, _total: number) => void;
 }
 
 interface ChecklistItemWithActions extends WorkOrderChecklistItem {
@@ -100,7 +100,7 @@ const ChecklistExecution: React.FC<ChecklistExecutionProps> = ({
         setActiveItemId(itemId);
       };
 
-      recognition.onresult = (event) => {
+      recognition.onresult = event => {
         const transcript = Array.from(event.results)
           .map(result => result[0])
           .map(result => result.transcript)
@@ -116,7 +116,7 @@ const ChecklistExecution: React.FC<ChecklistExecutionProps> = ({
         }
       };
 
-      recognition.onerror = (_event) => {
+      recognition.onerror = _event => {
         toast({
           title: 'Voice Recognition Error',
           description: 'Please try again or type manually',

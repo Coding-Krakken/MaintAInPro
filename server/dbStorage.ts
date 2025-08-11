@@ -379,7 +379,10 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Work Orders
-  async getWorkOrders(warehouseId: string, _filters?: Record<string, unknown>): Promise<WorkOrder[]> {
+  async getWorkOrders(
+    warehouseId: string,
+    _filters?: Record<string, unknown>
+  ): Promise<WorkOrder[]> {
     return await db.select().from(workOrders).where(eq(workOrders.warehouseId, warehouseId));
   }
 

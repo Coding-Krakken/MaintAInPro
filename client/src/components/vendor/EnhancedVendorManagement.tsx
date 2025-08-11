@@ -6,12 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import {
   Select,
   SelectContent,
@@ -134,10 +129,10 @@ const EnhancedVendorManagement: React.FC = () => {
         description: selectedVendor ? 'Vendor updated successfully' : 'Vendor created successfully',
       });
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       toast({
         title: 'Error',
-        description: error.message || 'Failed to save vendor',
+        description: (error as Error).message || 'Failed to save vendor',
         variant: 'destructive',
       });
     },
@@ -275,7 +270,10 @@ const EnhancedVendorManagement: React.FC = () => {
             <CardTitle>Vendor Management</CardTitle>
             <div className='flex items-center space-x-4'>
               {/* Filters */}
-              <Select value={filterType} onValueChange={(value: any) => setFilterType(value)}>
+              <Select
+                value={filterType}
+                onValueChange={value => setFilterType(value as 'all' | 'contractor' | 'supplier')}
+              >
                 <SelectTrigger className='w-32'>
                   <SelectValue />
                 </SelectTrigger>
@@ -286,7 +284,12 @@ const EnhancedVendorManagement: React.FC = () => {
                 </SelectContent>
               </Select>
 
-              <Select value={filterStatus} onValueChange={(value: any) => setFilterStatus(value)}>
+              <Select
+                value={filterStatus}
+                onValueChange={value =>
+                  setFilterStatus(value as 'all' | 'active' | 'inactive' | 'pending')
+                }
+              >
                 <SelectTrigger className='w-32'>
                   <SelectValue />
                 </SelectTrigger>

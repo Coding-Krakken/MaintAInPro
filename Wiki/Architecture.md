@@ -1,6 +1,7 @@
 # 🏗️ Architecture
 
-Comprehensive technical architecture documentation for MaintAInPro CMMS, covering system design, technologies, patterns, and scalability considerations.
+Comprehensive technical architecture documentation for MaintAInPro CMMS,
+covering system design, technologies, patterns, and scalability considerations.
 
 ## 📋 Table of Contents
 
@@ -17,7 +18,9 @@ Comprehensive technical architecture documentation for MaintAInPro CMMS, coverin
 
 ## 🎯 System Overview
 
-MaintAInPro follows a modern, full-stack architecture designed for enterprise-grade maintenance management with multi-tenant support, real-time capabilities, and mobile-first design.
+MaintAInPro follows a modern, full-stack architecture designed for
+enterprise-grade maintenance management with multi-tenant support, real-time
+capabilities, and mobile-first design.
 
 ### High-Level Architecture
 
@@ -28,32 +31,32 @@ graph TB
         B[Mobile Browser]
         C[Desktop Browser]
     end
-    
+
     subgraph "CDN & Edge"
         D[Vercel Edge Network]
         E[Static Assets]
         F[Edge Functions]
     end
-    
+
     subgraph "Application Layer"
         G[Express.js API]
         H[WebSocket Server]
         I[Background Jobs]
         J[File Storage]
     end
-    
+
     subgraph "Data Layer"
         K[PostgreSQL]
         L[Redis Cache]
         M[File System]
     end
-    
+
     subgraph "External Services"
         N[Email Service]
         O[Monitoring]
         P[Backup Storage]
     end
-    
+
     A --> D
     B --> D
     C --> D
@@ -72,30 +75,35 @@ graph TB
 ### Core Principles
 
 **1. Multi-Tenant Architecture**
+
 - Organization-level data isolation
 - Shared application instance
 - Row-level security policies
 - Hierarchical data organization
 
 **2. API-First Design**
+
 - RESTful API with OpenAPI specification
 - Consistent request/response patterns
 - Comprehensive error handling
 - Versioning strategy
 
 **3. Real-Time Capabilities**
+
 - WebSocket connections for live updates
 - Event-driven architecture
 - Push notifications for mobile
 - Collaborative features
 
 **4. Mobile-First Approach**
+
 - Progressive Web App (PWA)
 - Offline-first design with sync
 - Touch-optimized interfaces
 - QR code integration
 
 **5. Enterprise Security**
+
 - JWT-based authentication
 - Role-based access control (RBAC)
 - API rate limiting
@@ -157,20 +165,20 @@ node-cron 4.2         // Scheduled tasks
 
 ```yaml
 # Deployment Platform
-Vercel:               # Serverless deployment with global CDN
-  - Edge Functions    # API routes as serverless functions
-  - Static Hosting    # Frontend assets with CDN
-  - Database          # Managed PostgreSQL (Neon/Supabase)
+Vercel: # Serverless deployment with global CDN
+  - Edge Functions # API routes as serverless functions
+  - Static Hosting # Frontend assets with CDN
+  - Database # Managed PostgreSQL (Neon/Supabase)
 
 # Alternative Platforms
-Railway:              # Full-stack platform with integrated DB
-Docker:               # Containerized deployment
-On-Premises:          # Self-hosted infrastructure
+Railway: # Full-stack platform with integrated DB
+Docker: # Containerized deployment
+On-Premises: # Self-hosted infrastructure
 
 # Monitoring & Observability
-Vercel Analytics:     # Web vitals and performance
-PM2:                  # Process management (self-hosted)
-PostgreSQL Logs:      # Database monitoring
+Vercel Analytics: # Web vitals and performance
+PM2: # Process management (self-hosted)
+PostgreSQL Logs: # Database monitoring
 ```
 
 ## 🏢 Application Architecture
@@ -219,13 +227,13 @@ const useWorkOrders = (filters?: WorkOrderFilters) => {
     ['work-orders', filters],
     () => workOrderService.getWorkOrders(filters)
   );
-  
+
   return {
     workOrders: data?.data || [],
     isLoading,
     error,
     refetch: mutate,
-    createWorkOrder: (data: CreateWorkOrderInput) => 
+    createWorkOrder: (data: CreateWorkOrderInput) =>
       workOrderService.create(data).then(() => mutate()),
   };
 };
@@ -233,15 +241,15 @@ const useWorkOrders = (filters?: WorkOrderFilters) => {
 // 2. List Component
 const WorkOrderList: React.FC<WorkOrderListProps> = ({ filters }) => {
   const { workOrders, isLoading, createWorkOrder } = useWorkOrders(filters);
-  
+
   if (isLoading) return <WorkOrderSkeleton />;
-  
+
   return (
     <div className="space-y-4">
       {workOrders.map(workOrder => (
-        <WorkOrderCard 
-          key={workOrder.id} 
-          workOrder={workOrder} 
+        <WorkOrderCard
+          key={workOrder.id}
+          workOrder={workOrder}
         />
       ))}
     </div>
@@ -305,46 +313,52 @@ export class WorkOrderService {
   async create(data: CreateWorkOrderInput, userId: string): Promise<WorkOrder> {
     // 1. Validate input
     const validatedData = createWorkOrderSchema.parse(data);
-    
+
     // 2. Check permissions
     await this.checkCreatePermissions(userId, validatedData.organizationId);
-    
+
     // 3. Generate work order number
-    const foNumber = await this.generateWorkOrderNumber(validatedData.organizationId);
-    
+    const foNumber = await this.generateWorkOrderNumber(
+      validatedData.organizationId
+    );
+
     // 4. Create work order
-    const workOrder = await db.insert(workOrders).values({
-      ...validatedData,
-      foNumber,
-      createdBy: userId,
-      status: 'open',
-    }).returning();
-    
+    const workOrder = await db
+      .insert(workOrders)
+      .values({
+        ...validatedData,
+        foNumber,
+        createdBy: userId,
+        status: 'open',
+      })
+      .returning();
+
     // 5. Create audit log
     await this.createAuditLog('create', workOrder[0], userId);
-    
+
     // 6. Send notifications
     await this.sendAssignmentNotifications(workOrder[0]);
-    
+
     return workOrder[0];
   }
-  
+
   // Update work order with status transitions
   async update(
-    id: string, 
-    updates: UpdateWorkOrderInput, 
+    id: string,
+    updates: UpdateWorkOrderInput,
     userId: string
   ): Promise<WorkOrder> {
     // 1. Get current work order
     const current = await this.getById(id, userId);
-    
+
     // 2. Validate status transition
     if (updates.status) {
       await this.validateStatusTransition(current.status, updates.status);
     }
-    
+
     // 3. Apply updates
-    const updated = await db.update(workOrders)
+    const updated = await db
+      .update(workOrders)
       .set({
         ...updates,
         updatedAt: new Date(),
@@ -352,42 +366,43 @@ export class WorkOrderService {
       })
       .where(eq(workOrders.id, id))
       .returning();
-    
+
     // 4. Create audit log
     await this.createAuditLog('update', updated[0], userId, current);
-    
+
     // 5. Handle status-specific logic
     if (updates.status === 'completed') {
       await this.handleCompletion(updated[0]);
     }
-    
+
     return updated[0];
   }
-  
+
   // Get work orders with filtering and pagination
   async getWorkOrders(
     filters: WorkOrderFilters,
     organizationId: string
   ): Promise<PaginatedResponse<WorkOrder>> {
-    const query = db.select({
-      workOrder: workOrders,
-      equipment: equipment,
-      assignee: users,
-    })
-    .from(workOrders)
-    .leftJoin(equipment, eq(workOrders.equipmentId, equipment.id))
-    .leftJoin(users, eq(workOrders.assignedTo, users.id))
-    .where(eq(workOrders.organizationId, organizationId));
-    
+    const query = db
+      .select({
+        workOrder: workOrders,
+        equipment: equipment,
+        assignee: users,
+      })
+      .from(workOrders)
+      .leftJoin(equipment, eq(workOrders.equipmentId, equipment.id))
+      .leftJoin(users, eq(workOrders.assignedTo, users.id))
+      .where(eq(workOrders.organizationId, organizationId));
+
     // Apply filters
     if (filters.status) {
       query.where(eq(workOrders.status, filters.status));
     }
-    
+
     if (filters.priority) {
       query.where(eq(workOrders.priority, filters.priority));
     }
-    
+
     if (filters.search) {
       query.where(
         or(
@@ -396,17 +411,18 @@ export class WorkOrderService {
         )
       );
     }
-    
+
     // Apply pagination
-    const total = await db.select({ count: count() })
+    const total = await db
+      .select({ count: count() })
       .from(workOrders)
       .where(eq(workOrders.organizationId, organizationId));
-    
+
     const results = await query
       .limit(filters.limit || 50)
       .offset(filters.offset || 0)
       .orderBy(desc(workOrders.createdAt));
-    
+
     return {
       data: results.map(r => ({
         ...r.workOrder,
@@ -427,7 +443,8 @@ export class WorkOrderService {
 
 ### Schema Architecture
 
-MaintAInPro uses PostgreSQL with a carefully designed schema supporting multi-tenancy, audit trails, and hierarchical data structures.
+MaintAInPro uses PostgreSQL with a carefully designed schema supporting
+multi-tenancy, audit trails, and hierarchical data structures.
 
 ### Core Entities
 
@@ -717,13 +734,13 @@ sequenceDiagram
     A->>A: Generate JWT token
     A->>R: Store refresh token
     A-->>C: Return JWT + refresh token
-    
+
     Note over C: Store tokens securely
-    
+
     C->>A: API Request with Authorization header
     A->>A: Verify JWT token
     A-->>C: Allow request or 401 Unauthorized
-    
+
     C->>A: POST /api/auth/refresh (refresh token)
     A->>R: Verify refresh token
     R-->>A: Token valid
@@ -739,10 +756,10 @@ interface JWTPayload {
   organizationId: string;
   role: UserRole;
   permissions: string[];
-  iat: number;        // Issued at
-  exp: number;        // Expires at
-  iss: string;        // Issuer
-  aud: string;        // Audience
+  iat: number; // Issued at
+  exp: number; // Expires at
+  iss: string; // Issuer
+  aud: string; // Audience
 }
 
 // Token generation
@@ -753,11 +770,11 @@ const generateToken = (user: User): string => {
     role: user.role,
     permissions: getRolePermissions(user.role),
     iat: Math.floor(Date.now() / 1000),
-    exp: Math.floor(Date.now() / 1000) + (24 * 60 * 60), // 24 hours
+    exp: Math.floor(Date.now() / 1000) + 24 * 60 * 60, // 24 hours
     iss: 'maintainpro',
     aud: 'maintainpro-api',
   };
-  
+
   return jwt.sign(payload, process.env.JWT_SECRET!);
 };
 ```
@@ -816,7 +833,7 @@ export const ROLE_PERMISSIONS = {
 export const requirePermission = (permission: string) => {
   return (req: Request, res: Response, next: NextFunction) => {
     const user = req.user;
-    
+
     if (!user) {
       return res.status(401).json({
         success: false,
@@ -826,7 +843,7 @@ export const requirePermission = (permission: string) => {
         },
       });
     }
-    
+
     if (!user.permissions.includes(permission)) {
       return res.status(403).json({
         success: false,
@@ -836,7 +853,7 @@ export const requirePermission = (permission: string) => {
         },
       });
     }
-    
+
     next();
   };
 };
@@ -847,6 +864,7 @@ export const requirePermission = (permission: string) => {
 ### Frontend Performance
 
 **Code Splitting:**
+
 ```typescript
 // Route-based code splitting
 const WorkOrdersPage = lazy(() => import('./pages/WorkOrdersPage'));
@@ -858,20 +876,21 @@ const WorkOrderDetails = lazy(() => import('./components/WorkOrderDetails'));
 ```
 
 **Caching Strategies:**
+
 ```typescript
 // React Query caching
 const useWorkOrders = (filters: WorkOrderFilters) => {
   return useQuery({
     queryKey: ['work-orders', filters],
     queryFn: () => api.workOrders.list(filters),
-    staleTime: 5 * 60 * 1000,  // 5 minutes
-    gcTime: 10 * 60 * 1000,    // 10 minutes
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
     refetchOnWindowFocus: false,
   });
 };
 
 // Service Worker caching
-self.addEventListener('fetch', (event) => {
+self.addEventListener('fetch', event => {
   if (event.request.url.includes('/api/')) {
     // Network first for API requests
     event.respondWith(networkFirst(event.request));
@@ -885,6 +904,7 @@ self.addEventListener('fetch', (event) => {
 ### Backend Performance
 
 **Database Query Optimization:**
+
 ```typescript
 // Efficient joins with selected fields
 const getWorkOrdersWithDetails = async (organizationId: string) => {
@@ -916,48 +936,51 @@ const getPaginatedWorkOrders = async (
     .where(eq(workOrders.organizationId, organizationId))
     .orderBy(desc(workOrders.createdAt))
     .limit(limit + 1);
-    
+
   if (cursor) {
     query.where(lt(workOrders.createdAt, new Date(cursor)));
   }
-  
+
   const results = await query;
   const hasMore = results.length > limit;
   const items = hasMore ? results.slice(0, -1) : results;
-  
+
   return {
     items,
     hasMore,
-    nextCursor: hasMore ? items[items.length - 1].createdAt.toISOString() : null,
+    nextCursor: hasMore
+      ? items[items.length - 1].createdAt.toISOString()
+      : null,
   };
 };
 ```
 
 **Caching Layer:**
+
 ```typescript
 // Redis caching service
 export class CacheService {
   private redis = new Redis(process.env.REDIS_URL);
-  
+
   async get<T>(key: string): Promise<T | null> {
     const value = await this.redis.get(key);
     return value ? JSON.parse(value) : null;
   }
-  
+
   async set(key: string, value: any, ttl = 3600): Promise<void> {
     await this.redis.setex(key, ttl, JSON.stringify(value));
   }
-  
+
   async del(key: string): Promise<void> {
     await this.redis.del(key);
   }
-  
+
   // Cache work orders with automatic invalidation
   async cacheWorkOrders(organizationId: string, filters: any, data: any) {
     const key = `work-orders:${organizationId}:${JSON.stringify(filters)}`;
     await this.set(key, data, 300); // 5 minutes
   }
-  
+
   async invalidateWorkOrdersCache(organizationId: string) {
     const pattern = `work-orders:${organizationId}:*`;
     const keys = await this.redis.keys(pattern);
@@ -971,18 +994,21 @@ export class CacheService {
 ### Scalability Considerations
 
 **Horizontal Scaling:**
+
 - Stateless application design
 - Database connection pooling
 - Load balancer compatibility
 - Session storage in Redis
 
 **Database Scaling:**
+
 - Read replicas for reporting
 - Partitioning by organization
 - Connection pooling
 - Query optimization
 
 **File Storage Scaling:**
+
 - CDN integration
 - Multiple storage backends
 - Compression and optimization
@@ -999,24 +1025,24 @@ graph TB
         B[CDN Cache]
         C[Edge Functions]
     end
-    
+
     subgraph "Vercel Platform"
         D[Static Site Hosting]
         E[Serverless Functions]
         F[Build System]
     end
-    
+
     subgraph "Database"
         G[Neon PostgreSQL]
         H[Connection Pooling]
     end
-    
+
     subgraph "External Services"
         I[Email Service]
         J[File Storage]
         K[Monitoring]
     end
-    
+
     A --> D
     A --> E
     E --> G
@@ -1028,6 +1054,7 @@ graph TB
 ```
 
 **Benefits:**
+
 - Global CDN with 100+ edge locations
 - Automatic scaling and zero configuration
 - Built-in monitoring and analytics
@@ -1040,27 +1067,27 @@ graph TB
     subgraph "Load Balancer"
         A[Nginx/HAProxy]
     end
-    
+
     subgraph "Application Servers"
         B[Node.js Instance 1]
         C[Node.js Instance 2]
         D[Node.js Instance 3]
     end
-    
+
     subgraph "Database Layer"
         E[PostgreSQL Primary]
         F[PostgreSQL Replica]
     end
-    
+
     subgraph "Cache Layer"
         G[Redis Cluster]
     end
-    
+
     subgraph "Storage"
         H[File Storage]
         I[Backup Storage]
     end
-    
+
     A --> B
     A --> C
     A --> D
@@ -1096,30 +1123,29 @@ export class WorkOrderRepository implements Repository<WorkOrder, string> {
       .from(workOrders)
       .where(eq(workOrders.id, id))
       .limit(1);
-    
+
     return result[0] || null;
   }
-  
+
   async findAll(filters: WorkOrderFilters = {}): Promise<WorkOrder[]> {
     let query = db.select().from(workOrders);
-    
+
     if (filters.organizationId) {
-      query = query.where(eq(workOrders.organizationId, filters.organizationId));
+      query = query.where(
+        eq(workOrders.organizationId, filters.organizationId)
+      );
     }
-    
+
     if (filters.status) {
       query = query.where(eq(workOrders.status, filters.status));
     }
-    
+
     return query;
   }
-  
+
   async create(data: Partial<WorkOrder>): Promise<WorkOrder> {
-    const result = await db
-      .insert(workOrders)
-      .values(data)
-      .returning();
-    
+    const result = await db.insert(workOrders).values(data).returning();
+
     return result[0];
   }
 }
@@ -1131,14 +1157,14 @@ export class WorkOrderRepository implements Repository<WorkOrder, string> {
 // Event system for decoupled communication
 export class EventEmitter {
   private listeners: Map<string, Function[]> = new Map();
-  
+
   on(event: string, listener: Function): void {
     if (!this.listeners.has(event)) {
       this.listeners.set(event, []);
     }
     this.listeners.get(event)!.push(listener);
   }
-  
+
   emit(event: string, ...args: any[]): void {
     const listeners = this.listeners.get(event) || [];
     listeners.forEach(listener => listener(...args));
@@ -1148,20 +1174,20 @@ export class EventEmitter {
 // Usage in services
 export class WorkOrderService {
   private events = new EventEmitter();
-  
+
   constructor() {
     // Register event listeners
     this.events.on('work-order:created', this.sendCreationNotification);
     this.events.on('work-order:completed', this.handleCompletion);
     this.events.on('work-order:assigned', this.sendAssignmentNotification);
   }
-  
+
   async create(data: CreateWorkOrderInput): Promise<WorkOrder> {
     const workOrder = await this.repository.create(data);
-    
+
     // Emit event for other services to handle
     this.events.emit('work-order:created', workOrder);
-    
+
     return workOrder;
   }
 }
@@ -1173,7 +1199,7 @@ export class WorkOrderService {
 // Service factory for dependency injection
 export class ServiceFactory {
   private static instances: Map<string, any> = new Map();
-  
+
   static getWorkOrderService(): WorkOrderService {
     if (!this.instances.has('WorkOrderService')) {
       const repository = new WorkOrderRepository();
@@ -1182,7 +1208,7 @@ export class ServiceFactory {
     }
     return this.instances.get('WorkOrderService');
   }
-  
+
   static getEquipmentService(): EquipmentService {
     if (!this.instances.has('EquipmentService')) {
       const repository = new EquipmentRepository();
@@ -1199,6 +1225,7 @@ export class ServiceFactory {
 ### External System Integration
 
 **ERP System Integration:**
+
 ```typescript
 // ERP connector interface
 interface ERPConnector {
@@ -1212,7 +1239,7 @@ export class SAPConnector implements ERPConnector {
   async syncParts(): Promise<void> {
     // Fetch parts from SAP
     const sapParts = await this.sapClient.getMaterials();
-    
+
     // Transform and update local database
     for (const sapPart of sapParts) {
       await partsService.upsert({
@@ -1227,6 +1254,7 @@ export class SAPConnector implements ERPConnector {
 ```
 
 **IoT Sensor Integration:**
+
 ```typescript
 // IoT data processor
 export class IoTDataProcessor {
@@ -1243,7 +1271,7 @@ export class IoTDataProcessor {
           equipmentId: reading.equipmentId,
         });
       }
-      
+
       // Store reading for trend analysis
       await this.storeSensorReading(reading);
     }
@@ -1254,24 +1282,32 @@ export class IoTDataProcessor {
 ### API Integration Patterns
 
 **Webhook System:**
+
 ```typescript
 // Webhook handler
 export class WebhookService {
   async handleWorkOrderUpdate(workOrder: WorkOrder): Promise<void> {
     const webhooks = await this.getActiveWebhooks('work_order.updated');
-    
+
     for (const webhook of webhooks) {
       try {
-        await axios.post(webhook.url, {
-          event: 'work_order.updated',
-          data: workOrder,
-          timestamp: new Date().toISOString(),
-        }, {
-          headers: {
-            'X-Webhook-Signature': this.generateSignature(webhook.secret, workOrder),
+        await axios.post(
+          webhook.url,
+          {
+            event: 'work_order.updated',
+            data: workOrder,
+            timestamp: new Date().toISOString(),
           },
-          timeout: 5000,
-        });
+          {
+            headers: {
+              'X-Webhook-Signature': this.generateSignature(
+                webhook.secret,
+                workOrder
+              ),
+            },
+            timeout: 5000,
+          }
+        );
       } catch (error) {
         console.error(`Webhook delivery failed: ${webhook.url}`, error);
         await this.recordWebhookFailure(webhook.id, error);
@@ -1282,6 +1318,7 @@ export class WebhookService {
 ```
 
 **API Client Pattern:**
+
 ```typescript
 // Generic API client
 export class APIClient {
@@ -1289,7 +1326,7 @@ export class APIClient {
     private baseURL: string,
     private apiKey: string
   ) {}
-  
+
   async request<T>(
     method: 'GET' | 'POST' | 'PUT' | 'DELETE',
     endpoint: string,
@@ -1299,23 +1336,23 @@ export class APIClient {
       method,
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.apiKey}`,
+        Authorization: `Bearer ${this.apiKey}`,
       },
       body: data ? JSON.stringify(data) : undefined,
     });
-    
+
     if (!response.ok) {
       throw new Error(`API request failed: ${response.statusText}`);
     }
-    
+
     return response.json();
   }
-  
+
   // Specific methods
   async getWorkOrders(filters?: any): Promise<WorkOrder[]> {
     return this.request('GET', '/work-orders', filters);
   }
-  
+
   async createWorkOrder(data: CreateWorkOrderInput): Promise<WorkOrder> {
     return this.request('POST', '/work-orders', data);
   }
@@ -1327,12 +1364,14 @@ export class APIClient {
 ## 📚 Additional Resources
 
 ### Architecture Documentation
+
 - **[[API Reference]]** - Complete API specifications
 - **[[Security Guide]]** - Security implementation details
 - **[[Performance Guide]]** - Performance optimization strategies
 - **[[Deployment Guide]]** - Infrastructure and deployment options
 
 ### External Resources
+
 - **[Express.js Best Practices](https://expressjs.com/en/advanced/best-practice-security.html)**
 - **[PostgreSQL Performance Tuning](https://wiki.postgresql.org/wiki/Performance_Optimization)**
 - **[React Performance](https://react.dev/learn/render-and-commit)**
@@ -1345,24 +1384,28 @@ export class APIClient {
 MaintAInPro's architecture is designed to evolve with growing requirements:
 
 **Phase 1: Core Features** ✅
+
 - Basic CMMS functionality
 - Multi-tenant support
 - RESTful API
 - React frontend
 
 **Phase 2: Scale & Performance** 🔄
+
 - Caching layer implementation
 - Database optimization
 - API rate limiting
 - Performance monitoring
 
 **Phase 3: Advanced Features** 📋
+
 - Real-time collaboration
 - Advanced analytics
 - IoT integration
 - Mobile applications
 
 **Phase 4: Enterprise Features** 🚀
+
 - Microservices architecture
 - Event-driven design
 - Advanced security
@@ -1370,4 +1413,4 @@ MaintAInPro's architecture is designed to evolve with growing requirements:
 
 ---
 
-*Architecture documentation last updated: January 2025*
+_Architecture documentation last updated: January 2025_

@@ -7,9 +7,15 @@ and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]### Added
+
 ### Changed
-- Refactored server/services/audit-trail.service.ts to remove unused variables, forbidden non-null assertions, and any types; improved type safety and code quality.
-- Fixed missing import for Bar in client/src/components/admin/EnterprisePerformanceMonitor.tsx and removed unused state setter.
+
+- Refactored server/services/audit-trail.service.ts to remove unused variables,
+  forbidden non-null assertions, and any types; improved type safety and code
+  quality.
+- Fixed missing import for Bar in
+  client/src/components/admin/EnterprisePerformanceMonitor.tsx and removed
+  unused state setter.
 
 - Autonomous systems engineering loop with GitHub Actions workflows
 - Blueprint planner that converts documentation tasks into GitHub Issues
@@ -56,8 +62,6 @@ Co-authored-by: Copilot Autofix powered by AI
 - add lint-staged for pre-commit hooks
 - ensure main branch is properly configured for production deployments
   ([d29d2cb3](https://github.com/Coding-Krakken/MaintAInPro/commit/d29d2cb30bdbe45f9377e4efbe6b2de62dec6f64))
-
-
 
 ## [1.0.0] - 2025-01-08
 

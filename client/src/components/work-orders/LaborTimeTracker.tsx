@@ -7,23 +7,13 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
-import {
-  Clock,
-  Play,
-  Square,
-  Plus,
-  Trash2,
-  Users,
-  Timer,
-  Save,
-  Calculator,
-} from 'lucide-react';
+import { Clock, Play, Square, Plus, Trash2, Users, Timer, Save, Calculator } from 'lucide-react';
 import { formatDistance } from 'date-fns';
 
 interface LaborTimeTrackerProps {
   workOrderId: string;
   isReadOnly?: boolean;
-  onTimeUpdate?: (totalHours: number) => void;
+  onTimeUpdate?: (_totalHours: number) => void;
 }
 
 interface LaborEntry {
@@ -107,7 +97,7 @@ const LaborTimeTracker: React.FC<LaborTimeTrackerProps> = ({
       if (!response.ok) throw new Error('Failed to start time tracking');
       return response.json();
     },
-    onSuccess: (_data) => {
+    onSuccess: _data => {
       setIsTracking(true);
       setCurrentSession({
         startTime: new Date(),

@@ -1,12 +1,10 @@
 import {
   WorkOrder,
   Profile,
-  Notification,
   InsertNotification,
   EscalationRule,
   InsertEscalationRule,
   EscalationHistory,
-  InsertEscalationHistory,
 } from '@shared/schema';
 import { storage } from '../storage';
 import { db } from '../db';
@@ -94,8 +92,8 @@ export class EscalationEngine {
       console.log(
         `Initialized ${defaultRules.length} default escalation rules for warehouse ${warehouseId}`
       );
-    } catch (error) {
-      console.error('Error initializing default escalation rules:', error);
+    } catch (_error) {
+      console.error('Error initializing default escalation rules:', _error);
     }
   }
 
@@ -132,8 +130,8 @@ export class EscalationEngine {
       }
 
       return actions;
-    } catch (error) {
-      console.error('Error checking for escalations:', error);
+    } catch (_error) {
+      console.error('Error checking for escalations:', _error);
       return [];
     }
   }
@@ -198,8 +196,8 @@ export class EscalationEngine {
         );
 
       return rules[0] || null;
-    } catch (error) {
-      console.error('Error getting escalation rule:', error);
+    } catch (_error) {
+      console.error('Error getting escalation rule:', _error);
       return null;
     }
   }
@@ -303,8 +301,8 @@ export class EscalationEngine {
       );
 
       return action;
-    } catch (error) {
-      console.error(`Error escalating work order ${workOrder.id}:`, error);
+    } catch (_error) {
+      console.error(`Error escalating work order ${workOrder.id}:`, _error);
       return null;
     }
   }
@@ -366,8 +364,8 @@ export class EscalationEngine {
         byLevel,
         byPriority,
       };
-    } catch (error) {
-      console.error('Error getting escalation stats:', error);
+    } catch (_error) {
+      console.error('Error getting escalation stats:', _error);
       return {
         totalEscalated: 0,
         escalatedToday: 0,
@@ -384,7 +382,7 @@ export class EscalationEngine {
     workOrderId: string,
     escalateToUserId: string,
     reason: string,
-    escalatedByUserId: string
+    _escalatedByUserId: string
   ): Promise<EscalationAction | null> {
     try {
       const workOrder = await storage.getWorkOrder(workOrderId);
@@ -441,8 +439,8 @@ export class EscalationEngine {
         reason: `Manual escalation: ${reason}`,
         previousAssignee: workOrder.assignedTo || undefined,
       };
-    } catch (error) {
-      console.error('Error manually escalating work order:', error);
+    } catch (_error) {
+      console.error('Error manually escalating work order:', _error);
       return null;
     }
   }
@@ -457,8 +455,8 @@ export class EscalationEngine {
         .select()
         .from(escalationRules)
         .where(eq(escalationRules.warehouseId, warehouseId));
-    } catch (error) {
-      console.error('Error getting escalation rules:', error);
+    } catch (_error) {
+      console.error('Error getting escalation rules:', _error);
       return [];
     }
   }
@@ -473,9 +471,9 @@ export class EscalationEngine {
     try {
       await db.update(escalationRules).set(updates).where(eq(escalationRules.id, ruleId));
       console.log(`Updated escalation rule ${ruleId}`);
-    } catch (error) {
-      console.error('Error updating escalation rule:', error);
-      throw error;
+    } catch (_error) {
+      console.error('Error updating escalation rule:', _error);
+      throw _error;
     }
   }
 
@@ -498,9 +496,9 @@ export class EscalationEngine {
       await db.insert(escalationRules).values(newRule);
       console.log(`Created new escalation rule ${ruleId}`);
       return ruleId;
-    } catch (error) {
-      console.error('Error creating escalation rule:', error);
-      throw error;
+    } catch (_error) {
+      console.error('Error creating escalation rule:', _error);
+      throw _error;
     }
   }
 
@@ -513,8 +511,8 @@ export class EscalationEngine {
         .select()
         .from(escalationHistory)
         .where(eq(escalationHistory.workOrderId, workOrderId));
-    } catch (error) {
-      console.error('Error getting escalation history:', error);
+    } catch (_error) {
+      console.error('Error getting escalation history:', _error);
       return [];
     }
   }

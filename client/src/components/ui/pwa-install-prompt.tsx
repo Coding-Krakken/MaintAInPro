@@ -162,12 +162,14 @@ export function PWAOfflineIndicator() {
   const [pendingActions, setPendingActions] = useState(0);
 
   useEffect(() => {
-    const handleNetworkChange = (event: CustomEvent<{ isOnline: boolean }>) => {
-      setIsOnline(event.detail.isOnline);
+    const handleNetworkChange = (event: Event) => {
+      const customEvent = event as CustomEvent<{ isOnline: boolean }>;
+      setIsOnline(customEvent.detail.isOnline);
     };
 
-    const handleSyncProgress = (event: CustomEvent<{ pendingCount?: number }>) => {
-      setPendingActions(event.detail.pendingCount || 0);
+    const handleSyncProgress = (event: Event) => {
+      const customEvent = event as CustomEvent<{ pendingCount?: number }>;
+      setPendingActions(customEvent.detail.pendingCount || 0);
     };
 
     window.addEventListener('networkStatusChange', handleNetworkChange);

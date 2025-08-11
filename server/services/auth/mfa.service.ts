@@ -64,7 +64,7 @@ export class MFAService {
     try {
       const qrCodeDataUrl = await QRCode.toDataURL(otpauth_url);
       return qrCodeDataUrl;
-    } catch (error) {
+    } catch (_error) {
       throw new Error('Failed to generate QR code');
     }
   }
@@ -85,7 +85,7 @@ export class MFAService {
       return {
         success: verified,
       };
-    } catch (error) {
+    } catch (_error) {
       return {
         success: false,
         error: 'Invalid token format',
@@ -120,7 +120,7 @@ export class MFAService {
       // For now, use base64 encoding as a placeholder
       // In production, implement proper encryption
       return Buffer.from(JSON.stringify(codes)).toString('base64');
-    } catch (error) {
+    } catch (_error) {
       throw new Error('Failed to encrypt backup codes');
     }
   }
@@ -131,7 +131,7 @@ export class MFAService {
       // In production, implement proper decryption
       const codes = JSON.parse(Buffer.from(encryptedData, 'base64').toString('utf8')) as string[];
       return codes.map(code => ({ code, used: false }));
-    } catch (error) {
+    } catch (_error) {
       throw new Error('Failed to decrypt backup codes');
     }
   }
@@ -164,7 +164,7 @@ export class MFAService {
         success: true,
         updatedCodes,
       };
-    } catch (error) {
+    } catch (_error) {
       return {
         success: false,
         error: 'Failed to verify backup code',
@@ -187,7 +187,7 @@ export class MFAService {
       // await smsService.send(phoneNumber, `Your MaintainPro verification code is: ${code}`);
 
       return { success: true };
-    } catch (error) {
+    } catch (_error) {
       return {
         success: false,
         error: 'Failed to send SMS code',
@@ -214,7 +214,7 @@ export class MFAService {
       // await emailService.send(email, 'MFA Verification Code', `Your verification code is: ${code}`);
 
       return { success: true };
-    } catch (error) {
+    } catch (_error) {
       return {
         success: false,
         error: 'Failed to send email code',
@@ -224,7 +224,7 @@ export class MFAService {
 
   static isValidPhoneNumber(phoneNumber: string): boolean {
     // Basic phone number validation
-    const phoneRegex = /^\+?[\d\s\-\(\)]+$/;
+    const phoneRegex = /^\+?[\d\s\-()]+$/;
     const cleanPhone = phoneNumber.replace(/\s/g, '');
     return phoneRegex.test(phoneNumber) && cleanPhone.length >= 10;
   }

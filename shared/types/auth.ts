@@ -68,9 +68,11 @@ export function isAuthenticated(req: Request): req is AuthenticatedRequest {
 export function hasCompleteUser(user: unknown): user is AuthenticatedUser {
   return (
     user &&
-    typeof user.id === 'string' &&
-    typeof user.email === 'string' &&
-    typeof user.role === 'string' &&
-    typeof user.organizationId === 'string'
+    typeof user === 'object' &&
+    user !== null &&
+    typeof (user as any).id === 'string' &&
+    typeof (user as any).email === 'string' &&
+    typeof (user as any).role === 'string' &&
+    typeof (user as any).organizationId === 'string'
   );
 }

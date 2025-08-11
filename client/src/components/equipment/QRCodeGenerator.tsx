@@ -29,7 +29,11 @@ interface QROptions {
   format: 'PNG' | 'SVG';
 }
 
-const QRCodeGenerator: React.FC<QRCodeGeneratorProps> = ({ equipmentId: _equipmentId, assetTag, onGenerate }) => {
+const QRCodeGenerator: React.FC<QRCodeGeneratorProps> = ({
+  equipmentId: _equipmentId,
+  assetTag,
+  onGenerate,
+}) => {
   const { toast } = useToast();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [qrData, setQrData] = useState(assetTag || '');
@@ -125,7 +129,7 @@ const QRCodeGenerator: React.FC<QRCodeGeneratorProps> = ({ equipmentId: _equipme
         description: `Successfully generated ${options.format} QR code for ${qrData}`,
       });
     } catch (_error) {
-      console.error('QR Code generation error:', _error);
+      console.error('QR Code generation _error:', _error);
       toast({
         title: 'Generation Failed',
         description: 'Failed to generate QR code. Please try again.',

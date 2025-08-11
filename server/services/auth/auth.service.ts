@@ -251,11 +251,11 @@ export class AuthService {
         tokens,
         sessionId: session.id,
       };
-    } catch (error) {
-      console.error('Login error:', error);
+    } catch (_error) {
+      console.error('Login error:', _error);
       await AuditService.logLogin('', ipAddress, userAgent, false, {
         reason: 'system_error',
-        error: error.message,
+        error: _error.message,
       });
       return {
         success: false,
@@ -282,8 +282,8 @@ export class AuthService {
       }
 
       return { success: true };
-    } catch (error) {
-      console.error('Logout error:', error);
+    } catch (_error) {
+      console.error('Logout error:', _error);
       return { success: false };
     }
   }
@@ -345,8 +345,8 @@ export class AuthService {
         success: true,
         tokens,
       };
-    } catch (error) {
-      console.error('Token refresh error:', error);
+    } catch (_error) {
+      console.error('Token refresh error:', _error);
       return {
         success: false,
         error: 'Failed to refresh token',
@@ -447,8 +447,8 @@ export class AuthService {
         success: true,
         userId,
       };
-    } catch (error) {
-      console.error('Registration error:', error);
+    } catch (_error) {
+      console.error('Registration error:', _error);
       return {
         success: false,
         error: 'Registration failed',
@@ -499,8 +499,8 @@ export class AuthService {
       console.log(`Password reset token for ${request.email}: ${token}`);
 
       return { success: true };
-    } catch (error) {
-      console.error('Password reset request error:', error);
+    } catch (_error) {
+      console.error('Password reset request error:', _error);
       return {
         success: false,
         error: 'Failed to process password reset request',
@@ -577,8 +577,8 @@ export class AuthService {
       );
 
       return { success: true };
-    } catch (error) {
-      console.error('Password reset confirmation error:', error);
+    } catch (_error) {
+      console.error('Password reset confirmation error:', _error);
       return {
         success: false,
         error: 'Failed to reset password',
@@ -650,8 +650,8 @@ export class AuthService {
         success: true,
         setup,
       };
-    } catch (error) {
-      console.error('MFA setup error:', error);
+    } catch (_error) {
+      console.error('MFA setup error:', _error);
       return {
         success: false,
         error: 'Failed to setup MFA',
@@ -692,8 +692,8 @@ export class AuthService {
       });
 
       return { success: true };
-    } catch (error) {
-      console.error('MFA enable error:', error);
+    } catch (_error) {
+      console.error('MFA enable error:', _error);
       return {
         success: false,
         error: 'Failed to enable MFA',
@@ -771,8 +771,8 @@ export class AuthService {
         allowed,
         user: allowed ? user : undefined,
       };
-    } catch (error) {
-      console.error('Access validation error:', error);
+    } catch (_error) {
+      console.error('Access validation error:', _error);
       return {
         allowed: false,
         error: 'Access validation failed',
@@ -840,8 +840,8 @@ export class AuthService {
     try {
       const payload = JWTService.verifyAccessToken(token);
       return { valid: true, payload };
-    } catch (error) {
-      return { valid: false, error: error.message };
+    } catch (_error) {
+      return { valid: false, error: _error.message };
     }
   }
 
@@ -852,7 +852,7 @@ export class AuthService {
     try {
       const result = await SessionService.validateSession(sessionId);
       return result.isValid;
-    } catch (error) {
+    } catch (_error) {
       return false;
     }
   }

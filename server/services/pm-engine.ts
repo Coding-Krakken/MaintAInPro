@@ -1,10 +1,4 @@
-import {
-  PmTemplate,
-  Equipment,
-  WorkOrder,
-  InsertWorkOrder,
-  WorkOrderChecklistItem,
-} from '@shared/schema';
+import { PmTemplate, Equipment, WorkOrder, InsertWorkOrder } from '@shared/schema';
 import { storage } from '../storage';
 
 export interface PMSchedule {
@@ -72,45 +66,40 @@ export class PMEngine {
    * Generate PM work orders for due equipment
    */
   public async generatePMWorkOrders(warehouseId: string): Promise<WorkOrder[]> {
-    try {
-      const templates = await storage.getPmTemplates(warehouseId);
-      const equipment = await storage.getEquipment(warehouseId);
-      const existingWorkOrders = await storage.getWorkOrders(warehouseId);
+    const templates = await storage.getPmTemplates(warehouseId);
+    const equipment = await storage.getEquipment(warehouseId);
+    const existingWorkOrders = await storage.getWorkOrders(warehouseId);
 
-      const generatedWorkOrders: WorkOrder[] = [];
+    const generatedWorkOrders: WorkOrder[] = [];
 
-      for (const template of templates) {
-        // Find equipment matching this template's model
-        const matchingEquipment = equipment.filter(
-          eq => eq.model === template.model && eq.status === 'active'
-        );
+    for (const template of templates) {
+      // Find equipment matching this template's model
+      const matchingEquipment = equipment.filter(
+        eq => eq.model === template.model && eq.status === 'active'
+      );
 
-        for (const equip of matchingEquipment) {
-          const schedule = await this.getPMSchedule(equip.id, template.id);
+      for (const equip of matchingEquipment) {
+        const schedule = await this.getPMSchedule(equip.id, template.id);
 
-          // Check if PM is due and no existing PM work order exists
-          if (schedule.complianceStatus === 'due' || schedule.complianceStatus === 'overdue') {
-            const hasExistingPM = existingWorkOrders.some(
-              wo =>
-                wo.type === 'preventive' &&
-                wo.equipmentId === equip.id &&
-                wo.status !== 'completed' &&
-                wo.status !== 'closed'
-            );
+        // Check if PM is due and no existing PM work order exists
+        if (schedule.complianceStatus === 'due' || schedule.complianceStatus === 'overdue') {
+          const hasExistingPM = existingWorkOrders.some(
+            wo =>
+              wo.type === 'preventive' &&
+              wo.equipmentId === equip.id &&
+              wo.status !== 'completed' &&
+              wo.status !== 'closed'
+          );
 
-            if (!hasExistingPM) {
-              const workOrder = await this.createPMWorkOrder(equip, template, warehouseId);
-              generatedWorkOrders.push(workOrder);
-            }
+          if (!hasExistingPM) {
+            const workOrder = await this.createPMWorkOrder(equip, template, warehouseId);
+            generatedWorkOrders.push(workOrder);
           }
         }
       }
-
-      return generatedWorkOrders;
-    } catch (error) {
-      // Don't log errors here - let the calling method handle them
-      throw error;
     }
+
+    return generatedWorkOrders;
   }
 
   /**
@@ -336,8 +325,8 @@ export class PMEngine {
         generated: generatedWorkOrders.length,
         errors: [],
       };
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    } catch (_error) {
+      const errorMessage = _error instanceof Error ? _error.message : 'Unknown _error';
       console.error('PM automation error:', errorMessage);
 
       return {

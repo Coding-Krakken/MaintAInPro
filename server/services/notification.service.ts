@@ -1,14 +1,14 @@
 import { Server as SocketIOServer } from 'socket.io';
 import { Server as HTTPServer } from 'http';
-import type { InsertNotification, Notification } from '../../shared/schema';
+import type { InsertNotification } from '../../shared/schema';
 import { storage } from '../storage';
 
 export interface NotificationService {
-  initialize(httpServer: HTTPServer): void;
-  sendNotification(notification: InsertNotification): Promise<void>;
-  sendRealTimeUpdate(userId: string, data: any): Promise<void>;
-  broadcastToWarehouse(warehouseId: string, data: any): Promise<void>;
-  broadcastSystemAlert(data: any): Promise<void>;
+  initialize(_httpServer: HTTPServer): void;
+  sendNotification(_notification: InsertNotification): Promise<void>;
+  sendRealTimeUpdate(_userId: string, _data: any): Promise<void>;
+  broadcastToWarehouse(_warehouseId: string, _data: any): Promise<void>;
+  broadcastSystemAlert(_data: any): Promise<void>;
 }
 
 class NotificationServiceImpl implements NotificationService {
@@ -52,9 +52,9 @@ class NotificationServiceImpl implements NotificationService {
 
           socket.emit('authenticated', { success: true });
           console.log(`User ${userId} authenticated on socket ${socket.id}`);
-        } catch (error) {
-          console.error('Authentication error:', error);
-          socket.emit('authentication_error', { error: 'Invalid authentication data' });
+        } catch (_error) {
+          console.error('Authentication _error:', _error);
+          socket.emit('authentication_error', { _error: 'Invalid authentication data' });
         }
       });
 
@@ -139,9 +139,9 @@ class NotificationServiceImpl implements NotificationService {
       }
 
       console.log('Notification sent:', notification.id);
-    } catch (error) {
-      console.error('Failed to send notification:', error);
-      throw error;
+    } catch (_error) {
+      console.error('Failed to send notification:', _error);
+      throw _error;
     }
   }
 

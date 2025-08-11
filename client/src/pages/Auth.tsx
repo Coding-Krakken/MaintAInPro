@@ -29,7 +29,7 @@ export default function Auth() {
         description: 'Successfully logged in',
       });
       setLocation('/dashboard');
-    } catch (error) {
+    } catch (_error) {
       const errorMessage = 'Invalid credentials';
       setError(errorMessage);
       toast({

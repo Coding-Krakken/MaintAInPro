@@ -1,8 +1,10 @@
-import '@testing-library/jest-dom';
-import { configureAxe, toHaveNoViolations } from 'jest-axe';
+import '@testing-library/dom';
+import { vi, expect } from 'vitest';
+import { configureAxe } from 'vitest-axe';
+import * as matchers from 'vitest-axe/matchers';
 
-// Extend Jest matchers
-expect.extend(toHaveNoViolations);
+// Extend Vitest matchers
+expect.extend(matchers);
 
 // Configure axe for accessibility testing
 const axe = configureAxe({
@@ -21,31 +23,30 @@ global.axe = axe;
 // Mock window.matchMedia for accessibility tests
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
-  value: jest.fn().mockImplementation(query => ({
+  value: vi.fn().mockImplementation(query => ({
     matches: false,
     media: query,
     onchange: null,
-    addListener: jest.fn(),
-    removeListener: jest.fn(),
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn(),
-    dispatchEvent: jest.fn(),
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn(),
   })),
 });
 
 // Mock ResizeObserver
-global.ResizeObserver = jest.fn().mockImplementation(() => ({
-  observe: jest.fn(),
-  unobserve: jest.fn(),
-  disconnect: jest.fn(),
+global.ResizeObserver = vi.fn().mockImplementation(() => ({
+  observe: vi.fn(),
+  unobserve: vi.fn(),
+  disconnect: vi.fn(),
 }));
 
 // Mock IntersectionObserver
-global.IntersectionObserver = jest.fn().mockImplementation(() => ({
-  observe: jest.fn(),
-  unobserve: jest.fn(),
-  disconnect: jest.fn(),
+global.IntersectionObserver = vi.fn().mockImplementation(() => ({
+  observe: vi.fn(),
+  unobserve: vi.fn(),
+  disconnect: vi.fn(),
 }));
 
-// Set up default timeout for accessibility tests
-jest.setTimeout(30000);
+// Remove invalid vi.setTimeout usage; use test timeout in individual tests if needed

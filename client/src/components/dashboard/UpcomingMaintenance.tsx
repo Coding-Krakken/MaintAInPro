@@ -87,40 +87,42 @@ export default function UpcomingMaintenance() {
           <p className='text-gray-500 text-sm'>No upcoming maintenance scheduled</p>
         ) : (
           <div className='space-y-4'>
-            {upcomingMaintenance.map(item => {
-              const dueDate = item.dueDate;
-              if (!dueDate) return null;
-              
-              return (
-              <div key={item.id} className='flex items-center space-x-3'>
-                <div
-                  className={`w-3 h-3 rounded-full ${
-                    isOverdue(dueDate)
-                      ? 'bg-error-500'
-                      : new Date(dueDate).getTime() - Date.now() < 24 * 60 * 60 * 1000
-                        ? 'bg-warning-500'
-                        : 'bg-success-500'
-                  }`}
-                ></div>
-                <div className='flex-1 min-w-0'>
-                  <div className='flex items-center justify-between'>
-                    <p className='font-medium text-gray-900 text-sm truncate'>
-                      {getEquipmentTag(item.equipmentId || '')} - {item.assetModel}
-                    </p>
-                    {isOverdue(dueDate) && (
-                      <Badge variant='destructive' className='ml-2'>
-                        <AlertTriangle className='w-3 h-3 mr-1' />
-                        Overdue
-                      </Badge>
-                    )}
+            {upcomingMaintenance
+              .map(item => {
+                const dueDate = item.dueDate;
+                if (!dueDate) return null;
+
+                return (
+                  <div key={item.id} className='flex items-center space-x-3'>
+                    <div
+                      className={`w-3 h-3 rounded-full ${
+                        isOverdue(dueDate)
+                          ? 'bg-error-500'
+                          : new Date(dueDate).getTime() - Date.now() < 24 * 60 * 60 * 1000
+                            ? 'bg-warning-500'
+                            : 'bg-success-500'
+                      }`}
+                    ></div>
+                    <div className='flex-1 min-w-0'>
+                      <div className='flex items-center justify-between'>
+                        <p className='font-medium text-gray-900 text-sm truncate'>
+                          {getEquipmentTag(item.equipmentId || '')} - {item.assetModel}
+                        </p>
+                        {isOverdue(dueDate) && (
+                          <Badge variant='destructive' className='ml-2'>
+                            <AlertTriangle className='w-3 h-3 mr-1' />
+                            Overdue
+                          </Badge>
+                        )}
+                      </div>
+                      <p className='text-gray-500 text-xs'>
+                        Due: {formatDistanceToNow(new Date(dueDate), { addSuffix: true })}
+                      </p>
+                    </div>
                   </div>
-                  <p className='text-gray-500 text-xs'>
-                    Due: {formatDistanceToNow(new Date(dueDate), { addSuffix: true })}
-                  </p>
-                </div>
-              </div>
-              );
-            }).filter(Boolean)}
+                );
+              })
+              .filter(Boolean)}
           </div>
         )}
       </CardContent>

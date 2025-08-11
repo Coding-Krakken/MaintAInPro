@@ -4,14 +4,32 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
-  Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  Bar, PieChart, Pie, Cell, ScatterChart, Scatter,
-  ComposedChart, Area
+import {
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Bar,
+  PieChart,
+  Pie,
+  Cell,
+  ScatterChart,
+  Scatter,
+  ComposedChart,
+  Area,
 } from 'recharts';
-import { 
-  Activity, TrendingUp, TrendingDown, AlertTriangle, Clock, 
-  Wrench, DollarSign, Zap, Target 
+import {
+  Activity,
+  TrendingUp,
+  TrendingDown,
+  AlertTriangle,
+  Clock,
+  Wrench,
+  DollarSign,
+  Zap,
+  Target,
 } from 'lucide-react';
 
 interface EquipmentMetrics {

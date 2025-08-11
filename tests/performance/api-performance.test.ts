@@ -1,8 +1,8 @@
-import { describe, it, expect, beforeEach } from 'vitest'
-import request from 'supertest'
-import express from 'express'
-import { createApp } from '../../server/index'
-import { MemoryStorage } from '../../server/storage'
+import { describe, it, expect, beforeEach } from 'vitest';
+import request from 'supertest';
+import express from 'express';
+import { createApp } from '../../server/index';
+import { MemoryStorage } from '../../server/storage';
 
 describe('API Performance Tests', () => {
   let app: express.Application;
@@ -32,15 +32,13 @@ describe('API Performance Tests', () => {
 
   describe('Response Time Performance', () => {
     it('should respond to health check within 100ms', async () => {
-      const start = Date.now()
-      
-      await request(app)
-        .get('/api/health')
-        .expect(200)
-      
-      const duration = Date.now() - start
-      expect(duration).toBeLessThan(100)
-    })
+      const start = Date.now();
+
+      await request(app).get('/api/health').expect(200);
+
+      const duration = Date.now() - start;
+      expect(duration).toBeLessThan(100);
+    });
 
     it('should respond to equipment list within 500ms', async () => {
       // Pre-populate with some test data

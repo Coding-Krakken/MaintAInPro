@@ -1,11 +1,11 @@
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 import tsconfigPaths from 'vite-tsconfig-paths';
-import path from "path";
+import path from 'path';
 
 export default defineConfig({
   plugins: [react(), tsconfigPaths()],
-  base: "/",
+  base: '/',
   resolve: {
     alias: {
       '@': path.resolve(import.meta.dirname, 'client', 'src'),
@@ -21,11 +21,7 @@ export default defineConfig({
       output: {
         manualChunks: {
           // Vendor chunk for large third-party libraries
-          vendor: [
-            'react',
-            'react-dom',
-            'react-router-dom'
-          ],
+          vendor: ['react', 'react-dom', 'react-router-dom'],
           // UI components chunk
           ui: [
             '@radix-ui/react-dialog',
@@ -34,32 +30,21 @@ export default defineConfig({
             '@radix-ui/react-tabs',
             '@radix-ui/react-toast',
             '@radix-ui/react-tooltip',
-            'lucide-react'
+            'lucide-react',
           ],
           // Form handling chunk
-          forms: [
-            'react-hook-form',
-            '@hookform/resolvers',
-            'zod'
-          ],
+          forms: ['react-hook-form', '@hookform/resolvers', 'zod'],
           // Charts and data visualization
-          charts: [
-            'recharts',
-            'date-fns'
-          ],
+          charts: ['recharts', 'date-fns'],
           // Utils and smaller libraries
-          utils: [
-            'clsx',
-            'tailwind-merge',
-            'class-variance-authority'
-          ]
-        }
-      }
+          utils: ['clsx', 'tailwind-merge', 'class-variance-authority'],
+        },
+      },
     },
     // Set chunk size warning limit to 800KB
     chunkSizeWarningLimit: 800,
     // Enable source maps for production debugging
-    sourcemap: process.env.NODE_ENV === 'production' ? false : true
+    sourcemap: process.env.NODE_ENV === 'production' ? false : true,
   },
   server: {
     fs: {

@@ -1,31 +1,38 @@
 # 🚀 Getting Started with MaintAInPro
 
-Welcome to MaintAInPro! This guide will help you get up and running quickly, whether you're a user, developer, or system administrator.
+Welcome to MaintAInPro! This guide will help you get up and running quickly,
+whether you're a user, developer, or system administrator.
 
 ## 🎯 Choose Your Path
 
 ### 👤 I'm a User
+
 **Goal**: Learn how to use the CMMS system for maintenance management
 
 **Next Steps**:
+
 1. Read the **[[User Guide]]** for complete system usage
 2. Check **[[Work Orders]]** to learn about managing maintenance tasks
 3. Explore **[[Equipment Management]]** for asset tracking
 4. Review **[[Parts Inventory]]** for inventory management
 
 ### 💻 I'm a Developer
+
 **Goal**: Set up development environment and contribute to the project
 
 **Next Steps**:
+
 1. Follow the **[[Developer Guide]]** for complete setup
 2. Review the **[[Architecture]]** documentation
 3. Check the **[[API Reference]]** for endpoint details
 4. Read **[[Testing Guide]]** for quality standards
 
 ### 🔧 I'm a System Administrator
+
 **Goal**: Deploy and manage MaintAInPro in production
 
 **Next Steps**:
+
 1. Review **[[System Requirements]]** first
 2. Follow the **[[Deployment Guide]]** for production setup
 3. Check **[[Security Guide]]** for hardening
@@ -34,17 +41,21 @@ Welcome to MaintAInPro! This guide will help you get up and running quickly, whe
 ## ⚡ Quick Start (5 Minutes)
 
 ### Option 1: Try the Demo
-Visit our [live demo](https://maintainpro.vercel.app) to explore MaintAInPro without installation.
+
+Visit our [live demo](https://maintainpro.vercel.app) to explore MaintAInPro
+without installation.
 
 **Demo Credentials**:
+
 - **Email**: demo@maintainpro.com
 - **Password**: demo123
 
 ### Option 2: Local Development Setup
 
 #### Prerequisites
+
 - **Node.js**: v18 or higher
-- **PostgreSQL**: v14 or higher  
+- **PostgreSQL**: v14 or higher
 - **npm**: v8 or higher
 
 #### Installation
@@ -89,18 +100,21 @@ docker-compose up --build
 ## 📋 System Requirements
 
 ### Minimum Requirements
+
 - **OS**: Linux, macOS, or Windows
 - **RAM**: 4GB minimum, 8GB recommended
 - **Storage**: 10GB available space
 - **Network**: Internet connection for package installation
 
 ### Development Requirements
+
 - **Node.js**: v18.0.0 or higher
 - **PostgreSQL**: v14.0 or higher
 - **npm**: v8.0.0 or higher
 - **Git**: Latest version
 
 ### Production Requirements
+
 - **CPU**: 2 cores minimum, 4+ recommended
 - **RAM**: 8GB minimum, 16GB+ recommended
 - **Storage**: 50GB+ with SSD recommended
@@ -180,6 +194,7 @@ npm run test:run          # Run all tests
 ## 🎯 Next Steps
 
 ### For Users
+
 1. **Learn the Basics**: Read the complete **[[User Guide]]**
 2. **Explore Modules**:
    - **[[Work Orders]]** - Managing maintenance tasks
@@ -189,6 +204,7 @@ npm run test:run          # Run all tests
 4. **Tips & Tricks**: Check **[[Troubleshooting]]** for helpful tips
 
 ### For Developers
+
 1. **Understand Architecture**: Review **[[Architecture]]** documentation
 2. **API Integration**: Explore the **[[API Reference]]**
 3. **Contributing**: Read the **[[Developer Guide]]**
@@ -196,6 +212,7 @@ npm run test:run          # Run all tests
 5. **Deployment**: Learn **[[Deployment Guide]]** for production
 
 ### For Administrators
+
 1. **Security Setup**: Follow the **[[Security Guide]]**
 2. **Performance Tuning**: Review **[[Performance Guide]]**
 3. **Monitoring**: Set up **[[Operations Guide]]** procedures
@@ -207,6 +224,7 @@ npm run test:run          # Run all tests
 ### Installation Issues
 
 **Node.js Version Error**
+
 ```bash
 # Check your Node.js version
 node --version
@@ -217,6 +235,7 @@ nvm use 18
 ```
 
 **Database Connection Error**
+
 ```bash
 # Verify PostgreSQL is running
 sudo systemctl status postgresql
@@ -226,6 +245,7 @@ psql -h localhost -U username -d maintainpro
 ```
 
 **Port Already in Use**
+
 ```bash
 # Kill process using port 5000
 lsof -ti:5000 | xargs kill -9
@@ -236,30 +256,36 @@ PORT=5001
 
 ### Common Solutions
 
-| Issue | Solution |
-|-------|----------|
-| **Build Fails** | Run `npm install` and check Node.js version |
-| **Database Error** | Verify `DATABASE_URL` in `.env.local` |
-| **Permission Denied** | Check file permissions: `chmod +x scripts/*` |
-| **Tests Failing** | Run `npm run test:run` to see specific failures |
-| **Port Conflicts** | Change `PORT` in `.env.local` |
+| Issue                 | Solution                                        |
+| --------------------- | ----------------------------------------------- |
+| **Build Fails**       | Run `npm install` and check Node.js version     |
+| **Database Error**    | Verify `DATABASE_URL` in `.env.local`           |
+| **Permission Denied** | Check file permissions: `chmod +x scripts/*`    |
+| **Tests Failing**     | Run `npm run test:run` to see specific failures |
+| **Port Conflicts**    | Change `PORT` in `.env.local`                   |
 
 For more detailed troubleshooting, see **[[Troubleshooting]]**.
 
 ## 📞 Getting Help
 
 ### Documentation
+
 - **[[User Guide]]** - Complete user manual
-- **[[API Reference]]** - Technical API documentation  
+- **[[API Reference]]** - Technical API documentation
 - **[[Troubleshooting]]** - Common issues and solutions
 
 ### Community Support
-- **[GitHub Issues](https://github.com/Coding-Krakken/MaintAInPro/issues)** - Bug reports and feature requests
-- **[GitHub Discussions](https://github.com/Coding-Krakken/MaintAInPro/discussions)** - Questions and community help
+
+- **[GitHub Issues](https://github.com/Coding-Krakken/MaintAInPro/issues)** -
+  Bug reports and feature requests
+- **[GitHub Discussions](https://github.com/Coding-Krakken/MaintAInPro/discussions)** -
+  Questions and community help
 - **[Contributing Guide](Developer-Guide)** - How to contribute to the project
 
 ### Professional Support
+
 For enterprise deployments and professional support:
+
 - Email: support@maintainpro.com
 - Documentation: **[[Operations Guide]]**
 - Security: **[[Security Guide]]**
@@ -268,10 +294,12 @@ For enterprise deployments and professional support:
 
 ## 🎉 Welcome to MaintAInPro!
 
-You're now ready to start using MaintAInPro. Whether you're managing maintenance operations, developing new features, or deploying in production, our comprehensive documentation will guide you every step of the way.
+You're now ready to start using MaintAInPro. Whether you're managing maintenance
+operations, developing new features, or deploying in production, our
+comprehensive documentation will guide you every step of the way.
 
 **Happy maintaining! 🔧**
 
 ---
 
-*Getting Started guide last updated: January 2025*
+_Getting Started guide last updated: January 2025_
