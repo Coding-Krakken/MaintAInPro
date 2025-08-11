@@ -4,6 +4,18 @@
 # Triggers: Only runs for code changes, not docs-only edits.
 name: 🚀 Smoke Tests
 on:
+  push:
+    paths:
+      - '**/*.ts'
+      - '**/*.js'
+      - 'client/**'
+      - 'server/**'
+      - 'shared/**'
+      - 'api/**'
+    paths-ignore:
+      - 'Documentation/**'
+      - '**/*.md'
+      - 'CHANGELOG.md'
   workflow_dispatch:
     inputs:
       environment:
@@ -19,18 +31,6 @@ on:
         required: false
         default: false
         type: boolean
-    paths:
-      - '**/*.ts'
-      - '**/*.js'
-      - 'client/**'
-      - 'server/**'
-      - 'shared/**'
-      - 'api/**'
-    paths-ignore:
-      - 'Documentation/**'
-      - '**/*.md'
-      - 'CHANGELOG.md'
-
   schedule:
     # Run smoke tests every 6 hours
     - cron: '0 */6 * * *'
