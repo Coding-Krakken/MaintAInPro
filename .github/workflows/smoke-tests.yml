@@ -1,5 +1,8 @@
-name: 🚀 Smoke Tests
 
+# MaintAInPro Smoke Tests
+# Purpose: Scheduled and manual smoke tests for critical environments and endpoints.
+# Triggers: Only runs for code changes, not docs-only edits.
+name: 🚀 Smoke Tests
 on:
   workflow_dispatch:
     inputs:
@@ -16,6 +19,17 @@ on:
         required: false
         default: false
         type: boolean
+    paths:
+      - '**/*.ts'
+      - '**/*.js'
+      - 'client/**'
+      - 'server/**'
+      - 'shared/**'
+      - 'api/**'
+    paths-ignore:
+      - 'Documentation/**'
+      - '**/*.md'
+      - 'CHANGELOG.md'
 
   schedule:
     # Run smoke tests every 6 hours
@@ -40,14 +54,10 @@ jobs:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
 
-      - name: 🔧 Setup Node.js
-        uses: actions/setup-node@v4
+      - name: �️ Setup Node.js with Caching
+        uses: ./.github/actions/setup-node
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-
-      - name: 📦 Install dependencies
-        run: npm ci --prefer-offline --no-audit
 
       - name: 🔧 Setup test environment
         run: |

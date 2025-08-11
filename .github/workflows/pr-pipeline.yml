@@ -1,9 +1,23 @@
-name: PR Quality Gate
 
+# MaintAInPro PR Quality Gate
+# Purpose: Ensures PRs meet build, test, security, docs, and performance standards before merge.
+# Triggers: Only runs for code changes, not docs-only edits.
+name: PR Quality Gate
 on:
   pull_request:
     types: [opened, synchronize, ready_for_review]
     branches: [main, Replit]
+    paths:
+      - '**/*.ts'
+      - '**/*.js'
+      - 'client/**'
+      - 'server/**'
+      - 'shared/**'
+      - 'api/**'
+    paths-ignore:
+      - 'Documentation/**'
+      - '**/*.md'
+      - 'CHANGELOG.md'
 
 permissions:
   contents: read
@@ -43,14 +57,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Node.js with Caching
+        uses: ./.github/actions/setup-node
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
 
       - name: Type check
         run: npm run type-check
