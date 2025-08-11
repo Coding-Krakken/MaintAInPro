@@ -60,7 +60,7 @@ export function errorTrackingMiddleware(
   err: any,
   req: Request,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ): void {
   // Increment error count
   monitoringService.incrementErrorCount();

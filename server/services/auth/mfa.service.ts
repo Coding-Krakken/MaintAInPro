@@ -224,7 +224,7 @@ export class MFAService {
 
   static isValidPhoneNumber(phoneNumber: string): boolean {
     // Basic phone number validation
-    const phoneRegex = /^\+?[\d\s\-\(\)]+$/;
+    const phoneRegex = /^\+?[\d\s\-()]+$/;
     const cleanPhone = phoneNumber.replace(/\s/g, '');
     return phoneRegex.test(phoneNumber) && cleanPhone.length >= 10;
   }

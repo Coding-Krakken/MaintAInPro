@@ -56,7 +56,7 @@ export class PasswordService {
     return { hash, salt };
   }
 
-  static async verifyPassword(password: string, hash: string, salt?: string): Promise<boolean> {
+  static async verifyPassword(password: string, hash: string, _salt?: string): Promise<boolean> {
     try {
       // Add pepper for verification
       const pepperedPassword = password + this.PEPPER;
@@ -72,7 +72,7 @@ export class PasswordService {
   static validatePassword(
     password: string,
     userInfo?: { email?: string; firstName?: string; lastName?: string },
-    previousPasswords: string[] = [],
+    _previousPasswords: string[] = [],
     policy: Partial<PasswordPolicy> = {}
   ): PasswordValidationResult {
     const activePolicy = { ...this.DEFAULT_POLICY, ...policy };
@@ -98,7 +98,7 @@ export class PasswordService {
     }
     if (
       activePolicy.requireSpecialChars &&
-      !/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)
+      !/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password)
     ) {
       errors.push('Password must contain at least one special character');
     }

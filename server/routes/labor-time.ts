@@ -1,9 +1,7 @@
 import type { Express } from 'express';
 import { z } from 'zod';
 import { storage } from '../storage';
-import { insertLaborTimeSchema, profiles } from '@shared/schema';
-import { eq, and } from 'drizzle-orm';
-import { db } from '../db';
+import { insertLaborTimeSchema } from '@shared/schema';
 
 const authenticateRequest = (req: any, res: any, next: any) => {
   // Basic authentication check - replace with actual auth logic

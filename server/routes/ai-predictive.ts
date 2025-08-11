@@ -248,7 +248,7 @@ export function registerAIPredictiveRoutes(
         let reportData;
 
         switch (reportType) {
-          case 'health-summary':
+          case 'health-summary': {
             const healthScores = await Promise.all(
               equipment.map(async equip => {
                 try {
@@ -273,8 +273,9 @@ export function registerAIPredictiveRoutes(
               },
             };
             break;
+          }
 
-          case 'failure-predictions':
+          case 'failure-predictions': {
             const predictions = await Promise.all(
               equipment.slice(0, 20).map(async equip => {
                 try {
@@ -298,6 +299,7 @@ export function registerAIPredictiveRoutes(
               },
             };
             break;
+          }
 
           default:
             reportData = {

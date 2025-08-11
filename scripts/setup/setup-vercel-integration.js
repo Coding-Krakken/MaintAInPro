@@ -50,7 +50,7 @@ try {
   execSync(`gh secret set VERCEL_ORG_ID --body "${projectConfig.orgId}"`, { stdio: 'pipe' });
   console.log('✅ VERCEL_ORG_ID set');
 } catch (_error) {
-  console.log('❌ Failed to set GitHub secrets:', __error.message);
+  console.log('❌ Failed to set GitHub secrets:', _error.message);
   process.exit(1);
 }
 

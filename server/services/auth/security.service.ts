@@ -1,4 +1,4 @@
-import { randomBytes, createHash, scryptSync } from 'node:crypto';
+import { randomBytes, createHash } from 'node:crypto';
 import rateLimit, { ipKeyGenerator } from 'express-rate-limit';
 import { Request, Response, NextFunction } from 'express';
 

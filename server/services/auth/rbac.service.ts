@@ -301,7 +301,7 @@ export class RBACService {
     // Additional resource-specific checks
     if (resourceData) {
       switch (resource) {
-        case 'work_orders':
+        case 'work_orders': {
           // Check if user can access this specific work order
           const workOrder = resourceData;
           if (context.role === 'technician' || context.role === 'contractor') {
@@ -311,14 +311,16 @@ export class RBACService {
             return workOrder.requestedBy === context.userId;
           }
           break;
+        }
 
-        case 'users':
+        case 'users': {
           // Users can only access users in same warehouse (unless admin)
           const user = resourceData;
           if (context.role !== 'admin' && user.warehouseId !== context.warehouseId) {
             return false;
           }
           break;
+        }
       }
     }
 
@@ -379,7 +381,7 @@ export class RBACService {
     currentUserRole: UserRole,
     targetUserId: string,
     newRole: UserRole,
-    context: AccessControlContext
+    _context: AccessControlContext
   ): { allowed: boolean; reason?: string } {
     const hierarchy = this.getRoleHierarchy();
     const currentUserLevel = hierarchy[currentUserRole];

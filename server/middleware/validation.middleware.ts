@@ -645,7 +645,7 @@ export const sanitizeRequest = (req: Request, res: Response, next: NextFunction)
 /**
  * Enhanced error handling middleware
  */
-export const errorHandler = (error: any, req: Request, res: Response, next: NextFunction) => {
+export const errorHandler = (error: any, req: Request, res: Response, _next: NextFunction) => {
   console.error('API Error:', {
     path: req.path,
     method: req.method,
