@@ -28,7 +28,7 @@ jobs:
           cache: 'npm'
 
       - name: Update deployment traceability
-        run: node scripts/update-deployments.js
+        run: node scripts/setup/update-deployments.js
         env:
           GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_SHA: ${{ github.sha }}
