@@ -1,4 +1,3 @@
-
 name: Auto Add Issues to GitHub Project
 
 on:
@@ -18,15 +17,9 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y gh
       - name: Install jq
         run: sudo apt-get update && sudo apt-get install -y jq
-      - name: Run create_github_issues.sh
+      - name: Sync issues and project
         run: |
-          chmod +x scripts/project-management/create_github_issues.sh
-          ./scripts/project-management/create_github_issues.sh
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Run add_issues_to_project.sh
-        run: |
-          chmod +x scripts/project-management/add_issues_to_project.sh
-          ./scripts/project-management/add_issues_to_project.sh
+          chmod +x scripts/project-management/sync_issues_and_project.sh
+          ./scripts/project-management/sync_issues_and_project.sh
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
