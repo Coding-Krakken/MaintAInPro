@@ -88,7 +88,7 @@ export class StartupOptimizationService {
 
     try {
       // Initialize cache service
-      const cacheService = CacheService.getInstance({
+      const _cacheService = CacheService.getInstance({
         redis: {
           url: process.env.REDIS_URL,
           host: process.env.REDIS_HOST,

@@ -343,7 +343,7 @@ export class SecurityService {
     return createHash('sha256').update(data).digest('hex');
   }
 
-  static encryptSensitiveData(data: string, encryptionKey: string): string {
+  static encryptSensitiveData(data: string, _encryptionKey: string): string {
     try {
       // For now, return base64 encoded data as a placeholder
       // In production, implement proper AES-256-GCM encryption
@@ -354,7 +354,7 @@ export class SecurityService {
     }
   }
 
-  static decryptSensitiveData(encryptedData: string, key?: string): string {
+  static decryptSensitiveData(encryptedData: string, _key?: string): string {
     try {
       // For now, decode from base64 as a placeholder
       // In production, implement proper AES-256-GCM decryption

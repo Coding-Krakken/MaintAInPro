@@ -478,7 +478,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         userAgent: req.headers['user-agent'] || 'Unknown',
       };
 
-      const result = await AuthService.requestPasswordReset(resetRequest);
+      const _result = await AuthService.requestPasswordReset(resetRequest);
 
       // Always return success for security (don't reveal if email exists)
       res.json({ message: 'If the email exists, a password reset link has been sent' });
@@ -1673,13 +1673,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const days = parseInt(req.query.days as string) || 30;
-      const endDate = new Date();
+      const _endDate = new Date();
       const startDate = new Date();
       startDate.setDate(startDate.getDate() - days);
 
       // Get all equipment for the warehouse
       const equipment = await storage.getEquipment(warehouseId);
-      const templates = await storage.getPmTemplates(warehouseId);
+      const _templates = await storage.getPmTemplates(warehouseId);
 
       // Calculate compliance for each equipment
       const equipmentCompliance = [];

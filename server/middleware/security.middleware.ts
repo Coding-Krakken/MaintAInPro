@@ -152,7 +152,7 @@ export function sanitizeInput(req: Request, res: Response, next: NextFunction): 
         .replace(/javascript:/gi, '')
         .replace(/on\w+\s*=/gi, '')
         .replace(/['"`;]/g, '') // Remove SQL injection characters
-        .replace(/\u0000/g, '') // Remove null bytes
+        .replace(/\0/g, '') // Remove null bytes
         .trim();
     }
 

@@ -361,7 +361,7 @@ class PMSchedulerEnhanced {
     try {
       const config = await this.loadSchedulingConfig(warehouseId);
       const equipment = await storage.getEquipment(warehouseId);
-      const now = new Date();
+      const _now = new Date();
 
       for (const equip of equipment) {
         const complianceStatus = await pmEngine.checkComplianceStatus(equip.id, warehouseId);

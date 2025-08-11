@@ -7,7 +7,7 @@
 
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { Pool } from 'pg';
-import { eq, and, isNull, ilike, or, desc, asc, sql, count } from 'drizzle-orm';
+import { sql, count } from 'drizzle-orm';
 import { v4 as uuidv4 } from 'uuid';
 import {
   organizations,

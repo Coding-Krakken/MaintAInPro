@@ -386,7 +386,7 @@ export class CacheService {
    */
   private setupCleanupInterval(): void {
     setInterval(() => {
-      const now = Date.now();
+      const _now = Date.now();
       for (const [key, entry] of this.memoryCache.entries()) {
         if (this.isExpired(entry)) {
           this.memoryCache.delete(key);
