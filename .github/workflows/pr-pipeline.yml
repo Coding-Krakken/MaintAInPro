@@ -1,4 +1,3 @@
-
 # MaintAInPro PR Quality Gate
 # Purpose: Ensures PRs meet build, test, security, docs, and performance standards before merge.
 # Triggers: Only runs for code changes, not docs-only edits.

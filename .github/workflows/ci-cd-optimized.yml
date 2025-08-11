@@ -1,4 +1,3 @@
-
 # MaintAInPro CI/CD Pipeline - Optimized
 # Purpose: Full build, test, security, and deployment pipeline for PRs and pushes to main/stable branches.
 # Triggers: Only runs for code changes, not docs-only edits.

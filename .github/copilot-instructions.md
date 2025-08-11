@@ -1,389 +1,366 @@
-# MaintAInPro CMMS - AI Agent Instructions
+# MaintAInPro CMMS - GitHub Copilot Agent Instructions
+
+**ALWAYS follow these instructions first and only search for additional information if these instructions are incomplete or found to be in error.**
+
+## Quick Start - Essential Commands
+
+Bootstrap and run the application:
+```bash
+# Install dependencies (takes ~3 minutes, NEVER CANCEL)
+npm install
+
+# Run all quality checks and basic validation (takes ~40 seconds total)
+npm run quality
+
+# Build the application (takes ~15 seconds, NEVER CANCEL)
+npm run build
+
+# Start development server (runs indefinitely until stopped)
+npm run dev
+```
 
 ## Project Architecture
 
-MaintAInPro is an enterprise CMMS (Computerized Maintenance Management System)
-built with a modern full-stack architecture:
+MaintAInPro is an enterprise-grade CMMS (Computerized Maintenance Management System) with:
 
 - **Frontend**: React 18 + TypeScript + Vite + TailwindCSS (`client/`)
 - **Backend**: Express.js + TypeScript + Drizzle ORM (`server/`)
-- **Database**: PostgreSQL with strategic indexing and multi-tenant support
-- **Shared**: Common schemas, types, and validation (`shared/`)
-- **Deployment**: Vercel for production hosting with edge functions
+- **Database**: PostgreSQL with multi-tenant support, fallback to in-memory storage
+- **Shared**: Common schemas, types, validation (`shared/`)
+- **Deployment**: Vercel with edge functions, Railway support
 
-## Strategic Blueprint Framework
+## Working Effectively
 
-The project follows a comprehensive 6-tier documentation structure in
-`Documentation/Blueprint/`:
+### Initial Setup (Required for Fresh Clone)
 
-### 0-Executive/ - Strategic Leadership
+```bash
+# 1. Install dependencies (NEVER CANCEL - takes 3+ minutes)
+npm install
+# Timeout: Set 10+ minutes, expect warnings about vulnerabilities (these are acceptable)
 
-- `ENTERPRISE_BLUEPRINT.md` - Master strategic document and engineering
-  excellence standards
-- `COMPETITIVE_ANALYSIS.md` - Market positioning vs Atlas CMMS and industry
-  analysis
-- `TECHNICAL_EXCELLENCE_FRAMEWORK.md` - Elite engineering quality standards
-  (95%+ test coverage, <200ms P95 latency)
+# 2. Install testing library dependency (if not present)
+npm install --save-dev @testing-library/jest-dom
 
-### 1-Vision/ - Product Strategy
+# 3. Verify environment setup
+npm run type-check    # Takes ~20 seconds
+npm run lint:check    # Takes ~5 seconds (warnings OK, errors must be fixed)
+npm run format:check  # Takes ~15 seconds
+```
 
-- `ProductVision.md` - Product vision with competitive differentiation
-- `UserPersonas.md` - Detailed workflow mapping and pain point analysis
-- `BusinessModel.md` - Revenue strategy and go-to-market approach
+### Core Development Commands
 
-### 2-Features/ - Feature Excellence
+```bash
+# DEVELOPMENT SERVER
+npm run dev                    # Start full-stack dev server on port 5000
+# NEVER CANCEL - runs indefinitely, includes hot reload
+# Access: http://localhost:5000
+# Health check: http://localhost:5000/health should return 200
 
-- Core CMMS modules (Work Orders, Equipment, Preventive Maintenance, Parts
-  Inventory)
-- Advanced Intelligence (AI Automation, Workflow Engine, Real-time
-  Collaboration)
-- Enterprise features (RBAC, Compliance, Data Governance)
+# BUILD AND VALIDATION
+npm run build                  # Full production build, takes ~15 seconds, NEVER CANCEL
+npm run quality               # Complete quality pipeline, takes ~45 seconds total
+# Quality includes: lint + format + type-check + test:run
 
-### 3-Architecture/ - Technical Excellence
+# TESTING FRAMEWORK
+npm run test:unit             # Vitest unit tests, takes ~5 seconds
+npm run test:integration      # API integration tests, takes ~2 seconds  
+npm run test:e2e              # Playwright E2E tests, takes 5+ minutes, requires database
+npm run test:all              # All test suites, takes 5+ minutes, NEVER CANCEL
+# Timeout: Set 10+ minutes for test:all
 
-- `SystemArchitecture.md` - Comprehensive technical architecture
-- `SecurityArchitecture.md` - Zero-trust security model with SOC 2 compliance
-- `DevOpsExcellence.md` - CI/CD pipelines and deployment strategies
+# DATABASE OPERATIONS
+npm run db:push               # Apply schema changes to database
+npm run db:generate           # Generate new migrations
+npm run seed                  # Seed development data (requires database)
 
-### 4-UX-Flow/ - Experience Excellence
+# CODE QUALITY
+npm run lint                  # Fix linting issues automatically
+npm run format               # Fix formatting issues automatically
+```
 
-- `UserExperienceFlow.md` - User journey mapping with accessibility standards
-- `DesignSystem.md` - Complete design system and component library
+### Critical Timing Information
 
-### 5-Traceability/ - Quality Tracking
+**ALWAYS use these timeout values - DO NOT use shorter timeouts:**
 
-- `TraceabilityMatrix.md` - Complete feature-to-implementation mapping
-- `PerformanceBenchmarks.md` - SLA targets and performance metrics
-- `QualityMetrics.md` - Code quality and technical debt tracking
+| Command | Duration | Timeout | Notes |
+|---------|----------|---------|-------|
+| `npm install` | ~3 minutes | **10+ minutes** | NEVER CANCEL - includes native dependencies |
+| `npm run build` | ~15 seconds | **60+ seconds** | NEVER CANCEL - full production build |
+| `npm run quality` | ~45 seconds | **120+ seconds** | NEVER CANCEL - runs all quality checks |
+| `npm run test:all` | 5+ minutes | **15+ minutes** | NEVER CANCEL - includes E2E tests |
+| `npm run test:e2e` | 5+ minutes | **15+ minutes** | Requires database, may fail without proper setup |
+| `npm run dev` | Indefinite | N/A | Runs until manually stopped |
 
-### 6-Operations/ - Operational Excellence
+## Database and Environment Setup
 
-- `IncidentResponse.md` - Comprehensive incident management procedures
-- `CapacityPlanning.md` - Resource and scaling strategies
+### Local Development Mode (Default)
+The application works WITHOUT database setup:
+```bash
+# The application automatically uses in-memory storage for development
+npm run dev  # Works immediately after npm install
+```
 
-**Blueprint Usage**: Always reference relevant Blueprint sections when
-implementing features or making architectural decisions.
+### PostgreSQL Database Mode (Production/Testing)
+For full functionality including E2E tests:
+```bash
+# 1. Set up database environment variables in .env.local:
+DATABASE_URL=postgres://user:password@host:port/database?sslmode=require
+NODE_ENV=production
 
-## Copilot Agent Guidelines
+# 2. Apply database schema
+npm run db:push
 
-### Work Scope Restrictions
+# 3. Seed with sample data
+npm run seed
+```
 
-- **ONLY** work on Issues labeled with `agent-ok`
-- **IGNORE** all other Issues, even if they seem important
-- If an Issue lacks the `agent-ok` label, comment asking for human review and
-  label addition
+**Database Notes:**
+- E2E tests REQUIRE database setup and WILL FAIL without proper DATABASE_URL
+- Unit and integration tests work with mock data
+- Application gracefully falls back to in-memory storage if database unavailable
+- Environment variables loaded from `.env.local` then `.env`
 
-### PR Quality Standards
+## Testing and Validation
 
-- Keep PRs **single-purpose** and focused
-- **Maximum 300 lines changed** per PR (excluding auto-generated files)
-- If a task requires more than 300 lines, break it into multiple Issues/PRs
-- Use clear, descriptive commit messages following conventional commits
+### Test Strategy
+```bash
+# Fast validation (suitable for frequent testing)
+npm run test:unit               # ~5 seconds - DOM and logic tests
+npm run test:integration        # ~2 seconds - API endpoint tests
 
-### Required Testing
+# Complete validation (before committing)
+npm run test:all               # ~5+ minutes - includes E2E tests, NEVER CANCEL
 
-- Add or extend **unit tests** matching all Acceptance Criteria
-- Ensure **integration tests** cover API endpoints if applicable
-- Add **E2E tests** for user-facing features
-- Run `npm run test:all` before submitting PR
-- Include test evidence in PR description
+# Quality gates (required before commits)
+npm run quality                # ~45 seconds - lint + format + type + tests
+```
 
-### Documentation Requirements
+### Manual Validation Scenarios
 
-- Update relevant docs under `Documentation/` for any feature changes
-- Update API documentation for endpoint changes
-- Add entries to `CHANGELOG.md` for user-facing changes
-- Update Blueprint documentation if architecture changes
+**ALWAYS test these scenarios after making changes:**
 
-### Code Quality Gates
+1. **Development Server Health**:
+   ```bash
+   npm run dev
+   # Wait for "serving on port 5000" message
+   curl http://localhost:5000/health  # Should return 200
+   ```
 
-- All code must pass `npm run quality` (lint + format + type-check + tests)
-- Follow existing architectural patterns in the codebase
-- Use TypeScript strictly - no `any` types without justification
-- Implement proper error handling and logging
-- Follow security best practices (input validation, SQL injection prevention)
+2. **Build Integrity**:
+   ```bash
+   npm run build
+   # Check dist/public/ directory contains built assets
+   ls -la dist/public/assets/  # Should show .js and .css files
+   ```
 
-### Multi-Tenant Considerations
+3. **Application Login Flow** (if database configured):
+   - Navigate to http://localhost:5000
+   - Should show login page or dashboard
+   - Test basic navigation and API responses
 
-- Always include `organizationId` validation in database queries
-- Ensure data isolation between tenants
-- Use audit trails for all data modifications
-- Follow RBAC patterns for permission checks
+## Project Structure and Key Files
 
-### Autonomous Decision Making
+### Repository Organization
+```
+MaintAInPro/
+├── client/                    # React frontend application
+│   ├── src/components/       # Reusable UI components  
+│   ├── src/pages/           # Route-level components
+│   ├── src/services/        # API client functions
+│   └── src/hooks/           # Custom React hooks
+├── server/                   # Express.js backend
+│   ├── routes/              # API route handlers
+│   ├── services/            # Business logic services
+│   ├── middleware/          # Express middleware
+│   └── index.ts             # Server entry point
+├── shared/                   # Common types and schemas
+│   ├── schema.ts            # Drizzle database schema + Zod validation
+│   ├── types/               # TypeScript type definitions
+│   └── validation-utils.ts  # Validation helpers
+├── tests/                    # Comprehensive test suite
+│   ├── unit/                # Component and service tests
+│   ├── integration/         # API integration tests
+│   ├── e2e/                 # End-to-end Playwright tests
+│   └── config/              # Test configuration files
+├── Documentation/            # Comprehensive documentation
+└── .github/workflows/       # CI/CD pipelines
+```
 
-- If requirements are **clear and unambiguous**: proceed with implementation
-- If requirements are **unclear or conflicting**: open PR with:
-  - Questions in the PR description
-  - Add `needs-human` label
-  - Request clarification in comments
-  - Propose alternative approaches
+### Critical Configuration Files
+- `package.json` - Dependencies and npm scripts
+- `vite.config.ts` - Frontend build configuration
+- `vitest.config.ts` - Test configuration
+- `drizzle.config.ts` - Database configuration
+- `vercel.json` - Deployment configuration
+- `tsconfig.json` - TypeScript configuration
 
-## Key Architectural Patterns
+## Multi-Tenant Architecture Patterns
 
-### Multi-Tenant Architecture
-
-The system uses organization-based multi-tenancy with a hierarchical structure:
+**ALWAYS follow these patterns when working with data:**
 
 ```typescript
-organizations -> users -> equipment/work orders/parts
-```
-
-Always validate `organizationId` in queries and ensure data isolation between
-tenants.
-
-### Service Layer Pattern
-
-Business logic is centralized in `server/services/`:
-
-- **Security**: JWT auth with RBAC in `auth/security.service.ts`
-- **Performance**: Real-time monitoring via `performance.service.ts`
-- **Caching**: Multi-tier caching via `cache.service.ts`
-- **AI/ML**: Predictive maintenance in `ai-predictive.service.ts`
-- **Background Jobs**: Scheduled tasks via `background-jobs.ts`
-
-### Schema-First Development
-
-All data structures are defined in `shared/schema.ts` using Drizzle + Zod:
-
-- Database tables use `pgTable` with UUID primary keys
-- Validation schemas use `createInsertSchema` from drizzle-zod
-- Field validation rules in `shared/validation-utils.ts`
-
-## Development Workflows
-
-### Essential Commands
-
-```bash
-# Development server with hot reload
-npm run dev
-
-# Database operations
-npm run db:push      # Push schema changes
-npm run db:generate  # Generate migrations
-npm run seed         # Seed development data
-
-# Testing (comprehensive framework)
-npm run test:unit        # Vitest unit tests
-npm run test:integration # API integration tests
-npm run test:e2e         # Playwright end-to-end
-npm run test:all         # Run complete test suite
-
-# Quality checks
-npm run quality     # Lint + format + type-check + test
-npm run build       # Production build
-
-# Vercel deployment
-vercel              # Deploy to preview
-vercel --prod       # Deploy to production
-vercel logs         # View deployment logs
-```
-
-### Vercel Deployment
-
-The application is optimized for Vercel deployment:
-
-- **Build Output**: Vite builds to `dist/public/` for static assets
-- **API Routes**: Express.js server runs as serverless functions
-- **Environment**: Uses `vercel.json` for configuration
-- **Database**: PostgreSQL connection via environment variables
-- **Edge Functions**: Optimized for global performance
-
-Always test locally before deploying:
-
-```bash
-npm run build       # Verify build succeeds
-vercel dev         # Test locally with Vercel functions
-```
-
-### Docker Development
-
-For local development consistency:
-
-```bash
-docker build -t app-test .
-docker run --rm app-test
-```
-
-## Project-Specific Conventions
-
-### API Route Structure
-
-Routes follow RESTful patterns with enterprise security:
-
-```typescript
-// In server/routes.ts - all routes include audit trails
-app.use(auditMiddleware);
-app.use('/api', apiRateLimit);
-app.use('/api/auth', authRateLimit);
-
-// Multi-tenant data access pattern
+// Database queries - ALWAYS include organizationId
 const workOrders = await storage.getWorkOrders(organizationId);
-```
 
-### Frontend Component Organization
+// Route handlers - ALWAYS validate organizationId
+app.get('/api/work-orders', async (req, res) => {
+  const { organizationId } = req.user; // From auth middleware
+  const data = await storage.getWorkOrders(organizationId);
+});
 
-```
-client/src/
-├── components/     # Reusable UI components
-├── pages/         # Route-level components
-├── hooks/         # Custom React hooks
-├── services/      # API client functions
-├── lib/           # Utilities and configurations
-└── types/         # TypeScript type definitions
-```
-
-### Error Handling Pattern
-
-Use structured error responses with audit logging:
-
-```typescript
-// Server-side error pattern
-throw new Error(`[${context}] ${message}`);
-
-// Client-side error handling in services/api.ts
-export const handleApiError = (error: unknown) => {
-  // Structured error handling with user-friendly messages
-};
-```
-
-### Database Patterns
-
-- Use transactions for multi-table operations
-- Always include `organizationId` in WHERE clauses
-- Implement soft deletes with `deletedAt` timestamp
-- Use `createdBy/updatedBy` for audit trails
-
-## Integration Points
-
-### Authentication Flow
-
-JWT-based auth with role-based permissions:
-
-1. Login via `/api/auth/login` returns JWT token
-2. All API requests include `Authorization: Bearer <token>`
-3. Middleware validates token and sets `req.user`
-
-### File Upload System
-
-Centralized file management via `fileManagementService`:
-
-- Supports local filesystem and cloud storage
-- Automatic file type validation and virus scanning
-- Generates secure download URLs
-
-### Background Job Processing
-
-Scheduled tasks via `background-jobs.ts`:
-
-- PM schedule generation
-- Email notifications
-- Data cleanup and archival
-
-### Real-time Features
-
-WebSocket integration for live updates:
-
-- Work order status changes
-- Equipment alerts
-- System notifications
-
-## Performance Considerations
-
-### Caching Strategy
-
-Multi-tier caching via `CacheService`:
-
-- Memory cache for frequently accessed data
-- Database query optimization with strategic indexes
-- CDN for static assets
-
-### Database Optimization
-
-- Use `databaseOptimizer.service.ts` for query analysis
-- Implement connection pooling
-- Regular VACUUM and ANALYZE operations
-
-### Bundle Optimization
-
-Vite configuration includes:
-
-- Code splitting by feature (`vendor`, `ui`, `forms`, `charts`)
-- Tree shaking for unused code
-- Production minification with esbuild
-- Vercel-optimized build output for edge deployment
-
-### Vercel Edge Optimization
-
-- **Static Assets**: Served via Vercel's global CDN
-- **API Functions**: Serverless functions with automatic scaling
-- **Environment Variables**: Managed via Vercel dashboard
-- **Preview Deployments**: Automatic on PR creation
-- **Analytics**: Built-in Web Vitals monitoring
-
-## Security Patterns
-
-### Input Validation
-
-All inputs validated using Zod schemas:
-
-```typescript
+// Schema validation - Use shared schemas
+import { insertWorkOrderSchema } from '@shared/schema';
 const validatedData = insertWorkOrderSchema.parse(requestBody);
 ```
 
-### SQL Injection Prevention
+## Common Issues and Solutions
 
-Always use Drizzle ORM parameterized queries - never string concatenation.
+### Build Issues
+```bash
+# If npm install fails
+npm cache clean --force
+rm -rf node_modules package-lock.json
+npm install
 
-### Rate Limiting
+# If TypeScript errors
+npm run type-check  # Shows specific type errors
+# Fix TypeScript issues, avoid using 'any' types
 
-Different limits for endpoint types:
+# If lint errors (must fix before committing)
+npm run lint        # Automatically fixes many issues
+npm run format      # Fixes formatting issues
+```
 
-- `/api/auth/*`: Strict rate limiting
-- `/api/upload/*`: File-specific limits
-- `/api/*`: General API limits
+### Test Issues
+```bash
+# If unit tests fail with "toBeInTheDocument" errors
+npm install --save-dev @testing-library/jest-dom
+# Ensure tests/setup.ts imports '@testing-library/jest-dom'
 
-Remember: This is an enterprise-grade CMMS focused on operational excellence,
-security, and scalability. Always consider multi-tenancy, audit trails, and
-performance impacts when making changes.
+# If E2E tests fail
+# Verify database connection: DATABASE_URL environment variable
+# E2E tests REQUIRE real database, will fail with in-memory storage
+```
 
-## Blueprint Integration Guidelines
+### Runtime Issues
+```bash
+# If dev server fails to start
+# Check port 5000 availability: lsof -i :5000
+# Kill existing process: kill -9 $(lsof -t -i:5000)
 
-When implementing features or making architectural decisions:
+# If database connection errors
+# Application falls back to in-memory storage (this is expected)
+# For full functionality, configure DATABASE_URL in .env.local
+```
 
-1. **Strategic Alignment**: Reference `Documentation/Blueprint/0-Executive/` for
-   business impact and competitive positioning
-2. **Technical Standards**: Follow `TECHNICAL_EXCELLENCE_FRAMEWORK.md` for
-   quality gates and engineering standards
-3. **Feature Specifications**: Check `Documentation/Blueprint/2-Features/` for
-   detailed requirements
-4. **Architecture Compliance**: Validate against
-   `Documentation/Blueprint/3-Architecture/` patterns
-5. **User Experience**: Ensure consistency with
-   `Documentation/Blueprint/4-UX-Flow/` guidelines
-6. **Quality Tracking**: Update
-   `Documentation/Blueprint/5-Traceability/TraceabilityMatrix.md` for
-   significant changes
-7. **Operational Impact**: Consider `Documentation/Blueprint/6-Operations/`
-   procedures for production changes
+## Quality Standards and CI Requirements
 
-## Vercel-Specific Considerations
+### Pre-Commit Checklist
+**ALWAYS run these commands before committing:**
 
-### Environment Management
+```bash
+npm run quality                # Takes ~45 seconds, NEVER CANCEL
+# This includes:
+# - ESLint check (warnings OK, errors must be fixed)
+# - Prettier format check
+# - TypeScript type checking
+# - Unit test execution
 
-- Use Vercel dashboard for environment variables
-- Separate environments: Development, Preview, Production
-- Database connections via secure environment variables
+npm run build                  # Verify build works, takes ~15 seconds
+```
 
-### Performance Optimization
+### Code Quality Gates
+- **TypeScript**: Strict mode, no `any` types without justification
+- **ESLint**: Warnings allowed, errors must be fixed
+- **Prettier**: Consistent formatting required
+- **Tests**: Unit tests required for new components/services
+- **Security**: No secrets in code, proper input validation
 
-- Leverage Vercel's Edge Network for global performance
-- Monitor Core Web Vitals via Vercel Analytics
-- Optimize for Vercel's serverless function limits (10s timeout, 50MB response)
+### CI/CD Pipeline
+The GitHub Actions workflows require:
+- All quality checks pass (`npm run quality`)
+- Build succeeds (`npm run build`)
+- Security scans pass
+- No critical vulnerabilities in dependencies
 
-### Deployment Strategy
+## Development Workflow
 
-- **Preview Deployments**: Every PR gets automatic preview URL
-- **Production Deployments**: Deploy from main branch
-- **Rollback**: Use Vercel dashboard for instant rollbacks
-- **Monitoring**: Built-in error tracking and performance monitoring
+### Working with Issues
+- **ONLY** work on Issues labeled with `agent-ok`
+- Keep PRs focused and under 300 lines changed
+- Include tests for all new functionality
+- Update documentation for API changes
+
+### Authentication and Security
+- JWT-based authentication with role-based access control
+- All API routes require authentication (except /health)
+- Input validation using Zod schemas
+- Rate limiting on API endpoints
+- Audit trails for all data modifications
+
+### Performance Considerations
+- Bundle size monitoring (target <1MB)
+- Database query optimization required
+- Caching strategies implemented
+- Vercel edge optimization for global performance
+
+## Troubleshooting Quick Reference
+
+| Issue | Solution |
+|-------|----------|
+| Tests fail with DOM errors | Install `@testing-library/jest-dom` |
+| Build timeout | Set timeout 60+ seconds, NEVER CANCEL |
+| E2E tests fail | Configure DATABASE_URL or skip E2E tests |
+| Server won't start | Check port 5000, kill existing processes |
+| Slow npm install | Expected ~3 minutes, network dependent |
+| Lint errors | Run `npm run lint` to auto-fix |
+| Format errors | Run `npm run format` to auto-fix |
+| Type errors | Fix manually, avoid `any` types |
+
+## Deployment and Production
+
+### Vercel Deployment
+```bash
+# Local Vercel testing
+vercel dev                     # Test with Vercel functions locally
+vercel                         # Deploy to preview
+vercel --prod                 # Deploy to production
+
+# Build verification
+npm run build                  # Verify build works locally first
+```
+
+### Environment Variables (Production)
+Required for full functionality:
+- `DATABASE_URL` - PostgreSQL connection string
+- `NODE_ENV=production` - Enables PostgreSQL storage
+- `JWT_SECRET` - JWT token signing secret
+- Authentication provider keys (Stack Auth)
+
+---
+
+## Quick Command Reference
+
+```bash
+# ESSENTIAL DEVELOPMENT CYCLE
+npm install                    # 3+ min, timeout 10+ min, NEVER CANCEL
+npm run dev                    # Start dev server (indefinite)
+npm run quality               # 45 sec, timeout 2+ min, NEVER CANCEL  
+npm run build                 # 15 sec, timeout 60+ sec, NEVER CANCEL
+
+# TESTING COMMANDS  
+npm run test:unit             # 5 sec - Fast unit tests
+npm run test:integration      # 2 sec - API tests
+npm run test:all              # 5+ min, timeout 15+ min, NEVER CANCEL
+
+# CODE QUALITY
+npm run lint                  # Auto-fix linting issues
+npm run format               # Auto-fix formatting
+npm run type-check           # Verify TypeScript
+
+# DATABASE
+npm run db:push              # Apply schema changes
+npm run seed                 # Seed sample data
+```
+
+**Remember: This is an enterprise CMMS focused on operational excellence, security, and scalability. Always consider multi-tenancy, audit trails, and performance impacts when making changes.**
