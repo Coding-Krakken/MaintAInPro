@@ -1,4 +1,3 @@
-
 # MaintAInPro Simple Test Workflow
 # Purpose: Manual and push-triggered test for basic CI validation.
 # Triggers: Only runs for code changes, not docs-only edits.

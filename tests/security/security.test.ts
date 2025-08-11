@@ -7,8 +7,8 @@ describe('Security Tests', () => {
   let storage: InstanceType<typeof MemoryStorage>;
 
   beforeEach(async () => {
-  storage = new MemoryStorage();
-  // app is imported from server/index
+    storage = new MemoryStorage();
+    // app is imported from server/index
   });
 
   describe('Authentication Security', () => {
@@ -197,7 +197,9 @@ describe('Security Tests', () => {
       // Make many requests quickly
       const responses: request.Response[] = [];
       for (let i = 0; i < 100; i++) {
-        const res = await request(app).get('/api/equipment').set('Authorization', `Bearer ${token}`);
+        const res = await request(app)
+          .get('/api/equipment')
+          .set('Authorization', `Bearer ${token}`);
         responses.push(res);
       }
       // Should eventually rate limit
@@ -245,13 +247,14 @@ describe('Security Tests', () => {
 
       for (const endpoint of adminEndpoints) {
         // Technician should be denied
-  const techResponse = await request(app)[endpoint.method](endpoint.path).set('Authorization', `Bearer ${tokens.technician}`);
+        const techResponse = await request(app)[endpoint.method](endpoint.path)
+          .set('Authorization', `Bearer ${tokens.technician}`);
 
+        expect([403, 404]).toContain(techResponse.status);
 
-  expect([403, 404]).toContain(techResponse.status);
-
-  // Admin should be allowed
-  const adminResponse = await request(app)[endpoint.method](endpoint.path).set('Authorization', `Bearer ${tokens.admin}`);
+        // Admin should be allowed
+        const adminResponse = await request(app)[endpoint.method](endpoint.path)
+          .set('Authorization', `Bearer ${tokens.admin}`);
 
         expect(adminResponse.status).not.toBe(403);
       }
@@ -344,8 +347,8 @@ describe('Security Tests', () => {
         warehouse_id: 'warehouse-1',
       });
 
-  const users = await storage.getProfiles();
-  const user = users.find(u => u.email === 'test@example.com');
+      const users = await storage.getProfiles();
+      const user = users.find(u => u.email === 'test@example.com');
 
       expect(user?.password).not.toBe(password);
       expect(user?.password).toMatch(/^\$2[aby]\$/); // bcrypt format
@@ -388,9 +391,9 @@ describe('Security Tests', () => {
 
     it('should handle database errors securely', async () => {
       // Mock a database error
-  // Mock getEquipment to throw error
-  const originalGetEquipment = storage.getEquipment;
-  storage.getEquipment = vi.fn().mockRejectedValue(new Error('Database connection failed'));
+      // Mock getEquipment to throw error
+      const originalGetEquipment = storage.getEquipment;
+      storage.getEquipment = vi.fn().mockRejectedValue(new Error('Database connection failed'));
 
       await request(app).post('/api/auth/register').send({
         email: 'test@example.com',
@@ -413,8 +416,8 @@ describe('Security Tests', () => {
       expect(response.body.message).not.toContain('Database connection failed');
       expect(response.body.message).not.toContain('stack');
 
-  // Restore original method
-  storage.getEquipment = originalGetEquipment;
+      // Restore original method
+      storage.getEquipment = originalGetEquipment;
     });
   });
 });
