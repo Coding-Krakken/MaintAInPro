@@ -1,14 +1,14 @@
 import { Server as SocketIOServer } from 'socket.io';
 import { Server as HTTPServer } from 'http';
-import type { InsertNotification, Notification } from '../../shared/schema';
+import type { InsertNotification } from '../../shared/schema';
 import { storage } from '../storage';
 
 export interface NotificationService {
-  initialize(httpServer: HTTPServer): void;
-  sendNotification(notification: InsertNotification): Promise<void>;
-  sendRealTimeUpdate(userId: string, data: any): Promise<void>;
-  broadcastToWarehouse(warehouseId: string, data: any): Promise<void>;
-  broadcastSystemAlert(data: any): Promise<void>;
+  initialize(_httpServer: HTTPServer): void;
+  sendNotification(_notification: InsertNotification): Promise<void>;
+  sendRealTimeUpdate(_userId: string, _data: any): Promise<void>;
+  broadcastToWarehouse(_warehouseId: string, _data: any): Promise<void>;
+  broadcastSystemAlert(_data: any): Promise<void>;
 }
 
 class NotificationServiceImpl implements NotificationService {

@@ -1,12 +1,10 @@
 import {
   WorkOrder,
   Profile,
-  Notification,
   InsertNotification,
   EscalationRule,
   InsertEscalationRule,
   EscalationHistory,
-  InsertEscalationHistory,
 } from '@shared/schema';
 import { storage } from '../storage';
 import { db } from '../db';

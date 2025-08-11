@@ -1,5 +1,4 @@
 import crypto from 'crypto';
-import { storage } from '../storage';
 
 export interface WebhookEvent {
   id: string;

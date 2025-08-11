@@ -385,7 +385,7 @@ class PMSchedulerEnhanced {
   /**
    * Determine escalation level based on compliance
    */
-  private determineEscalationLevel(complianceStatus: any, config: PMSchedulingConfig): number {
+  private determineEscalationLevel(complianceStatus: any, _config: PMSchedulingConfig): number {
     if (complianceStatus.missedPMCount > 5) return 3;
     if (complianceStatus.missedPMCount > 2) return 2;
     if (complianceStatus.missedPMCount > 0) return 1;

@@ -51,98 +51,98 @@ export interface IStorage {
   initializeData(): Promise<void>;
 
   // Profiles
-  getProfile(id: string): Promise<Profile | undefined>;
+  getProfile(_id: string): Promise<Profile | undefined>;
   getProfiles(): Promise<Profile[]>;
-  getProfileByEmail(email: string): Promise<Profile | undefined>;
-  createProfile(profile: InsertProfile): Promise<Profile>;
-  updateProfile(id: string, profile: Partial<InsertProfile>): Promise<Profile>;
+  getProfileByEmail(_email: string): Promise<Profile | undefined>;
+  createProfile(_profile: InsertProfile): Promise<Profile>;
+  updateProfile(_id: string, _profile: Partial<InsertProfile>): Promise<Profile>;
 
   // Warehouses
   getWarehouses(): Promise<Warehouse[]>;
-  getWarehouse(id: string): Promise<Warehouse | undefined>;
-  createWarehouse(warehouse: InsertWarehouse): Promise<Warehouse>;
+  getWarehouse(_id: string): Promise<Warehouse | undefined>;
+  createWarehouse(_warehouse: InsertWarehouse): Promise<Warehouse>;
 
   // Equipment
-  getEquipment(warehouseId: string): Promise<Equipment[]>;
-  getEquipmentById(id: string): Promise<Equipment | undefined>;
-  getEquipmentByAssetTag(assetTag: string): Promise<Equipment | undefined>;
-  createEquipment(equipment: InsertEquipment): Promise<Equipment>;
-  updateEquipment(id: string, equipment: Partial<InsertEquipment>): Promise<Equipment>;
+  getEquipment(_warehouseId: string): Promise<Equipment[]>;
+  getEquipmentById(_id: string): Promise<Equipment | undefined>;
+  getEquipmentByAssetTag(_assetTag: string): Promise<Equipment | undefined>;
+  createEquipment(_equipment: InsertEquipment): Promise<Equipment>;
+  updateEquipment(_id: string, _equipment: Partial<InsertEquipment>): Promise<Equipment>;
 
   // Work Orders
-  getWorkOrders(warehouseId: string, filters?: any): Promise<WorkOrder[]>;
-  getWorkOrder(id: string): Promise<WorkOrder | undefined>;
-  createWorkOrder(workOrder: InsertWorkOrder): Promise<WorkOrder>;
-  updateWorkOrder(id: string, workOrder: Partial<InsertWorkOrder>): Promise<WorkOrder>;
-  deleteWorkOrder(id: string): Promise<void>;
-  getWorkOrdersByAssignee(userId: string): Promise<WorkOrder[]>;
+  getWorkOrders(_warehouseId: string, _filters?: any): Promise<WorkOrder[]>;
+  getWorkOrder(_id: string): Promise<WorkOrder | undefined>;
+  createWorkOrder(_workOrder: InsertWorkOrder): Promise<WorkOrder>;
+  updateWorkOrder(_id: string, _workOrder: Partial<InsertWorkOrder>): Promise<WorkOrder>;
+  deleteWorkOrder(_id: string): Promise<void>;
+  getWorkOrdersByAssignee(_userId: string): Promise<WorkOrder[]>;
 
   // Work Order Checklist Items
-  getChecklistItems(workOrderId: string): Promise<WorkOrderChecklistItem[]>;
+  getChecklistItems(_workOrderId: string): Promise<WorkOrderChecklistItem[]>;
   createChecklistItem(
-    item: Omit<WorkOrderChecklistItem, 'id' | 'createdAt'>
+    _item: Omit<WorkOrderChecklistItem, 'id' | 'createdAt'>
   ): Promise<WorkOrderChecklistItem>;
   createWorkOrderChecklistItem(
-    item: Omit<WorkOrderChecklistItem, 'id' | 'createdAt'>
+    _item: Omit<WorkOrderChecklistItem, 'id' | 'createdAt'>
   ): Promise<WorkOrderChecklistItem>;
   updateChecklistItem(
-    id: string,
-    item: Partial<WorkOrderChecklistItem>
+    _id: string,
+    _item: Partial<WorkOrderChecklistItem>
   ): Promise<WorkOrderChecklistItem>;
 
   // Parts
-  getParts(warehouseId: string): Promise<Part[]>;
-  getPart(id: string): Promise<Part | undefined>;
-  getPartByNumber(partNumber: string): Promise<Part | undefined>;
-  createPart(part: InsertPart): Promise<Part>;
-  updatePart(id: string, part: Partial<InsertPart>): Promise<Part>;
-  getPartsUsage(workOrderId: string): Promise<PartsUsage[]>;
-  getPartsUsageById(id: string): Promise<PartsUsage | undefined>;
-  getPartsUsageByWorkOrder(workOrderId: string): Promise<PartsUsage[]>;
-  createPartsUsage(usage: Omit<PartsUsage, 'id' | 'createdAt'>): Promise<PartsUsage>;
-  updatePartsUsage(id: string, usage: Partial<PartsUsage>): Promise<PartsUsage>;
-  getPartsUsageAnalytics(filters: {
+  getParts(_warehouseId: string): Promise<Part[]>;
+  getPart(_id: string): Promise<Part | undefined>;
+  getPartByNumber(_partNumber: string): Promise<Part | undefined>;
+  createPart(_part: InsertPart): Promise<Part>;
+  updatePart(_id: string, _part: Partial<InsertPart>): Promise<Part>;
+  getPartsUsage(_workOrderId: string): Promise<PartsUsage[]>;
+  getPartsUsageById(_id: string): Promise<PartsUsage | undefined>;
+  getPartsUsageByWorkOrder(_workOrderId: string): Promise<PartsUsage[]>;
+  createPartsUsage(_usage: Omit<PartsUsage, 'id' | 'createdAt'>): Promise<PartsUsage>;
+  updatePartsUsage(_id: string, _usage: Partial<PartsUsage>): Promise<PartsUsage>;
+  getPartsUsageAnalytics(_filters: {
     startDate?: Date;
     equipmentId?: string;
   }): Promise<(PartsUsage & { part?: Part })[]>;
 
   // Labor Time Tracking
-  getLaborTime(workOrderId: string): Promise<LaborTime[]>;
-  getLaborTimeById(id: string): Promise<LaborTime | undefined>;
-  createLaborTime(laborTime: InsertLaborTime): Promise<LaborTime>;
-  updateLaborTime(id: string, laborTime: Partial<InsertLaborTime>): Promise<LaborTime>;
-  deleteLaborTime(id: string): Promise<void>;
-  getActiveLaborTime(userId: string): Promise<LaborTime | undefined>;
+  getLaborTime(_workOrderId: string): Promise<LaborTime[]>;
+  getLaborTimeById(_id: string): Promise<LaborTime | undefined>;
+  createLaborTime(_laborTime: InsertLaborTime): Promise<LaborTime>;
+  updateLaborTime(_id: string, _laborTime: Partial<InsertLaborTime>): Promise<LaborTime>;
+  deleteLaborTime(_id: string): Promise<void>;
+  getActiveLaborTime(_userId: string): Promise<LaborTime | undefined>;
 
   // Vendors
-  getVendors(warehouseId: string): Promise<Vendor[]>;
-  getVendor(id: string): Promise<Vendor | undefined>;
-  createVendor(vendor: InsertVendor): Promise<Vendor>;
-  updateVendor(id: string, vendor: Partial<InsertVendor>): Promise<Vendor>;
-  deleteVendor(id: string): Promise<void>;
+  getVendors(_warehouseId: string): Promise<Vendor[]>;
+  getVendor(_id: string): Promise<Vendor | undefined>;
+  createVendor(_vendor: InsertVendor): Promise<Vendor>;
+  updateVendor(_id: string, _vendor: Partial<InsertVendor>): Promise<Vendor>;
+  deleteVendor(_id: string): Promise<void>;
 
   // PM Templates
-  getPmTemplates(warehouseId: string): Promise<PmTemplate[]>;
-  getPmTemplate(id: string): Promise<PmTemplate | null>;
-  createPmTemplate(template: InsertPmTemplate): Promise<PmTemplate>;
-  updatePmTemplate(id: string, updates: Partial<InsertPmTemplate>): Promise<PmTemplate | null>;
-  deletePmTemplate(id: string): Promise<void>;
+  getPmTemplates(_warehouseId: string): Promise<PmTemplate[]>;
+  getPmTemplate(_id: string): Promise<PmTemplate | null>;
+  createPmTemplate(_template: InsertPmTemplate): Promise<PmTemplate>;
+  updatePmTemplate(_id: string, _updates: Partial<InsertPmTemplate>): Promise<PmTemplate | null>;
+  deletePmTemplate(_id: string): Promise<void>;
 
   // Notifications
-  getNotifications(userId: string): Promise<Notification[]>;
-  createNotification(notification: InsertNotification): Promise<Notification>;
-  markNotificationRead(id: string): Promise<void>;
+  getNotifications(_userId: string): Promise<Notification[]>;
+  createNotification(_notification: InsertNotification): Promise<Notification>;
+  markNotificationRead(_id: string): Promise<void>;
 
   // Attachments
   getAttachments(
-    workOrderId?: string,
-    equipmentId?: string,
-    pmTemplateId?: string,
-    vendorId?: string
+    _workOrderId?: string,
+    _equipmentId?: string,
+    _pmTemplateId?: string,
+    _vendorId?: string
   ): Promise<Attachment[]>;
-  getAttachmentById(id: string): Promise<Attachment | undefined>;
-  createAttachment(attachment: InsertAttachment): Promise<Attachment>;
-  deleteAttachment(id: string): Promise<void>;
+  getAttachmentById(_id: string): Promise<Attachment | undefined>;
+  createAttachment(_attachment: InsertAttachment): Promise<Attachment>;
+  deleteAttachment(_id: string): Promise<void>;
   getFileUploadStatistics(): Promise<{
     totalFiles: number;
     totalSize: number;
@@ -151,15 +151,15 @@ export interface IStorage {
   }>;
 
   // Labor Time
-  getLaborTime(workOrderId: string): Promise<LaborTime[]>;
-  getLaborTimeById(id: string): Promise<LaborTime | undefined>;
-  createLaborTime(laborTime: InsertLaborTime): Promise<LaborTime>;
-  updateLaborTime(id: string, laborTime: Partial<InsertLaborTime>): Promise<LaborTime>;
-  deleteLaborTime(id: string): Promise<void>;
-  getActiveLaborTime(userId: string): Promise<LaborTime | undefined>;
+  getLaborTime(_workOrderId: string): Promise<LaborTime[]>;
+  getLaborTimeById(_id: string): Promise<LaborTime | undefined>;
+  createLaborTime(_laborTime: InsertLaborTime): Promise<LaborTime>;
+  updateLaborTime(_id: string, _laborTime: Partial<InsertLaborTime>): Promise<LaborTime>;
+  deleteLaborTime(_id: string): Promise<void>;
+  getActiveLaborTime(_userId: string): Promise<LaborTime | undefined>;
 
   // System Logs
-  createSystemLog(log: Omit<SystemLog, 'id' | 'createdAt'>): Promise<SystemLog>;
+  createSystemLog(_log: Omit<SystemLog, 'id' | 'createdAt'>): Promise<SystemLog>;
 }
 
 export class MemStorage implements IStorage {
