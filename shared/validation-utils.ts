@@ -4,13 +4,11 @@ import { z } from 'zod';
 /**
  * Utility to transform camelCase keys to snake_case
  */
-export function camelToSnake(_obj: Record<string, unknown>): Record<string, unknown>;
-export function camelToSnake(_obj: Record<string, unknown>[]): Record<string, unknown>[];
 export function camelToSnake(obj: Record<string, unknown> | Record<string, unknown>[]): Record<string, unknown> | Record<string, unknown>[] {
   if (!obj || typeof obj !== 'object' || obj instanceof Date) return obj;
 
   if (Array.isArray(obj)) {
-    return obj.map(item => camelToSnake(item as Record<string, unknown>));
+    return obj.map(item => camelToSnake(item as Record<string, unknown>)) as Record<string, unknown>[];
   }
 
   const result: Record<string, unknown> = {};
@@ -28,13 +26,11 @@ export function camelToSnake(obj: Record<string, unknown> | Record<string, unkno
 /**
  * Utility to transform snake_case keys to camelCase
  */
-export function snakeToCamel(_obj: Record<string, unknown>): Record<string, unknown>;
-export function snakeToCamel(_obj: Record<string, unknown>[]): Record<string, unknown>[];
 export function snakeToCamel(obj: Record<string, unknown> | Record<string, unknown>[]): Record<string, unknown> | Record<string, unknown>[] {
   if (!obj || typeof obj !== 'object' || obj instanceof Date) return obj;
 
   if (Array.isArray(obj)) {
-    return obj.map(item => snakeToCamel(item as Record<string, unknown>));
+    return obj.map(item => snakeToCamel(item as Record<string, unknown>)) as Record<string, unknown>[];
   }
 
   const result: Record<string, unknown> = {};

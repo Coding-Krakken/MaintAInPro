@@ -259,7 +259,7 @@ export class WebSocketService {
     return this.subscribe('pm_update', callback);
   }
 
-  public subscribeToNotifications(callback: (_data: NotificationData) => void): () => void {
+  public subscribeToNotifications(callback: (_data: unknown) => void): () => void {
     return this.subscribe('notification', callback);
   }
 

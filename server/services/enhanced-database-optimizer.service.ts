@@ -281,7 +281,7 @@ class DatabasePerformanceService {
 
       return metrics;
     } catch (_error) {
-      logger._error('Failed to get database health metrics', _error, { service: this.serviceName });
+      logger.error('Failed to get database health metrics', _error, { service: this.serviceName });
       throw _error;
     }
   }

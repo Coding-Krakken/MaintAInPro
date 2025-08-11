@@ -275,7 +275,7 @@ const EnhancedVendorManagement: React.FC = () => {
             <CardTitle>Vendor Management</CardTitle>
             <div className='flex items-center space-x-4'>
               {/* Filters */}
-              <Select value={filterType} onValueChange={(value: unknown) => setFilterType(value)}>
+              <Select value={filterType} onValueChange={(value) => setFilterType(value as 'all' | 'contractor' | 'supplier')}>
                 <SelectTrigger className='w-32'>
                   <SelectValue />
                 </SelectTrigger>
@@ -286,7 +286,7 @@ const EnhancedVendorManagement: React.FC = () => {
                 </SelectContent>
               </Select>
 
-              <Select value={filterStatus} onValueChange={(value: unknown) => setFilterStatus(value)}>
+              <Select value={filterStatus} onValueChange={(value) => setFilterStatus(value as 'all' | 'active' | 'inactive' | 'pending')}>
                 <SelectTrigger className='w-32'>
                   <SelectValue />
                 </SelectTrigger>

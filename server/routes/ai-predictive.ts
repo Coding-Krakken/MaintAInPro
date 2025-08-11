@@ -16,7 +16,7 @@ export function registerAIPredictiveRoutes(
       const healthScore = await aiPredictiveService.calculateHealthScore(id, warehouseId);
       res.json(healthScore);
     } catch (_error) {
-      console._error('Get health score _error:', _error);
+      console.error('Get health score _error:', _error);
       res.status(500).json({ message: 'Failed to calculate equipment health score' });
     }
   });
@@ -31,7 +31,7 @@ export function registerAIPredictiveRoutes(
       const prediction = await aiPredictiveService.predictFailure(id, warehouseId);
       res.json(prediction);
     } catch (_error) {
-      console._error('Get failure prediction _error:', _error);
+      console.error('Get failure prediction _error:', _error);
       res.status(500).json({ message: 'Failed to predict equipment failure' });
     }
   });
@@ -50,7 +50,7 @@ export function registerAIPredictiveRoutes(
         const optimization = await aiPredictiveService.optimizeMaintenanceStrategy(id, warehouseId);
         res.json(optimization);
       } catch (_error) {
-        console._error('Get optimization _error:', _error);
+        console.error('Get optimization _error:', _error);
         res.status(500).json({ message: 'Failed to optimize maintenance strategy' });
       }
     }
@@ -67,7 +67,7 @@ export function registerAIPredictiveRoutes(
       const trends = await aiPredictiveService.analyzePerformanceTrends(id, warehouseId, months);
       res.json(trends);
     } catch (_error) {
-      console._error('Get performance trends _error:', _error);
+      console.error('Get performance trends _error:', _error);
       res.status(500).json({ message: 'Failed to analyze performance trends' });
     }
   });
@@ -88,7 +88,7 @@ export function registerAIPredictiveRoutes(
           try {
             return await aiPredictiveService.calculateHealthScore(id, warehouseId);
           } catch (_error) {
-            console._error(`Error calculating health score for equipment ${id}:`, _error);
+            console.error(`Error calculating health score for equipment ${id}:`, _error);
             return null;
           }
         })
@@ -99,7 +99,7 @@ export function registerAIPredictiveRoutes(
 
       res.json(validHealthScores);
     } catch (_error) {
-      console._error('Bulk health analysis _error:', _error);
+      console.error('Bulk health analysis _error:', _error);
       res.status(500).json({ message: 'Failed to perform bulk health analysis' });
     }
   });
@@ -196,7 +196,7 @@ export function registerAIPredictiveRoutes(
 
       res.json(dashboardData);
     } catch (_error) {
-      console._error('AI dashboard _error:', _error);
+      console.error('AI dashboard _error:', _error);
       res.status(500).json({ message: 'Failed to generate AI dashboard data' });
     }
   });
@@ -226,7 +226,7 @@ export function registerAIPredictiveRoutes(
 
       res.json(recommendations);
     } catch (_error) {
-      console._error('Get recommendations _error:', _error);
+      console.error('Get recommendations _error:', _error);
       res.status(500).json({ message: 'Failed to get equipment recommendations' });
     }
   });
@@ -309,7 +309,7 @@ export function registerAIPredictiveRoutes(
 
         res.json(reportData);
       } catch (_error) {
-        console._error('Generate report _error:', _error);
+        console.error('Generate report _error:', _error);
         res.status(500).json({ message: 'Failed to generate predictive maintenance report' });
       }
     }

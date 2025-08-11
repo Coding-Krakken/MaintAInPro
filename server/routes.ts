@@ -133,7 +133,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       res.status(statusCode).json(response);
     } catch (_error) {
-      console._error('Health check _error:', _error);
+      console.error('Health check _error:', _error);
       res.status(500).json({
         status: 'unhealthy',
         timestamp: new Date().toISOString(),
@@ -215,7 +215,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       };
       next();
     } catch (_error) {
-      console._error('Authentication _error:', _error);
+      console.error('Authentication _error:', _error);
       return res.status(401).json({ message: 'Authentication failed' });
     }
   };
@@ -238,7 +238,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
         next();
       } catch (_error) {
-        console._error('Authorization _error:', _error);
+        console.error('Authorization _error:', _error);
         return res.status(403).json({ message: 'Access denied' });
       }
     };
@@ -278,7 +278,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       res.json(performanceDashboard);
     } catch (_error) {
-      console._error('Performance dashboard _error:', _error);
+      console.error('Performance dashboard _error:', _error);
       res.status(500).json({
         _error: 'Failed to generate performance dashboard',
         message: _error.message,
@@ -292,13 +292,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const _generalRateLimit = createRateLimiter(15 * 60 * 1000, 100); // 100 requests per 15 minutes
 
   const getCurrentUser = (req: unknown) => {
-    return req.user?.id || req.headers['x-user-id'] || '00000000-0000-0000-0000-000000000001';
+    return (req as any).user?.id || (req as any).headers['x-user-id'] || '00000000-0000-0000-0000-000000000001';
   };
 
   const getCurrentWarehouse = (req: unknown) => {
     return (
-      req.user?.warehouseId ||
-      req.headers['x-warehouse-id'] ||
+      (req as any).user?.warehouseId ||
+      (req as any).headers['x-warehouse-id'] ||
       '00000000-0000-0000-0000-000000000001'
     );
   };
@@ -340,7 +340,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         sessionId: loginResult.sessionId,
       });
     } catch (_error) {
-      console._error('Login _error:', _error);
+      console.error('Login _error:', _error);
       res.status(500).json({ message: 'Login failed' });
     }
   });
@@ -360,7 +360,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       res.json({ message: 'Logout successful' });
     } catch (_error) {
-      console._error('Logout _error:', _error);
+      console.error('Logout _error:', _error);
       res.status(500).json({ message: 'Logout failed' });
     }
   });
@@ -390,7 +390,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         refreshToken: result.tokens?.refreshToken,
       });
     } catch (_error) {
-      console._error('Token refresh _error:', _error);
+      console.error('Token refresh _error:', _error);
       res.status(500).json({ message: 'Token refresh failed' });
     }
   });
@@ -407,7 +407,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       res.json(result);
     } catch (_error) {
-      console._error('MFA setup _error:', _error);
+      console.error('MFA setup _error:', _error);
       res.status(500).json({ message: 'MFA setup failed' });
     }
   });
@@ -432,7 +432,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       res.json({ message: 'MFA enabled successfully' });
     } catch (_error) {
-      console._error('MFA enable _error:', _error);
+      console.error('MFA enable _error:', _error);
       res.status(500).json({ message: 'MFA enable failed' });
     }
   });
@@ -457,7 +457,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         userId: result.userId,
       });
     } catch (_error) {
-      console._error('Registration _error:', _error);
+      console.error('Registration _error:', _error);
       res.status(500).json({ message: 'Registration failed' });
     }
   });
@@ -483,7 +483,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Always return success for security (don't reveal if email exists)
       res.json({ message: 'If the email exists, a password reset link has been sent' });
     } catch (_error) {
-      console._error('Password reset request _error:', _error);
+      console.error('Password reset request _error:', _error);
       res.status(500).json({ message: 'Password reset request failed' });
     }
   });
@@ -512,7 +512,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       res.json({ message: 'Password reset successful' });
     } catch (_error) {
-      console._error('Password reset confirmation _error:', _error);
+      console.error('Password reset confirmation _error:', _error);
       res.status(500).json({ message: 'Password reset confirmation failed' });
     }
   });
@@ -527,7 +527,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       res.json(sessions);
     } catch (_error) {
-      console._error('Get sessions _error:', _error);
+      console.error('Get sessions _error:', _error);
       res.status(500).json({ message: 'Failed to get sessions' });
     }
   });
@@ -546,7 +546,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       res.json({ message: 'Session ended successfully' });
     } catch (_error) {
-      console._error('End session _error:', _error);
+      console.error('End session _error:', _error);
       res.status(500).json({ message: 'Failed to end session' });
     }
   });
@@ -564,7 +564,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         endedSessions: endedCount,
       });
     } catch (_error) {
-      console._error('End all sessions _error:', _error);
+      console.error('End all sessions _error:', _error);
       res.status(500).json({ message: 'Failed to end sessions' });
     }
   });
@@ -918,7 +918,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (_error instanceof z.ZodError) {
         return res.status(400).json({ message: 'Invalid work order data', errors: _error.errors });
       }
-      if (error.message === 'Work order not found') {
+      if (_error.message === 'Work order not found') {
         return res.status(404).json({ message: 'Work order not found' });
       }
       res.status(500).json({ message: 'Failed to update work order' });
@@ -1145,7 +1145,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         inventoryImpact,
       });
     } catch (_error) {
-      console._error('Error creating parts usage:', _error);
+      console.error('Error creating parts usage:', _error);
       res.status(500).json({ message: 'Failed to create parts usage' });
     }
   });
@@ -1224,7 +1224,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         message: `Successfully consumed ${consumedCount} parts from inventory`,
       });
     } catch (_error) {
-      console._error('Error consuming parts:', _error);
+      console.error('Error consuming parts:', _error);
       res.status(500).json({ message: 'Failed to consume parts' });
     }
   });
@@ -1290,7 +1290,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         rawData: partsUsage,
       });
     } catch (_error) {
-      console._error('Error getting parts consumption analytics:', _error);
+      console.error('Error getting parts consumption analytics:', _error);
       res.status(500).json({ message: 'Failed to get analytics' });
     }
   });
@@ -1324,7 +1324,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       res.json(impacts);
     } catch (_error) {
-      console._error('Error getting inventory impact:', _error);
+      console.error('Error getting inventory impact:', _error);
       res.status(500).json({ message: 'Failed to get inventory impact' });
     }
   });
@@ -1566,7 +1566,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (_error instanceof z.ZodError) {
         return res.status(400).json({ message: 'Invalid vendor data', errors: _error.errors });
       }
-      if (error.message === 'Vendor not found') {
+      if (_error.message === 'Vendor not found') {
         return res.status(404).json({ message: 'Vendor not found' });
       }
       res.status(500).json({ message: 'Failed to update vendor' });
@@ -1598,7 +1598,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const templates = await storage.getPmTemplates(warehouseId);
       res.json(templates);
     } catch (_error) {
-      console._error('Error fetching PM templates:', _error);
+      console.error('Error fetching PM templates:', _error);
       res.status(500).json({ _error: 'Failed to fetch PM templates' });
     }
   });
@@ -1619,7 +1619,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const template = await storage.createPmTemplate(templateData);
       res.status(201).json(template);
     } catch (_error) {
-      console._error('Error creating PM template:', _error);
+      console.error('Error creating PM template:', _error);
       res.status(500).json({ _error: 'Failed to create PM template' });
     }
   });
@@ -1639,7 +1639,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       res.json(template);
     } catch (_error) {
-      console._error('Error updating PM template:', _error);
+      console.error('Error updating PM template:', _error);
       res.status(500).json({ _error: 'Failed to update PM template' });
     }
   });
@@ -1655,7 +1655,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       await storage.deletePmTemplate(id);
       res.status(204).send();
     } catch (_error) {
-      console._error('Error deleting PM template:', _error);
+      console.error('Error deleting PM template:', _error);
       res.status(500).json({ _error: 'Failed to delete PM template' });
     }
   });
@@ -1739,7 +1739,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         monthlyTrends,
       });
     } catch (_error) {
-      console._error('Error fetching PM compliance:', _error);
+      console.error('Error fetching PM compliance:', _error);
       res.status(500).json({ _error: 'Failed to fetch PM compliance data' });
     }
   });
@@ -1753,7 +1753,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       pmScheduler.start();
       res.json({ message: 'PM scheduler started', status: pmScheduler.getStatus() });
     } catch (_error) {
-      console._error('Error starting PM scheduler:', _error);
+      console.error('Error starting PM scheduler:', _error);
       res.status(500).json({ _error: 'Failed to start PM scheduler' });
     }
   });
@@ -1766,7 +1766,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       pmScheduler.stop();
       res.json({ message: 'PM scheduler stopped', status: pmScheduler.getStatus() });
     } catch (_error) {
-      console._error('Error stopping PM scheduler:', _error);
+      console.error('Error stopping PM scheduler:', _error);
       res.status(500).json({ _error: 'Failed to stop PM scheduler' });
     }
   });
@@ -1779,7 +1779,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const status = pmScheduler.getStatus();
       res.json(status);
     } catch (_error) {
-      console._error('Error getting PM scheduler status:', _error);
+      console.error('Error getting PM scheduler status:', _error);
       res.status(500).json({ _error: 'Failed to get PM scheduler status' });
     }
   });
@@ -1797,7 +1797,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       await pmScheduler.runForWarehouse(warehouseId);
       res.json({ message: 'PM scheduler run completed' });
     } catch (_error) {
-      console._error('Error running PM scheduler:', _error);
+      console.error('Error running PM scheduler:', _error);
       res.status(500).json({ _error: 'Failed to run PM scheduler' });
     }
   });
@@ -1885,7 +1885,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         workOrders: result,
       });
     } catch (_error) {
-      console._error('PM generation _error:', _error);
+      console.error('PM generation _error:', _error);
       res.status(500).json({ message: 'Failed to generate PM work orders' });
     }
   });
@@ -1912,7 +1912,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       res.json(schedules);
     } catch (_error) {
-      console._error('PM schedule _error:', _error);
+      console.error('PM schedule _error:', _error);
       res.status(500).json({ message: 'Failed to get PM schedule' });
     }
   });
@@ -1927,7 +1927,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const compliance = await pmEngine.checkComplianceStatus(equipmentId, warehouseId);
       res.json(compliance);
     } catch (_error) {
-      console._error('PM compliance _error:', _error);
+      console.error('PM compliance _error:', _error);
       res.status(500).json({ message: 'Failed to get compliance status' });
     }
   });
@@ -1941,7 +1941,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const result = await pmEngine.runPMAutomation(warehouseId);
       res.json(result);
     } catch (_error) {
-      console._error('PM automation _error:', _error);
+      console.error('PM automation _error:', _error);
       res.status(500).json({ message: 'Failed to run PM automation' });
     }
   });
@@ -2194,7 +2194,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       res.json(equipmentMetrics);
     } catch (_error) {
-      console._error('Error fetching equipment performance:', _error);
+      console.error('Error fetching equipment performance:', _error);
       res.status(500).json({ message: 'Failed to fetch equipment performance data' });
     }
   });
@@ -2232,7 +2232,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       res.json(trends);
     } catch (_error) {
-      console._error('Error fetching performance trends:', _error);
+      console.error('Error fetching performance trends:', _error);
       res.status(500).json({ message: 'Failed to fetch performance trends' });
     }
   });

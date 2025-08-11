@@ -64,7 +64,7 @@ export class PasswordService {
       // Verify password
       return await bcrypt.compare(pepperedPassword, hash);
     } catch (_error) {
-      console._error('Password verification _error:', _error);
+      console.error('Password verification _error:', _error);
       return false;
     }
   }

@@ -99,7 +99,7 @@ export class EnhancedCacheService {
       this.cacheStats.misses++;
       return null;
     } catch (_error) {
-      console._error('[Cache] Get _error:', _error);
+      console.error('[Cache] Get _error:', _error);
       this.cacheStats.errors++;
       return null;
     }
@@ -120,7 +120,7 @@ export class EnhancedCacheService {
 
       return true;
     } catch (_error) {
-      console._error('[Cache] Set _error:', _error);
+      console.error('[Cache] Set _error:', _error);
       this.cacheStats.errors++;
       return false;
     }
@@ -141,7 +141,7 @@ export class EnhancedCacheService {
 
       return true;
     } catch (_error) {
-      console._error('[Cache] Delete _error:', _error);
+      console.error('[Cache] Delete _error:', _error);
       this.cacheStats.errors++;
       return false;
     }
@@ -160,7 +160,7 @@ export class EnhancedCacheService {
         await this.redisClient.flushDb();
       }
     } catch (_error) {
-      console._error('[Cache] Clear _error:', _error);
+      console.error('[Cache] Clear _error:', _error);
       this.cacheStats.errors++;
     }
   }
@@ -205,7 +205,7 @@ export class EnhancedCacheService {
       await this.set(key, result, ttlSeconds);
       return result;
     } catch (_error) {
-      console._error(`[Cache] Error executing cached function for key ${key}:`, _error);
+      console.error(`[Cache] Error executing cached function for key ${key}:`, _error);
       throw _error;
     }
   }
@@ -234,7 +234,7 @@ export class EnhancedCacheService {
         }
       }
     } catch (_error) {
-      console._error('[Cache] Pattern invalidation _error:', _error);
+      console.error('[Cache] Pattern invalidation _error:', _error);
       this.cacheStats.errors++;
     }
 
@@ -278,7 +278,7 @@ export class EnhancedCacheService {
         }
       }
     } catch (_error) {
-      console._error('[Cache] Batch get _error:', _error);
+      console.error('[Cache] Batch get _error:', _error);
       this.cacheStats.errors++;
     }
 
@@ -366,7 +366,7 @@ export class EnhancedCacheService {
       this.memoryCache.clear();
       console.log('[Cache] Cache service shutdown complete');
     } catch (_error) {
-      console._error('[Cache] Shutdown _error:', _error);
+      console.error('[Cache] Shutdown _error:', _error);
     }
   }
 }

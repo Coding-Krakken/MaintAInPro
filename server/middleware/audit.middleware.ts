@@ -66,7 +66,7 @@ export function auditMiddleware() {
           });
         }
       } catch (_error) {
-        console._error('Audit logging _error:', _error);
+        console.error('Audit logging _error:', _error);
         // Don't fail the request due to audit logging errors
       }
     });

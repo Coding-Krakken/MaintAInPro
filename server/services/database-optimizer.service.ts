@@ -178,7 +178,7 @@ export class DatabaseOptimizerService {
       } catch (_error) {
         const errorMessage = `Failed to apply index: ${query} - Error: ${_error.message}`;
         results.errors.push(errorMessage);
-        console._error(`❌ ${errorMessage}`);
+        console.error(`❌ ${errorMessage}`);
         results.success = false;
       }
     }
@@ -326,7 +326,7 @@ export class DatabaseOptimizerService {
         await db.execute(`VACUUM ANALYZE ${table}`);
         console.log(`✅ Maintained table: ${table}`);
       } catch (_error) {
-        console._error(`❌ Failed to maintain table ${table}: ${_error.message}`);
+        console.error(`❌ Failed to maintain table ${table}: ${_error.message}`);
       }
     }
 
@@ -386,7 +386,7 @@ export class DatabaseOptimizerService {
         performance,
       };
     } catch (_error) {
-      console._error('Error getting database health metrics:', _error);
+      console.error('Error getting database health metrics:', _error);
       return {
         connections: 0,
         cacheHitRatio: 0,

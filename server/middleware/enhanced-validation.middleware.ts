@@ -215,7 +215,7 @@ export function validateSchema<T extends z.ZodSchema>(schema: T, options: Valida
       if (transformFields && typeof validatedData === 'object' && fieldMapping === 'snakeToCamel') {
         // Keep both formats for flexibility
         enhancedReq.validatedData = validatedData; // camelCase for API
-        enhancedReq.validated = camelToSnake(validatedData); // snake_case for DB
+        enhancedReq.validated = camelToSnake(validatedData) as Record<string, unknown>; // snake_case for DB
       } else {
         enhancedReq.validatedData = validatedData;
         enhancedReq.validated = validatedData;
@@ -233,7 +233,7 @@ export function validateSchema<T extends z.ZodSchema>(schema: T, options: Valida
 
       next();
     } catch (_error) {
-      console._error(`[${enhancedReq.auditContext?.requestId}] Validation middleware error:`, _error);
+      console.error(`[${enhancedReq.auditContext?.requestId}] Validation middleware error:`, _error);
 
       const serverError = {
         success: false,

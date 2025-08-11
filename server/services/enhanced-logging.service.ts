@@ -212,10 +212,10 @@ class EnhancedLoggingService {
 
     if (error) {
       errorContext.error = {
-        name: error.name || 'Error',
-        message: error.message || String(error),
-        stack: error.stack,
-        code: error.code,
+        name: (error as any).name || 'Error',
+        message: (error as any).message || String(error),
+        stack: (error as any).stack,
+        code: (error as any).code,
       };
     }
 
@@ -238,10 +238,10 @@ class EnhancedLoggingService {
 
     if (error) {
       errorContext.error = {
-        name: error.name || 'FatalError',
-        message: error.message || String(error),
-        stack: error.stack,
-        code: error.code,
+        name: (error as any).name || 'FatalError',
+        message: (error as any).message || String(error),
+        stack: (error as any).stack,
+        code: (error as any).code,
       };
     }
 

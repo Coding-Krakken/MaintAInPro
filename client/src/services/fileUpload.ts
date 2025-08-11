@@ -265,7 +265,7 @@ export class FileUploadService {
 
       return response.ok;
     } catch (_error) {
-      console._error('Failed to delete file:', _error);
+      console.error('Failed to delete file:', _error);
       return false;
     }
   }

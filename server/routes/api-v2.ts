@@ -272,7 +272,7 @@ router.get(
         filters: filters,
       });
     } catch (_error) {
-      console._error('Get work orders _error:', _error);
+      console.error('Get work orders _error:', _error);
       res.status(500).json({
         success: false,
         _error: 'FETCH_ERROR',
@@ -304,7 +304,7 @@ router.get(
         data: workOrder,
       });
     } catch (_error) {
-      console._error('Get work order _error:', _error);
+      console.error('Get work order _error:', _error);
       res.status(500).json({
         success: false,
         _error: 'FETCH_ERROR',
@@ -383,7 +383,7 @@ router.post('/work-orders', validateSchema(insertWorkOrderSchema), async (req: a
       message: 'Work order created successfully',
     });
   } catch (_error) {
-    console._error('Create work order _error:', _error);
+    console.error('Create work order _error:', _error);
     res.status(500).json({
       success: false,
       _error: 'CREATE_ERROR',
@@ -459,7 +459,7 @@ router.put(
         message: 'Work order updated successfully',
       });
     } catch (_error) {
-      console._error('Update work order _error:', _error);
+      console.error('Update work order _error:', _error);
       res.status(500).json({
         success: false,
         _error: 'UPDATE_ERROR',
@@ -495,7 +495,7 @@ router.delete(
         message: 'Work order deleted successfully',
       });
     } catch (_error) {
-      console._error('Delete work order _error:', _error);
+      console.error('Delete work order _error:', _error);
       res.status(500).json({
         success: false,
         _error: 'DELETE_ERROR',
@@ -581,7 +581,7 @@ router.get(
         },
       });
     } catch (_error) {
-      console._error('Get equipment _error:', _error);
+      console.error('Get equipment _error:', _error);
       res.status(500).json({
         success: false,
         _error: 'FETCH_ERROR',
@@ -625,7 +625,7 @@ router.post('/equipment', validateSchema(insertEquipmentSchema), async (req: any
       message: 'Equipment created successfully',
     });
   } catch (_error) {
-    console._error('Create equipment _error:', _error);
+    console.error('Create equipment _error:', _error);
     res.status(500).json({
       success: false,
       _error: 'CREATE_ERROR',
@@ -656,7 +656,7 @@ router.get(
         data: equipment,
       });
     } catch (_error) {
-      console._error('Get equipment _error:', _error);
+      console.error('Get equipment _error:', _error);
       res.status(500).json({
         success: false,
         _error: 'FETCH_ERROR',
@@ -712,7 +712,7 @@ router.put(
         message: 'Equipment updated successfully',
       });
     } catch (_error) {
-      console._error('Update equipment _error:', _error);
+      console.error('Update equipment _error:', _error);
       res.status(500).json({
         success: false,
         _error: 'UPDATE_ERROR',
@@ -797,7 +797,7 @@ router.get(
         },
       });
     } catch (_error) {
-      console._error('Get parts _error:', _error);
+      console.error('Get parts _error:', _error);
       res.status(500).json({
         success: false,
         _error: 'FETCH_ERROR',
@@ -822,7 +822,7 @@ router.post('/parts', validateSchema(insertPartSchema), async (req: any, res) =>
       message: 'Part created successfully',
     });
   } catch (_error) {
-    console._error('Create part _error:', _error);
+    console.error('Create part _error:', _error);
     res.status(500).json({
       success: false,
       _error: 'CREATE_ERROR',
@@ -853,7 +853,7 @@ router.get(
         data: part,
       });
     } catch (_error) {
-      console._error('Get part _error:', _error);
+      console.error('Get part _error:', _error);
       res.status(500).json({
         success: false,
         _error: 'FETCH_ERROR',
@@ -940,7 +940,7 @@ router.put(
         message: 'Part updated successfully',
       });
     } catch (_error) {
-      console._error('Update part _error:', _error);
+      console.error('Update part _error:', _error);
       res.status(500).json({
         success: false,
         _error: 'UPDATE_ERROR',
@@ -1063,7 +1063,7 @@ router.get(
         data: analytics,
       });
     } catch (_error) {
-      console._error('Get analytics _error:', _error);
+      console.error('Get analytics _error:', _error);
       res.status(500).json({
         success: false,
         _error: 'FETCH_ERROR',
@@ -1103,7 +1103,7 @@ router.get(
         },
       });
     } catch (_error) {
-      console._error('Get trends _error:', _error);
+      console.error('Get trends _error:', _error);
       res.status(500).json({
         success: false,
         _error: 'FETCH_ERROR',
@@ -1162,7 +1162,7 @@ router.patch(
         message: `Bulk update completed. ${results.updated.length} updated, ${results.failed.length} failed.`,
       });
     } catch (_error) {
-      console._error('Bulk update _error:', _error);
+      console.error('Bulk update _error:', _error);
       res.status(500).json({
         success: false,
         _error: 'BULK_UPDATE_ERROR',
@@ -1237,7 +1237,7 @@ router.patch(
         message: `Bulk assignment completed. ${results.assigned.length} assigned, ${results.failed.length} failed.`,
       });
     } catch (_error) {
-      console._error('Bulk assign _error:', _error);
+      console.error('Bulk assign _error:', _error);
       res.status(500).json({
         success: false,
         _error: 'BULK_ASSIGN_ERROR',
