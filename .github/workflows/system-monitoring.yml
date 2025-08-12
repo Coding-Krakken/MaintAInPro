@@ -1,0 +1,65 @@
+# MaintAInPro System Monitoring & Status
+# Purpose: Scheduled and manual health checks for production/staging/API/CI/CD.
+# Triggers: Only runs for code changes, not docs-only edits.
+
+name: 📊 System Monitoring & Status
+on:
+  workflow_dispatch:
+    inputs:
+      force_check:
+        description: 'Force health check of all systems'
+        required: false
+        default: false
+        type: boolean
+  push:
+    paths:
+      - 'server/**'
+      - 'client/**'
+      - 'shared/**'
+      - 'api/**'
+      - 'docker-compose.yml'
+      - 'drizzle.config.ts'
+      - 'package.json'
+      - 'tsconfig.json'
+      - 'vite.config.ts'
+      - '.github/workflows/system-monitoring.yml'
+  schedule:
+    - cron: '0 * * * *'
+
+jobs:
+  system-health-check:
+    name: System Health Check
+    runs-on: ubuntu-latest
+    outputs:
+      status: ${{ steps.set_status.outputs.status }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Ensure health-check.sh is executable
+        run: chmod +x scripts/workflow-helpers/health-check.sh
+      - name: Run system health checks
+        id: set_status
+        run: bash scripts/workflow-helpers/health-check.sh
+      - name: 📤 Upload status artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: system-status-${{ github.run_number }}
+          path: status-report.json
+          retention-days: 30
+
+          
+
+  alert-on-issues:
+    needs: system-health-check
+    if: needs.system-health-check.outputs.status != 'healthy'
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🚨 Create system alert issue
+        run: |
+          npm install @octokit/rest
+          node scripts/workflow-helpers/system-alert-issue.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
