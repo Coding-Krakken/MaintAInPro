@@ -49,9 +49,9 @@ get_latest_deployment() {
     local branch=$1
     print_status "Getting latest deployment for branch: $branch"
     
-    # Get the latest production deployment
-    local deployment=$(vercel ls --scope $SCOPE 2>/dev/null | grep "● Ready" | grep "Production" | head -1 | awk '{print $2}' | sed 's/https:\/\///')
-    
+    # Get the latest production deployment URL (column 2 in Vercel CLI output)
+    local deployment=$(vercel ls --scope coding-krakken-projects --no-color 2>/dev/null | grep -o 'https://[^ ]*' | head -1 | sed 's|https://||')
+
     if [ -z "$deployment" ]; then
         print_error "❌ No production deployment found for branch $branch"
         echo "deployment-url=" >> "$GITHUB_OUTPUT"
