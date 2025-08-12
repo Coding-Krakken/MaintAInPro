@@ -39,6 +39,7 @@ jobs:
 
           if [ -z "$LATEST_DEPLOYMENT" ]; then
             echo "❌ No production deployment found"
+            echo "DEPLOYMENT_FOUND=false" >> $GITHUB_ENV
             exit 1
           fi
 
@@ -58,14 +59,16 @@ jobs:
           if [ -z "$LATEST_DEPLOYMENT" ]; then
             echo "❌ No production deployment found for branch $BRANCH_NAME."
             echo "deployment-url=" >> $GITHUB_OUTPUT
+            echo "DEPLOYMENT_FOUND=false" >> $GITHUB_ENV
             exit 1
           fi
 
           echo "Latest deployment for branch $BRANCH_NAME: $LATEST_DEPLOYMENT"
           echo "deployment-url=$LATEST_DEPLOYMENT" >> $GITHUB_OUTPUT
+          echo "DEPLOYMENT_FOUND=true" >> $GITHUB_ENV
 
       - name: Update Domain Aliases for Main Branch
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' && env.DEPLOYMENT_FOUND == 'true'
         run: |
           echo "🔄 Updating domain aliases for main branch..."
           DEPLOYMENT_URL="${{ steps.get-deployment.outputs.deployment-url }}"
@@ -81,7 +84,7 @@ jobs:
           echo "✅ Main branch domains updated successfully"
 
       - name: Update Domain Aliases for Stable Branch
-        if: github.ref == 'refs/heads/stable'
+        if: github.ref == 'refs/heads/stable' && env.DEPLOYMENT_FOUND == 'true'
         run: |
           echo "🔄 Updating domain aliases for stable branch..."
           DEPLOYMENT_URL="${{ steps.get-deployment.outputs.deployment-url }}"
@@ -97,7 +100,7 @@ jobs:
           echo "✅ Stable branch domains updated successfully"
 
       - name: Force Update All Domains (Manual Trigger)
-        if: github.event.inputs.force_update == 'true'
+        if: github.event.inputs.force_update == 'true' && env.DEPLOYMENT_FOUND == 'true'
         run: |
           echo "🔄 Force updating all domain aliases..."
           DEPLOYMENT_URL="${{ steps.get-deployment.outputs.deployment-url }}"
@@ -127,10 +130,11 @@ jobs:
             "branch": "${{ github.ref_name }}",
             "sha": "${{ github.sha }}",
             "deploymentUrl": "${{ steps.get-deployment.outputs.deployment-url }}",
+            "deploymentFound": "${{ env.DEPLOYMENT_FOUND }}",
             "updatedDomains": {
-              "main": $(if [ "${{ github.ref }}" = "refs/heads/main" ]; then echo '["unitedautosupply.org", "www.unitedautosupply.org"]'; else echo '[]'; fi),
-              "stable": $(if [ "${{ github.ref }}" = "refs/heads/stable" ]; then echo '["uasmaintenance.com", "www.uasmaintenance.com"]'; else echo '[]'; fi),
-              "force": $(if [ "${{ github.event.inputs.force_update }}" = "true" ]; then echo '["unitedautosupply.org", "www.unitedautosupply.org", "uasmaintenance.com", "www.uasmaintenance.com"]'; else echo '[]'; fi)
+              "main": $(if [ "${{ github.ref }}" = "refs/heads/main" ] && [ "${{ env.DEPLOYMENT_FOUND }}" = "true" ]; then echo '["unitedautosupply.org", "www.unitedautosupply.org"]'; else echo '[]'; fi),
+              "stable": $(if [ "${{ github.ref }}" = "refs/heads/stable" ] && [ "${{ env.DEPLOYMENT_FOUND }}" = "true" ]; then echo '["uasmaintenance.com", "www.uasmaintenance.com"]'; else echo '[]'; fi),
+              "force": $(if [ "${{ github.event.inputs.force_update }}" = "true" ] && [ "${{ env.DEPLOYMENT_FOUND }}" = "true" ]; then echo '["unitedautosupply.org", "www.unitedautosupply.org", "uasmaintenance.com", "www.uasmaintenance.com"]'; else echo '[]'; fi)
             },
             "actor": "${{ github.actor }}",
             "workflowRun": "${{ github.run_id }}"
