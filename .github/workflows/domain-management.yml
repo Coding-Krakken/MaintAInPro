@@ -10,7 +10,7 @@ on:
       force_update:
         description: 'Force update all domain aliases'
         required: false
-        default: 'false'
+        default: false
         type: boolean
 
 permissions:
@@ -43,6 +43,25 @@ jobs:
           fi
 
           echo "Latest deployment: $LATEST_DEPLOYMENT"
+          echo "deployment-url=$LATEST_DEPLOYMENT" >> $GITHUB_OUTPUT
+          # Get deployments for the current branch
+          echo "Listing all deployments for debugging:"
+          vercel ls --scope coding-krakken-projects --token=${{ secrets.VERCEL_TOKEN }}
+
+          # Get the current branch name
+          BRANCH_NAME=$(echo "${GITHUB_REF#refs/heads/}")
+          echo "Current branch: $BRANCH_NAME"
+
+          # Filter deployments by branch and status
+          LATEST_DEPLOYMENT=$(vercel ls --scope coding-krakken-projects --token=${{ secrets.VERCEL_TOKEN }} | grep "● Ready" | grep "Production" | grep "$BRANCH_NAME" | head -1 | awk '{print $2}' | sed 's/https:\/\///')
+
+          if [ -z "$LATEST_DEPLOYMENT" ]; then
+            echo "❌ No production deployment found for branch $BRANCH_NAME."
+            echo "deployment-url=" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+
+          echo "Latest deployment for branch $BRANCH_NAME: $LATEST_DEPLOYMENT"
           echo "deployment-url=$LATEST_DEPLOYMENT" >> $GITHUB_OUTPUT
 
       - name: Update Domain Aliases for Main Branch
