@@ -33,6 +33,8 @@ jobs:
     outputs:
       status: ${{ steps.set_status.outputs.status }}
     steps:
+      - name: List workflow helper scripts
+        run: ls -l scripts/workflow-helpers
       - name: Run system health checks
         id: set_status
         run: bash scripts/workflow-helpers/health-check.sh
