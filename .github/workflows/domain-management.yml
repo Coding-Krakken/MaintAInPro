@@ -66,16 +66,16 @@ jobs:
             ATTEMPT=1
             DEPLOYMENT_STATUS=""
             while [ $ATTEMPT -le $MAX_ATTEMPTS ]; do
-              DEPLOYMENT_STATUS=$(vercel inspect $LATEST_DEPLOYMENT --scope coding-krakken-projects --token=${{ secrets.VERCEL_TOKEN }} | grep "State:" | awk '{print $2}')
+              DEPLOYMENT_STATUS=$(vercel inspect $LATEST_DEPLOYMENT --scope coding-krakken-projects --token=${{ secrets.VERCEL_TOKEN }} | grep "status:" | grep -i "Ready")
               echo "Deployment status: $DEPLOYMENT_STATUS (attempt $ATTEMPT/$MAX_ATTEMPTS)"
-              if [ "$DEPLOYMENT_STATUS" = "READY" ]; then
+              if [ -n "$DEPLOYMENT_STATUS" ]; then
                 break
               fi
               sleep 10
               ATTEMPT=$((ATTEMPT+1))
             done
 
-            if [ "$DEPLOYMENT_STATUS" != "READY" ]; then
+            if [ -z "$DEPLOYMENT_STATUS" ]; then
               echo "❌ Deployment $LATEST_DEPLOYMENT is not ready after waiting."
               echo "deployment-url=" >> $GITHUB_OUTPUT
               echo "DEPLOYMENT_FOUND=false" >> $GITHUB_ENV
