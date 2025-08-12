@@ -3,6 +3,8 @@
 # Triggers: Only runs for code changes, not docs-only edits.
 
 name: 📊 System Monitoring & Status
+permissions:
+  issues: write
 on:
   workflow_dispatch:
     inputs:
