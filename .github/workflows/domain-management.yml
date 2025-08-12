@@ -34,17 +34,23 @@ jobs:
       - name: Get Latest Deployment URL
         id: get-deployment
         run: |
-          # Get the latest production deployment
-          LATEST_DEPLOYMENT=$(vercel ls --scope coding-krakken-projects --token=${{ secrets.VERCEL_TOKEN }} | grep "● Ready" | grep "Production" | head -1 | awk '{print $2}' | sed 's/https:\/\///')
+          # Get the latest production deployment for the current branch
+          echo "VERCEL_TOKEN=${{ secrets.VERCEL_TOKEN }}"
+          echo "BRANCH_NAME=${{ github.ref_name }}"
+          LATEST_DEPLOYMENT=$(vercel ls --scope coding-krakken-projects --token=${{ secrets.VERCEL_TOKEN }} | grep "● Ready" | grep "Production" | grep "${{ github.ref_name }}" | head -1 | awk '{print $2}' | sed 's/https:\/\///')
+
+          echo "LATEST_DEPLOYMENT=$LATEST_DEPLOYMENT"
 
           if [ -z "$LATEST_DEPLOYMENT" ]; then
-            echo "❌ No production deployment found"
+            echo "❌ No production deployment found for branch ${{ github.ref_name }}"
             echo "deployment-url=" >> $GITHUB_OUTPUT
+            echo "DEPLOYMENT_FOUND=false" >> $GITHUB_ENV
             exit 1
           fi
 
           echo "Latest production deployment: $LATEST_DEPLOYMENT"
           echo "deployment-url=$LATEST_DEPLOYMENT" >> $GITHUB_OUTPUT
+          echo "DEPLOYMENT_FOUND=true" >> $GITHUB_ENV
 
       - name: Update Domain Aliases for Main Branch
         if: github.ref == 'refs/heads/main' && env.DEPLOYMENT_FOUND == 'true'
