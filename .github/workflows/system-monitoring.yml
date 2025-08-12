@@ -33,10 +33,10 @@ jobs:
     outputs:
       status: ${{ steps.set_status.outputs.status }}
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
       - name: Ensure health-check.sh is executable
         run: chmod +x scripts/workflow-helpers/health-check.sh
-      - name: List workflow helper scripts
-        run: ls -l scripts/workflow-helpers
       - name: Run system health checks
         id: set_status
         run: bash scripts/workflow-helpers/health-check.sh
@@ -52,176 +52,13 @@ jobs:
     needs: system-health-check
     if: needs.system-health-check.outputs.status != 'healthy'
     runs-on: ubuntu-latest
-
     steps:
       - name: 🚨 Create system alert issue
-        uses: actions/github-script@v7
-        with:
-          script: |
-            // Check if there's already an open system alert issue
-            const issues = await github.rest.issues.listForRepo({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              labels: ['🚨 system-alert', '🤖 automated'],
-              state: 'open'
-            });
-
-            if (issues.data.length > 0) {
-              console.log('System alert issue already exists, updating it...');
-              
-              const existingIssue = issues.data[0];
-              const updateBody = `## 🚨 System Health Alert - Updated
-              
-              **Status:** 🟡 System Degraded  
-              **Last Check:** ${new Date().toISOString()}  
-              **Alert Level:** Warning
-              
-              **Current Issues:**
-              - Some services are experiencing issues
-              - Check the [monitoring workflow](${context.payload.repository.html_url}/actions/runs/${context.runId}) for details
-              
-              **Services Status:**
-              - 🌐 Production: Checking...
-              - 🧪 Staging: Checking...  
-              - 🔌 API: Checking...
-              - 🚀 CI/CD: Operational
-              
-              **Actions Taken:**
-              1. Automated monitoring detected issues
-              2. System alert triggered
-              3. Investigation in progress
-              
-              **Next Steps:**
-              1. 🔍 Check detailed logs and metrics
-              2. 🔧 Identify root cause
-              3. 🚀 Implement fix
-              4. ✅ Verify resolution
-              
-              **Auto-updated by system monitoring** 🤖`;
-              
-              await github.rest.issues.update({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: existingIssue.number,
-                body: updateBody
-              });
-              
-            } else {
-              console.log('Creating new system alert issue...');
-              
-              const title = `🚨 System Health Alert - ${new Date().toISOString().split('T')[0]}`;
-              const body = `## 🚨 System Health Alert
-              
-              **Status:** 🟡 System Degraded  
-              **Detected:** ${new Date().toISOString()}  
-              **Alert Level:** Warning
-              
-              **Issue Description:**
-              Automated monitoring has detected degraded performance or availability issues with one or more system components.
-              
-              **Affected Services:**
-              - Check the [monitoring workflow](${context.payload.repository.html_url}/actions/runs/${context.runId}) for specific service status
-              
-              **Immediate Actions Required:**
-              1. 🔍 Check application logs and error rates
-              2. 🩺 Verify database connectivity and performance
-              3. 🌐 Test all critical user flows
-              name: 📊 System Monitoring & Status
-              on:
-                workflow_dispatch:
-                  inputs:
-                    force_check:
-                      description: 'Force health check of all systems'
-                      required: false
-                      default: false
-                      type: boolean
-                push:
-                  paths:
-                    - 'server/**'
-                    - 'client/**'
-                    - 'shared/**'
-                    - 'api/**'
-                    - 'docker-compose.yml'
-                    - 'drizzle.config.ts'
-                    - 'package.json'
-                    - 'tsconfig.json'
-                    - 'vite.config.ts'
-                    - '.github/workflows/system-monitoring.yml'
-                schedule:
-                  - cron: '0 * * * *'
-
-              jobs:
-                system-health-check:
-                  name: System Health Check
-                  runs-on: ubuntu-latest
-                  steps:
-                    - name: Run system health checks
-                      run: bash scripts/workflow-helpers/health-check.sh
-                    - name: 📤 Upload status artifacts
-                      uses: actions/upload-artifact@v4
-                      with:
-                        name: system-status-${{ github.run_number }}
-                        path: status-report.json
-                        retention-days: 30
-                **Resolution Summary:**
-                - All system health checks are now passing
-                - Services have returned to normal operation
-                - No further action required at this time
-                
-                **Monitoring Status:**
-                - 🌐 Production: Healthy
-                - name: System Health Check
-                  run: |
-                    declare -A services
-                    overall_status="healthy"
-
-                    # Check production (main branch)
-                    echo "Testing production environment..."
-                    PROD_CODE=$(curl -s -o /dev/null -w "%{http_code}" "https://unitedautosupply.org/" --max-time 10 || echo "000")
-                    if [ "$PROD_CODE" = "200" ] || [ "$PROD_CODE" = "401" ]; then
-                      services["production"]="✅ healthy"
-                      echo "✅ Production: healthy (HTTP $PROD_CODE)"
-                    else
-                      services["production"]="❌ unhealthy"
-                      overall_status="degraded"
-                      echo "❌ Production: unhealthy (HTTP $PROD_CODE)"
-                    fi
-
-                    # Check staging (stable branch)
-                    echo "Testing staging environment..."
-                    STAGING_CODE=$(curl -s -o /dev/null -w "%{http_code}" "https://uasmaintenance.com/" --max-time 10 || echo "000")
-                    if [ "$STAGING_CODE" = "200" ] || [ "$STAGING_CODE" = "401" ]; then
-                      services["staging"]="✅ healthy"
-                      echo "✅ Staging: healthy (HTTP $STAGING_CODE)"
-                    else
-                      services["staging"]="❌ unhealthy"
-                      overall_status="degraded"
-                      echo "❌ Staging: unhealthy (HTTP $STAGING_CODE)"
-                    fi
-
-                    # Check API endpoints
-                    echo "Testing API endpoints..."
-                    PROD_API_CODE=$(curl -s -o /dev/null -w "%{http_code}" "https://unitedautosupply.org/api/health" --max-time 10 || echo "000")
-                    if [ "$PROD_API_CODE" = "200" ]; then
-                      services["api"]="✅ healthy"
-                      echo "✅ API: healthy (HTTP $PROD_API_CODE)"
-                    else
-                      services["api"]="❌ unhealthy"
-                      overall_status="degraded"
-                      echo "❌ API: unhealthy (HTTP $PROD_API_CODE)"
-                    fi
-
-                    # Check if CI/CD pipeline is working (recent successful runs)
-                    echo "Checking CI/CD pipeline status..."
-                    # This is a simplified check - in real implementation, you'd check GitHub API
-                    services["cicd"]="✅ operational"
-
-                    # Format output for next steps
-                    # Ensure overall_status is never empty
-                    if [ -z "$overall_status" ]; then
-                      overall_status="unknown"
-                    fi
-                    echo "status=$overall_status" >> $GITHUB_OUTPUT
-                    echo "services=$(echo "${services[@]}" | tr ' ' '\n' | jq -R . | jq -s .)" >> $GITHUB_OUTPUT
-
-                    echo "📊 Overall system status: $overall_status"
+        run: |
+          npm install @octokit/rest
+          node scripts/workflow-helpers/system-alert-issue.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_RUN_ID: ${{ github.run_id }}

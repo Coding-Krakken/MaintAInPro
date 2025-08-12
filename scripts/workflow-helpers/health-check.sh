@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# MaintAInPro System Health Check Script
+# This script checks the health of production, staging, and API endpoints, and outputs status for GitHub Actions workflow.
+
 set -e
 
 declare -A services
