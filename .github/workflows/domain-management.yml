@@ -14,8 +14,9 @@ on:
         type: boolean
 
 permissions:
-  contents: read
+  contents: write
   deployments: read
+  issues: write
 
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
