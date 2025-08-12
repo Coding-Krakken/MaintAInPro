@@ -35,21 +35,30 @@ jobs:
       - name: Get Latest Deployment URL
         id: get-deployment
         run: |
-          # Get the latest production deployment for the current branch
           echo "VERCEL_TOKEN=${{ secrets.VERCEL_TOKEN }}"
           echo "BRANCH_NAME=${{ github.ref_name }}"
-          LATEST_DEPLOYMENT=$(vercel ls --scope coding-krakken-projects --token=${{ secrets.VERCEL_TOKEN }} | grep "● Ready" | grep "Production" | grep "${{ github.ref_name }}" | head -1 | awk '{print $2}' | sed 's/https:\/\///')
+          # Get the latest deployment URL (assume main=production, else preview)
+          LATEST_DEPLOYMENT=$(vercel ls --scope coding-krakken-projects --token=${{ secrets.VERCEL_TOKEN }} )
+          LATEST_DEPLOYMENT=$(echo $LATEST_DEPLOYMENT | cut -d " " -f 1)
 
           echo "LATEST_DEPLOYMENT=$LATEST_DEPLOYMENT"
 
           if [ -z "$LATEST_DEPLOYMENT" ]; then
-            echo "❌ No production deployment found for branch ${{ github.ref_name }}"
+            echo "❌ No deployment found for branch ${{ github.ref_name }}"
             echo "deployment-url=" >> $GITHUB_OUTPUT
             echo "DEPLOYMENT_FOUND=false" >> $GITHUB_ENV
             exit 1
           fi
 
-          echo "Latest production deployment: $LATEST_DEPLOYMENT"
+          # Set deployment type based on branch
+          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            echo "DEPLOYMENT_TYPE=production" >> $GITHUB_ENV
+            echo "Latest production deployment: $LATEST_DEPLOYMENT"
+          else
+            echo "DEPLOYMENT_TYPE=preview" >> $GITHUB_ENV
+            echo "Latest preview deployment: $LATEST_DEPLOYMENT"
+          fi
+
           echo "deployment-url=$LATEST_DEPLOYMENT" >> $GITHUB_OUTPUT
           echo "DEPLOYMENT_FOUND=true" >> $GITHUB_ENV
 
