@@ -48,6 +48,7 @@ services["cicd"]="✅ operational"
 if [ -z "$overall_status" ]; then
   overall_status="unknown"
 fi
+
 if [ -n "$GITHUB_OUTPUT" ]; then
   echo "status=$overall_status" >> "$GITHUB_OUTPUT"
 fi
@@ -55,4 +56,5 @@ echo "📊 Overall system status: $overall_status"
 if [ -n "$GITHUB_STEP_SUMMARY" ]; then
   echo "| 🚀 CI/CD | 🟢 Operational | Active |" >> "$GITHUB_STEP_SUMMARY"
 fi
+
 echo "{\"status\": \"$overall_status\"}" > status-report.json
