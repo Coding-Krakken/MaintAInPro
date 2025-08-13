@@ -60,7 +60,7 @@ deploy → verify → trace → next plan" cycle.
 - **✅ Changelog Automation**: Automatic `CHANGELOG.md` updates
 - **✅ Utility Scripts**:
   - `scripts/setup/update-deployments.js` - Deployment metadata tracking
-  - `scripts/update-changelog-new.js` - Automated changelog updates
+  - `scripts/changelog/update-changelog-new.js` - Automated changelog updates
 
 ### 7. Repository Setup Documentation
 
@@ -180,7 +180,7 @@ graph LR
 
 - `server/health.ts` - Comprehensive health check endpoint
 - `scripts/setup/update-deployments.js` - Deployment metadata tracking
-- `scripts/update-changelog-new.js` - Automated changelog updates
+- `scripts/changelog/update-changelog-new.js` - Automated changelog updates
 - `scripts/print_env.sh` - Environment diagnostics
 
 ### Documentation

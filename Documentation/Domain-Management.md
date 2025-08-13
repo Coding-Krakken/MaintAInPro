@@ -51,22 +51,22 @@ Use the provided script for manual control:
 
 ```bash
 # List current domain aliases
-./scripts/domain-management.sh list
+./scripts/development/domain-management.sh list
 
 # Update main branch domains to latest deployment
-./scripts/domain-management.sh update-main
+./scripts/development/domain-management.sh update-main
 
 # Update stable branch domains to latest deployment
-./scripts/domain-management.sh update-stable
+./scripts/development/domain-management.sh update-stable
 
 # Update all domains to latest deployment
-./scripts/domain-management.sh update-all
+./scripts/development/domain-management.sh update-all
 
 # Verify domain status
-./scripts/domain-management.sh verify
+./scripts/development/domain-management.sh verify
 
 # Show setup instructions
-./scripts/domain-management.sh setup
+./scripts/development/domain-management.sh setup
 ```
 
 ### 3. Manual Vercel CLI Commands
@@ -119,7 +119,7 @@ vercel alias ls --scope coding-krakken-projects
 
 3. **Manual update**:
    ```bash
-   ./scripts/domain-management.sh update-main
+   ./scripts/development/domain-management.sh update-main
    ```
 
 ### DNS Propagation
@@ -155,7 +155,7 @@ vercel alias ls --scope coding-krakken-projects
 - Specifies build settings and routing
 - Enables deployment for main and stable branches
 
-### `scripts/domain-management.sh`
+### `scripts/development/domain-management.sh`
 
 - Manual domain management script
 - Provides easy CLI interface
