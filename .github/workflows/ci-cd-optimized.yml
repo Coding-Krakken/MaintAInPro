@@ -5,7 +5,7 @@ name: ⚡ CI/CD Pipeline - Optimized
 on:
   pull_request:
     types: [opened, synchronize, ready_for_review]
-    branches: [main, Replit]
+    branches: [main, stable]
     paths:
       - '**/*.ts'
       - '**/*.js'
@@ -14,7 +14,7 @@ on:
       - 'shared/**'
       - 'api/**'
   push:
-    branches: [main, Replit, stable]
+    branches: [main, stable]
     paths:
       - '**/*.ts'
       - '**/*.js'
@@ -22,6 +22,34 @@ on:
       - 'server/**'
       - 'shared/**'
       - 'api/**'
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to run workflow on'
+        required: false
+        default: 'main'
+      environment:
+        description: 'Deployment environment'
+        required: false
+        default: 'preview'
+        type: choice
+        options:
+          - preview
+          - production
+      deploy:
+        description: 'Deploy after build?'
+        required: false
+        default: 'true'
+        type: boolean
+      run_tests:
+        description: 'Run tests?'
+        required: false
+        default: 'true'
+        type: boolean
+      custom_message:
+        description: 'Custom message for this run'
+        required: false
+        default: ''
 
 permissions:
   contents: read
