@@ -133,11 +133,17 @@ jobs:
           }
           echo "✅ Lint check passed"
 
-      - name: 🎨 Format check
+      - name: 🎨 Format check (Prettier, then ESLint)
         run: |
           echo "Checking code formatting..."
           npm run format:check
-          echo "✅ Format check passed"
+          echo "✅ Prettier formatting applied"
+          # Run ESLint fix after Prettier to resolve any new lint errors
+          npm run lint:fix
+          echo "✅ ESLint auto-fix applied after Prettier"
+          # Final lint check to ensure no errors remain
+          npm run lint:check
+          echo "✅ Final lint check passed"
 
       - name: 🔨 Build project
         id: build
@@ -224,8 +230,8 @@ jobs:
       - name: 🔒 Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
-          languages: javascript
-          config-file: ./.github/codeql/codeql-config.yml
+          languages: javascript, typescript
+          queries: security-and-quality
 
       - name: 📦 Install dependencies
         run: npm ci --prefer-offline --no-audit

@@ -247,14 +247,18 @@ describe('Security Tests', () => {
 
       for (const endpoint of adminEndpoints) {
         // Technician should be denied
-        const techResponse = await request(app)[endpoint.method](endpoint.path).set('Authorization', `Bearer ${tokens.technician}`);
+        const techResponse = await request(app)
+          [endpoint.method](endpoint.path)
+          .set('Authorization', `Bearer ${tokens.technician}`);
         expect([403, 404]).toContain(techResponse.status);
 
         // Admin should be allowed
-        const adminResponse = await request(app)[endpoint.method](endpoint.path).set('Authorization', `Bearer ${tokens.admin}`);
+        const adminResponse = await request(app)
+          [endpoint.method](endpoint.path)
+          .set('Authorization', `Bearer ${tokens.admin}`);
         expect(adminResponse.status).not.toBe(403);
-            }
-          });
+      }
+    });
 
     it('should prevent access to other users data', async () => {
       // Create two users
