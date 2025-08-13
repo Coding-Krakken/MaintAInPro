@@ -2,7 +2,7 @@
 // MaintAInPro System Alert Issue Script
 // Usage: node scripts/workflow-helpers/system-alert-issue.js
 
-const { Octokit } = require('@octokit/rest');
+import { Octokit } from '@octokit/rest';
 
 const githubToken = process.env.GITHUB_TOKEN;
 const repoOwner = process.env.GITHUB_REPOSITORY_OWNER;
