@@ -102,3 +102,4 @@ realtimeEnabled:false, advancedAnalytics:false, mobileApp:false | |
 Push | `cbdf417` | n/a | n/a | `cbdf417-2025-08-13T15:37` | pending | pending |
 none | aiEnabled:false, realtimeEnabled:false, advancedAnalytics:false,
 mobileApp:false |
+| 2025-08-13T16:13:56.807Z | 08/13/2025, 12:13:56 PM | Coding-Krakken | Direct Push | `8fe1717` | n/a | n/a | `8fe1717-2025-08-13T16:13` | pending | pending | none | aiEnabled:false, realtimeEnabled:false, advancedAnalytics:false, mobileApp:false |
