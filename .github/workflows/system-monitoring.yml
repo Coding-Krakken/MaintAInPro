@@ -84,8 +84,6 @@ jobs:
           path: status-report.json
           retention-days: 30
 
-
-
   alert-on-issues:
     needs: system-health-check
     if: needs.system-health-check.outputs.status != 'healthy'

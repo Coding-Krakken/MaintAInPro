@@ -2,9 +2,9 @@
 
 ## Overview
 
-This script (`scripts/project-management/add-issues-to-project.js`) automatically adds all open
-issues from the MaintAInPro repository to the "MaintAInPro Roadmap" GitHub
-Project.
+This script (`scripts/project-management/add-issues-to-project.js`)
+automatically adds all open issues from the MaintAInPro repository to the
+"MaintAInPro Roadmap" GitHub Project.
 
 ## Features
 
