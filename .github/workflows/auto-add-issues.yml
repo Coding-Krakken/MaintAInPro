@@ -1,4 +1,5 @@
-name: Auto Add Issues to GitHub Project
+
+name: Sync Issues and Project
 
 on:
   push:
@@ -6,20 +7,47 @@ on:
       - main
     paths:
       - 'issues/**'
+  workflow_dispatch:
+    inputs:
+      force_sync:
+        description: 'Force sync all issues (even if already in project)'
+        required: false
+        default: 'false'
+        type: boolean
+  issues:
+    types: [opened]
+  schedule:
+    - cron: '0 2 * * *'
+
+permissions:
+  issues: read
+  contents: read
 
 jobs:
-  add-issues:
+  sync-issues-and-project:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
       - name: Install GitHub CLI
-        run: sudo apt-get update && sudo apt-get install -y gh
-      - name: Install jq
-        run: sudo apt-get update && sudo apt-get install -y jq
+        run: sudo apt-get update && sudo apt-get install -y gh jq
       - name: Sync issues and project
         run: |
           chmod +x scripts/project-management/sync_issues_and_project.sh
           ./scripts/project-management/sync_issues_and_project.sh
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          FORCE_SYNC: ${{ github.event.inputs.force_sync || 'false' }}
+      - name: Summary
+        run: |
+          echo "## 📋 Project Sync Results" >> $GITHUB_STEP_SUMMARY
