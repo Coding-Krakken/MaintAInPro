@@ -135,15 +135,9 @@ jobs:
 
       - name: 🎨 Format check (Prettier, then ESLint)
         run: |
-          echo "Checking code formatting..."
-          npm run format:check
-          echo "✅ Prettier formatting applied"
-          # Run ESLint fix after Prettier to resolve any new lint errors
-          npm run lint:fix
-          echo "✅ ESLint auto-fix applied after Prettier"
-          # Final lint check to ensure no errors remain
-          npm run lint:check
-          echo "✅ Final lint check passed"
+          echo "Checking code linting and formatting..."
+          npm run quality
+          echo "✅ All checks passed"
 
       - name: 🔨 Build project
         id: build
