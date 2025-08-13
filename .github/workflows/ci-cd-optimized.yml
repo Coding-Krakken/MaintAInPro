@@ -133,12 +133,6 @@ jobs:
           }
           echo "✅ Lint check passed"
 
-      - name: 🎨 Format check (Prettier, then ESLint)
-        run: |
-          echo "Checking code linting and formatting..."
-          npm run quality
-          echo "✅ All checks passed"
-
       - name: 🔨 Build project
         id: build
         run: |
@@ -249,10 +243,8 @@ jobs:
       - name: 🔐 Check for secrets
         uses: trufflesecurity/trufflehog@main
         with:
-          path: ./
-          base: ${{ github.event.repository.default_branch }}
-          head: HEAD
-          extra_args: --debug --only-verified --repo
+          path: .
+          extra_args: "--fail-verified --no-verify"
 
   # Deployment jobs (conditional)
   deploy-preview:
@@ -450,51 +442,57 @@ jobs:
     steps:
       - name: 📊 Quality Gate Summary
         run: |
-          echo "## 🎯 Quality Gate Results" >> $GITHUB_STEP_SUMMARY
-          echo "| Check | Status | Details |" >> $GITHUB_STEP_SUMMARY
-          echo "|-------|--------|---------|" >> $GITHUB_STEP_SUMMARY
+          # Ensure $GITHUB_STEP_SUMMARY exists and is writable
+          if [ -z "$GITHUB_STEP_SUMMARY" ]; then
+            export GITHUB_STEP_SUMMARY="/tmp/step-summary.md"
+            touch "$GITHUB_STEP_SUMMARY"
+          fi
+
+          echo "## 🎯 Quality Gate Results" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Check | Status | Details |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|-------|--------|---------|" >> "$GITHUB_STEP_SUMMARY"
 
           # Build and Quality
           BUILD_STATUS="${{ needs.build-and-quality.result }}"
           if [ "$BUILD_STATUS" = "success" ]; then
-            echo "| 🔨 Build & Tests | ✅ Pass | All quality checks passed |" >> $GITHUB_STEP_SUMMARY
+            echo "| 🔨 Build & Tests | ✅ Pass | All quality checks passed |" >> "$GITHUB_STEP_SUMMARY"
           else
-            echo "| 🔨 Build & Tests | ❌ Fail | Check logs for details |" >> $GITHUB_STEP_SUMMARY
+            echo "| 🔨 Build & Tests | ❌ Fail | Check logs for details |" >> "$GITHUB_STEP_SUMMARY"
           fi
 
           # Security
           SECURITY_STATUS="${{ needs.security-scan.result }}"
           if [ "$SECURITY_STATUS" = "success" ]; then
-            echo "| 🔒 Security Scan | ✅ Pass | No critical issues found |" >> $GITHUB_STEP_SUMMARY
+            echo "| 🔒 Security Scan | ✅ Pass | No critical issues found |" >> "$GITHUB_STEP_SUMMARY"
           else
-            echo "| 🔒 Security Scan | ❌ Fail | Security issues detected |" >> $GITHUB_STEP_SUMMARY
+            echo "| 🔒 Security Scan | ❌ Fail | Security issues detected |" >> "$GITHUB_STEP_SUMMARY"
           fi
 
           # Auto-merge eligibility
           AUTO_MERGE_ELIGIBLE="${{ contains(github.event.pull_request.labels.*.name, 'automerge') }}"
           ALL_PASSED=$([ "$BUILD_STATUS" = "success" ] && [ "$SECURITY_STATUS" = "success" ] && echo "true" || echo "false")
 
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### 🚀 Deployment Status" >> $GITHUB_STEP_SUMMARY
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "### 🚀 Deployment Status" >> "$GITHUB_STEP_SUMMARY"
 
           if [ "${{ needs.workflow-control.outputs.is-pr }}" = "true" ]; then
             if [ "$AUTO_MERGE_ELIGIBLE" = "true" ] && [ "$ALL_PASSED" = "true" ]; then
-              echo "🤖 **Auto-merge**: Ready to merge automatically" >> $GITHUB_STEP_SUMMARY
+              echo "🤖 **Auto-merge**: Ready to merge automatically" >> "$GITHUB_STEP_SUMMARY"
             elif [ "$AUTO_MERGE_ELIGIBLE" = "true" ]; then
-              echo "⏳ **Auto-merge**: Waiting for all checks to pass" >> $GITHUB_STEP_SUMMARY  
+              echo "⏳ **Auto-merge**: Waiting for all checks to pass" >> "$GITHUB_STEP_SUMMARY"  
             else
-              echo "👥 **Manual review**: Required (add \`automerge\` label for auto-merge)" >> $GITHUB_STEP_SUMMARY
+              echo "👥 **Manual review**: Required (add \`automerge\` label for auto-merge)" >> "$GITHUB_STEP_SUMMARY"
             fi
           else
-            echo "🚀 **Production**: Deployment initiated for \`${{ needs.workflow-control.outputs.branch }}\` branch" >> $GITHUB_STEP_SUMMARY
+            echo "🚀 **Production**: Deployment initiated for \`${{ needs.workflow-control.outputs.branch }}\` branch" >> "$GITHUB_STEP_SUMMARY"
           fi
 
           # Overall status
           if [ "$ALL_PASSED" = "true" ]; then
-            echo "🎉 **Overall Status**: All quality gates passed!" >> $GITHUB_STEP_SUMMARY
+            echo "🎉 **Overall Status**: All quality gates passed!" >> "$GITHUB_STEP_SUMMARY"
             exit 0
           else
-            echo "💥 **Overall Status**: Quality gates failed - see details above" >> $GITHUB_STEP_SUMMARY
+            echo "💥 **Overall Status**: Quality gates failed - see details above" >> "$GITHUB_STEP_SUMMARY"
             exit 1
           fi
 

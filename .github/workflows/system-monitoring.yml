@@ -39,7 +39,7 @@ on:
       - 'vite.config.ts'
       - '.github/workflows/system-monitoring.yml'
   schedule:
-    - cron: '0 * * * *'
+    - cron: '0 0 * * *'
 
 jobs:
   system-health-check:
