@@ -13,10 +13,6 @@ on:
       - 'server/**'
       - 'shared/**'
       - 'api/**'
-    paths-ignore:
-      - 'Documentation/**'
-      - '**/*.md'
-      - 'CHANGELOG.md'
   push:
     branches: [main, Replit, stable]
     paths:
@@ -26,10 +22,6 @@ on:
       - 'server/**'
       - 'shared/**'
       - 'api/**'
-    paths-ignore:
-      - 'Documentation/**'
-      - '**/*.md'
-      - 'CHANGELOG.md'
 
 permissions:
   contents: read
