@@ -50,7 +50,8 @@ Co-authored-by: Coding-Krakken <davidtraversmailbox@gmail.com> ([8b2f72fa2](http
 
 
 - update cron schedule for system monitoring to run daily at midnight ([688eafd58](https://github.com/Coding-Krakken/MaintAInPro/commit/688eafd58ee9d1451ee8dd36d111b3b8f11da714))
-
+### Added
+- enhance system alert handling by closing issues when system health is restored ([ae4e43fd8](https://github.com/Coding-Krakken/MaintAInPro/commit/ae4e43fd8da702a05dab3a2beba510933a456fa0))
 
 
 ## [e97b962] - 2025-08-13
