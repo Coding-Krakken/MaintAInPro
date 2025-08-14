@@ -390,11 +390,11 @@ jobs:
           if [ "${{ needs.workflow-control.outputs.branch }}" = "main" ]; then
             echo "Updating main branch domains..."
             vercel alias set "$DEPLOYMENT_ID" unitedautosupply.org --scope coding-krakken-projects --token=${{ secrets.VERCEL_TOKEN }} || echo "Failed to update unitedautosupply.org"
-            vercel alias set "$DEPLOYMENT_ID" www.unitedautosupply.org --scope coding-krakken-projects --token=${{ secrets.VERCEL_TOKEN }} || echo "Failed to update www.unitedautosupply.org"
+            # Removed alias update for www.unitedautosupply.org as it's not needed
           elif [ "${{ needs.workflow-control.outputs.branch }}" = "stable" ]; then
             echo "Updating stable branch domains..."
             vercel alias set "$DEPLOYMENT_ID" uasmaintenance.com --scope coding-krakken-projects --token=${{ secrets.VERCEL_TOKEN }} || echo "Failed to update uasmaintenance.com"
-            vercel alias set "$DEPLOYMENT_ID" www.uasmaintenance.com --scope coding-krakken-projects --token=${{ secrets.VERCEL_TOKEN }} || echo "Failed to update www.uasmaintenance.com"
+            # Removed alias update for www.unitedautosupply.org as it's not needed
           fi
 
           echo "✅ Domain aliases updated successfully"

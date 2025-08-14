@@ -14,7 +14,7 @@ NC='\033[0m' # No Color
 
 # Configuration
 SCOPE="coding-krakken-projects"
-MAIN_DOMAINS=("unitedautosupply.org" "www.unitedautosupply.org")
+MAIN_DOMAINS=("unitedautosupply.org")
 STABLE_DOMAINS=("uasmaintenance.com" "www.uasmaintenance.com")
 
 # Function to print colored output

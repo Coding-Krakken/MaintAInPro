@@ -10,7 +10,7 @@ The system automatically manages two sets of domains:
 ### Main Branch (Production)
 
 - `unitedautosupply.org` → Latest main branch deployment
-- `www.unitedautosupply.org` → Latest main branch deployment
+* `www.unitedautosupply.org` is a CNAME alias for `unitedautosupply.org` and does not require separate alias updates.
 
 ### Stable Branch
 
@@ -41,7 +41,7 @@ VERCEL_PROJECT_ID=your_project_id
 #### Branch Mapping
 
 - **Push to `main`** → Updates `unitedautosupply.org` and
-  `www.unitedautosupply.org`
+   *Note: `www.unitedautosupply.org` is managed as a CNAME and does not require direct alias updates.*
 - **Push to `stable`** → Updates `uasmaintenance.com` and
   `www.uasmaintenance.com`
 
