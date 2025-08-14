@@ -35,7 +35,8 @@ Signed-off-by: dependabot[bot] <support@github.com>
 
 Signed-off-by: dependabot[bot] <support@github.com>
 Co-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>
-Co-authored-by: Coding-Krakken <davidtraversmailbox@gmail.com> ([8b2f72fa2](https://github.com/Coding-Krakken/MaintAInPro/commit/8b2f72fa295d9fc53597b1883c51061e87acd162))### Fixed
+Co-authored-by: Coding-Krakken <davidtraversmailbox@gmail.com> ([8b2f72fa2](https://github.com/Coding-Krakken/MaintAInPro/commit/8b2f72fa295d9fc53597b1883c51061e87acd162))
+- Refactor: remove unnecessary domain alias updates for www.unitedautosupply.org ([be0879285](https://github.com/Coding-Krakken/MaintAInPro/commit/be0879285d48733dcc7ffe9978e050509088d4c2))### Fixed
 - streamline request handling for admin and technician endpoints ([3d44744eb](https://github.com/Coding-Krakken/MaintAInPro/commit/3d44744eb559dec359c55d43234db85698434dae))
 
 
@@ -52,6 +53,8 @@ Co-authored-by: Coding-Krakken <davidtraversmailbox@gmail.com> ([8b2f72fa2](http
 - update cron schedule for system monitoring to run daily at midnight ([688eafd58](https://github.com/Coding-Krakken/MaintAInPro/commit/688eafd58ee9d1451ee8dd36d111b3b8f11da714))
 ### Added
 - enhance system alert handling by closing issues when system health is restored ([ae4e43fd8](https://github.com/Coding-Krakken/MaintAInPro/commit/ae4e43fd8da702a05dab3a2beba510933a456fa0))
+
+
 
 
 ## [e97b962] - 2025-08-13
