@@ -18,13 +18,50 @@ const octokit = new Octokit({ auth: githubToken });
 
 async function main() {
   try {
+    // Determine system health status from environment variable or status-report.json
+    let systemHealthy = false;
+    let statusReport;
+    try {
+      statusReport = require('../../status-report.json');
+      systemHealthy = statusReport.status === 'healthy';
+    } catch (_) {
+      // fallback: check env var
+      systemHealthy = process.env.SYSTEM_HEALTH === 'healthy';
+    }
+
+    // Find existing open alert issue
     const issues = await octokit.issues.listForRepo({
       owner: repoOwner,
       repo: repoName,
-      labels: ['� system-alert', '🤖 automated'],
+      labels: ['🚨 system-alert', '🤖 automated'],
       state: 'open',
     });
 
+    if (systemHealthy) {
+      // If system is healthy, close any open alert issue
+      if (issues.data.length > 0) {
+        const existingIssue = issues.data[0];
+        await octokit.issues.update({
+          owner: repoOwner,
+          repo: repoName,
+          issue_number: existingIssue.number,
+          state: 'closed',
+          body: [
+            '## ✅ System Health Restored',
+            '',
+            '**Status:** 🟢 Healthy',
+            `**Resolved:** ${new Date().toISOString()}`,
+            '',
+            'System health has returned to normal. This alert issue is now closed.',
+            '',
+            '**Auto-closed by system monitoring** 🤖',
+          ].join('\n'),
+        });
+      }
+      return;
+    }
+
+    // If system is degraded, update or create alert issue
     if (issues.data.length > 0) {
       const existingIssue = issues.data[0];
       const updateBody = [
