@@ -1,8 +1,21 @@
+# MaintAInPro Auto-Merge Dependabot PRs
+# Purpose: Automatically approve and merge eligible Dependabot PRs for security/patch/minor updates.
+# Triggers: Only runs for code changes, not docs-only edits.
 name: 🤖 Auto-Merge Dependabot PRs
-
 on:
   pull_request:
     types: [opened, synchronize]
+    paths:
+      - '**/*.ts'
+      - '**/*.js'
+      - 'client/**'
+      - 'server/**'
+      - 'shared/**'
+      - 'api/**'
+    paths-ignore:
+      - 'Documentation/**'
+      - '**/*.md'
+      - 'CHANGELOG.md'
 
 permissions:
   contents: write

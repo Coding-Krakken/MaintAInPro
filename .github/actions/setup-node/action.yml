@@ -1,0 +1,28 @@
+# Composite action for Node.js setup and caching
+name: 'Setup Node.js with Caching'
+description: 'Sets up Node.js and caches dependencies for optimal workflow performance.'
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: 'npm'
+    - name: Cache dependencies
+      uses: actions/cache@v4
+      with:
+        path: |
+          node_modules
+          ~/.npm
+        key: deps-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          deps-${{ runner.os }}-
+    - name: Install dependencies
+      run: npm ci --prefer-offline --no-audit
+      shell: bash
+inputs:
+  node-version:
+    description: 'Node.js version to use'
+    required: true
+    default: '18'

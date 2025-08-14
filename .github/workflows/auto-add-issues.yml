@@ -1,6 +1,11 @@
-name: Sync Issues to MaintAInPro Roadmap Project
+name: Sync Issues and Project
 
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'issues/**'
   workflow_dispatch:
     inputs:
       force_sync:
@@ -8,12 +13,9 @@ on:
         required: false
         default: 'false'
         type: boolean
-
   issues:
     types: [opened]
-
   schedule:
-    # Run daily at 2 AM UTC to catch any missed issues
     - cron: '0 2 * * *'
 
 permissions:
@@ -21,34 +23,30 @@ permissions:
   contents: read
 
 jobs:
-  sync-issues-to-project:
+  sync-issues-and-project:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
           cache: 'npm'
-
       - name: Install dependencies
         run: npm ci
-
-      - name: Sync issues to project
+      - name: Install GitHub CLI
+        run: sudo apt-get update && sudo apt-get install -y gh jq
+      - name: Sync issues and project
+        run: |
+          chmod +x scripts/project-management/sync_issues_and_project.sh
+          ./scripts/project-management/sync_issues_and_project.sh
         env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           FORCE_SYNC: ${{ github.event.inputs.force_sync || 'false' }}
-        run: npm run project:add-issues
-
       - name: Summary
         run: |
           echo "## 📋 Project Sync Results" >> $GITHUB_STEP_SUMMARY
-          echo "- **Trigger**: ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Force Sync**: ${{ github.event.inputs.force_sync || 'false' }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Time**: $(date -u +"%Y-%m-%d %H:%M:%S UTC")" >> $GITHUB_STEP_SUMMARY
-          echo "- **Project**: [MaintAInPro Roadmap](https://github.com/Coding-Krakken/MaintAInPro/projects)" >> $GITHUB_STEP_SUMMARY

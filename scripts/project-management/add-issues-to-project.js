@@ -7,6 +7,9 @@
 
 import { Octokit } from '@octokit/rest';
 import { graphql } from '@octokit/graphql';
+// ARCHIVED: This script used GraphQL for Projects V2 and is deprecated.
+// All project/issue management is now handled by sync_issues_and_project.sh using classic project commands.
+// Do not use this script. See sync_issues_and_project.sh for current logic.
 
 // Configuration
 const OWNER = 'Coding-Krakken';

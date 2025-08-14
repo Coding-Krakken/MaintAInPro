@@ -40,7 +40,7 @@ describe('Security Tests', () => {
       for (const token of invalidTokens) {
         const response = await request(app).get('/api/work-orders').set('Authorization', token);
 
-        expect([401, 403]).toContain(response.status);
+        expect(response.status).toBeOneOf([401, 403]);
       }
     });
 
@@ -247,14 +247,13 @@ describe('Security Tests', () => {
 
       for (const endpoint of adminEndpoints) {
         // Technician should be denied
-        const techResponse = await request(app)[endpoint.method](endpoint.path)
-          .set('Authorization', `Bearer ${tokens.technician}`);
+  const techResponse = await request(app)[endpoint.method](endpoint.path).set('Authorization', `Bearer ${tokens.technician}`);
 
-        expect([403, 404]).toContain(techResponse.status);
 
-        // Admin should be allowed
-        const adminResponse = await request(app)[endpoint.method](endpoint.path)
-          .set('Authorization', `Bearer ${tokens.admin}`);
+  expect([403, 404]).toContain(techResponse.status);
+
+  // Admin should be allowed
+  const adminResponse = await request(app)[endpoint.method](endpoint.path).set('Authorization', `Bearer ${tokens.admin}`);
 
         expect(adminResponse.status).not.toBe(403);
       }

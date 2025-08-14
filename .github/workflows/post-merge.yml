@@ -28,7 +28,7 @@ jobs:
           cache: 'npm'
 
       - name: Update deployment traceability
-        run: node scripts/update-deployments.js
+        run: node scripts/setup/update-deployments.js
         env:
           GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_SHA: ${{ github.sha }}
@@ -37,7 +37,7 @@ jobs:
           GITHUB_REPOSITORY: ${{ github.repository }}
 
       - name: Update changelog
-        run: node scripts/update-changelog-new.js
+        run: node scripts/changelog/update-changelog-new.js
         env:
           GITHUB_REPOSITORY: ${{ github.repository }}
           GITHUB_SHA: ${{ github.sha }}

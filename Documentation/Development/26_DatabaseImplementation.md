@@ -239,7 +239,8 @@ CREATE INDEX idx_work_orders_tsv ON work_orders USING GIN(tsv);
 
 2. **Environment Configuration** ✅ **COMPLETED**
    - DATABASE_URL configured in production (Neon PostgreSQL)
-   - Production deployment scripts created (`scripts/test-migration-phase1.sh`)
+   - Production deployment scripts created
+     (`scripts/testing/test-migration-phase1.sh`)
    - Environment validation and fallback mechanisms implemented
 
 3. **Data Initialization** ✅ **COMPLETED**

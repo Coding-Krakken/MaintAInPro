@@ -10,6 +10,15 @@ export default {
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
       },
+      borderColor: {
+        DEFAULT: 'var(--border)',
+        border: 'var(--border)',
+        muted: 'var(--muted)',
+        primary: 'var(--primary)',
+        input: 'var(--input)',
+        ring: 'var(--ring)',
+        sidebar: 'var(--sidebar-border)',
+      },
       colors: {
         background: 'var(--background)',
         foreground: 'var(--foreground)',

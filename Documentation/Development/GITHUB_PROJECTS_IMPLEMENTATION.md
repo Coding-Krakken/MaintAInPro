@@ -7,7 +7,7 @@ MaintAInPro repository to the "MaintAInPro Roadmap" GitHub Project.
 
 ## 🚀 Features Delivered
 
-### 1. Core Script (`scripts/add-issues-to-project.js`)
+### 1. Core Script (`scripts/project-management/add-issues-to-project.js`)
 
 - ✅ Fetches all open issues using GitHub REST API
 - ✅ Creates "MaintAInPro Roadmap" project if it doesn't exist

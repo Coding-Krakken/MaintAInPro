@@ -23,6 +23,11 @@ interface SystemMetric {
     errorCount: number;
     throughput: number;
   };
+  database: {
+    activeConnections: number;
+    avgQueryTime: number;
+    queryCount: number;
+  };
 }
 
 export default function handler(req: VercelRequest, res: VercelResponse) {

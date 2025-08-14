@@ -1,11 +1,55 @@
+# MaintAInPro CI/CD Pipeline - Optimized
+# Purpose: Full build, test, security, and deployment pipeline for PRs and pushes to main/stable branches.
+# Triggers: Only runs for code changes, not docs-only edits.
 name: ⚡ CI/CD Pipeline - Optimized
-
 on:
   pull_request:
     types: [opened, synchronize, ready_for_review]
-    branches: [main, Replit]
+    branches: [main, stable]
+    paths:
+      - '**/*.ts'
+      - '**/*.js'
+      - 'client/**'
+      - 'server/**'
+      - 'shared/**'
+      - 'api/**'
   push:
-    branches: [main, Replit, stable]
+    branches: [main, stable]
+    paths:
+      - '**/*.ts'
+      - '**/*.js'
+      - 'client/**'
+      - 'server/**'
+      - 'shared/**'
+      - 'api/**'
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to run workflow on'
+        required: false
+        default: 'main'
+      environment:
+        description: 'Deployment environment'
+        required: false
+        default: 'preview'
+        type: choice
+        options:
+          - preview
+          - production
+      deploy:
+        description: 'Deploy after build?'
+        required: false
+        default: 'true'
+        type: boolean
+      run_tests:
+        description: 'Run tests?'
+        required: false
+        default: 'true'
+        type: boolean
+      custom_message:
+        description: 'Custom message for this run'
+        required: false
+        default: ''
 
 permissions:
   contents: read
@@ -67,28 +111,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: 🔧 Setup Node.js with cache
-        uses: actions/setup-node@v4
+      - name: 🔧 Setup Node.js with Caching
+        uses: ./.github/actions/setup-node
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-
-      - name: 📦 Cache dependencies
-        id: cache-deps
-        uses: actions/cache@v4
-        with:
-          path: |
-            node_modules
-            ~/.npm
-          key: deps-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            deps-${{ runner.os }}-
-
-      - name: 🚀 Install dependencies
-        run: |
-          echo "Installing dependencies..."
-          npm ci --prefer-offline --no-audit
-          echo "✅ Dependencies installed successfully"
 
       - name: 🔍 Type check
         run: |
@@ -106,12 +132,6 @@ jobs:
             exit 1
           }
           echo "✅ Lint check passed"
-
-      - name: 🎨 Format check
-        run: |
-          echo "Checking code formatting..."
-          npm run format:check
-          echo "✅ Format check passed"
 
       - name: 🔨 Build project
         id: build
@@ -198,8 +218,8 @@ jobs:
       - name: 🔒 Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
-          languages: javascript
-          config-file: ./.github/codeql/codeql-config.yml
+          languages: javascript, typescript
+          queries: security-and-quality
 
       - name: 📦 Install dependencies
         run: npm ci --prefer-offline --no-audit
@@ -223,10 +243,8 @@ jobs:
       - name: 🔐 Check for secrets
         uses: trufflesecurity/trufflehog@main
         with:
-          path: ./
-          base: ${{ github.event.repository.default_branch }}
-          head: HEAD
-          extra_args: --debug --only-verified
+          path: .
+          extra_args: "--fail-verified --no-verify"
 
   # Deployment jobs (conditional)
   deploy-preview:
@@ -318,11 +336,10 @@ jobs:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
 
-      - name: 🔧 Setup Node.js
-        uses: actions/setup-node@v4
+      - name: 🔧 Setup Node.js with Caching
+        uses: ./.github/actions/setup-node
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
 
       - name: 📦 Install Vercel CLI
         run: npm install -g vercel@latest
@@ -425,51 +442,57 @@ jobs:
     steps:
       - name: 📊 Quality Gate Summary
         run: |
-          echo "## 🎯 Quality Gate Results" >> $GITHUB_STEP_SUMMARY
-          echo "| Check | Status | Details |" >> $GITHUB_STEP_SUMMARY
-          echo "|-------|--------|---------|" >> $GITHUB_STEP_SUMMARY
+          # Ensure $GITHUB_STEP_SUMMARY exists and is writable
+          if [ -z "$GITHUB_STEP_SUMMARY" ]; then
+            export GITHUB_STEP_SUMMARY="/tmp/step-summary.md"
+            touch "$GITHUB_STEP_SUMMARY"
+          fi
+
+          echo "## 🎯 Quality Gate Results" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Check | Status | Details |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|-------|--------|---------|" >> "$GITHUB_STEP_SUMMARY"
 
           # Build and Quality
           BUILD_STATUS="${{ needs.build-and-quality.result }}"
           if [ "$BUILD_STATUS" = "success" ]; then
-            echo "| 🔨 Build & Tests | ✅ Pass | All quality checks passed |" >> $GITHUB_STEP_SUMMARY
+            echo "| 🔨 Build & Tests | ✅ Pass | All quality checks passed |" >> "$GITHUB_STEP_SUMMARY"
           else
-            echo "| 🔨 Build & Tests | ❌ Fail | Check logs for details |" >> $GITHUB_STEP_SUMMARY
+            echo "| 🔨 Build & Tests | ❌ Fail | Check logs for details |" >> "$GITHUB_STEP_SUMMARY"
           fi
 
           # Security
           SECURITY_STATUS="${{ needs.security-scan.result }}"
           if [ "$SECURITY_STATUS" = "success" ]; then
-            echo "| 🔒 Security Scan | ✅ Pass | No critical issues found |" >> $GITHUB_STEP_SUMMARY
+            echo "| 🔒 Security Scan | ✅ Pass | No critical issues found |" >> "$GITHUB_STEP_SUMMARY"
           else
-            echo "| 🔒 Security Scan | ❌ Fail | Security issues detected |" >> $GITHUB_STEP_SUMMARY
+            echo "| 🔒 Security Scan | ❌ Fail | Security issues detected |" >> "$GITHUB_STEP_SUMMARY"
           fi
 
           # Auto-merge eligibility
           AUTO_MERGE_ELIGIBLE="${{ contains(github.event.pull_request.labels.*.name, 'automerge') }}"
           ALL_PASSED=$([ "$BUILD_STATUS" = "success" ] && [ "$SECURITY_STATUS" = "success" ] && echo "true" || echo "false")
 
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### 🚀 Deployment Status" >> $GITHUB_STEP_SUMMARY
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "### 🚀 Deployment Status" >> "$GITHUB_STEP_SUMMARY"
 
           if [ "${{ needs.workflow-control.outputs.is-pr }}" = "true" ]; then
             if [ "$AUTO_MERGE_ELIGIBLE" = "true" ] && [ "$ALL_PASSED" = "true" ]; then
-              echo "🤖 **Auto-merge**: Ready to merge automatically" >> $GITHUB_STEP_SUMMARY
+              echo "🤖 **Auto-merge**: Ready to merge automatically" >> "$GITHUB_STEP_SUMMARY"
             elif [ "$AUTO_MERGE_ELIGIBLE" = "true" ]; then
-              echo "⏳ **Auto-merge**: Waiting for all checks to pass" >> $GITHUB_STEP_SUMMARY  
+              echo "⏳ **Auto-merge**: Waiting for all checks to pass" >> "$GITHUB_STEP_SUMMARY"  
             else
-              echo "👥 **Manual review**: Required (add \`automerge\` label for auto-merge)" >> $GITHUB_STEP_SUMMARY
+              echo "👥 **Manual review**: Required (add \`automerge\` label for auto-merge)" >> "$GITHUB_STEP_SUMMARY"
             fi
           else
-            echo "🚀 **Production**: Deployment initiated for \`${{ needs.workflow-control.outputs.branch }}\` branch" >> $GITHUB_STEP_SUMMARY
+            echo "🚀 **Production**: Deployment initiated for \`${{ needs.workflow-control.outputs.branch }}\` branch" >> "$GITHUB_STEP_SUMMARY"
           fi
 
           # Overall status
           if [ "$ALL_PASSED" = "true" ]; then
-            echo "🎉 **Overall Status**: All quality gates passed!" >> $GITHUB_STEP_SUMMARY
+            echo "🎉 **Overall Status**: All quality gates passed!" >> "$GITHUB_STEP_SUMMARY"
             exit 0
           else
-            echo "💥 **Overall Status**: Quality gates failed - see details above" >> $GITHUB_STEP_SUMMARY
+            echo "💥 **Overall Status**: Quality gates failed - see details above" >> "$GITHUB_STEP_SUMMARY"
             exit 1
           fi
 

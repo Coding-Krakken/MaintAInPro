@@ -112,7 +112,7 @@ jobs:
             });
 
   deploy-production:
-    if: github.event_name == 'push' && contains(github.ref, 'refs/heads/')
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     outputs:
       production-url: ${{ steps.deploy.outputs.production-url }}

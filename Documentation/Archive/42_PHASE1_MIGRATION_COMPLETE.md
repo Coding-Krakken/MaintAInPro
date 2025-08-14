@@ -46,8 +46,8 @@
 
 #### **New Scripts Created:**
 
-- `scripts/test-migration-phase1.sh` - Phase 1 testing script
-- `scripts/test-migration-api.sh` - API functionality testing
+- `scripts/testing/test-migration-phase1.sh` - Phase 1 testing script
+- `scripts/testing/test-migration-api.sh` - API functionality testing
 - `scripts/production-deploy.sh` - Production deployment script
 - `scripts/migration-phase1-setup.sh` - Environment setup script
 
