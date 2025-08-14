@@ -9,7 +9,33 @@ All notable changes to this project will be documented in this file.
 
 
 - Refactor: streamline format check and linting process in CI/CD workflow ([e31e1c669](https://github.com/Coding-Krakken/MaintAInPro/commit/e31e1c669af5f3257c12ca12a5c760cdca339fbf))
-### Fixed
+
+- deps(deps-dev): bump @tailwindcss/typography from 0.5.15 to 0.5.16 (#298)
+
+* deps(deps-dev): bump @tailwindcss/typography from 0.5.15 to 0.5.16
+
+Bumps [@tailwindcss/typography](https://github.com/tailwindlabs/tailwindcss-typography) from 0.5.15 to 0.5.16.
+- [Release notes](https://github.com/tailwindlabs/tailwindcss-typography/releases)
+- [Changelog](https://github.com/tailwindlabs/tailwindcss-typography/blob/main/CHANGELOG.md)
+- [Commits](https://github.com/tailwindlabs/tailwindcss-typography/compare/v0.5.15...v0.5.16)
+
+---
+updated-dependencies:
+- dependency-name: "@tailwindcss/typography"
+  dependency-version: 0.5.16
+  dependency-type: direct:development
+  update-type: version-update:semver-patch
+...
+
+Signed-off-by: dependabot[bot] <support@github.com>
+
+* style(tests): format code for improved readability in security tests
+
+---------
+
+Signed-off-by: dependabot[bot] <support@github.com>
+Co-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>
+Co-authored-by: Coding-Krakken <davidtraversmailbox@gmail.com> ([8b2f72fa2](https://github.com/Coding-Krakken/MaintAInPro/commit/8b2f72fa295d9fc53597b1883c51061e87acd162))### Fixed
 - streamline request handling for admin and technician endpoints ([3d44744eb](https://github.com/Coding-Krakken/MaintAInPro/commit/3d44744eb559dec359c55d43234db85698434dae))
 
 
@@ -24,6 +50,8 @@ All notable changes to this project will be documented in this file.
 
 
 - update cron schedule for system monitoring to run daily at midnight ([688eafd58](https://github.com/Coding-Krakken/MaintAInPro/commit/688eafd58ee9d1451ee8dd36d111b3b8f11da714))
+
+
 
 ## [e97b962] - 2025-08-13
 
