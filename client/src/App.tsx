@@ -24,6 +24,7 @@ import AdminPage from './pages/AdminPage';
 import { PerformanceDashboard } from './components/admin/PerformanceDashboard';
 import EnterpriseMonitoring from './pages/EnterpriseMonitoring';
 import MonitoringDebugPage from './pages/MonitoringDebugPage';
+import DebugPage from './pages/Debug';
 import SystemDashboard from './pages/monitoring/SystemDashboard';
 import NotFound from '@/pages/not-found';
 
@@ -109,6 +110,7 @@ function AppRoutes() {
           <EnterpriseMonitoring />
         </ProtectedRoute>
       </Route>
+      <Route path='/debug' component={DebugPage} />
       <Route path='/monitoring/system-dashboard'>
         <ProtectedRoute>
           <SystemDashboard />
