@@ -57,6 +57,14 @@ Co-authored-by: Coding-Krakken <davidtraversmailbox@gmail.com> ([8b2f72fa2](http
 
 
 
+
+- add debug endpoints and debug dashboard
+
+- Implemented a new debug router with endpoints for fetching environment variables and test summary.
+- Created a DebugPage component in the client to display database connection status, API health, environment variables, and test results.
+- Enhanced error handling in the server to provide more specific error types.
+- Updated server index to include the new debug router. ([2d8b44372](https://github.com/Coding-Krakken/MaintAInPro/commit/2d8b4437263fb8ff5d2314f6a54d1f7ace081122))
+
 ## [e97b962] - 2025-08-13
 
 - Deployment record added to traceability log.
