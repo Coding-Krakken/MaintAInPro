@@ -52,7 +52,7 @@ jobs:
       status: ${{ steps.set_status.outputs.status }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Ensure health-check.sh is executable
         run: chmod +x scripts/workflow-helpers/health-check.sh
       - name: Run system health checks
@@ -90,7 +90,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: 🚨 Create system alert issue
         run: |
           npm install @octokit/rest
