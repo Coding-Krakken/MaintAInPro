@@ -215,6 +215,7 @@ export const equipment = pgTable('equipment', {
   deletedAt: timestamp('deleted_at'),
   createdBy: uuid('created_by').references(() => profiles.id),
   updatedBy: uuid('updated_by').references(() => profiles.id),
+  qrCode: text('qr_code').unique(), // Added for index support
 });
 
 // Work Orders
@@ -357,6 +358,7 @@ export const pmTemplates = pgTable('pm_templates', {
     .references(() => warehouses.id)
     .notNull(),
   createdAt: timestamp('created_at').defaultNow(),
+  enabled: boolean('enabled').default(true), // Added for index support
 });
 
 // Notifications

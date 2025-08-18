@@ -7,7 +7,6 @@ import compression from 'compression';
 import helmet from 'helmet';
 import { registerRoutes } from './routes';
 import { setupVite, serveStatic, log } from './vite';
-import { pmScheduler } from './services/pm-scheduler';
 import { backgroundJobScheduler } from './services/background-jobs';
 import { CacheService } from './services/cache.service';
 import { performanceService } from './services/performance.service';
@@ -133,11 +132,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// Start PM scheduler
-pmScheduler.start();
-
-// Start background job scheduler
-backgroundJobScheduler.startAll();
 
 // Initialize the app
 async function initializeApp() {
