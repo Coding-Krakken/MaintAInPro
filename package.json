@@ -33,6 +33,8 @@
     "test:performance": "echo 'Install k6 globally to run performance tests'",
     "test:accessibility": "vitest run --config tests/config/vitest.config.accessibility.ts",
     "bench:workorder": "vitest bench bench/server/services/workOrderService.bench.ts",
+    "bench:client:formatters": "vitest bench bench/client/src/formatters.bench.ts",
+    "bench:all": "npm run bench:workorder && npm run bench:client:formatters",
     "test:all": "npm run test:unit && npm run test:integration && npm run test:e2e",
     "test:mutation": "stryker run",
     "test:mutation:debug": "stryker run --logLevel debug",
