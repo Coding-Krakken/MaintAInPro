@@ -89,7 +89,19 @@ Co-authored-by: Coding-Krakken <220203495+Coding-Krakken@users.noreply.github.co
 ---------
 
 Co-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>
-Co-authored-by: Coding-Krakken <220203495+Coding-Krakken@users.noreply.github.com> ([41fb75a41](https://github.com/Coding-Krakken/MaintAInPro/commit/41fb75a41055529a903604b11ff8991b54735246))### Fixed
+Co-authored-by: Coding-Krakken <220203495+Coding-Krakken@users.noreply.github.com> ([41fb75a41](https://github.com/Coding-Krakken/MaintAInPro/commit/41fb75a41055529a903604b11ff8991b54735246))
+- Add minimal benchmark for WorkOrderService operations (#372)
+
+* Initial plan
+
+* feat: Add minimal WorkOrderService benchmark with comprehensive performance metrics
+
+Co-authored-by: Coding-Krakken <220203495+Coding-Krakken@users.noreply.github.com>
+
+---------
+
+Co-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>
+Co-authored-by: Coding-Krakken <220203495+Coding-Krakken@users.noreply.github.com> ([434e9694b](https://github.com/Coding-Krakken/MaintAInPro/commit/434e9694b6f876dc88fa3980538298cf4902c30e))### Fixed
 - streamline request handling for admin and technician endpoints ([3d44744eb](https://github.com/Coding-Krakken/MaintAInPro/commit/3d44744eb559dec359c55d43234db85698434dae))
 
 
@@ -117,6 +129,8 @@ Co-authored-by: Coding-Krakken <220203495+Coding-Krakken@users.noreply.github.co
 - Created a DebugPage component in the client to display database connection status, API health, environment variables, and test results.
 - Enhanced error handling in the server to provide more specific error types.
 - Updated server index to include the new debug router. ([2d8b44372](https://github.com/Coding-Krakken/MaintAInPro/commit/2d8b4437263fb8ff5d2314f6a54d1f7ace081122))
+
+
 
 
 
