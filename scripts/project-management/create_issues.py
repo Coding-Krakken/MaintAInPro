@@ -51,32 +51,31 @@ def parse_issue_md(md_path):
     title = None
     body = ''
     for line in lines:
-        # Skip template header if present
+        # Find first H1 that is not a template or a number
         if not title and line.strip().startswith('# '):
             candidate = line.strip().lstrip('# ').strip()
-            # Avoid generic template titles
             if candidate.lower() not in [
                 'github issue template',
                 '📝 github issue template',
                 'issue template',
-            ] and candidate:
+            ] and candidate and not candidate.isdigit():
                 title = candidate
                 continue
         body += line
     if not title:
-        # Fallback: use first non-empty line that starts with '#' and isn't a template title
+        # Fallback: use first non-empty, non-numeric line that isn't a template title
         for line in lines:
-            if line.strip().startswith('# '):
-                candidate = line.strip().lstrip('# ').strip()
-                if candidate.lower() not in [
-                    'github issue template',
-                    '📝 github issue template',
-                    'issue template',
-                ] and candidate:
-                    title = candidate
-                    break
+            candidate = line.strip().lstrip('# ').strip()
+            if candidate and not candidate.isdigit() and candidate.lower() not in [
+                'github issue template',
+                '📝 github issue template',
+                'issue template',
+            ]:
+                title = candidate
+                break
     if not title:
-        title = md_path.stem
+        # As a last resort, use a generic placeholder
+        title = 'Untitled Issue'
     return title, body
 
 def create_github_issue(title, body, assignees=None, labels=None):
