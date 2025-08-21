@@ -51,10 +51,30 @@ def parse_issue_md(md_path):
     title = None
     body = ''
     for line in lines:
+        # Skip template header if present
         if not title and line.strip().startswith('# '):
-            title = line.strip().lstrip('# ').strip()
-        else:
-            body += line
+            candidate = line.strip().lstrip('# ').strip()
+            # Avoid generic template titles
+            if candidate.lower() not in [
+                'github issue template',
+                '📝 github issue template',
+                'issue template',
+            ] and candidate:
+                title = candidate
+                continue
+        body += line
+    if not title:
+        # Fallback: use first non-empty line that starts with '#' and isn't a template title
+        for line in lines:
+            if line.strip().startswith('# '):
+                candidate = line.strip().lstrip('# ').strip()
+                if candidate.lower() not in [
+                    'github issue template',
+                    '📝 github issue template',
+                    'issue template',
+                ] and candidate:
+                    title = candidate
+                    break
     if not title:
         title = md_path.stem
     return title, body
