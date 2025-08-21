@@ -37,7 +37,23 @@ Signed-off-by: dependabot[bot] <support@github.com>
 Co-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>
 Co-authored-by: Coding-Krakken <davidtraversmailbox@gmail.com> ([8b2f72fa2](https://github.com/Coding-Krakken/MaintAInPro/commit/8b2f72fa295d9fc53597b1883c51061e87acd162))
 - Refactor: remove unnecessary domain alias updates for www.unitedautosupply.org ([be0879285](https://github.com/Coding-Krakken/MaintAInPro/commit/be0879285d48733dcc7ffe9978e050509088d4c2))
-- Refactor: change code structure for improved readability and maintainability ([38ca8867f](https://github.com/Coding-Krakken/MaintAInPro/commit/38ca8867f88715ca308e998252ec7770c596e125))### Fixed
+- Refactor: change code structure for improved readability and maintainability ([38ca8867f](https://github.com/Coding-Krakken/MaintAInPro/commit/38ca8867f88715ca308e998252ec7770c596e125))
+- Add comprehensive unit tests for AssetCard component (#368)
+
+* Initial plan
+
+* Add comprehensive unit tests for AssetCard component
+
+Co-authored-by: Coding-Krakken <220203495+Coding-Krakken@users.noreply.github.com>
+
+* Fix code formatting for AssetCard component and tests
+
+Co-authored-by: Coding-Krakken <220203495+Coding-Krakken@users.noreply.github.com>
+
+---------
+
+Co-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>
+Co-authored-by: Coding-Krakken <220203495+Coding-Krakken@users.noreply.github.com> ([381762f23](https://github.com/Coding-Krakken/MaintAInPro/commit/381762f23b54fdf1d8ccd69120f60197400f8f5f))### Fixed
 - streamline request handling for admin and technician endpoints ([3d44744eb](https://github.com/Coding-Krakken/MaintAInPro/commit/3d44744eb559dec359c55d43234db85698434dae))
 
 
@@ -65,6 +81,8 @@ Co-authored-by: Coding-Krakken <davidtraversmailbox@gmail.com> ([8b2f72fa2](http
 - Created a DebugPage component in the client to display database connection status, API health, environment variables, and test results.
 - Enhanced error handling in the server to provide more specific error types.
 - Updated server index to include the new debug router. ([2d8b44372](https://github.com/Coding-Krakken/MaintAInPro/commit/2d8b4437263fb8ff5d2314f6a54d1f7ace081122))
+
+
 
 
 
