@@ -53,6 +53,7 @@ export class AuthTestServer {
     process.env.JWT_ACCESS_EXPIRY = '15m';
     process.env.JWT_REFRESH_EXPIRY = '7d';
     process.env.TEST_AUTH_MODE = 'true'; // Enable test auth bypass for simpler testing
+    process.env.DISABLE_RATE_LIMITING = 'true'; // Disable rate limiting for tests
 
     // Register all routes including authentication
     this.server = await registerRoutes(this.app);
