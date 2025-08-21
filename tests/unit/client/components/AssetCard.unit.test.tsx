@@ -19,7 +19,9 @@ describe('AssetCard Component', () => {
 
       expect(screen.getByTestId('asset-card')).toBeInTheDocument();
       expect(screen.getByTestId('asset-tag')).toHaveTextContent('UAS-001');
-      expect(screen.getByTestId('asset-description')).toHaveTextContent('Test Equipment Description');
+      expect(screen.getByTestId('asset-description')).toHaveTextContent(
+        'Test Equipment Description'
+      );
       expect(screen.getByTestId('asset-model')).toHaveTextContent('TEST-001');
     });
 
@@ -195,7 +197,7 @@ describe('AssetCard Component', () => {
 
       const card = screen.getByTestId('asset-card');
       expect(card).toHaveAttribute('data-testid', 'asset-card');
-      
+
       // Card should be clickable
       expect(card).toHaveClass('cursor-pointer');
     });

@@ -51,13 +51,10 @@ export default function AssetCard({ equipment, onClick }: AssetCardProps) {
             <Settings className='w-6 h-6 text-primary-600' data-testid='asset-icon' />
           </div>
           <div className='flex space-x-2'>
-            <Badge 
-              className={getStatusColor(equipment.status)} 
-              data-testid='status-badge'
-            >
+            <Badge className={getStatusColor(equipment.status)} data-testid='status-badge'>
               {equipment.status}
             </Badge>
-            <Badge 
+            <Badge
               className={getCriticalityColor(equipment.criticality)}
               data-testid='criticality-badge'
             >
@@ -66,16 +63,10 @@ export default function AssetCard({ equipment, onClick }: AssetCardProps) {
           </div>
         </div>
 
-        <h3 
-          className='font-semibold text-gray-900 mb-1' 
-          data-testid='asset-tag'
-        >
+        <h3 className='font-semibold text-gray-900 mb-1' data-testid='asset-tag'>
           {equipment.assetTag}
         </h3>
-        <p 
-          className='text-sm text-gray-600 mb-2' 
-          data-testid='asset-description'
-        >
+        <p className='text-sm text-gray-600 mb-2' data-testid='asset-description'>
           {equipment.description || 'No description'}
         </p>
 
