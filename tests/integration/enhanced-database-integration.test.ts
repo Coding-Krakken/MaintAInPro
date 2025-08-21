@@ -20,8 +20,8 @@ dotenv.config({ path: path.resolve(process.cwd(), '.env.local') });
 
 import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
 // Import service AFTER environment variables are loaded
-import { EnhancedDatabaseService } from '@server/services/enhanced-database-service-working';
-import { validateAndTransform, camelToSnake, snakeToCamel } from '@shared/validation-utils';
+import { EnhancedDatabaseService } from '../../server/services/enhanced-database-service-working';
+import { validateAndTransform, camelToSnake, snakeToCamel } from '../../shared/validation-utils';
 import {
   insertOrganizationSchema,
   insertWorkOrderSchema,
@@ -30,7 +30,7 @@ import {
   insertTagSchema,
   type Organization,
   type WorkOrder,
-} from '@shared/schema';
+} from '../../shared/schema';
 
 describe('Enhanced Database Service - Production Integration Tests', () => {
   let enhancedDbService: EnhancedDatabaseService;
@@ -433,7 +433,7 @@ describe('🔧 Field Mapping and Validation Tests', () => {
         },
       };
 
-      const snakeCaseData = camelToSnake(camelCaseData);
+      const snakeCaseData = camelToSnake(camelCaseData) as Record<string, any>;
 
       expect(snakeCaseData.first_name).toBe('John');
       expect(snakeCaseData.last_name).toBe('Doe');
@@ -455,7 +455,7 @@ describe('🔧 Field Mapping and Validation Tests', () => {
         },
       };
 
-      const camelCaseData = snakeToCamel(snakeCaseData);
+      const camelCaseData = snakeToCamel(snakeCaseData) as Record<string, any>;
 
       expect(camelCaseData.firstName).toBe('Jane');
       expect(camelCaseData.lastName).toBe('Smith');
