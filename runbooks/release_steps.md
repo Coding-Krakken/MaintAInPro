@@ -1,9 +1,11 @@
 # MaintAInPro Release Steps Runbook
 
 ## Purpose
+
 Ensure safe, reliable, and auditable releases of MaintAInPro CMMS.
 
 ## Steps
+
 - Complete pre-release checklist (tests, gates, compliance, documentation).
 - Deploy to staging environment and validate all gates.
 - Perform canary release to a subset of users.

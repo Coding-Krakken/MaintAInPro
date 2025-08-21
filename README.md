@@ -109,6 +109,8 @@ graph LR
   ([Documentation/Development/](Documentation/Development/))
 - **Security & Compliance**:
   [Documentation/Blueprint/3-Architecture/SecurityArchitecture.md](Documentation/Blueprint/3-Architecture/SecurityArchitecture.md)
+- **Architecture Decision Records**: [artifacts/adr/](artifacts/adr/)
+  - [Database Optimization Strategy](artifacts/adr/adr-database-optimization.md)
 - **User Guides**: [Wiki/](Wiki/)
 - **Changelog**:
   [Documentation/Development/CHANGELOG.md](Documentation/Development/CHANGELOG.md)

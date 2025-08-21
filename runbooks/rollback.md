@@ -1,9 +1,12 @@
 # MaintAInPro Rollback Runbook
 
 ## Purpose
-Safely revert MaintAInPro deployments or configuration changes in case of failure or incident.
+
+Safely revert MaintAInPro deployments or configuration changes in case of
+failure or incident.
 
 ## Steps
+
 - Identify rollback trigger (failed deployment, critical bug, security issue).
 - Notify stakeholders and affected users.
 - Execute rollback using automated scripts or manual procedures.

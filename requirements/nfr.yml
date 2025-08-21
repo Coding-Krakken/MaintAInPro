@@ -1,20 +1,20 @@
 # Non-Functional Requirements for MaintAInPro
 
 performance:
-  p95_latency: "<= 500ms for all API endpoints"
-  throughput: ">= 100 requests/sec sustained"
+  p95_latency: '<= 500ms for all API endpoints'
+  throughput: '>= 100 requests/sec sustained'
 reliability:
-  slos_met: ">= 99.9% uptime"
-  error_budget: "<= 1% bad-deploy minutes per quarter"
+  slos_met: '>= 99.9% uptime'
+  error_budget: '<= 1% bad-deploy minutes per quarter'
 security:
-  critical_vulnerabilities: "0 at release"
-  dependency_policy: "All dependencies scanned and approved"
+  critical_vulnerabilities: '0 at release'
+  dependency_policy: 'All dependencies scanned and approved'
 privacy:
   data_minimization: true
   consent_management: true
   compliance: [GDPR, CCPA]
 scalability:
-  max_assets: ">= 100,000 equipment records"
-  max_users: ">= 10,000 concurrent users"
+  max_assets: '>= 100,000 equipment records'
+  max_users: '>= 10,000 concurrent users'
 accessibility:
-  wcag: "Meets WCAG 2.1 AA standards"
+  wcag: 'Meets WCAG 2.1 AA standards'

@@ -7,18 +7,11 @@ dotenv.config();
 const router = Router();
 
 // Safe environment variables to expose
-const SAFE_ENV = [
-  'NODE_ENV',
-  'DATABASE_URL',
-  'VERCEL',
-  'VERCEL_ENV',
-  'RAILWAY_STATIC_URL',
-  'PORT',
-];
+const SAFE_ENV = ['NODE_ENV', 'DATABASE_URL', 'VERCEL', 'VERCEL_ENV', 'RAILWAY_STATIC_URL', 'PORT'];
 
 router.get('/env', (req: Request, res: Response) => {
   const env: Record<string, string | undefined> = {};
-  SAFE_ENV.forEach((key) => {
+  SAFE_ENV.forEach(key => {
     env[key] = process.env[key];
   });
   res.json(env);

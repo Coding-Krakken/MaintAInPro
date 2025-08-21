@@ -26,11 +26,7 @@ export function camelToSnake(
           ? camelToSnake(item as Record<string, unknown>)
           : item
       );
-    } else if (
-      typeof value === 'object' &&
-      value !== null &&
-      !(value instanceof Date)
-    ) {
+    } else if (typeof value === 'object' && value !== null && !(value instanceof Date)) {
       result[snakeKey] = camelToSnake(value as Record<string, unknown>);
     } else {
       result[snakeKey] = value;
@@ -64,11 +60,7 @@ export function snakeToCamel(
           ? snakeToCamel(item as Record<string, unknown>)
           : item
       );
-    } else if (
-      typeof value === 'object' &&
-      value !== null &&
-      !(value instanceof Date)
-    ) {
+    } else if (typeof value === 'object' && value !== null && !(value instanceof Date)) {
       result[camelKey] = snakeToCamel(value as Record<string, unknown>);
     } else {
       result[camelKey] = value;

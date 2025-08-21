@@ -1,13 +1,17 @@
 # Incident Response Runbook
 
 ## Purpose
-Guide the response to security, operational, or system incidents to minimize impact and restore normal operations quickly.
+
+Guide the response to security, operational, or system incidents to minimize
+impact and restore normal operations quickly.
 
 ## Prerequisites
+
 - Incident response team contact list
 - Access to monitoring and alerting systems
 
 ## Steps
+
 1. **Detect Incident**
    - Monitor alerts and reports
 2. **Assess Severity**
@@ -27,6 +31,6 @@ Guide the response to security, operational, or system incidents to minimize imp
    - Conduct post-incident review
 
 ## References
+
 - Incident Management Policy
 - Security Guidelines
-
