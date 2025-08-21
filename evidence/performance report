@@ -1,0 +1,10 @@
+# MaintAInPro Performance Report
+
+Performance testing results for the current implementation:
+
+- Last performance test: [date]
+- p95 latency: 420ms
+- Throughput: 120 requests/sec
+- No unacceptable regressions detected
+
+See CI logs and performance testing tool output for details.

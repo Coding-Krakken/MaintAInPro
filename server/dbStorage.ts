@@ -72,7 +72,7 @@ export class DatabaseStorage implements IStorage {
     const users = [
       {
         id: this.generateId(),
-        email: 'supervisor@company.com',
+        email: 'supervisor@maintainpro.com',
         firstName: 'John',
         lastName: 'Smith',
         role: 'supervisor' as const,
@@ -81,7 +81,7 @@ export class DatabaseStorage implements IStorage {
       },
       {
         id: this.generateId(),
-        email: 'technician@company.com',
+        email: 'technician@example.com',
         firstName: 'Jane',
         lastName: 'Doe',
         role: 'technician' as const,
@@ -90,7 +90,7 @@ export class DatabaseStorage implements IStorage {
       },
       {
         id: this.generateId(),
-        email: 'manager@company.com',
+        email: 'manager@example.com',
         firstName: 'Mike',
         lastName: 'Johnson',
         role: 'manager' as const,

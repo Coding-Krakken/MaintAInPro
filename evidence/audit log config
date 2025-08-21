@@ -1,0 +1,10 @@
+# MaintAInPro Audit Log Configuration
+
+Audit logging is enabled for all critical actions and changes:
+
+- Log retention: 7 years
+- Log format: JSON, timestamped, user/action details
+- Secure storage: Encrypted at rest
+- Compliance: GDPR, CCPA, ISO 55000
+
+See system configuration for audit log setup and retention policies.

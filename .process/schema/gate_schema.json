@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MaintAInPro Gate Node",
+  "type": "object",
+  "properties": {
+    "id": { "type": "string" },
+    "kind": { "type": "string", "enum": ["gate"] },
+    "criteria": { "type": "array", "items": { "type": "string" } },
+    "evidence": { "type": "array", "items": { "type": "string" } },
+    "next": { "type": "string" }
+  },
+  "required": ["id", "kind", "criteria", "evidence", "next"]
+}

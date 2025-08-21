@@ -306,6 +306,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Authentication routes
   app.post('/api/auth/login', authRateLimit, async (req, res) => {
     try {
+      // TEST_AUTH_MODE bypass: allow direct login for E2E tests
+      if (process.env.TEST_AUTH_MODE === 'true') {
+        // Accept any credentials, return a mock user and token
+        const mockUser = {
+          id: '00000000-0000-0000-0000-000000000001',
+          email: req.body.email,
+          firstName: 'Test',
+          lastName: 'User',
+          role: 'admin',
+          warehouseId: '00000000-0000-0000-0000-000000000001',
+          emailVerified: true,
+          mfaEnabled: false,
+        };
+        return res.json({
+          user: mockUser,
+          token: 'mock-token',
+          refreshToken: 'mock-refresh-token',
+          sessionId: 'mock-session-id',
+        });
+      }
+
       const { AuthService } = await import('./services/auth');
 
       const deviceInfo = {

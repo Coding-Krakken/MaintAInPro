@@ -1,0 +1,10 @@
+# MaintAInPro Monitoring Configuration
+
+Monitoring and observability setup for the current release:
+
+- Dashboards: System health, error rates, SLOs
+- Alerts: Critical incidents, performance regressions
+- Post-release monitoring enabled
+- Integration with incident management system
+
+See ops documentation and dashboard links for details.

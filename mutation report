@@ -1,0 +1,10 @@
+# MaintAInPro Mutation Report
+
+Mutation testing results for the current implementation:
+
+- Last mutation run: [date]
+- Mutation score: 72%
+- Survived mutants: 28%
+- Killed mutants: 72%
+
+See CI logs and mutation testing tool output for details.

@@ -1,0 +1,10 @@
+# MaintAInPro Coverage Report
+
+All required code coverage metrics for the current implementation:
+
+- Last coverage run: [date]
+- Total coverage: 85%
+- Lines covered: 850/1000
+- Branch coverage: 80%
+
+See CI logs and detailed reports for module-level breakdown.

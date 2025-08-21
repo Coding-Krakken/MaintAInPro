@@ -1,0 +1,23 @@
+flowchart TD
+requirements["requirements"]
+requirements --> design
+design["design"]
+design --> gate-design
+gate-design["gate-design"]
+gate-design --> implementation
+implementation["implementation"]
+implementation --> gate-implementation
+gate-implementation["gate-implementation"]
+gate-implementation --> verification
+verification["verification"]
+verification --> gate-verification
+gate-verification["gate-verification"]
+gate-verification --> release
+release["release"]
+release --> gate-release
+gate-release["gate-release"]
+gate-release --> operate
+operate["operate"]
+operate --> recalibrate
+recalibrate["recalibrate"]
+recalibrate --> requirements

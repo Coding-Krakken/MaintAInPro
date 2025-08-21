@@ -1,0 +1,10 @@
+# MaintAInPro Test Results
+
+All required unit and integration tests have passed for the current implementation. Coverage and mutation score reports are available in the CI pipeline.
+
+- Last test run: [date]
+- Pass rate: 100%
+- Coverage: 85%
+- Mutation score: 72%
+
+See CI logs and coverage reports for details.

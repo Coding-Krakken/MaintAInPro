@@ -1,0 +1,14 @@
+# Privacy Requirements for MaintAInPro
+
+data_minimization: true
+consent_management: true
+secure_storage: "All sensitive data encrypted at rest and in transit"
+regulatory_compliance:
+  - GDPR
+  - CCPA
+  - Other applicable regulations
+user_rights:
+  - Data access
+  - Data rectification
+  - Data erasure
+  - Data portability

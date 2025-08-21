@@ -1,0 +1,72 @@
+nodes:
+  - id: requirements
+    kind: activity
+    next: design
+  - id: design
+    kind: activity
+    next: gate-design
+  - id: gate-design
+    kind: gate
+    criteria:
+      - threat model completed
+      - privacy and compliance sign-off
+      - NFRs documented
+    evidence:
+      - artifacts/threat/THREAT_TEMPLATE.md
+      - requirements/privacy.yml
+      - requirements/compliance.yml
+      - requirements/nfr.yml
+    next: implementation
+  - id: implementation
+    kind: activity
+    next: gate-implementation
+  - id: gate-implementation
+    kind: gate
+    criteria:
+      - code reviewed
+      - unit/integration tests pass
+      - coverage ≥ 80%
+      - mutation score ≥ 70%
+    evidence:
+      - evidence/test results
+      - evidence/coverage report
+      - evidence/mutation report
+    next: verification
+  - id: verification
+    kind: activity
+    next: gate-verification
+  - id: gate-verification
+    kind: gate
+    criteria:
+      - performance tests pass
+      - security scan clean
+      - audit logging enabled
+    evidence:
+      - evidence/performance report
+      - evidence/SARIF report
+      - evidence/audit log config
+    next: release
+  - id: release
+    kind: activity
+    next: gate-release
+  - id: gate-release
+    kind: gate
+    criteria:
+      - canary/staged rollout
+      - rollback plan in place
+      - post-release monitoring
+    evidence:
+      - evidence/rollout plan
+      - evidence/monitoring config
+      - evidence/postmortem template
+    next: operate
+  - id: operate
+    kind: activity
+    next: recalibrate
+  - id: recalibrate
+    kind: decision
+    options:
+      - continue
+      - update process
+      - trigger incident review
+    next: requirements
