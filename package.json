@@ -32,6 +32,7 @@
     "test:e2e:report": "playwright show-report test-results/reports/playwright-report",
     "test:performance": "echo 'Install k6 globally to run performance tests'",
     "test:accessibility": "vitest run --config tests/config/vitest.config.accessibility.ts",
+    "bench:workorder": "vitest bench bench/server/services/workOrderService.bench.ts",
     "test:all": "npm run test:unit && npm run test:integration && npm run test:e2e",
     "test:mutation": "stryker run",
     "test:mutation:debug": "stryker run --logLevel debug",
