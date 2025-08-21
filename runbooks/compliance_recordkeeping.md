@@ -23,4 +23,6 @@ Ensure all compliance-related activities and records are properly documented and
 ## References
 - Compliance Policy Manual
 - Regulatory Guidelines
+- **Traceability Framework**: [Documentation/Blueprint/5-Traceability/traceability.md](../Documentation/Blueprint/5-Traceability/traceability.md)
+- **ADR Template**: [artifacts/adr/ADR_TEMPLATE.md](../artifacts/adr/ADR_TEMPLATE.md)
 
