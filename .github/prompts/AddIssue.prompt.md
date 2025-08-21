@@ -9,7 +9,7 @@ mode: agent
 This prompt instructs Copilot to add a new issue to the repository, using all
 available tools and techniques to retrieve and infer as much relevant context as
 possible—even if the user provides minimal input. The workflow and formatting
-must mirror `Issue.prompt.md`.
+must mirror `CreateIssues.prompt.md`.
 
 ---
 
@@ -34,7 +34,7 @@ must mirror `Issue.prompt.md`.
 4. **Generate the issue file:**
    - Create a new markdown file in `.github/issues/` named according to the next
      available issue number (e.g., `6.md`).
-   - Use the formatting and logic of `Issue.prompt.md` for consistency.
+   - Use the formatting and logic of `CreateIssues.prompt.md` for consistency.
 5. **Output summary:**
    - Summarize the added issue, confirm creation, and list the context sources
      used.
@@ -57,7 +57,7 @@ must mirror `Issue.prompt.md`.
 
 ## Logic Reference
 
-- Use the same logic and formatting as `Issue.prompt.md` for issue creation and
+- Use the same logic and formatting as `CreateIssues.prompt.md` for issue creation and
   file structure.
 - Ensure atomic, standards-aligned steps.
 - Record decisions and outputs as per repo conventions.
