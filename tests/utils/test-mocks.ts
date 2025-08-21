@@ -41,12 +41,26 @@ export const mockWorkOrder = {
 // Mock equipment data
 export const mockEquipment = {
   id: '1',
-  name: 'Test Equipment',
+  assetTag: 'UAS-001',
   model: 'TEST-001',
-  serialNumber: 'SN123456',
-  location: 'Plant 1',
+  description: 'Test Equipment Description',
+  area: 'Plant 1',
   status: 'active' as const,
+  criticality: 'medium' as const,
+  installDate: new Date('2023-01-15'),
+  warrantyExpiry: new Date('2025-01-15'),
+  manufacturer: 'Test Manufacturer',
+  serialNumber: 'SN123456',
+  specifications: { power: '240V', weight: '50kg' },
+  organizationId: 'org-1',
   warehouseId: '1',
+  tsv: null,
+  createdAt: new Date('2023-01-01'),
+  updatedAt: new Date('2023-01-01'),
+  deletedAt: null,
+  createdBy: 'user-1',
+  updatedBy: 'user-1',
+  qrCode: 'qr-code-001',
 };
 
 // Mock parts data
