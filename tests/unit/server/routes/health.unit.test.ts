@@ -12,20 +12,22 @@ const mockJson = vi.fn();
 const mockStatus = vi.fn(() => ({ json: mockJson }));
 const mockSetHeader = vi.fn();
 
-const createMockResponse = (): VercelResponse => ({
-  status: mockStatus,
-  setHeader: mockSetHeader,
-  json: mockJson,
-} as any);
+const createMockResponse = (): VercelResponse =>
+  ({
+    status: mockStatus,
+    setHeader: mockSetHeader,
+    json: mockJson,
+  }) as any;
 
-const createMockRequest = (overrides: Partial<VercelRequest> = {}): VercelRequest => ({
-  headers: { host: 'localhost:3000' },
-  method: 'GET',
-  url: '/health',
-  query: {},
-  body: {},
-  ...overrides,
-} as any);
+const createMockRequest = (overrides: Partial<VercelRequest> = {}): VercelRequest =>
+  ({
+    headers: { host: 'localhost:3000' },
+    method: 'GET',
+    url: '/health',
+    query: {},
+    body: {},
+    ...overrides,
+  }) as any;
 
 describe('Health Route', () => {
   let originalEnv: NodeJS.ProcessEnv;
@@ -36,28 +38,28 @@ describe('Health Route', () => {
   beforeEach(() => {
     // Store original environment
     originalEnv = { ...process.env };
-    
+
     // Clear all mocks
     vi.clearAllMocks();
-    
+
     // Mock console.error to avoid noise in test output
     consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-    
+
     // Mock process methods
     mockUptime = vi.fn(() => 3600); // 1 hour uptime
     mockMemoryUsage = vi.fn(() => ({
-      rss: 104857600,      // 100MB
-      heapTotal: 67108864, // 64MB  
-      heapUsed: 33554432,  // 32MB
-      external: 8388608,   // 8MB
-      arrayBuffers: 1048576 // 1MB
+      rss: 104857600, // 100MB
+      heapTotal: 67108864, // 64MB
+      heapUsed: 33554432, // 32MB
+      external: 8388608, // 8MB
+      arrayBuffers: 1048576, // 1MB
     }));
-    
+
     vi.stubGlobal('process', {
       ...process,
       uptime: mockUptime,
       memoryUsage: mockMemoryUsage,
-      env: process.env
+      env: process.env,
     });
   });
 
@@ -77,7 +79,7 @@ describe('Health Route', () => {
 
       expect(mockStatus).toHaveBeenCalledWith(200);
       expect(mockJson).toHaveBeenCalledTimes(1);
-      
+
       const healthData = mockJson.mock.calls[0][0];
       expect(healthData).toMatchObject({
         status: 'ok',
@@ -94,14 +96,14 @@ describe('Health Route', () => {
           heapTotal: 67108864,
           heapUsed: 33554432,
           external: 8388608,
-          arrayBuffers: 1048576
+          arrayBuffers: 1048576,
         }),
         features: expect.objectContaining({
           auth: expect.any(String),
           database: expect.any(String),
           redis: expect.any(String),
-          email: expect.any(String)
-        })
+          email: expect.any(String),
+        }),
       });
     });
 
@@ -111,7 +113,10 @@ describe('Health Route', () => {
 
       health(req, res);
 
-      expect(mockSetHeader).toHaveBeenCalledWith('Cache-Control', 'no-cache, no-store, must-revalidate');
+      expect(mockSetHeader).toHaveBeenCalledWith(
+        'Cache-Control',
+        'no-cache, no-store, must-revalidate'
+      );
       expect(mockSetHeader).toHaveBeenCalledWith('Pragma', 'no-cache');
       expect(mockSetHeader).toHaveBeenCalledWith('Expires', '0');
       expect(mockSetHeader).toHaveBeenCalledTimes(3);
@@ -158,7 +163,7 @@ describe('Health Route', () => {
         auth: 'enabled',
         database: 'enabled',
         redis: 'enabled',
-        email: 'enabled'
+        email: 'enabled',
       });
     });
 
@@ -178,7 +183,7 @@ describe('Health Route', () => {
         auth: 'disabled',
         database: 'disabled',
         redis: 'disabled',
-        email: 'disabled'
+        email: 'disabled',
       });
     });
 
@@ -241,7 +246,7 @@ describe('Health Route', () => {
       expect(mockJson).toHaveBeenCalledWith({
         status: 'error',
         timestamp: expect.any(String),
-        error: 'Process uptime failed'
+        error: 'Process uptime failed',
       });
       expect(consoleErrorSpy).toHaveBeenCalledWith('Health check failed:', expect.any(Error));
     });
@@ -261,7 +266,7 @@ describe('Health Route', () => {
       expect(mockJson).toHaveBeenCalledWith({
         status: 'error',
         timestamp: expect.any(String),
-        error: 'Unknown error'
+        error: 'Unknown error',
       });
       expect(consoleErrorSpy).toHaveBeenCalledWith('Health check failed:', 'String error');
     });
@@ -291,7 +296,7 @@ describe('Health Route', () => {
       health(req, res);
 
       const healthData = mockJson.mock.calls[0][0];
-      
+
       // Check that all expected fields exist
       expect(healthData).toHaveProperty('status');
       expect(healthData).toHaveProperty('timestamp');
@@ -304,7 +309,7 @@ describe('Health Route', () => {
       expect(healthData).toHaveProperty('uptime');
       expect(healthData).toHaveProperty('memory');
       expect(healthData).toHaveProperty('features');
-      
+
       // Verify data types
       expect(typeof healthData.status).toBe('string');
       expect(typeof healthData.timestamp).toBe('string');
@@ -324,11 +329,11 @@ describe('Health Route', () => {
       health(req, res);
 
       const errorData = mockJson.mock.calls[0][0];
-      
+
       expect(errorData).toHaveProperty('status', 'error');
       expect(errorData).toHaveProperty('timestamp');
       expect(errorData).toHaveProperty('error');
-      
+
       expect(typeof errorData.timestamp).toBe('string');
       expect(typeof errorData.error).toBe('string');
     });
@@ -341,13 +346,13 @@ describe('Health Route', () => {
 
       const healthData = mockJson.mock.calls[0][0];
       const memory = healthData.memory;
-      
+
       expect(memory).toHaveProperty('rss');
       expect(memory).toHaveProperty('heapTotal');
       expect(memory).toHaveProperty('heapUsed');
       expect(memory).toHaveProperty('external');
       expect(memory).toHaveProperty('arrayBuffers');
-      
+
       // All memory values should be numbers
       expect(typeof memory.rss).toBe('number');
       expect(typeof memory.heapTotal).toBe('number');
@@ -364,12 +369,12 @@ describe('Health Route', () => {
 
       const healthData = mockJson.mock.calls[0][0];
       const features = healthData.features;
-      
+
       expect(features).toHaveProperty('auth');
       expect(features).toHaveProperty('database');
       expect(features).toHaveProperty('redis');
       expect(features).toHaveProperty('email');
-      
+
       // All feature values should be either 'enabled' or 'disabled'
       const validValues = ['enabled', 'disabled'];
       expect(validValues).toContain(features.auth);

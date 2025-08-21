@@ -9,7 +9,7 @@ regulatory:
 
 audit_logging:
   enabled: true
-  retention: ">= 7 years"
+  retention: '>= 7 years'
 
 security_controls:
   - Role-based access control
@@ -18,4 +18,4 @@ security_controls:
 
 incident_response:
   plan_documented: true
-  response_time: "<= 1 hour for critical incidents>"
+  response_time: '<= 1 hour for critical incidents>'

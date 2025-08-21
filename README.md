@@ -104,11 +104,15 @@ graph LR
 
 - **Blueprint Framework**: Strategic, technical, feature, UX, traceability,
   operations ([Documentation/Blueprint/](Documentation/Blueprint/))
+- **Traceability Framework**: Complete audit trails, ADRs, gates, and process governance
+  ([Documentation/Blueprint/5-Traceability/traceability.md](Documentation/Blueprint/5-Traceability/traceability.md))
 - **API Reference**: [Documentation/API/](Documentation/API/)
 - **DevOps Guides**: Vercel, Docker, CI/CD
   ([Documentation/Development/](Documentation/Development/))
 - **Security & Compliance**:
   [Documentation/Blueprint/3-Architecture/SecurityArchitecture.md](Documentation/Blueprint/3-Architecture/SecurityArchitecture.md)
+- **Architecture Decision Records**: [artifacts/adr/](artifacts/adr/)
+  - [Database Optimization Strategy](artifacts/adr/adr-database-optimization.md)
 - **User Guides**: [Wiki/](Wiki/)
 - **Changelog**:
   [Documentation/Development/CHANGELOG.md](Documentation/Development/CHANGELOG.md)
@@ -195,6 +199,7 @@ MaintAInPro is MIT licensed. See [LICENSE](LICENSE) for details.
 ## 🗂️ Quick Links
 
 - [Blueprint Framework](Documentation/Blueprint/)
+- [Traceability Framework](Documentation/Blueprint/5-Traceability/traceability.md)
 - [API Reference](Documentation/API/)
 - [DevOps Guides](Documentation/Development/)
 - [User Guides](Wiki/)

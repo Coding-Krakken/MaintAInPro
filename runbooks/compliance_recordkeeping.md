@@ -1,13 +1,17 @@
 # Compliance Recordkeeping Runbook
 
 ## Purpose
-Ensure all compliance-related activities and records are properly documented and retained according to regulatory and organizational requirements.
+
+Ensure all compliance-related activities and records are properly documented and
+retained according to regulatory and organizational requirements.
 
 ## Prerequisites
+
 - Access to compliance documentation systems
 - Knowledge of applicable regulations
 
 ## Steps
+
 1. **Identify Compliance Requirements**
    - Review relevant laws, standards, and policies
 2. **Document Activities**
@@ -21,6 +25,9 @@ Ensure all compliance-related activities and records are properly documented and
    - Escalate any discrepancies or missing records
 
 ## References
+
 - Compliance Policy Manual
 - Regulatory Guidelines
+- **Traceability Framework**: [Documentation/Blueprint/5-Traceability/traceability.md](../Documentation/Blueprint/5-Traceability/traceability.md)
+- **ADR Template**: [artifacts/adr/ADR_TEMPLATE.md](../artifacts/adr/ADR_TEMPLATE.md)
 

@@ -2,7 +2,7 @@
 
 data_minimization: true
 consent_management: true
-secure_storage: "All sensitive data encrypted at rest and in transit"
+secure_storage: 'All sensitive data encrypted at rest and in transit'
 regulatory_compliance:
   - GDPR
   - CCPA
