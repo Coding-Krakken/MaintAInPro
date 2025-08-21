@@ -53,7 +53,19 @@ Co-authored-by: Coding-Krakken <220203495+Coding-Krakken@users.noreply.github.co
 ---------
 
 Co-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>
-Co-authored-by: Coding-Krakken <220203495+Coding-Krakken@users.noreply.github.com> ([381762f23](https://github.com/Coding-Krakken/MaintAInPro/commit/381762f23b54fdf1d8ccd69120f60197400f8f5f))### Fixed
+Co-authored-by: Coding-Krakken <220203495+Coding-Krakken@users.noreply.github.com> ([381762f23](https://github.com/Coding-Krakken/MaintAInPro/commit/381762f23b54fdf1d8ccd69120f60197400f8f5f))
+- Add comprehensive unit tests for server/health.ts endpoint (#369)
+
+* Initial plan
+
+* Add comprehensive unit tests for server/health.ts route
+
+Co-authored-by: Coding-Krakken <220203495+Coding-Krakken@users.noreply.github.com>
+
+---------
+
+Co-authored-by: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>
+Co-authored-by: Coding-Krakken <220203495+Coding-Krakken@users.noreply.github.com> ([3b3429fe1](https://github.com/Coding-Krakken/MaintAInPro/commit/3b3429fe167dc091a7660c39f82b72c7953022c9))### Fixed
 - streamline request handling for admin and technician endpoints ([3d44744eb](https://github.com/Coding-Krakken/MaintAInPro/commit/3d44744eb559dec359c55d43234db85698434dae))
 
 
@@ -81,6 +93,8 @@ Co-authored-by: Coding-Krakken <220203495+Coding-Krakken@users.noreply.github.co
 - Created a DebugPage component in the client to display database connection status, API health, environment variables, and test results.
 - Enhanced error handling in the server to provide more specific error types.
 - Updated server index to include the new debug router. ([2d8b44372](https://github.com/Coding-Krakken/MaintAInPro/commit/2d8b4437263fb8ff5d2314f6a54d1f7ace081122))
+
+
 
 
 
