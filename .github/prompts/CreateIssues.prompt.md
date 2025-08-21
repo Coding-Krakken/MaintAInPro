@@ -23,7 +23,7 @@ You are an autonomous repo engineer. Your goals are to:
 
 1. Discover repo metadata:
 
-   * Read: `README.md`, `Documentation/CONTRIBUTING.md`, `Documentation/Blueprint/`, `package.json`, `.github/`, `Dockerfile`, `scripts/`.
+   * Read: `README*`, `CONTRIBUTING*`, `docs/`, `docs/vision.md`, `Documentation/Blueprint/`, `.process/graph.yaml`, `requirements/`, `runbooks/`, `package.*`, `pyproject.toml`, `go.mod`, `Cargo.toml`, `.github/`, `Makefile`, `Docker*`, `compose*`, `infra/`, `scripts/`.
    * Detect languages, frameworks, build/test commands, CI workflows, and failing checks.
 2. Build a quick **dependency & coupling map**:
 
@@ -63,6 +63,8 @@ For each task **T1..T5**:
 * Title: concise, imperative, scoped to unique path(s).
 * Body: Use `.github/issues/template.md` as the base template. Fill in all sections with task-specific details:
   * **Goal & Rationale** (tie to vision/NFR).
+  * **Start & End Date** (when to begin and complete the task).
+  * **Task Description** (what to do, why, and how).
   * **Scope** (explicit file globs this task may edit).
   * **Out of Scope** (name adjacent high-risk files/modules).
   * **Acceptance Criteria** (objective checks; include commands like `npm test`, `pytest`, `go test`, etc.).
@@ -73,7 +75,8 @@ For each task **T1..T5**:
 
 * Save each issue as a markdown file in `.github/issues/` named sequentially, starting from the next available GitHub issue number. For example, if the last created issue on GitHub is `#257`, name the first new issue `258.md`, the next `259.md`, and so on.
 
-* Do **not** use `gh` CLI, REST API, or open PRs/branches. Issues will be created on GitHub by a separate script.
+Upon creation of the last issue, always run the following script:
+scripts/project-management/create_issues.py
 
 ---
 

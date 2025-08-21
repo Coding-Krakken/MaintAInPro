@@ -20,8 +20,8 @@ dotenv.config({ path: path.resolve(process.cwd(), '.env.local') });
 
 import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
 // Import service AFTER environment variables are loaded
-import { EnhancedDatabaseService } from '../server/services/enhanced-database-service-working';
-import { validateAndTransform, camelToSnake, snakeToCamel } from '../shared/validation-utils';
+import { EnhancedDatabaseService } from '@server/services/enhanced-database-service-working';
+import { validateAndTransform, camelToSnake, snakeToCamel } from '@shared/validation-utils';
 import {
   insertOrganizationSchema,
   insertWorkOrderSchema,
@@ -30,7 +30,7 @@ import {
   insertTagSchema,
   type Organization,
   type WorkOrder,
-} from '../shared/schema';
+} from '@shared/schema';
 
 describe('Enhanced Database Service - Production Integration Tests', () => {
   let enhancedDbService: EnhancedDatabaseService;

@@ -20,15 +20,22 @@ export function camelToSnake(
 
   for (const [key, value] of Object.entries(obj)) {
     const snakeKey = key.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
-    result[snakeKey] =
+    if (Array.isArray(value)) {
+      result[snakeKey] = value.map(item =>
+        typeof item === 'object' && item !== null && !(item instanceof Date)
+          ? camelToSnake(item as Record<string, unknown>)
+          : item
+      );
+    } else if (
       typeof value === 'object' &&
       value !== null &&
-      !Array.isArray(value) &&
       !(value instanceof Date)
-        ? camelToSnake(value as Record<string, unknown>)
-        : value;
+    ) {
+      result[snakeKey] = camelToSnake(value as Record<string, unknown>);
+    } else {
+      result[snakeKey] = value;
+    }
   }
-
   return result;
 }
 
@@ -51,15 +58,22 @@ export function snakeToCamel(
 
   for (const [key, value] of Object.entries(obj)) {
     const camelKey = key.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase());
-    result[camelKey] =
+    if (Array.isArray(value)) {
+      result[camelKey] = value.map(item =>
+        typeof item === 'object' && item !== null && !(item instanceof Date)
+          ? snakeToCamel(item as Record<string, unknown>)
+          : item
+      );
+    } else if (
       typeof value === 'object' &&
       value !== null &&
-      !Array.isArray(value) &&
       !(value instanceof Date)
-        ? snakeToCamel(value as Record<string, unknown>)
-        : value;
+    ) {
+      result[camelKey] = snakeToCamel(value as Record<string, unknown>);
+    } else {
+      result[camelKey] = value;
+    }
   }
-
   return result;
 }
 
