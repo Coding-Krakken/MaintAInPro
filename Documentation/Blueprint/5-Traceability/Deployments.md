@@ -104,27 +104,77 @@ none | aiEnabled:false, realtimeEnabled:false, advancedAnalytics:false,
 mobileApp:false | | 2025-08-13T16:13:56.807Z | 08/13/2025, 12:13:56 PM |
 Coding-Krakken | Direct Push | `8fe1717` | n/a | n/a |
 `8fe1717-2025-08-13T16:13` | pending | pending | none | aiEnabled:false,
+realtimeEnabled:false, advancedAnalytics:false, mobileApp:false | |
+2025-08-13T16:22:31.435Z | 08/13/2025, 12:22:31 PM | Coding-Krakken | Direct
+Push | `b73e62a` | n/a | n/a | `b73e62a-2025-08-13T16:22` | pending | pending |
+none | aiEnabled:false, realtimeEnabled:false, advancedAnalytics:false,
+mobileApp:false | | 2025-08-13T16:46:10.412Z | 08/13/2025, 12:46:10 PM |
+Coding-Krakken | Direct Push | `e31e1c6` | n/a | n/a |
+`e31e1c6-2025-08-13T16:46` | pending | pending | none | aiEnabled:false,
+realtimeEnabled:false, advancedAnalytics:false, mobileApp:false | |
+2025-08-13T16:47:59.144Z | 08/13/2025, 12:47:59 PM | Coding-Krakken | Direct
+Push | `61541f7` | n/a | n/a | `61541f7-2025-08-13T16:47` | pending | pending |
+none | aiEnabled:false, realtimeEnabled:false, advancedAnalytics:false,
+mobileApp:false | | 2025-08-13T16:53:30.751Z | 08/13/2025, 12:53:30 PM |
+Coding-Krakken | Direct Push | `3d44744` | n/a | n/a |
+`3d44744-2025-08-13T16:53` | pending | pending | none | aiEnabled:false,
+realtimeEnabled:false, advancedAnalytics:false, mobileApp:false | |
+2025-08-13T17:00:47.207Z | 08/13/2025, 01:00:47 PM | Coding-Krakken | Direct
+Push | `0c60e9e` | n/a | n/a | `0c60e9e-2025-08-13T17:00` | pending | pending |
+none | aiEnabled:false, realtimeEnabled:false, advancedAnalytics:false,
+mobileApp:false | | 2025-08-13T17:09:51.069Z | 08/13/2025, 01:09:51 PM |
+Coding-Krakken | Direct Push | `24812ce` | n/a | n/a |
+`24812ce-2025-08-13T17:09` | pending | pending | none | aiEnabled:false,
+realtimeEnabled:false, advancedAnalytics:false, mobileApp:false | |
+2025-08-13T18:04:53.019Z | 08/13/2025, 02:04:53 PM | Coding-Krakken | Direct
+Push | `32b7c4f` | n/a | n/a | `32b7c4f-2025-08-13T18:04` | pending | pending |
+none | aiEnabled:false, realtimeEnabled:false, advancedAnalytics:false,
+mobileApp:false | | 2025-08-14T17:05:45.323Z | 08/14/2025, 01:05:45 PM |
+Coding-Krakken | Direct Push | `688eafd` | n/a | n/a |
+`688eafd-2025-08-14T17:05` | pending | pending | none | aiEnabled:false,
+realtimeEnabled:false, advancedAnalytics:false, mobileApp:false | |
+2025-08-14T17:19:24.089Z | 08/14/2025, 01:19:24 PM | Coding-Krakken | Direct
+Push | `4fac045` | n/a | n/a | `4fac045-2025-08-14T17:19` | pending | pending |
+none | aiEnabled:false, realtimeEnabled:false, advancedAnalytics:false,
+mobileApp:false | | 2025-08-14T17:27:03.580Z | 08/14/2025, 01:27:03 PM |
+Coding-Krakken | Direct Push | `8b2f72f` | n/a | n/a |
+`8b2f72f-2025-08-14T17:27` | pending | pending | none | aiEnabled:false,
+realtimeEnabled:false, advancedAnalytics:false, mobileApp:false | |
+2025-08-14T17:42:44.402Z | 08/14/2025, 01:42:44 PM | Coding-Krakken | Direct
+Push | `ae4e43f` | n/a | n/a | `ae4e43f-2025-08-14T17:42` | pending | pending |
+none | aiEnabled:false, realtimeEnabled:false, advancedAnalytics:false,
+mobileApp:false | | 2025-08-14T17:57:31.762Z | 08/14/2025, 01:57:31 PM |
+Coding-Krakken | Direct Push | `be08792` | n/a | n/a |
+`be08792-2025-08-14T17:57` | pending | pending | none | aiEnabled:false,
+realtimeEnabled:false, advancedAnalytics:false, mobileApp:false | |
+2025-08-15T14:46:43.832Z | 08/15/2025, 10:46:43 AM | Coding-Krakken | Direct
+Push | `2d8b443` | n/a | n/a | `2d8b443-2025-08-15T14:46` | pending | pending |
+none | aiEnabled:false, realtimeEnabled:false, advancedAnalytics:false,
+mobileApp:false | | 2025-08-18T15:21:05.888Z | 08/18/2025, 11:21:05 AM |
+Coding-Krakken | Direct Push | `38ca886` | n/a | n/a |
+`38ca886-2025-08-18T15:21` | pending | pending | none | aiEnabled:false,
+realtimeEnabled:false, advancedAnalytics:false, mobileApp:false | |
+2025-08-18T15:25:23.890Z | 08/18/2025, 11:25:23 AM | Coding-Krakken | Direct
+Push | `3ca9dbf` | n/a | n/a | `3ca9dbf-2025-08-18T15:25` | pending | pending |
+none | aiEnabled:false, realtimeEnabled:false, advancedAnalytics:false,
+mobileApp:false | | 2025-08-21T18:10:59.412Z | 08/21/2025, 02:10:59 PM |
+Coding-Krakken | Direct Push | `381762f` | n/a | n/a |
+`381762f-2025-08-21T18:10` | pending | pending | none | aiEnabled:false,
+realtimeEnabled:false, advancedAnalytics:false, mobileApp:false | |
+2025-08-21T18:11:43.839Z | 08/21/2025, 02:11:43 PM | Coding-Krakken | Direct
+Push | `3b3429f` | n/a | n/a | `3b3429f-2025-08-21T18:11` | pending | pending |
+none | aiEnabled:false, realtimeEnabled:false, advancedAnalytics:false,
+mobileApp:false | | 2025-08-21T18:13:02.172Z | 08/21/2025, 02:13:02 PM |
+Coding-Krakken | Direct Push | `1b719cf` | n/a | n/a |
+`1b719cf-2025-08-21T18:13` | pending | pending | none | aiEnabled:false,
+realtimeEnabled:false, advancedAnalytics:false, mobileApp:false | |
+2025-08-21T18:13:29.214Z | 08/21/2025, 02:13:29 PM | Coding-Krakken | Direct
+Push | `41fb75a` | n/a | n/a | `41fb75a-2025-08-21T18:13` | pending | pending |
+none | aiEnabled:false, realtimeEnabled:false, advancedAnalytics:false,
+mobileApp:false | | 2025-08-21T18:14:01.820Z | 08/21/2025, 02:14:01 PM |
+Coding-Krakken | Direct Push | `434e969` | n/a | n/a |
+`434e969-2025-08-21T18:14` | pending | pending | none | aiEnabled:false,
 realtimeEnabled:false, advancedAnalytics:false, mobileApp:false |
-| 2025-08-13T16:22:31.435Z | 08/13/2025, 12:22:31 PM | Coding-Krakken | Direct Push | `b73e62a` | n/a | n/a | `b73e62a-2025-08-13T16:22` | pending | pending | none | aiEnabled:false, realtimeEnabled:false, advancedAnalytics:false, mobileApp:false |
-| 2025-08-13T16:46:10.412Z | 08/13/2025, 12:46:10 PM | Coding-Krakken | Direct Push | `e31e1c6` | n/a | n/a | `e31e1c6-2025-08-13T16:46` | pending | pending | none | aiEnabled:false, realtimeEnabled:false, advancedAnalytics:false, mobileApp:false |
-| 2025-08-13T16:47:59.144Z | 08/13/2025, 12:47:59 PM | Coding-Krakken | Direct Push | `61541f7` | n/a | n/a | `61541f7-2025-08-13T16:47` | pending | pending | none | aiEnabled:false, realtimeEnabled:false, advancedAnalytics:false, mobileApp:false |
-| 2025-08-13T16:53:30.751Z | 08/13/2025, 12:53:30 PM | Coding-Krakken | Direct Push | `3d44744` | n/a | n/a | `3d44744-2025-08-13T16:53` | pending | pending | none | aiEnabled:false, realtimeEnabled:false, advancedAnalytics:false, mobileApp:false |
-| 2025-08-13T17:00:47.207Z | 08/13/2025, 01:00:47 PM | Coding-Krakken | Direct Push | `0c60e9e` | n/a | n/a | `0c60e9e-2025-08-13T17:00` | pending | pending | none | aiEnabled:false, realtimeEnabled:false, advancedAnalytics:false, mobileApp:false |
-| 2025-08-13T17:09:51.069Z | 08/13/2025, 01:09:51 PM | Coding-Krakken | Direct Push | `24812ce` | n/a | n/a | `24812ce-2025-08-13T17:09` | pending | pending | none | aiEnabled:false, realtimeEnabled:false, advancedAnalytics:false, mobileApp:false |
-| 2025-08-13T18:04:53.019Z | 08/13/2025, 02:04:53 PM | Coding-Krakken | Direct Push | `32b7c4f` | n/a | n/a | `32b7c4f-2025-08-13T18:04` | pending | pending | none | aiEnabled:false, realtimeEnabled:false, advancedAnalytics:false, mobileApp:false |
-| 2025-08-14T17:05:45.323Z | 08/14/2025, 01:05:45 PM | Coding-Krakken | Direct Push | `688eafd` | n/a | n/a | `688eafd-2025-08-14T17:05` | pending | pending | none | aiEnabled:false, realtimeEnabled:false, advancedAnalytics:false, mobileApp:false |
-| 2025-08-14T17:19:24.089Z | 08/14/2025, 01:19:24 PM | Coding-Krakken | Direct Push | `4fac045` | n/a | n/a | `4fac045-2025-08-14T17:19` | pending | pending | none | aiEnabled:false, realtimeEnabled:false, advancedAnalytics:false, mobileApp:false |
-| 2025-08-14T17:27:03.580Z | 08/14/2025, 01:27:03 PM | Coding-Krakken | Direct Push | `8b2f72f` | n/a | n/a | `8b2f72f-2025-08-14T17:27` | pending | pending | none | aiEnabled:false, realtimeEnabled:false, advancedAnalytics:false, mobileApp:false |
-| 2025-08-14T17:42:44.402Z | 08/14/2025, 01:42:44 PM | Coding-Krakken | Direct Push | `ae4e43f` | n/a | n/a | `ae4e43f-2025-08-14T17:42` | pending | pending | none | aiEnabled:false, realtimeEnabled:false, advancedAnalytics:false, mobileApp:false |
-| 2025-08-14T17:57:31.762Z | 08/14/2025, 01:57:31 PM | Coding-Krakken | Direct Push | `be08792` | n/a | n/a | `be08792-2025-08-14T17:57` | pending | pending | none | aiEnabled:false, realtimeEnabled:false, advancedAnalytics:false, mobileApp:false |
-| 2025-08-15T14:46:43.832Z | 08/15/2025, 10:46:43 AM | Coding-Krakken | Direct Push | `2d8b443` | n/a | n/a | `2d8b443-2025-08-15T14:46` | pending | pending | none | aiEnabled:false, realtimeEnabled:false, advancedAnalytics:false, mobileApp:false |
-| 2025-08-18T15:21:05.888Z | 08/18/2025, 11:21:05 AM | Coding-Krakken | Direct Push | `38ca886` | n/a | n/a | `38ca886-2025-08-18T15:21` | pending | pending | none | aiEnabled:false, realtimeEnabled:false, advancedAnalytics:false, mobileApp:false |
-| 2025-08-18T15:25:23.890Z | 08/18/2025, 11:25:23 AM | Coding-Krakken | Direct Push | `3ca9dbf` | n/a | n/a | `3ca9dbf-2025-08-18T15:25` | pending | pending | none | aiEnabled:false, realtimeEnabled:false, advancedAnalytics:false, mobileApp:false |
-| 2025-08-21T18:10:59.412Z | 08/21/2025, 02:10:59 PM | Coding-Krakken | Direct Push | `381762f` | n/a | n/a | `381762f-2025-08-21T18:10` | pending | pending | none | aiEnabled:false, realtimeEnabled:false, advancedAnalytics:false, mobileApp:false |
-| 2025-08-21T18:11:43.839Z | 08/21/2025, 02:11:43 PM | Coding-Krakken | Direct Push | `3b3429f` | n/a | n/a | `3b3429f-2025-08-21T18:11` | pending | pending | none | aiEnabled:false, realtimeEnabled:false, advancedAnalytics:false, mobileApp:false |
-| 2025-08-21T18:13:02.172Z | 08/21/2025, 02:13:02 PM | Coding-Krakken | Direct Push | `1b719cf` | n/a | n/a | `1b719cf-2025-08-21T18:13` | pending | pending | none | aiEnabled:false, realtimeEnabled:false, advancedAnalytics:false, mobileApp:false |
-| 2025-08-21T18:13:29.214Z | 08/21/2025, 02:13:29 PM | Coding-Krakken | Direct Push | `41fb75a` | n/a | n/a | `41fb75a-2025-08-21T18:13` | pending | pending | none | aiEnabled:false, realtimeEnabled:false, advancedAnalytics:false, mobileApp:false |
-| 2025-08-21T18:14:01.820Z | 08/21/2025, 02:14:01 PM | Coding-Krakken | Direct Push | `434e969` | n/a | n/a | `434e969-2025-08-21T18:14` | pending | pending | none | aiEnabled:false, realtimeEnabled:false, advancedAnalytics:false, mobileApp:false |
 
 ---
 

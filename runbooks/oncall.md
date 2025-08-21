@@ -1,9 +1,12 @@
 # MaintAInPro On-Call Runbook
 
 ## Purpose
-Ensure rapid response and resolution for production incidents affecting MaintAInPro CMMS.
+
+Ensure rapid response and resolution for production incidents affecting
+MaintAInPro CMMS.
 
 ## Procedures
+
 - Monitor system health dashboards and alerts.
 - Triage incoming incidents and assign severity.
 - Communicate with affected users and stakeholders.
@@ -12,5 +15,6 @@ Ensure rapid response and resolution for production incidents affecting MaintAIn
 - Review incident postmortem and update runbook as required.
 
 ## Contacts
+
 - On-call engineer: [Name, contact info]
 - Escalation manager: [Name, contact info]

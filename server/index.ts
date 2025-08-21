@@ -132,7 +132,6 @@ app.use((req, res, next) => {
   next();
 });
 
-
 // Initialize the app
 async function initializeApp() {
   // Start production-optimized initialization
@@ -151,30 +150,37 @@ async function initializeApp() {
 
   // Enhanced error handler with logging
   app.use(errorLoggingMiddleware);
-  app.use((err: Error & { status?: number; statusCode?: number; code?: string }, _req: Request, res: Response, _next: NextFunction) => {
-    const status = err.status || err.statusCode || 500;
-    const message = err.message || 'Internal Server Error';
+  app.use(
+    (
+      err: Error & { status?: number; statusCode?: number; code?: string },
+      _req: Request,
+      res: Response,
+      _next: NextFunction
+    ) => {
+      const status = err.status || err.statusCode || 500;
+      const message = err.message || 'Internal Server Error';
 
-    // Log error with additional context
-    loggingService.error('Server Error', err, {
-      status,
-      path: _req.path,
-      method: _req.method,
-      ip: _req.ip,
-      userAgent: _req.get('User-Agent'),
-    });
+      // Log error with additional context
+      loggingService.error('Server Error', err, {
+        status,
+        path: _req.path,
+        method: _req.method,
+        ip: _req.ip,
+        userAgent: _req.get('User-Agent'),
+      });
 
-    res.status(status).json({
-      error: message,
-      code: err.code || 'INTERNAL_ERROR',
-      timestamp: new Date().toISOString(),
-    });
+      res.status(status).json({
+        error: message,
+        code: err.code || 'INTERNAL_ERROR',
+        timestamp: new Date().toISOString(),
+      });
 
-    // Don't throw in test environment to avoid test failures
-    if (process.env.NODE_ENV !== 'test' && process.env.NODE_ENV !== 'development') {
-      throw err;
+      // Don't throw in test environment to avoid test failures
+      if (process.env.NODE_ENV !== 'test' && process.env.NODE_ENV !== 'development') {
+        throw err;
+      }
     }
-  });
+  );
 
   // importantly only setup vite in development and after
   // setting up all the other routes so the catch-all route

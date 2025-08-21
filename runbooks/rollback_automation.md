@@ -1,14 +1,18 @@
 # Rollback Automation Runbook
 
 ## Purpose
-Automate rollback procedures to minimize downtime and ensure system stability after failed deployments or incidents.
+
+Automate rollback procedures to minimize downtime and ensure system stability
+after failed deployments or incidents.
 
 ## Prerequisites
+
 - Access to deployment tools and rollback scripts
 - Backup of current production state
 - Notification to stakeholders
 
 ## Steps
+
 1. **Assess Impact**
    - Review incident or deployment failure details
    - Confirm rollback necessity
@@ -29,8 +33,11 @@ Automate rollback procedures to minimize downtime and ensure system stability af
    - Schedule follow-up review
 
 ## References
+
 - [Rollback Procedures](rollback.md)
 - Incident Management Policy
 
 ---
-*This runbook is part of the universal hybrid process template for AI-accelerated engineering.*
+
+_This runbook is part of the universal hybrid process template for
+AI-accelerated engineering._
