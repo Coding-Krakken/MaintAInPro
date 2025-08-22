@@ -5,8 +5,32 @@
 
   "routes": [
     {
+      "src": "/sw.js",
+      "dest": "/api/sw.js"
+    },
+    {
+      "src": "/manifest.json",
+      "dest": "/api/manifest.json"
+    },
+    {
       "src": "/health",
       "dest": "/api/health"
+    },
+    {
+      "src": "/api/equipment",
+      "dest": "/api/equipment"
+    },
+    {
+      "src": "/api/work-orders",
+      "dest": "/api/work-orders"
+    },
+    {
+      "src": "/api/dashboard/stats",
+      "dest": "/api/dashboard/stats"
+    },
+    {
+      "src": "/api/notifications",
+      "dest": "/api/notifications"
     },
     {
       "src": "/api/(.*)",

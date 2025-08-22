@@ -34,6 +34,17 @@ export const useWebSocket = (): UseWebSocketReturn => {
   const reconnectAttempts = useRef(0);
 
   useEffect(() => {
+    // Check if we're in a serverless environment (Vercel) where WebSocket isn't supported
+    const isServerless = window.location.hostname.includes('vercel.app') || 
+                        window.location.hostname.includes('netlify.app') || 
+                        process.env.NODE_ENV === 'production';
+    
+    if (isServerless) {
+      console.log('WebSocket disabled in serverless environment');
+      setConnectionStatus('disconnected');
+      return;
+    }
+
     // Initialize WebSocket connection
     const initializeConnection = () => {
       try {
