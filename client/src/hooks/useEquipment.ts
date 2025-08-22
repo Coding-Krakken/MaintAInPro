@@ -72,10 +72,10 @@ export function useCreateEquipment() {
         id: `temp-${Date.now()}`, // Temporary ID until server responds
         assetTag: newEquipment.assetTag,
         model: newEquipment.model,
-        description: newEquipment.name || newEquipment.description || '',
+        description: newEquipment.description || '',
         area: newEquipment.area || null,
-        status: newEquipment.status || 'active',
-        criticality: newEquipment.criticality || 'medium',
+        status: (newEquipment.status as 'active' | 'inactive' | 'maintenance' | 'retired') || 'active',
+        criticality: (newEquipment.criticality as 'low' | 'medium' | 'high' | 'critical') || 'medium',
         installDate: null,
         warrantyExpiry: null,
         manufacturer: newEquipment.manufacturer || null,
