@@ -90,7 +90,7 @@ role-based workflow, and detailed task tracking.
 - Configurable escalation rules per WO type/priority
 - Default: WO not updated in 24 hours → notify supervisor
 - Emergency WOs escalate after 4 hours
-- Use Supabase CRON or Edge Functions for periodic evaluation
+- Use background services or scheduled jobs for periodic evaluation
 - Escalation triggers:
   - Send notification to supervisor/manager
   - Increment escalation_level
@@ -106,7 +106,7 @@ role-based workflow, and detailed task tracking.
   - WO escalation → supervisor
   - WO completion → requester
   - Overdue WO → supervisor
-- Real-time updates via Supabase subscriptions
+- Real-time updates via WebSocket connections
 
 ---
 

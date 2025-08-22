@@ -16,7 +16,7 @@ ordering automation.
 - email (Text)
 - phone (Text)
 - address (Text)
-- documents (Array of Supabase Storage URLs)
+- documents (Array of file storage URLs)
 - warehouse_id (UUID FK) - Multi-warehouse vendor relationships
 
 ---

@@ -128,7 +128,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ['react', 'react-dom', '@supabase/supabase-js'],
+          vendor: ['react', 'react-dom'],
           ui: ['@headlessui/react', '@heroicons/react'],
           utils: ['date-fns', 'lodash-es'],
         },
@@ -141,10 +141,10 @@ export default defineConfig({
       globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
       runtimeCaching: [
         {
-          urlPattern: /^https:\/\/.*\.supabase\.co\/storage\/.*/,
+          urlPattern: /^https:\/\/.*\/uploads\/.*/,
           handler: 'CacheFirst',
           options: {
-            cacheName: 'supabase-storage',
+            cacheName: 'file-storage',
             expiration: {
               maxEntries: 100,
               maxAgeSeconds: 60 * 60 * 24 * 7, // 1 week
@@ -304,7 +304,7 @@ const trackWorkOrderCompletion = (duration: number, technicianId: string) => {
 
 - **Uptime monitoring**: Pingdom/StatusCake for availability
 - **Performance monitoring**: Web Vitals tracking
-- **Database monitoring**: Supabase built-in metrics
+- **Database monitoring**: PostgreSQL performance monitoring
 - **Error alerting**: Slack/PagerDuty integration
 - **Log aggregation**: Structured logging with correlation IDs
 
@@ -319,10 +319,10 @@ const trackWorkOrderCompletion = (duration: number, technicianId: string) => {
 const securityHeaders = {
   'Content-Security-Policy': [
     "default-src 'self'",
-    "script-src 'self' 'unsafe-inline' *.supabase.co",
+    "script-src 'self' 'unsafe-inline'",
     "style-src 'self' 'unsafe-inline'",
-    "img-src 'self' data: *.supabase.co",
-    "connect-src 'self' *.supabase.co",
+    "img-src 'self' data:",
+    "connect-src 'self'",
     "font-src 'self'",
     "frame-ancestors 'none'",
   ].join('; '),

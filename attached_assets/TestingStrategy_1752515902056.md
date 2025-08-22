@@ -12,7 +12,7 @@ tests, end-to-end workflows, and quality assurance for the CMMS system.
 **1.1. Test Technologies:**
 
 - **Unit Tests**: Vitest + React Testing Library
-- **Integration Tests**: Vitest with Supabase test client
+- **Integration Tests**: Vitest with Express.js test server
 - **E2E Tests**: Playwright for cross-browser testing
 - **Component Tests**: Storybook for isolated component testing
 - **Performance Tests**: Lighthouse CI for performance regression
@@ -127,7 +127,7 @@ describe('File Upload Integration', () => {
 
     const result = await uploadWorkOrderAttachment(workOrderId, mockFile);
 
-    expect(result.file_url).toMatch(/supabase.*storage/);
+    expect(result.file_url).toMatch(/\/uploads\//);
     expect(result.file_size).toBeLessThan(5 * 1024 * 1024); // 5MB compressed
     expect(result.file_type).toBe('image/jpeg');
   });

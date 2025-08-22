@@ -44,13 +44,13 @@
 
 ### 🗄️ Backend & Database:
 
-- **Supabase** (Latest version) for backend-as-a-service
+- **Express.js** with TypeScript for API server
 - **PostgreSQL 15+** with advanced indexing and query optimization
-- **Row Level Security (RLS)** for fine-grained access control
-- **Supabase Edge Functions** (Deno runtime) for serverless computing
-- **PostgREST** for auto-generated RESTful APIs
-- **Supabase Realtime** for live data synchronization
-- **Supabase Storage** with CDN and image transformations
+- **Drizzle ORM** for type-safe database operations
+- **JWT Authentication** with access/refresh token pattern
+- **Application-level Authorization** with role-based access control
+- **Background Services** for scheduled tasks and notifications
+- **File Storage** with local/cloud storage adapters
 
 ### 📱 Mobile & PWA Features:
 
@@ -79,7 +79,7 @@
 - **Mixpanel** for user behavior analytics
 - **Hotjar** for user experience insights
 - **Google Analytics 4** for web analytics
-- **Supabase Analytics** for database performance monitoring
+- **Database Performance Monitoring** for query optimization
 
 ### 📈 Performance Optimization:
 
