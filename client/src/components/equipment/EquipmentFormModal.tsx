@@ -33,7 +33,7 @@ export default function EquipmentFormModal({ isOpen, onClose }: EquipmentFormMod
           'x-warehouse-id': localStorage.getItem('warehouseId') || 'default-warehouse-id',
         },
         body: JSON.stringify({
-          name,
+          name, // Note: backend maps this to 'description' field in database schema
           assetTag,
           description,
           model,

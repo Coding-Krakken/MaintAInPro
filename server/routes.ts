@@ -173,8 +173,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         if (process.env.NODE_ENV === 'development') {
           // Create a default anonymous user for development
           req.user = {
-            id: 'dev-user-id',
-            warehouseId: 'default-warehouse-id',
+            id: '00000000-0000-0000-0000-000000000001',
+            warehouseId: '00000000-0000-0000-0000-000000000001',
             role: 'admin',
             sessionId: 'dev-session-id',
           };
@@ -185,8 +185,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Accept mock token in development mode
       if (process.env.NODE_ENV === 'development' && token === 'demo-token') {
         req.user = {
-          id: 'dev-user-id',
-          warehouseId: 'default-warehouse-id',
+          id: '00000000-0000-0000-0000-000000000001',
+          warehouseId: '00000000-0000-0000-0000-000000000001',
           role: 'admin',
           sessionId: 'dev-session-id',
         };
@@ -747,22 +747,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post('/api/equipment', authenticateRequest, async (req, res) => {
     try {
-      // Auto-populate required fields
+      // Auto-populate required fields and map frontend fields to backend schema
       const equipmentData = {
         ...req.body,
         id: req.body.id || crypto.randomUUID(),
         warehouseId: req.body.warehouseId || getCurrentWarehouse(req),
         status: req.body.status || 'active',
+        // Map frontend 'name' field to backend 'description' field if name is provided
+        description: req.body.name || req.body.description,
       };
+
+      // Remove the 'name' field as it's not part of the schema
+      delete equipmentData.name;
 
       const parsedData = insertEquipmentSchema.parse(equipmentData);
       const equipment = await storage.createEquipment(parsedData);
       res.status(201).json(equipment);
     } catch (_error) {
+      console.error('Equipment creation error:', _error);
       if (_error instanceof z.ZodError) {
-        return res.status(400).json({ message: 'Invalid equipment data', errors: _error.errors });
+        return res.status(400).json({ 
+          message: 'Invalid equipment data', 
+          errors: _error.errors,
+          received: req.body
+        });
       }
-      res.status(500).json({ message: 'Failed to create equipment' });
+      res.status(500).json({ message: 'Failed to create equipment', error: _error.message });
     }
   });
 
