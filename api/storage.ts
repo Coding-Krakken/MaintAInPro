@@ -230,34 +230,56 @@ export async function createEquipment(equipmentData: {
   updatedBy: string;
   [key: string]: any;
 }): Promise<Equipment> {
-  const data = await loadData();
+  console.log('=== STORAGE createEquipment START ===');
+  console.log('Input equipmentData:', JSON.stringify(equipmentData, null, 2));
   
-  const id = `equip-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-  const equipment: Equipment = {
-    id,
-    assetTag: equipmentData.assetTag,
-    model: equipmentData.model,
-    description: equipmentData.description,
-    area: equipmentData.area || '',
-    status: (equipmentData.status as any) || 'active',
-    criticality: (equipmentData.criticality as any) || 'medium',
-    organizationId: equipmentData.organizationId,
-    warehouseId: equipmentData.warehouseId,
-    createdBy: equipmentData.createdBy,
-    updatedBy: equipmentData.updatedBy,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    installDate: equipmentData.installDate ? new Date(equipmentData.installDate) : null,
-    warrantyExpiry: equipmentData.warrantyExpiry ? new Date(equipmentData.warrantyExpiry) : null,
-    manufacturer: equipmentData.manufacturer || null,
-    serialNumber: equipmentData.serialNumber || null,
-    specifications: equipmentData.specifications || null
-  };
+  try {
+    console.log('Loading data from storage...');
+    const data = await loadData();
+    console.log(`Current equipment count: ${data.equipment.length}`);
+    
+    const id = `equip-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    console.log('Generated equipment ID:', id);
+    
+    const equipment: Equipment = {
+      id,
+      assetTag: equipmentData.assetTag,
+      model: equipmentData.model,
+      description: equipmentData.description,
+      area: equipmentData.area || '',
+      status: (equipmentData.status as any) || 'active',
+      criticality: (equipmentData.criticality as any) || 'medium',
+      organizationId: equipmentData.organizationId,
+      warehouseId: equipmentData.warehouseId,
+      createdBy: equipmentData.createdBy,
+      updatedBy: equipmentData.updatedBy,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      installDate: equipmentData.installDate ? new Date(equipmentData.installDate) : null,
+      warrantyExpiry: equipmentData.warrantyExpiry ? new Date(equipmentData.warrantyExpiry) : null,
+      manufacturer: equipmentData.manufacturer || null,
+      serialNumber: equipmentData.serialNumber || null,
+      specifications: equipmentData.specifications || null
+    };
 
-  data.equipment.push(equipment);
-  await saveData(data);
-  console.log(`Created equipment with ID: ${id}, total equipment: ${data.equipment.length}`);
-  return equipment;
+    console.log('Equipment object created:', JSON.stringify(equipment, null, 2));
+
+    data.equipment.push(equipment);
+    console.log('Equipment added to data array. New count:', data.equipment.length);
+    
+    console.log('Saving data...');
+    await saveData(data);
+    console.log('Data saved successfully');
+    
+    console.log('=== STORAGE createEquipment SUCCESS ===');
+    console.log(`Created equipment with ID: ${id}, total equipment: ${data.equipment.length}`);
+    return equipment;
+  } catch (error) {
+    console.error('=== STORAGE createEquipment ERROR ===');
+    console.error('Error in createEquipment:', error);
+    console.error('Error stack:', error instanceof Error ? error.stack : 'No stack');
+    throw error;
+  }
 }
 
 // Work order operations

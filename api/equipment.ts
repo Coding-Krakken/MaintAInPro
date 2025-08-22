@@ -1,11 +1,17 @@
 /**
  * Equipment API Serverless Handler for Vercel
+ * Fixed import issue and enhanced error handling
  */
 
 import { VercelRequest, VercelResponse } from '@vercel/node';
+// Import directly from the local storage file to ensure serverless compatibility
 import { getAllEquipment, getEquipmentById, createEquipment } from './storage';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  // Enhanced logging for debugging
+  console.log(`Equipment API called: ${req.method} ${req.url}`);
+  console.log('Request headers:', JSON.stringify(req.headers, null, 2));
+  
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
@@ -13,10 +19,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   // Handle preflight requests
   if (req.method === 'OPTIONS') {
+    console.log('Handling CORS preflight request');
     return res.status(200).end();
   }
 
   try {
+    console.log(`Processing ${req.method} request`);
     switch (req.method) {
       case 'GET':
         return handleGet(req, res);
@@ -27,9 +35,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
   } catch (error) {
     console.error('Equipment API error:', error);
+    console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace');
     return res.status(500).json({ 
-      message: 'Internal server error',
-      error: error instanceof Error ? error.message : 'Unknown error'
+      message: 'Failed to process equipment request',
+      error: error instanceof Error ? error.message : 'Unknown error',
+      timestamp: new Date().toISOString()
     });
   }
 }
@@ -62,23 +72,31 @@ async function handleGet(req: VercelRequest, res: VercelResponse) {
 }
 
 async function handlePost(req: VercelRequest, res: VercelResponse) {
+  console.log('=== EQUIPMENT CREATION START ===');
+  console.log('Request body:', JSON.stringify(req.body, null, 2));
+  
   try {
     const { name, assetTag, description, model, area, status, criticality, ...otherFields } = req.body;
 
+    console.log('Extracted fields:', { name, assetTag, description, model, area, status, criticality });
+
     // Validate required fields
     if (!name && !description) {
+      console.log('Validation failed: missing name/description');
       return res.status(400).json({ 
         message: 'Equipment name or description is required' 
       });
     }
 
     if (!assetTag) {
+      console.log('Validation failed: missing assetTag');
       return res.status(400).json({ 
         message: 'Asset tag is required' 
       });
     }
 
     if (!model) {
+      console.log('Validation failed: missing model');
       return res.status(400).json({ 
         message: 'Model is required' 
       });
@@ -86,6 +104,8 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
 
     const warehouseId = (req.headers['x-warehouse-id'] as string) || 'default-warehouse-id';
     const userId = (req.headers['x-user-id'] as string) || 'default-user-id';
+
+    console.log('Using warehouseId:', warehouseId, 'userId:', userId);
 
     // Create equipment using the storage system
     const equipmentData = {
@@ -107,15 +127,24 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
       ...otherFields
     };
 
+    console.log('Equipment data to create:', JSON.stringify(equipmentData, null, 2));
+    console.log('About to call createEquipment function...');
+    
     const newEquipment = await createEquipment(equipmentData);
-    console.log('Equipment created successfully:', newEquipment);
+    console.log('Equipment created successfully:', JSON.stringify(newEquipment, null, 2));
+    console.log('=== EQUIPMENT CREATION SUCCESS ===');
     
     return res.status(201).json(newEquipment);
   } catch (error) {
-    console.error('Error creating equipment:', error);
+    console.error('=== EQUIPMENT CREATION ERROR ===');
+    console.error('Error in handlePost:', error);
+    console.error('Error message:', error instanceof Error ? error.message : 'Unknown');
+    console.error('Error stack:', error instanceof Error ? error.stack : 'No stack');
+    
     return res.status(500).json({ 
       message: 'Failed to create equipment',
-      error: error instanceof Error ? error.message : 'Unknown error'
+      error: error instanceof Error ? error.message : 'Unknown error',
+      timestamp: new Date().toISOString()
     });
   }
 }
