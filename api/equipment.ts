@@ -11,24 +11,8 @@ console.log('Node.js version:', process.version);
 console.log('Environment:', process.env.NODE_ENV);
 console.log('Platform:', process.platform);
 
-// Import directly from the local storage file to ensure serverless compatibility
-let storageModule: any;
-try {
-  storageModule = require('./storage');
-  console.log('Storage module imported successfully');
-  console.log('Storage functions available:', {
-    getAllEquipment: typeof storageModule.getAllEquipment,
-    getEquipmentById: typeof storageModule.getEquipmentById, 
-    createEquipment: typeof storageModule.createEquipment
-  });
-} catch (error) {
-  console.error('CRITICAL: Failed to import storage module:', error);
-  console.error('Error details:', {
-    message: error instanceof Error ? error.message : 'Unknown',
-    stack: error instanceof Error ? error.stack : 'No stack',
-    name: error instanceof Error ? error.name : 'Unknown'
-  });
-}
+// Import storage functions directly
+import * as storageModule from './storage.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Enhanced logging for debugging
@@ -47,15 +31,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    // Check if storage module is available
-    if (!storageModule) {
-      console.error('Storage module not available - cannot process request');
-      return res.status(500).json({ 
-        message: 'Storage module not available',
-        error: 'Failed to import storage module at startup'
-      });
-    }
-
     console.log(`Processing ${req.method} request`);
     switch (req.method) {
       case 'GET':

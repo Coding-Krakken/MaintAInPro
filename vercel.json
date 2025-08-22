@@ -13,6 +13,18 @@
       "dest": "/api/manifest.json"
     },
     {
+      "src": "/icon-192.png",
+      "dest": "/api/icon-192.png"
+    },
+    {
+      "src": "/icon-512.png", 
+      "dest": "/api/icon-512.png"
+    },
+    {
+      "src": "/favicon.ico",
+      "dest": "/api/favicon.ico"
+    },
+    {
       "src": "/health",
       "dest": "/api/health"
     },

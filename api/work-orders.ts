@@ -4,14 +4,8 @@
 
 import { VercelRequest, VercelResponse } from '@vercel/node';
 
-// Robust import with error handling
-let storageModule: any;
-try {
-  storageModule = require('./storage');
-  console.log('Work Orders: Storage module imported successfully');
-} catch (error) {
-  console.error('Work Orders: Failed to import storage module:', error);
-}
+// Import storage functions directly
+import * as storageModule from './storage.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Set CORS headers
@@ -25,10 +19,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    if (!storageModule) {
-      return res.status(500).json({ message: 'Storage module not available' });
-    }
-
     switch (req.method) {
       case 'GET':
         return handleGet(req, res);
