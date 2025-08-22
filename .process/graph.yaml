@@ -1,98 +1,120 @@
 nodes:
+  - id: design
     kind: activity
-    next: design
-    kind: activity
-  next: gate-risk-review
-- id: gate-risk-review
-  kind: gate
-  criteria:
-    - risk assessment completed
-    - risk mitigation plan documented
-    - automated evidence collection triggered
-  evidence:
-    - evidence/risk_assessment.md
-    - evidence/risk_mitigation_plan.md
-    - evidence/automation_log.md
-  next: gate-design
+    next: gate-risk-review
+  - id: gate-risk-review
+    kind: gate
+    criteria:
+      - risk assessment completed
+      - risk mitigation plan documented
+      - automated evidence collection triggered
+    evidence:
+      - evidence/risk_assessment.md # Update after risk assessment
+      - evidence/risk_mitigation_plan.md # Update after mitigation planning
+      - evidence/automation_log.md # Update after automation events
+    action:
+      - "Contributors and automation must update all evidence files before proceeding."
+    next: gate-design
+  - id: gate-design
     kind: gate
     criteria:
       - threat model completed
       - privacy and compliance sign-off
       - NFRs documented
-    - automated evidence collection triggered
+      - automated evidence collection triggered
     evidence:
-      - artifacts/threat/THREAT_TEMPLATE.md
-      - requirements/privacy.yml
-      - requirements/compliance.yml
-      - requirements/nfr.yml
-    - evidence/automation_log.md
+      - artifacts/threat/THREAT_TEMPLATE.md # Update after threat modeling
+      - requirements/privacy.yml # Update after privacy review
+      - requirements/compliance.yml # Update after compliance review
+      - requirements/nfr.yml # Update after NFR documentation
+      - evidence/automation_log.md # Update after automation events
+    action:
+      - "Contributors and automation must update all evidence files before proceeding."
     next: implementation
+  - id: implementation
     kind: activity
-  next: gate-problems-check
-- id: gate-problems-check
-  kind: gate
-  criteria:
-    - VSCode Problems pane checked and cleared
-    - automated evidence collection triggered
-  evidence:
-    - evidence/problems_pane_log.md
-    - evidence/automation_log.md
-  next: gate-commit-hygiene
-- id: gate-commit-hygiene
-  kind: gate
-  criteria:
-    - commits are atomic, well-organized, and descriptive
-    - automated evidence collection triggered
-  evidence:
-    - evidence/commit_log.md
-    - evidence/automation_log.md
-  next: gate-implementation
+    next: gate-problems-check
+  - id: gate-problems-check
+    kind: gate
+    criteria:
+      - VSCode Problems pane checked and cleared
+      - automated evidence collection triggered
+    evidence:
+      - evidence/problems_pane_log.md # Update after problems pane review
+      - evidence/automation_log.md # Update after automation events
+    action:
+      - "Contributors and automation must update all evidence files before proceeding."
+    next: gate-commit-hygiene
+  - id: gate-commit-hygiene
+    kind: gate
+    criteria:
+      - commits are atomic, well-organized, and descriptive
+      - automated evidence collection triggered
+    evidence:
+      - evidence/commit_log.md # Update after commit hygiene review
+      - evidence/automation_log.md # Update after automation events
+    action:
+      - "Contributors and automation must update all evidence files before proceeding."
+    next: gate-implementation
+  - id: gate-implementation
     kind: gate
     criteria:
       - code reviewed
       - unit/integration tests pass
       - coverage ≥ 80%
       - mutation score ≥ 70%
-    - automated evidence collection triggered
+      - automated evidence collection triggered
     evidence:
-      - evidence/test results
-      - evidence/coverage report
-      - evidence/mutation report
-    - evidence/automation_log.md
+      - evidence/test results # Update after test run
+      - evidence/coverage report # Update after coverage run
+      - evidence/mutation report # Update after mutation testing
+      - evidence/automation_log.md # Update after automation events
+    action:
+      - "Contributors and automation must update all evidence files before proceeding."
     next: verification
+  - id: verification
     kind: activity
     next: gate-verification
+  - id: gate-verification
     kind: gate
     criteria:
       - performance tests pass
       - security scan clean
       - audit logging enabled
-    - automated evidence collection triggered
+      - automated evidence collection triggered
     evidence:
-      - evidence/performance report
-      - evidence/SARIF report
-      - evidence/audit log config
-    - evidence/automation_log.md
+      - evidence/performance report # Update after performance test
+      - evidence/SARIF report # Update after security scan
+      - evidence/audit log config # Update after audit log review
+      - evidence/automation_log.md # Update after automation events
+    action:
+      - "Contributors and automation must update all evidence files before proceeding."
     next: release
+  - id: release
     kind: activity
     next: gate-release
+  - id: gate-release
     kind: gate
     criteria:
       - canary/staged rollout
       - rollback plan in place
       - post-release monitoring
-    - automated evidence collection triggered
+      - automated evidence collection triggered
     evidence:
-      - evidence/rollout plan
-      - evidence/monitoring config
-      - evidence/postmortem template
-    - evidence/automation_log.md
+      - evidence/rollout plan # Update after rollout
+      - evidence/monitoring config # Update after monitoring setup
+      - evidence/postmortem template # Update after postmortem
+      - evidence/automation_log.md # Update after automation events
+    action:
+      - "Contributors and automation must update all evidence files before proceeding."
     next: operate
+  - id: operate
     kind: activity
-  next: incident-review
-- id: incident-review
-  kind: activity
-  next: recalibrate
+    next: incident-review
+  - id: incident-review
+    kind: activity
+    next: recalibrate
+  - id: recalibrate
     kind: decision
     options:
       - continue
