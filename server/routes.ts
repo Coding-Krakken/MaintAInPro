@@ -2329,20 +2329,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
   registerLaborTimeRoutes(app);
   console.log('Labor time routes registered');
 
-  // PWA file routes with proper MIME types
-  app.get('/sw.js', (req, res, next) => {
-    // Set proper Content-Type header before serving
-    res.type('application/javascript');
-    next();
-  });
-  
-  app.get('/manifest.json', (req, res, next) => {
-    // Set proper Content-Type header before serving
-    res.type('application/manifest+json');
-    next();
-  });
-  console.log('PWA file routes registered');
-
   // Add error tracking middleware (should be last)
   app.use(errorTrackingMiddleware);
   console.log('Error tracking middleware enabled');
