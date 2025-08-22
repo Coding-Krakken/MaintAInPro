@@ -34,13 +34,13 @@ export default function EquipmentDetailModal({
   // Check if this is a temporary equipment ID (from optimistic update)
   const isTemporaryId = equipmentId?.startsWith('temp-');
 
-  // Get equipment data from cache if it's a temporary ID
+  // Get equipment data from cache first (for both temporary and newly created equipment)
   const equipmentFromCache = useMemo(() => {
-    if (!isTemporaryId || !equipmentId) return null;
+    if (!equipmentId) return null;
     
     const allEquipment = queryClient.getQueryData<Equipment[]>(['/api/equipment']);
     return allEquipment?.find(eq => eq.id === equipmentId) || null;
-  }, [isTemporaryId, equipmentId, queryClient]);
+  }, [equipmentId, queryClient]);
 
   // Fetch equipment by ID or asset tag (skip fetch if temporary ID)
   const { data: equipment, isLoading, error } = useQuery<Equipment>({
@@ -59,15 +59,15 @@ export default function EquipmentDetailModal({
       if (!response.ok) throw new Error('Failed to fetch equipment');
       return response.json();
     },
-    enabled: isOpen && (!!equipmentId || !!assetTag) && !isTemporaryId,
+    enabled: isOpen && (!!equipmentId || !!assetTag) && !isTemporaryId && !equipmentFromCache,
     // Add staleTime to prevent showing stale data
     staleTime: 0,
     // Refetch when the modal opens with a different equipment ID
     refetchOnMount: 'always',
   });
 
-  // Use cached equipment data if it's a temporary ID, otherwise use fetched data
-  const finalEquipment = isTemporaryId ? equipmentFromCache : equipment;
+  // Use cached equipment data first (for both temporary and newly created), otherwise use fetched data
+  const finalEquipment = equipmentFromCache || equipment;
 
   // Fetch recent work orders for this equipment
   const { data: workOrders } = useQuery<WorkOrder[]>({
