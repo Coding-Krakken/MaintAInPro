@@ -143,6 +143,19 @@ export function EnterprisePerformanceMonitor() {
   const criticalAlerts = alerts.filter(a => a.type === 'critical' && !a.resolved);
   const warningAlerts = alerts.filter(a => a.type === 'warning' && !a.resolved);
 
+  // Transform systemMetrics data for charts (flatten nested objects)
+  const chartData = systemMetrics.map(metrics => ({
+    timestamp: metrics.timestamp,
+    cpu: metrics.cpu?.usage || 0,
+    memory: metrics.memory?.usage || 0,
+    responseTime: metrics.performance?.avgResponseTime || 0,
+    throughput: metrics.performance?.throughput || 0,
+    errorRate: metrics.performance?.errorCount 
+      ? ((metrics.performance.errorCount / metrics.performance.requestCount) * 100) 
+      : 0,
+    disk: 0, // No disk data in current interface, using 0 for chart compatibility
+  }));
+
   const getHealthColor = (health: number) => {
     if (health >= 90) return COLORS.success;
     if (health >= 70) return COLORS.warning;
@@ -373,7 +386,7 @@ export function EnterprisePerformanceMonitor() {
               </CardHeader>
               <CardContent>
                 <ResponsiveContainer width='100%' height={300}>
-                  <LineChart data={systemMetrics}>
+                  <LineChart data={chartData}>
                     <CartesianGrid strokeDasharray='3 3' />
                     <XAxis dataKey='timestamp' />
                     <YAxis />
@@ -402,7 +415,7 @@ export function EnterprisePerformanceMonitor() {
               </CardHeader>
               <CardContent>
                 <ResponsiveContainer width='100%' height={300}>
-                  <ComposedChart data={systemMetrics}>
+                  <ComposedChart data={chartData}>
                     <CartesianGrid strokeDasharray='3 3' />
                     <XAxis dataKey='timestamp' />
                     <YAxis />
@@ -516,7 +529,7 @@ export function EnterprisePerformanceMonitor() {
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width='100%' height={400}>
-                <AreaChart data={systemMetrics}>
+                <AreaChart data={chartData}>
                   <CartesianGrid strokeDasharray='3 3' />
                   <XAxis dataKey='timestamp' />
                   <YAxis />
