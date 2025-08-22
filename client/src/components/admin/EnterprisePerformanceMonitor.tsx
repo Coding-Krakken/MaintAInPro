@@ -39,14 +39,27 @@ import {
 
 interface SystemMetrics {
   timestamp: string;
-  cpu: number;
-  memory: number;
-  disk: number;
-  network: number;
-  responseTime: number;
-  throughput: number;
-  errorRate: number;
-  activeUsers: number;
+  memory: {
+    used: number;
+    free: number;
+    total: number;
+    usage: number;
+  };
+  cpu: {
+    usage: number;
+    load: number;
+  };
+  performance: {
+    avgResponseTime: number;
+    requestCount: number;
+    errorCount: number;
+    throughput: number;
+  };
+  database: {
+    activeConnections: number;
+    avgQueryTime: number;
+    queryCount: number;
+  };
 }
 
 interface KPIMetrics {
@@ -129,6 +142,19 @@ export function EnterprisePerformanceMonitor() {
   const latestMetrics = systemMetrics[systemMetrics.length - 1];
   const criticalAlerts = alerts.filter(a => a.type === 'critical' && !a.resolved);
   const warningAlerts = alerts.filter(a => a.type === 'warning' && !a.resolved);
+
+  // Transform systemMetrics data for charts (flatten nested objects)
+  const chartData = systemMetrics.map(metrics => ({
+    timestamp: metrics.timestamp,
+    cpu: metrics.cpu?.usage || 0,
+    memory: metrics.memory?.usage || 0,
+    responseTime: metrics.performance?.avgResponseTime || 0,
+    throughput: metrics.performance?.throughput || 0,
+    errorRate: metrics.performance?.errorCount 
+      ? ((metrics.performance.errorCount / metrics.performance.requestCount) * 100) 
+      : 0,
+    disk: 0, // No disk data in current interface, using 0 for chart compatibility
+  }));
 
   const getHealthColor = (health: number) => {
     if (health >= 90) return COLORS.success;
@@ -300,7 +326,7 @@ export function EnterprisePerformanceMonitor() {
                 <Cpu className='h-5 w-5 text-blue-600' />
                 <div>
                   <p className='text-sm font-medium'>CPU Usage</p>
-                  <p className='text-2xl font-bold'>{latestMetrics.cpu}%</p>
+                  <p className='text-2xl font-bold'>{latestMetrics.cpu?.usage || 0}%</p>
                 </div>
               </div>
             </CardContent>
@@ -312,7 +338,7 @@ export function EnterprisePerformanceMonitor() {
                 <HardDrive className='h-5 w-5 text-green-600' />
                 <div>
                   <p className='text-sm font-medium'>Memory</p>
-                  <p className='text-2xl font-bold'>{latestMetrics.memory}%</p>
+                  <p className='text-2xl font-bold'>{latestMetrics.memory?.usage || 0}%</p>
                 </div>
               </div>
             </CardContent>
@@ -324,7 +350,7 @@ export function EnterprisePerformanceMonitor() {
                 <Clock className='h-5 w-5 text-yellow-600' />
                 <div>
                   <p className='text-sm font-medium'>Response Time</p>
-                  <p className='text-2xl font-bold'>{latestMetrics.responseTime}ms</p>
+                  <p className='text-2xl font-bold'>{latestMetrics.performance?.avgResponseTime || 0}ms</p>
                 </div>
               </div>
             </CardContent>
@@ -335,8 +361,8 @@ export function EnterprisePerformanceMonitor() {
               <div className='flex items-center space-x-2'>
                 <Users className='h-5 w-5 text-purple-600' />
                 <div>
-                  <p className='text-sm font-medium'>Active Users</p>
-                  <p className='text-2xl font-bold'>{latestMetrics.activeUsers}</p>
+                  <p className='text-sm font-medium'>DB Connections</p>
+                  <p className='text-2xl font-bold'>{latestMetrics.database?.activeConnections || 0}</p>
                 </div>
               </div>
             </CardContent>
@@ -360,7 +386,7 @@ export function EnterprisePerformanceMonitor() {
               </CardHeader>
               <CardContent>
                 <ResponsiveContainer width='100%' height={300}>
-                  <LineChart data={systemMetrics}>
+                  <LineChart data={chartData}>
                     <CartesianGrid strokeDasharray='3 3' />
                     <XAxis dataKey='timestamp' />
                     <YAxis />
@@ -389,7 +415,7 @@ export function EnterprisePerformanceMonitor() {
               </CardHeader>
               <CardContent>
                 <ResponsiveContainer width='100%' height={300}>
-                  <ComposedChart data={systemMetrics}>
+                  <ComposedChart data={chartData}>
                     <CartesianGrid strokeDasharray='3 3' />
                     <XAxis dataKey='timestamp' />
                     <YAxis />
@@ -503,7 +529,7 @@ export function EnterprisePerformanceMonitor() {
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width='100%' height={400}>
-                <AreaChart data={systemMetrics}>
+                <AreaChart data={chartData}>
                   <CartesianGrid strokeDasharray='3 3' />
                   <XAxis dataKey='timestamp' />
                   <YAxis />
