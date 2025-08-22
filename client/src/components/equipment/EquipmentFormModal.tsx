@@ -5,6 +5,7 @@ import { Textarea } from '../ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { useState } from 'react';
 import { useToast } from '../../hooks/use-toast';
+import { useCreateEquipment } from '../../hooks/useEquipment';
 
 interface EquipmentFormModalProps {
   isOpen: boolean;
@@ -20,50 +21,86 @@ export default function EquipmentFormModal({ isOpen, onClose }: EquipmentFormMod
   const [criticality, setCriticality] = useState('medium');
   const [area, setArea] = useState('');
   const { toast } = useToast();
+  
+  const createEquipmentMutation = useCreateEquipment();
+
+  // Reset form when modal closes
+  const handleClose = () => {
+    setName('');
+    setAssetTag('');
+    setDescription('');
+    setModel('');
+    setStatus('active');
+    setCriticality('medium');
+    setArea('');
+    onClose();
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    try {
-      const response = await fetch('/api/equipment', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-user-id': localStorage.getItem('userId') || 'default-user-id',
-          'x-warehouse-id': localStorage.getItem('warehouseId') || 'default-warehouse-id',
-        },
-        body: JSON.stringify({
-          name,
-          assetTag,
-          description,
-          model,
-          status,
-          criticality,
-          area,
-        }),
+    // Validate required fields
+    if (!name.trim()) {
+      toast({
+        title: 'Error',
+        description: 'Equipment name is required',
+        variant: 'destructive',
       });
+      return;
+    }
 
-      if (!response.ok) {
-        throw new Error('Failed to create equipment');
-      }
+    if (!assetTag.trim()) {
+      toast({
+        title: 'Error', 
+        description: 'Asset tag is required',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    if (!model.trim()) {
+      toast({
+        title: 'Error',
+        description: 'Model is required',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    try {
+      const requestBody = {
+        name, // Note: backend maps this to 'description' field in database schema
+        assetTag,
+        description,
+        model,
+        status,
+        criticality,
+        area,
+      };
+
+      console.log('Submitting equipment creation request:', requestBody);
+
+      const result = await createEquipmentMutation.mutateAsync(requestBody);
+      console.log('Equipment created successfully:', result);
 
       toast({
         title: 'Success',
         description: 'Equipment created successfully',
       });
 
-      onClose();
+      handleClose();
     } catch (_error) {
+      console.error('Equipment creation error:', _error);
       toast({
         title: 'Error',
-        description: 'Failed to create equipment',
+        description: _error instanceof Error ? _error.message : 'Failed to create equipment',
         variant: 'destructive',
       });
     }
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className='max-w-2xl'>
         <DialogHeader>
           <DialogTitle>Add New Equipment</DialogTitle>
@@ -162,7 +199,7 @@ export default function EquipmentFormModal({ isOpen, onClose }: EquipmentFormMod
           </div>
 
           <div className='flex justify-end space-x-2 pt-4'>
-            <Button type='button' variant='outline' onClick={onClose}>
+            <Button type='button' variant='outline' onClick={handleClose}>
               Cancel
             </Button>
             <Button type='submit'>Create Equipment</Button>

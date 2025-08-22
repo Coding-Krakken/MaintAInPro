@@ -60,9 +60,62 @@ export function useCreateEquipment() {
       const response = await apiRequest('POST', '/api/equipment', equipment);
       return response.json();
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/equipment'] });
+    onMutate: async (newEquipment: InsertEquipment) => {
+      // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
+      await queryClient.cancelQueries({ queryKey: ['/api/equipment'] });
+
+      // Snapshot the previous value
+      const previousEquipment = queryClient.getQueryData<Equipment[]>(['/api/equipment']);
+
+      // Optimistically update to the new value
+      const optimisticEquipment: Equipment = {
+        id: `temp-${Date.now()}`, // Temporary ID until server responds
+        assetTag: newEquipment.assetTag,
+        model: newEquipment.model,
+        description: newEquipment.description || '',
+        area: newEquipment.area || null,
+        status: (newEquipment.status as 'active' | 'inactive' | 'maintenance' | 'retired') || 'active',
+        criticality: (newEquipment.criticality as 'low' | 'medium' | 'high' | 'critical') || 'medium',
+        installDate: null,
+        warrantyExpiry: null,
+        manufacturer: newEquipment.manufacturer || null,
+        serialNumber: null,
+        specifications: null,
+        organizationId: null,
+        warehouseId: null,
+        tsv: null,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        deletedAt: null,
+        createdBy: null,
+        updatedBy: null,
+        qrCode: null,
+      };
+
+      queryClient.setQueryData<Equipment[]>(['/api/equipment'], (old) => {
+        return old ? [...old, optimisticEquipment] : [optimisticEquipment];
+      });
+
+      // Return a context object with the snapshotted value
+      return { previousEquipment };
     },
+    onSuccess: (data, variables, context) => {
+      // Replace the optimistic equipment with the real one from the server
+      queryClient.setQueryData<Equipment[]>(['/api/equipment'], (old) => {
+        if (!old) return [data];
+        
+        // Find and replace the temporary equipment with the real one
+        return old.map(equipment => 
+          equipment.id.startsWith('temp-') ? data : equipment
+        );
+      });
+    },
+    onError: (_err, _newEquipment, context) => {
+      // If the mutation fails, use the context returned from onMutate to roll back
+      queryClient.setQueryData(['/api/equipment'], context?.previousEquipment);
+    },
+    // Remove onSettled to prevent immediate invalidation
+    // Equipment list will be updated through onSuccess with the actual server data
   });
 }
 
