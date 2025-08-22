@@ -112,6 +112,10 @@ export function useCreateEquipment() {
           equipment.id === context?.tempId ? data : equipment
         );
       });
+
+      // Also set the individual equipment query cache for the new equipment
+      // This prevents the modal from showing "Equipment Not Found" when clicked immediately
+      queryClient.setQueryData(['/api/equipment', data.id], data);
     },
     onError: (_err, _newEquipment, context) => {
       // If the mutation fails, use the context returned from onMutate to roll back
