@@ -34,11 +34,13 @@ export default function PartFormModal({ isOpen, onClose }: PartFormModalProps) {
         partNumber,
         description,
         category,
+        unitOfMeasure: 'each', // Default unit of measure
         unitCost: parseFloat(unitCost) || 0,
         stockLevel: parseInt(stockLevel) || 0,
         reorderPoint: parseInt(reorderPoint) || 0,
         vendor,
         location,
+        warehouseId: localStorage.getItem('warehouseId') || '00000000-0000-0000-0000-000000000001', // Use a valid UUID format
       });
 
       toast({
