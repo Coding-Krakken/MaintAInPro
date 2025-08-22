@@ -38,7 +38,7 @@ vi.spyOn(process, 'memoryUsage').mockReturnValue({
 vi.spyOn(process, 'uptime').mockReturnValue(3600); // 1 hour
 
 // Mock environment variable
-const originalEnv = process.env.VERCEL_URL;
+const _originalEnv = process.env.VERCEL_URL;
 process.env.VERCEL_URL = 'https://test.vercel.app';
 
 describe('Health API Handler', () => {

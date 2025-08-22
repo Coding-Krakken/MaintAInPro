@@ -36,10 +36,10 @@ access, and operational control.
 
 **3. Auth Integration:**
 
-- Supabase `auth.users`
-- `profiles` table extends with `role` column and `warehouse_id` for
+- JWT-based authentication with access and refresh tokens
+- `profiles` table with `role` column and `warehouse_id` for
   multi-warehouse support
-- Enforce access via Supabase RLS and client logic
+- Enforce access via application-level authorization and client logic
 
 ---
 
@@ -91,6 +91,6 @@ access, and operational control.
 
 **7. Permissions Enforcement:** All CRUD actions mapped to roles via:
 
-- Supabase RLS policies on tables
+- Application-level authorization middleware
 - Role-aware client logic
 - Optional external contractor login portal

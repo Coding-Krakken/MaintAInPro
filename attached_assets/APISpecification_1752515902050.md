@@ -3,7 +3,7 @@
 ---
 
 **Purpose:** Define the complete API surface, data flow patterns, and
-integration points for the CMMS system using Supabase.
+integration points for the CMMS system using JWT-based authentication.
 
 ---
 
@@ -12,13 +12,39 @@ integration points for the CMMS system using Supabase.
 ```sql
 -- Users and Authentication
 profiles (extends auth.users)
-  - id (UUID, FK to auth.users)
+  - id (UUID, PK)
   - role (user_role_enum)
   - warehouse_id (UUID, FK)
   - first_name (TEXT)
   - last_name (TEXT)
   - phone (TEXT)
+  - email (TEXT)
   - created_at (TIMESTAMP)
+  - updated_at (TIMESTAMP)
+  - active (BOOLEAN)
+  - email_verified (BOOLEAN)
+
+user_credentials
+  - id (UUID, PK)
+  - user_id (UUID, FK to profiles)
+  - password_hash (TEXT)
+  - password_salt (TEXT)
+  - must_change_password (BOOLEAN)
+  - previous_passwords (JSONB)
+  - created_at (TIMESTAMP)
+  - updated_at (TIMESTAMP)
+
+user_sessions
+  - id (UUID, PK)
+  - user_id (UUID, FK to profiles)
+  - session_id (TEXT, UNIQUE)
+  - expires_at (TIMESTAMP)
+  - ip_address (TEXT)
+  - user_agent (TEXT)
+  - device_fingerprint (TEXT)
+  - is_active (BOOLEAN)
+  - created_at (TIMESTAMP)
+  - updated_at (TIMESTAMP)
 
 -- Equipment & Assets
 equipment
@@ -174,23 +200,61 @@ system_logs
 
 ---
 
-**2. Supabase RLS Policies:**
+**2. Authentication & Authorization:**
+
+```typescript
+// JWT Authentication Flow
+interface AuthenticationFlow {
+  login: {
+    endpoint: 'POST /api/auth/login',
+    request: {
+      email: string;
+      password: string;
+      mfaToken?: string;
+      rememberMe?: boolean;
+    },
+    response: {
+      success: boolean;
+      user: UserProfile;
+      token: string; // JWT access token
+      refreshToken: string;
+      sessionId: string;
+    }
+  },
+  
+  refresh: {
+    endpoint: 'POST /api/auth/refresh',
+    request: { refreshToken: string },
+    response: { token: string; refreshToken: string }
+  },
+  
+  logout: {
+    endpoint: 'POST /api/auth/logout',
+    request: { sessionId: string }
+  }
+}
+
+// Authorization middleware validates JWT tokens
+// Role-based access control enforced in application layer
+```
+
+**Database Access Control:**
 
 ```sql
--- Example RLS policies for multi-warehouse access
+-- Application-level access control using JWT claims
+-- Example policy patterns for multi-warehouse access
 CREATE POLICY "Users can only see their warehouse data" ON work_orders
-  FOR ALL USING (
-    warehouse_id = (
-      SELECT warehouse_id FROM profiles
-      WHERE id = auth.uid()
-    )
+  FOR ALL TO authenticated
+  USING (
+    warehouse_id = current_setting('app.current_warehouse_id', true)::uuid
   );
 
 CREATE POLICY "Managers can see cross-warehouse data" ON work_orders
-  FOR ALL USING (
+  FOR ALL TO authenticated
+  USING (
     EXISTS (
       SELECT 1 FROM profiles
-      WHERE id = auth.uid()
+      WHERE id = current_setting('app.current_user_id', true)::uuid
       AND role IN ('manager', 'admin')
     )
   );
@@ -198,12 +262,19 @@ CREATE POLICY "Managers can see cross-warehouse data" ON work_orders
 
 ---
 
-**3. Supabase Edge Functions:**
+**3. Background Services:**
 
 ```javascript
-// Functions to implement:
+// Background services implemented as scheduled jobs:
 1. escalation-checker: Periodic check for WO escalations
 2. notification-sender: Handle notification delivery
+3. pm-scheduler: Generate preventive maintenance tasks
+4. audit-processor: Process and analyze audit logs
+5. metrics-aggregator: Generate performance metrics
+
+// Implementation using Express.js with cron jobs or external schedulers
+// Services run independently with JWT-based internal authentication
+```
 3. pm-scheduler: Generate PM work orders
 4. audit-logger: Centralized audit logging
 5. file-processor: Image compression and metadata
@@ -239,7 +310,7 @@ CREATE POLICY "Managers can see cross-warehouse data" ON work_orders
 **6. File Upload Flow:**
 
 ```javascript
-// Supabase Storage buckets:
+// File storage using local filesystem or cloud storage:
 - wo-attachments: Work order files
 - pm-attachments: PM checklist files
 - vendor-documents: Vendor/contractor docs
@@ -248,9 +319,9 @@ CREATE POLICY "Managers can see cross-warehouse data" ON work_orders
 
 // File processing:
 1. Client-side compression (images)
-2. Upload to Supabase Storage
+2. Upload to configured storage (local/cloud)
 3. Store metadata in wo_attachments table
-4. Generate thumbnails (Edge Function)
+4. Generate thumbnails (background service)
 ```
 
 ---
@@ -275,9 +346,10 @@ CREATE POLICY "Managers can see cross-warehouse data" ON work_orders
 
 **8. Performance Considerations:**
 
-- Use Supabase views for complex reporting queries
+- Use database views for complex reporting queries
 - Implement pagination for large datasets
 - Cache static data (equipment models, vendors) locally
 - Use database indexes on frequently queried columns
 - Implement lazy loading for attachments and images
-- Use Supabase connection pooling for high concurrency
+- Use connection pooling for high concurrency
+- Implement JWT token caching and validation optimization
