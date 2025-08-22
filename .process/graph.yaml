@@ -1,69 +1,98 @@
 nodes:
-  - id: requirements
     kind: activity
     next: design
-  - id: design
     kind: activity
-    next: gate-design
-  - id: gate-design
+  next: gate-risk-review
+- id: gate-risk-review
+  kind: gate
+  criteria:
+    - risk assessment completed
+    - risk mitigation plan documented
+    - automated evidence collection triggered
+  evidence:
+    - evidence/risk_assessment.md
+    - evidence/risk_mitigation_plan.md
+    - evidence/automation_log.md
+  next: gate-design
     kind: gate
     criteria:
       - threat model completed
       - privacy and compliance sign-off
       - NFRs documented
+    - automated evidence collection triggered
     evidence:
       - artifacts/threat/THREAT_TEMPLATE.md
       - requirements/privacy.yml
       - requirements/compliance.yml
       - requirements/nfr.yml
+    - evidence/automation_log.md
     next: implementation
-  - id: implementation
     kind: activity
-    next: gate-implementation
-  - id: gate-implementation
+  next: gate-problems-check
+- id: gate-problems-check
+  kind: gate
+  criteria:
+    - VSCode Problems pane checked and cleared
+    - automated evidence collection triggered
+  evidence:
+    - evidence/problems_pane_log.md
+    - evidence/automation_log.md
+  next: gate-commit-hygiene
+- id: gate-commit-hygiene
+  kind: gate
+  criteria:
+    - commits are atomic, well-organized, and descriptive
+    - automated evidence collection triggered
+  evidence:
+    - evidence/commit_log.md
+    - evidence/automation_log.md
+  next: gate-implementation
     kind: gate
     criteria:
       - code reviewed
       - unit/integration tests pass
       - coverage ≥ 80%
       - mutation score ≥ 70%
+    - automated evidence collection triggered
     evidence:
       - evidence/test results
       - evidence/coverage report
       - evidence/mutation report
+    - evidence/automation_log.md
     next: verification
-  - id: verification
     kind: activity
     next: gate-verification
-  - id: gate-verification
     kind: gate
     criteria:
       - performance tests pass
       - security scan clean
       - audit logging enabled
+    - automated evidence collection triggered
     evidence:
       - evidence/performance report
       - evidence/SARIF report
       - evidence/audit log config
+    - evidence/automation_log.md
     next: release
-  - id: release
     kind: activity
     next: gate-release
-  - id: gate-release
     kind: gate
     criteria:
       - canary/staged rollout
       - rollback plan in place
       - post-release monitoring
+    - automated evidence collection triggered
     evidence:
       - evidence/rollout plan
       - evidence/monitoring config
       - evidence/postmortem template
+    - evidence/automation_log.md
     next: operate
-  - id: operate
     kind: activity
-    next: recalibrate
-  - id: recalibrate
+  next: incident-review
+- id: incident-review
+  kind: activity
+  next: recalibrate
     kind: decision
     options:
       - continue
