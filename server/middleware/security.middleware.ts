@@ -460,22 +460,25 @@ export function auditLogger(req: any, res: Response, next: NextFunction): void {
 
     // Log to system_logs table if available
     if (db && req.user?.id) {
-      db.execute(
-        `
-        INSERT INTO system_logs (user_id, action, table_name, record_id, old_values, new_values, ip_address, user_agent)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-      `,
-        [
-          req.user.id,
-          `${req.method} ${req.url}`,
-          'api_request',
-          null,
-          null,
-          JSON.stringify(auditData),
-          req.ip,
-          req.get('User-Agent'),
-        ]
-      ).catch(err => console.error('Audit logging error:', err));
+      (async () => {
+        try {
+          const { systemLogs } = await import('../../shared/schema');
+          const { randomUUID } = await import('crypto');
+          await db.insert(systemLogs).values({
+            id: randomUUID(),
+            userId: req.user.id,
+            action: `${req.method} ${req.url}`,
+            tableName: 'api_request',
+            recordId: null,
+            oldValues: null,
+            newValues: auditData,
+            ipAddress: req.ip,
+            userAgent: req.get('User-Agent'),
+          });
+        } catch (err) {
+          console.error('Audit logging error:', err);
+        }
+      })();
     }
 
     console.log('API Request:', JSON.stringify(auditData));
