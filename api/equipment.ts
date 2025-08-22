@@ -7,6 +7,19 @@ import { VercelRequest, VercelResponse } from '@vercel/node';
 // Import directly from the local storage file to ensure serverless compatibility
 import { getAllEquipment, getEquipmentById, createEquipment } from './storage';
 
+// Verify storage import at module level
+console.log('Equipment API module loaded - verifying storage import...');
+try {
+  console.log('Storage functions available:', {
+    getAllEquipment: typeof getAllEquipment,
+    getEquipmentById: typeof getEquipmentById, 
+    createEquipment: typeof createEquipment
+  });
+  console.log('Storage import verification successful');
+} catch (error) {
+  console.error('Storage import verification failed:', error);
+}
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Enhanced logging for debugging
   console.log(`Equipment API called: ${req.method} ${req.url}`);
