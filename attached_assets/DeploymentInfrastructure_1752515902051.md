@@ -11,7 +11,7 @@ environment configurations, and DevOps practices for the CMMS system.
 
 **1.1. Environment Tiers:**
 
-- **Development**: Local development with Supabase CLI
+- **Development**: Local development with PostgreSQL
 - **Staging**: Production-like environment for testing
 - **Production**: Live environment with high availability
 - **Demo**: Sandboxed environment with sample data
@@ -21,10 +21,15 @@ environment configurations, and DevOps practices for the CMMS system.
 ```typescript
 // Environment-specific configurations
 interface EnvironmentConfig {
-  supabase: {
+  database: {
     url: string;
-    anonKey: string;
-    serviceRoleKey: string;
+    pooledUrl: string;
+    maxConnections: number;
+  };
+  authentication: {
+    jwtSecret: string;
+    jwtRefreshSecret: string;
+    sessionTimeout: number;
   };
   app: {
     name: string;
@@ -47,21 +52,21 @@ interface EnvironmentConfig {
 
 ---
 
-**2. Supabase Infrastructure:**
+**2. Database Infrastructure:**
 
 **2.1. Database Configuration:**
 
-- **Production**: Supabase Pro plan with dedicated compute
+- **Production**: PostgreSQL with dedicated compute
 - **Connection pooling**: PgBouncer for high concurrency
 - **Read replicas**: For reporting and analytics queries
 - **Backup strategy**: Daily backups with 30-day retention
 - **Database monitoring**: Query performance and resource usage
 
-**2.2. Edge Functions:**
+**2.2. Background Services:**
 
 ```typescript
-// Deployment configuration for Edge Functions
-const edgeFunctions = {
+// Deployment configuration for Background Services
+const backgroundServices = {
   'escalation-checker': {
     schedule: '0 */6 * * *', // Every 6 hours
     timeout: 300, // 5 minutes
@@ -333,15 +338,17 @@ const securityHeaders = {
 
 ```bash
 # Production environment variables (via CI/CD secrets)
-VITE_SUPABASE_URL=https://xxx.supabase.co
-VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsI...
 VITE_APP_VERSION=$GITHUB_SHA
 VITE_SENTRY_DSN=https://xxx@sentry.io/xxx
 VITE_APP_ENVIRONMENT=production
 
-# Database secrets (server-side only)
-SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsI...
-DATABASE_URL=postgresql://xxx
+# Database configuration
+DATABASE_URL=postgresql://username:password@host:port/database
+POSTGRES_URL=postgresql://username:password@host:port/database
+
+# Authentication secrets (server-side only)
+JWT_SECRET=your-jwt-secret-key
+JWT_REFRESH_SECRET=your-jwt-refresh-secret-key
 ```
 
 ---

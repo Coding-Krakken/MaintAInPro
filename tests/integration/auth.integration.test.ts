@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach, vi, beforeAll, afterAll } from 'vitest';
+import { describe, it, expect, beforeEach, vi, beforeAll, afterAll } from 'vitest';
 import { AuthTestServer } from './helpers/auth-test-server';
 import { JWTService } from '../../server/services/auth/jwt.service';
 
