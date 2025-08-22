@@ -21,10 +21,62 @@ export default function EquipmentFormModal({ isOpen, onClose }: EquipmentFormMod
   const [area, setArea] = useState('');
   const { toast } = useToast();
 
+  // Reset form when modal closes
+  const handleClose = () => {
+    setName('');
+    setAssetTag('');
+    setDescription('');
+    setModel('');
+    setStatus('active');
+    setCriticality('medium');
+    setArea('');
+    onClose();
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Validate required fields
+    if (!name.trim()) {
+      toast({
+        title: 'Error',
+        description: 'Equipment name is required',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    if (!assetTag.trim()) {
+      toast({
+        title: 'Error', 
+        description: 'Asset tag is required',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    if (!model.trim()) {
+      toast({
+        title: 'Error',
+        description: 'Model is required',
+        variant: 'destructive',
+      });
+      return;
+    }
+
     try {
+      const requestBody = {
+        name, // Note: backend maps this to 'description' field in database schema
+        assetTag,
+        description,
+        model,
+        status,
+        criticality,
+        area,
+      };
+
+      console.log('Submitting equipment creation request:', requestBody);
+
       const response = await fetch('/api/equipment', {
         method: 'POST',
         headers: {
@@ -32,20 +84,20 @@ export default function EquipmentFormModal({ isOpen, onClose }: EquipmentFormMod
           'x-user-id': localStorage.getItem('userId') || 'default-user-id',
           'x-warehouse-id': localStorage.getItem('warehouseId') || 'default-warehouse-id',
         },
-        body: JSON.stringify({
-          name, // Note: backend maps this to 'description' field in database schema
-          assetTag,
-          description,
-          model,
-          status,
-          criticality,
-          area,
-        }),
+        body: JSON.stringify(requestBody),
       });
 
+      console.log('Response status:', response.status);
+      console.log('Response ok:', response.ok);
+
       if (!response.ok) {
-        throw new Error('Failed to create equipment');
+        const errorText = await response.text();
+        console.error('Equipment creation failed:', errorText);
+        throw new Error(`Failed to create equipment: ${response.status} - ${errorText}`);
       }
+
+      const result = await response.json();
+      console.log('Equipment created successfully:', result);
 
       toast({
         title: 'Success',
@@ -54,16 +106,17 @@ export default function EquipmentFormModal({ isOpen, onClose }: EquipmentFormMod
 
       onClose();
     } catch (_error) {
+      console.error('Equipment creation error:', _error);
       toast({
         title: 'Error',
-        description: 'Failed to create equipment',
+        description: _error instanceof Error ? _error.message : 'Failed to create equipment',
         variant: 'destructive',
       });
     }
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className='max-w-2xl'>
         <DialogHeader>
           <DialogTitle>Add New Equipment</DialogTitle>
@@ -162,7 +215,7 @@ export default function EquipmentFormModal({ isOpen, onClose }: EquipmentFormMod
           </div>
 
           <div className='flex justify-end space-x-2 pt-4'>
-            <Button type='button' variant='outline' onClick={onClose}>
+            <Button type='button' variant='outline' onClick={handleClose}>
               Cancel
             </Button>
             <Button type='submit'>Create Equipment</Button>
