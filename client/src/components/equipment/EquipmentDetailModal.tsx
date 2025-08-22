@@ -48,6 +48,10 @@ export default function EquipmentDetailModal({
       return response.json();
     },
     enabled: isOpen && (!!equipmentId || !!assetTag),
+    // Add staleTime to prevent showing stale data
+    staleTime: 0,
+    // Refetch when the modal opens with a different equipment ID
+    refetchOnMount: 'always',
   });
 
   // Fetch recent work orders for this equipment
@@ -159,6 +163,31 @@ export default function EquipmentDetailModal({
           <div className='text-center py-8'>
             <p className='text-gray-500'>
               No equipment found with {equipmentId ? 'ID' : 'asset tag'}: {equipmentId || assetTag}
+            </p>
+          </div>
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
+  // Safety check: ensure the equipment data matches the requested ID
+  if (equipmentId && equipment.id !== equipmentId) {
+    console.warn(`Equipment ID mismatch: requested ${equipmentId}, got ${equipment.id}`);
+    return (
+      <Dialog open={isOpen} onOpenChange={onClose}>
+        <DialogContent className='max-w-md'>
+          <DialogHeader>
+            <DialogTitle>Data Mismatch Error</DialogTitle>
+            <DialogDescription>
+              There was a data consistency issue. Please try again.
+            </DialogDescription>
+          </DialogHeader>
+          <div className='text-center py-8'>
+            <p className='text-gray-500'>
+              Expected equipment ID: {equipmentId}, but received: {equipment.id}
+            </p>
+            <p className='text-sm text-gray-400 mt-2'>
+              This may be a temporary caching issue. Try closing and reopening the modal.
             </p>
           </div>
         </DialogContent>
