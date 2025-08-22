@@ -201,22 +201,19 @@ export class LoggingService {
     // Log to database if available
     if (db) {
       try {
-        await db.execute(
-          `
-          INSERT INTO system_logs (user_id, action, table_name, record_id, old_values, new_values, ip_address, user_agent)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        `,
-          [
-            userId,
-            action,
-            'user_activity',
-            null,
-            null,
-            JSON.stringify(details),
-            req?.ip || null,
-            req?.get('User-Agent') || null,
-          ]
-        );
+        const { systemLogs } = await import('../../shared/schema');
+        const { randomUUID } = await import('crypto');
+        await db.insert(systemLogs).values({
+          id: randomUUID(),
+          userId,
+          action,
+          tableName: 'user_activity',
+          recordId: null,
+          oldValues: null,
+          newValues: details,
+          ipAddress: req?.ip || null,
+          userAgent: req?.get('User-Agent') || null,
+        });
       } catch (error) {
         this.error('Failed to log user activity to database', error);
       }
@@ -257,22 +254,19 @@ export class LoggingService {
     // Log to database if available
     if (db) {
       try {
-        await db.execute(
-          `
-          INSERT INTO system_logs (user_id, action, table_name, record_id, old_values, new_values, ip_address, user_agent)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        `,
-          [
-            details.userId || null,
-            `security_event_${type}`,
-            'security_log',
-            null,
-            null,
-            JSON.stringify(securityData),
-            req?.ip || null,
-            req?.get('User-Agent') || null,
-          ]
-        );
+        const { systemLogs } = await import('../../shared/schema');
+        const { randomUUID } = await import('crypto');
+        await db.insert(systemLogs).values({
+          id: randomUUID(),
+          userId: details.userId || null,
+          action: `security_event_${type}`,
+          tableName: 'security_log',
+          recordId: null,
+          oldValues: null,
+          newValues: securityData,
+          ipAddress: req?.ip || null,
+          userAgent: req?.get('User-Agent') || null,
+        });
       } catch (error) {
         this.error('Failed to log security event to database', error);
       }
@@ -306,22 +300,19 @@ export class LoggingService {
     // Log to database if available and not a SELECT operation
     if (db && operation !== 'SELECT') {
       try {
-        await db.execute(
-          `
-          INSERT INTO system_logs (user_id, action, table_name, record_id, old_values, new_values, ip_address, user_agent)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        `,
-          [
-            userId || null,
-            operation.toLowerCase(),
-            tableName,
-            recordId || null,
-            oldValues ? JSON.stringify(oldValues) : null,
-            newValues ? JSON.stringify(newValues) : null,
-            null,
-            null,
-          ]
-        );
+        const { systemLogs } = await import('../../shared/schema');
+        const { randomUUID } = await import('crypto');
+        await db.insert(systemLogs).values({
+          id: randomUUID(),
+          userId: userId || null,
+          action: operation.toLowerCase(),
+          tableName,
+          recordId: recordId || null,
+          oldValues: oldValues || null,
+          newValues: newValues || null,
+          ipAddress: null,
+          userAgent: null,
+        });
       } catch (error) {
         this.error('Failed to log database operation', error);
       }

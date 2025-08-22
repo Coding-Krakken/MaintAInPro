@@ -65,6 +65,14 @@
       "dest": "/api/notifications"
     },
     {
+      "src": "/api/vendors/([^/]+)",
+      "dest": "/api/vendors/$1"
+    },
+    {
+      "src": "/api/vendors",
+      "dest": "/api/vendors"
+    },
+    {
       "src": "/api/(.*)",
       "dest": "/api/$1"
     },

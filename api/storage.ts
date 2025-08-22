@@ -80,10 +80,24 @@ interface DashboardStats {
   maintenanceEquipment: number;
 }
 
+interface Vendor {
+  id: string;
+  name: string;
+  type: 'supplier' | 'contractor';
+  email?: string;
+  phone?: string;
+  address?: string;
+  contactPerson?: string;
+  active: boolean;
+  warehouseId: string;
+  createdAt: Date;
+}
+
 interface StorageData {
   equipment: Equipment[];
   workOrders: WorkOrder[];
   notifications: Notification[];
+  vendors: Vendor[];
   initialized: boolean;
 }
 
@@ -220,6 +234,7 @@ async function initializeData(): Promise<StorageData> {
     equipment: [equipment1, equipment2],
     workOrders: [workOrder1],
     notifications: [],
+    vendors: [],
     initialized: true
   };
 }
@@ -354,4 +369,76 @@ export async function getDashboardStats(warehouseId: string): Promise<DashboardS
     activeEquipment: equipment.filter(e => e.status === 'active').length,
     maintenanceEquipment: equipment.filter(e => e.status === 'maintenance').length
   };
+}
+
+// Vendor operations
+export async function getAllVendors(warehouseId: string): Promise<Vendor[]> {
+  const data = await loadData();
+  return data.vendors.filter(v => v.warehouseId === warehouseId && v.active);
+}
+
+export async function getVendorById(id: string): Promise<Vendor | undefined> {
+  const data = await loadData();
+  return data.vendors.find(v => v.id === id);
+}
+
+export async function createVendor(vendorData: {
+  name: string;
+  type: 'supplier' | 'contractor';
+  email?: string;
+  phone?: string;
+  address?: string;
+  contactPerson?: string;
+  warehouseId: string;
+}): Promise<Vendor> {
+  const data = await loadData();
+  
+  const newVendor: Vendor = {
+    id: `vendor-${Date.now()}`,
+    name: vendorData.name,
+    type: vendorData.type,
+    email: vendorData.email,
+    phone: vendorData.phone,
+    address: vendorData.address,
+    contactPerson: vendorData.contactPerson,
+    active: true,
+    warehouseId: vendorData.warehouseId,
+    createdAt: new Date()
+  };
+  
+  data.vendors.push(newVendor);
+  await saveData(data);
+  
+  return newVendor;
+}
+
+export async function updateVendor(id: string, updates: Partial<Vendor>): Promise<Vendor | undefined> {
+  const data = await loadData();
+  const vendorIndex = data.vendors.findIndex(v => v.id === id);
+  
+  if (vendorIndex === -1) {
+    return undefined;
+  }
+  
+  data.vendors[vendorIndex] = {
+    ...data.vendors[vendorIndex],
+    ...updates
+  };
+  
+  await saveData(data);
+  return data.vendors[vendorIndex];
+}
+
+export async function deleteVendor(id: string): Promise<boolean> {
+  const data = await loadData();
+  const vendorIndex = data.vendors.findIndex(v => v.id === id);
+  
+  if (vendorIndex === -1) {
+    return false;
+  }
+  
+  data.vendors.splice(vendorIndex, 1);
+  await saveData(data);
+  
+  return true;
 }

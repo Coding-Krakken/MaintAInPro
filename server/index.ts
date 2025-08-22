@@ -205,8 +205,8 @@ if (process.env.NODE_ENV === 'test') {
   initializeApp().catch(console.error);
 }
 
-// Export app for testing
-export { app };
+// Export app and initializeApp for testing
+export { app, initializeApp };
 
 // Only run server if this file is being executed directly
 if (process.env.NODE_ENV !== 'test') {
