@@ -43,7 +43,7 @@ export default function EquipmentDetailModal({
   }, [equipmentId, queryClient]);
 
   // Fetch equipment by ID or asset tag (skip fetch if temporary ID)
-  const { data: equipment, isLoading, error } = useQuery<Equipment>({
+  const { data: equipment, isLoading } = useQuery<Equipment>({
     queryKey: equipmentId ? ['/api/equipment', equipmentId] : ['/api/equipment/asset', assetTag],
     queryFn: async () => {
       const url = equipmentId
@@ -155,6 +155,12 @@ export default function EquipmentDetailModal({
     return (
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent className='max-w-md'>
+          <DialogHeader>
+            <DialogTitle>Loading Equipment</DialogTitle>
+            <DialogDescription>
+              Please wait while we load the equipment details.
+            </DialogDescription>
+          </DialogHeader>
           <div className='animate-pulse space-y-4'>
             <div className='h-6 bg-gray-200 rounded w-3/4'></div>
             <div className='h-16 bg-gray-200 rounded'></div>
