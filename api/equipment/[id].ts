@@ -4,6 +4,7 @@
  */
 
 import { VercelRequest, VercelResponse } from '@vercel/node';
+import * as storageModule from '../storage.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Set CORS headers
@@ -45,33 +46,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
 async function handleGet(req: VercelRequest, res: VercelResponse, id: string) {
   try {
-    // Mock equipment data
-    const mockEquipment = {
-      id: id,
-      name: `Equipment ${id}`,
-      assetTag: id.startsWith('equip-') ? id.replace('equip-', 'ASSET-') : `ASSET-${id}`,
-      type: 'Pump',
-      manufacturer: 'Industrial Corp',
-      model: 'Model-X1',
-      serialNumber: `SN-${id}-${Math.random().toString(36).substr(2, 6).toUpperCase()}`,
-      location: 'Floor 1, Section A',
-      status: 'operational',
-      criticality: 'medium',
-      installDate: '2023-01-15',
-      lastMaintenance: '2024-01-15',
-      nextMaintenance: '2024-07-15',
-      specifications: {
-        power: '10 HP',
-        voltage: '480V',
-        flowRate: '500 GPM'
-      },
-      notes: 'Equipment in good working condition',
-      createdAt: '2023-01-01T00:00:00Z',
-      updatedAt: new Date().toISOString()
-    };
+    console.log(`Fetching equipment with ID: ${id}`);
+    
+    // Get equipment from storage
+    const equipment = await storageModule.getEquipmentById(id);
+    
+    if (!equipment) {
+      console.log(`Equipment not found for ID: ${id}`);
+      return res.status(404).json({ message: 'Equipment not found' });
+    }
 
-    console.log(`Retrieved equipment: ${id}`);
-    return res.status(200).json(mockEquipment);
+    console.log(`Retrieved equipment: ${equipment.assetTag} (${equipment.id})`);
+    return res.status(200).json(equipment);
     
   } catch (error) {
     console.error('Error fetching equipment:', error);
