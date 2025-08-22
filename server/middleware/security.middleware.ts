@@ -3,6 +3,7 @@ import rateLimit, { RateLimitRequestHandler } from 'express-rate-limit';
 import { z } from 'zod';
 import crypto from 'crypto';
 import { db } from '../db';
+import { eq } from 'drizzle-orm';
 
 /**
  * Enhanced Security Middleware Suite
@@ -458,23 +459,35 @@ export function auditLogger(req: any, res: Response, next: NextFunction): void {
       body: req.method !== 'GET' ? req.body : undefined,
     };
 
-    // Log to system_logs table if available
+    // Log to system_logs table if available  
     if (db && req.user?.id) {
       (async () => {
         try {
           const { systemLogs } = await import('../../shared/schema');
           const { randomUUID } = await import('crypto');
-          await db.insert(systemLogs).values({
-            id: randomUUID(),
-            userId: req.user.id,
-            action: `${req.method} ${req.url}`,
-            tableName: 'api_request',
-            recordId: null,
-            oldValues: null,
-            newValues: auditData,
-            ipAddress: req.ip,
-            userAgent: req.get('User-Agent'),
-          });
+          
+          // Check if the user exists first to avoid foreign key constraint violations
+          const { profiles } = await import('../../shared/schema');
+          const userExists = await db.select({ id: profiles.id })
+            .from(profiles)
+            .where(eq(profiles.id, req.user.id))
+            .limit(1);
+          
+          if (userExists.length > 0) {
+            await db.insert(systemLogs).values({
+              id: randomUUID(),
+              userId: req.user.id,
+              action: `${req.method} ${req.url}`,
+              tableName: 'api_request',
+              recordId: null,
+              oldValues: null,
+              newValues: auditData,
+              ipAddress: req.ip,
+              userAgent: req.get('User-Agent'),
+            });
+          } else {
+            console.warn('Skipping audit log - user not found in profiles table:', req.user.id);
+          }
         } catch (err) {
           console.error('Audit logging error:', err);
         }

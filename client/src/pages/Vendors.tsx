@@ -77,7 +77,13 @@ export default function VendorsPage() {
   const { data: vendors = [], isLoading } = useQuery({
     queryKey: ['vendors'],
     queryFn: async () => {
-      const response = await fetch(API_BASE);
+      const response = await fetch(API_BASE, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('authToken') || 'demo-token'}`,
+          'x-user-id': localStorage.getItem('userId') || 'default-user-id',
+          'x-warehouse-id': localStorage.getItem('warehouseId') || 'default-warehouse-id',
+        },
+      });
       if (!response.ok) throw new Error('Failed to fetch vendors');
       return response.json() as Promise<Vendor[]>;
     },
@@ -86,13 +92,29 @@ export default function VendorsPage() {
   // Create vendor mutation
   const createVendorMutation = useMutation({
     mutationFn: async (data: VendorFormData) => {
+      console.log('Creating vendor with data:', data);
       const response = await fetch(API_BASE, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('authToken') || 'demo-token'}`,
+          'x-user-id': localStorage.getItem('userId') || 'default-user-id',
+          'x-warehouse-id': localStorage.getItem('warehouseId') || 'default-warehouse-id',
+        },
         body: JSON.stringify(data),
       });
-      if (!response.ok) throw new Error('Failed to create vendor');
-      return response.json();
+      
+      console.log('Vendor creation response status:', response.status);
+      
+      if (!response.ok) {
+        const errorBody = await response.text();
+        console.error('Vendor creation failed:', response.status, errorBody);
+        throw new Error(`Failed to create vendor: ${response.status} - ${errorBody}`);
+      }
+      
+      const result = await response.json();
+      console.log('Vendor creation successful:', result);
+      return result;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['vendors'] });
@@ -101,6 +123,7 @@ export default function VendorsPage() {
       form.reset();
     },
     onError: error => {
+      console.error('Vendor creation error:', error);
       toast({ title: 'Error', description: error.message, variant: 'destructive' });
     },
   });
@@ -110,7 +133,12 @@ export default function VendorsPage() {
     mutationFn: async ({ id, data }: { id: string; data: VendorFormData }) => {
       const response = await fetch(`${API_BASE}/${id}`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('authToken') || 'demo-token'}`,
+          'x-user-id': localStorage.getItem('userId') || 'default-user-id',
+          'x-warehouse-id': localStorage.getItem('warehouseId') || 'default-warehouse-id',
+        },
         body: JSON.stringify(data),
       });
       if (!response.ok) throw new Error('Failed to update vendor');
@@ -133,6 +161,11 @@ export default function VendorsPage() {
     mutationFn: async (id: string) => {
       const response = await fetch(`${API_BASE}/${id}`, {
         method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('authToken') || 'demo-token'}`,
+          'x-user-id': localStorage.getItem('userId') || 'default-user-id',
+          'x-warehouse-id': localStorage.getItem('warehouseId') || 'default-warehouse-id',
+        },
       });
       if (!response.ok) throw new Error('Failed to delete vendor');
     },
