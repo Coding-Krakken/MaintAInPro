@@ -50,17 +50,28 @@ def parse_issue_md(md_path):
         lines = f.readlines()
     title = None
     body = ''
+    # First, check for a 'title:' metadata line (YAML frontmatter or similar)
     for line in lines:
-        # Find first H1 that is not a template or a number
-        if not title and line.strip().startswith('# '):
-            candidate = line.strip().lstrip('# ').strip()
-            if candidate.lower() not in [
-                'github issue template',
-                '📝 github issue template',
-                'issue template',
-            ] and candidate and not candidate.isdigit():
-                title = candidate
-                continue
+        meta_match = re.match(r'^title:\s*(.+)', line.strip(), re.IGNORECASE)
+        if meta_match:
+            title = meta_match.group(1).strip()
+            continue
+    # If no metadata title, fall back to first H1
+    if not title:
+        for line in lines:
+            if line.strip().startswith('# '):
+                candidate = line.strip().lstrip('# ').strip()
+                if candidate.lower() not in [
+                    'github issue template',
+                    '📝 github issue template',
+                    'issue template',
+                ] and candidate and not candidate.isdigit():
+                    title = candidate
+                    break
+    # Build body (skip metadata line if present)
+    for line in lines:
+        if re.match(r'^title:\s*.+', line.strip(), re.IGNORECASE):
+            continue
         body += line
     if not title:
         # Fallback: use first non-empty, non-numeric line that isn't a template title
