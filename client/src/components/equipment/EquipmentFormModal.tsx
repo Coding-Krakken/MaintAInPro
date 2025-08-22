@@ -5,6 +5,7 @@ import { Textarea } from '../ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { useState } from 'react';
 import { useToast } from '../../hooks/use-toast';
+import { useCreateEquipment } from '../../hooks/useEquipment';
 
 interface EquipmentFormModalProps {
   isOpen: boolean;
@@ -20,6 +21,8 @@ export default function EquipmentFormModal({ isOpen, onClose }: EquipmentFormMod
   const [criticality, setCriticality] = useState('medium');
   const [area, setArea] = useState('');
   const { toast } = useToast();
+  
+  const createEquipmentMutation = useCreateEquipment();
 
   // Reset form when modal closes
   const handleClose = () => {
@@ -77,26 +80,7 @@ export default function EquipmentFormModal({ isOpen, onClose }: EquipmentFormMod
 
       console.log('Submitting equipment creation request:', requestBody);
 
-      const response = await fetch('/api/equipment', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-user-id': localStorage.getItem('userId') || 'default-user-id',
-          'x-warehouse-id': localStorage.getItem('warehouseId') || 'default-warehouse-id',
-        },
-        body: JSON.stringify(requestBody),
-      });
-
-      console.log('Response status:', response.status);
-      console.log('Response ok:', response.ok);
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Equipment creation failed:', errorText);
-        throw new Error(`Failed to create equipment: ${response.status} - ${errorText}`);
-      }
-
-      const result = await response.json();
+      const result = await createEquipmentMutation.mutateAsync(requestBody);
       console.log('Equipment created successfully:', result);
 
       toast({
@@ -104,7 +88,7 @@ export default function EquipmentFormModal({ isOpen, onClose }: EquipmentFormMod
         description: 'Equipment created successfully',
       });
 
-      onClose();
+      handleClose();
     } catch (_error) {
       console.error('Equipment creation error:', _error);
       toast({
