@@ -77,10 +77,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
   notificationService.initialize(httpServer);
   console.log('WebSocket notification service initialized');
 
-  // Security middleware (applied first)
-  app.use(securityHeaders);
-  app.use(serviceWorkerHandler);
-  app.use(pwaHeaders);
+  // Security middleware (applied first, but skip for PWA files)
+  app.use((req, res, next) => {
+    // Skip security middleware for PWA files that need special handling
+    if (req.path === '/sw.js' || req.path === '/manifest.json') {
+      return next();
+    }
+    securityHeaders(req, res, next);
+  });
+  
+  app.use((req, res, next) => {
+    // Skip service worker handler for non-PWA files  
+    if (req.path === '/sw.js' || req.path === '/manifest.json') {
+      return next();
+    }
+    serviceWorkerHandler(req, res, next);
+  });
+  
+  app.use((req, res, next) => {
+    // Skip PWA headers for files that have custom handlers
+    if (req.path === '/sw.js' || req.path === '/manifest.json') {
+      return next();
+    }
+    pwaHeaders(req, res, next);
+  });
+  
   app.use(sanitizeInput);
   app.use(validateRequest);
   console.log('Security middleware enabled');
@@ -169,7 +190,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Authentication middleware
   const authenticateRequest = async (req: any, res: any, next: any) => {
     try {
+      // Skip authentication for public endpoints
+      const publicEndpoints = ['/api/health', '/api/health/basic', '/api/monitoring'];
+      if (publicEndpoints.some(endpoint => req.path.startsWith(endpoint))) {
+        return next();
+      }
+
       const token = req.headers.authorization?.replace('Bearer ', '');
+      
       // In development mode, allow anonymous access when no token is provided
       if (!token) {
         if (process.env.NODE_ENV === 'development') {
@@ -180,10 +208,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
             role: 'admin',
             sessionId: 'dev-session-id',
           };
+          console.log('Development mode: Using anonymous user for', req.path);
           return next();
         }
         return res.status(401).json({ message: 'Authentication required' });
       }
+      
       // Accept mock token in development mode
       if (process.env.NODE_ENV === 'development' && token === 'demo-token') {
         req.user = {
@@ -194,6 +224,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         };
         return next();
       }
+      
       // In test environment, accept mock-token
       if (process.env.NODE_ENV === 'test' && token === 'mock-token') {
         req.user = {
@@ -202,12 +233,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         };
         return next();
       }
+      
       // Use advanced JWT validation
       const { AuthService } = await import('./services/auth');
       const tokenValidation = await new AuthService().validateToken(token);
       if (!tokenValidation.valid) {
         return res.status(401).json({ message: 'Invalid or expired token' });
       }
+      
       // Check if session is still valid
       const sessionValid = await new AuthService().validateSession(
         tokenValidation.payload.sessionId
@@ -215,6 +248,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!sessionValid) {
         return res.status(401).json({ message: 'Session expired' });
       }
+      
       req.user = {
         id: tokenValidation.payload.userId,
         warehouseId: tokenValidation.payload.warehouseId,
@@ -224,6 +258,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       next();
     } catch (_error) {
       console.error('Authentication _error:', _error);
+      // In development, continue with anonymous user on auth errors
+      if (process.env.NODE_ENV === 'development') {
+        req.user = {
+          id: '00000000-0000-0000-0000-000000000001',
+          warehouseId: '00000000-0000-0000-0000-000000000001',
+          role: 'admin',
+          sessionId: 'dev-session-id',
+        };
+        console.log('Development mode: Auth error, using anonymous user');
+        return next();
+      }
       return res.status(401).json({ message: 'Authentication failed' });
     }
   };
@@ -712,14 +757,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Equipment
+  // Equipment (no authentication required for basic read access in development)
   app.get('/api/equipment', async (req, res) => {
     try {
-      const warehouseId = getCurrentWarehouse(req);
+      console.log('GET /api/equipment called');
+      const warehouseId = getCurrentWarehouse(req) || '00000000-0000-0000-0000-000000000001';
+      console.log('Using warehouse ID:', warehouseId);
+      
+      if (!storage) {
+        console.error('Storage not initialized');
+        return res.status(503).json({ 
+          message: 'Service temporarily unavailable - storage initializing',
+          code: 'STORAGE_NOT_READY'
+        });
+      }
+      
       const equipment = await storage.getEquipment(warehouseId);
-      res.json(equipment);
+      console.log('Equipment count:', equipment?.length || 0);
+      res.json(equipment || []);
     } catch (_error) {
-      res.status(500).json({ message: 'Failed to get equipment' });
+      console.error('Equipment API error:', _error);
+      res.status(500).json({ 
+        message: 'Failed to get equipment',
+        error: process.env.NODE_ENV === 'development' ? _error.message : undefined
+      });
     }
   });
 
@@ -809,16 +870,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Work Orders
   app.get('/api/work-orders', authenticateRequest, async (req, res) => {
     try {
+      console.log('GET /api/work-orders called');
       const warehouseId = getCurrentWarehouse(req);
+      console.log('Using warehouse ID:', warehouseId);
+      
+      if (!storage) {
+        console.error('Storage not initialized');
+        return res.status(503).json({ 
+          message: 'Service temporarily unavailable - storage initializing',
+          code: 'STORAGE_NOT_READY'
+        });
+      }
+      
       const filters = {
         status: req.query.status ? String(req.query.status).split(',') : undefined,
         assignedTo: req.query.assignedTo ? String(req.query.assignedTo) : undefined,
         priority: req.query.priority ? String(req.query.priority).split(',') : undefined,
       };
+      console.log('Filters:', filters);
+      
       const workOrders = await storage.getWorkOrders(warehouseId, filters);
-      res.json(workOrders);
+      console.log('Work orders count:', workOrders?.length || 0);
+      res.json(workOrders || []);
     } catch (_error) {
-      res.status(500).json({ message: 'Failed to get work orders' });
+      console.error('Work orders API error:', _error);
+      res.status(500).json({ 
+        message: 'Failed to get work orders',
+        error: process.env.NODE_ENV === 'development' ? _error.message : undefined
+      });
     }
   });
 
@@ -1876,14 +1955,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Notifications
+  // Notifications (no authentication required for basic read access in development)
   app.get('/api/notifications', async (req, res) => {
     try {
-      const userId = getCurrentUser(req);
+      console.log('GET /api/notifications called');
+      const userId = getCurrentUser(req) || '00000000-0000-0000-0000-000000000001';
+      console.log('Using user ID:', userId);
+      
+      if (!storage) {
+        console.error('Storage not initialized');
+        return res.status(503).json({ 
+          message: 'Service temporarily unavailable - storage initializing',
+          code: 'STORAGE_NOT_READY'
+        });
+      }
+      
       const notifications = await storage.getNotifications(userId);
-      res.json(notifications);
+      console.log('Notifications count:', notifications?.length || 0);
+      res.json(notifications || []);
     } catch (_error) {
-      res.status(500).json({ message: 'Failed to get notifications' });
+      console.error('Notifications API error:', _error);
+      res.status(500).json({ 
+        message: 'Failed to get notifications',
+        error: process.env.NODE_ENV === 'development' ? _error.message : undefined
+      });
     }
   });
 
@@ -1896,13 +1991,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Dashboard statistics
+  // Dashboard statistics (no authentication required for basic read access in development)
   app.get('/api/dashboard/stats', async (req, res) => {
     try {
-      const warehouseId = getCurrentWarehouse(req);
-      const workOrders = await storage.getWorkOrders(warehouseId);
-      const equipment = await storage.getEquipment(warehouseId);
-      const parts = await storage.getParts(warehouseId);
+      console.log('GET /api/dashboard/stats called');
+      const warehouseId = getCurrentWarehouse(req) || '00000000-0000-0000-0000-000000000001';
+      console.log('Using warehouse ID:', warehouseId);
+      
+      if (!storage) {
+        console.error('Storage not initialized');
+        return res.status(503).json({ 
+          message: 'Service temporarily unavailable - storage initializing',
+          code: 'STORAGE_NOT_READY'
+        });
+      }
+      
+      const [workOrders, equipment, parts] = await Promise.all([
+        storage.getWorkOrders(warehouseId).catch(err => {
+          console.error('Failed to get work orders for dashboard:', err);
+          return [];
+        }),
+        storage.getEquipment(warehouseId).catch(err => {
+          console.error('Failed to get equipment for dashboard:', err);
+          return [];
+        }),
+        storage.getParts(warehouseId).catch(err => {
+          console.error('Failed to get parts for dashboard:', err);
+          return [];
+        })
+      ]);
 
       const stats = {
         totalWorkOrders: workOrders.length,
@@ -1929,10 +2046,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         ).length,
         totalParts: parts.length,
       };
-
+      
+      console.log('Dashboard stats:', stats);
       res.json(stats);
     } catch (_error) {
-      res.status(500).json({ message: 'Failed to get dashboard stats' });
+      console.error('Dashboard stats API error:', _error);
+      res.status(500).json({ 
+        message: 'Failed to get dashboard stats',
+        error: process.env.NODE_ENV === 'development' ? _error.message : undefined
+      });
     }
   });
 
