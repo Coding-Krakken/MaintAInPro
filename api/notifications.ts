@@ -3,16 +3,7 @@
  */
 
 import { VercelRequest, VercelResponse } from '@vercel/node';
-
-// Use the shared storage system instead of static mock data
-let storage: any;
-async function getStorage() {
-  if (!storage) {
-    const { MemStorage } = await import('../server/storage');
-    storage = new MemStorage();
-  }
-  return storage;
-}
+import { getAllNotifications } from './storage';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Set CORS headers
@@ -43,10 +34,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
 async function handleGet(req: VercelRequest, res: VercelResponse) {
   try {
-    const storageInstance = await getStorage();
     const userId = (req.headers['x-user-id'] as string) || 'default-user-id';
     
-    const notifications = await storageInstance.getNotifications(userId);
+    const notifications = await getAllNotifications(userId);
     console.log(`Retrieved ${notifications.length} notifications for user ${userId}`);
     
     return res.status(200).json(notifications);

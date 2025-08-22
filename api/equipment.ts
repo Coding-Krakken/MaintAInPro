@@ -3,16 +3,7 @@
  */
 
 import { VercelRequest, VercelResponse } from '@vercel/node';
-
-// Use the shared storage system instead of static mock data
-let storage: any;
-async function getStorage() {
-  if (!storage) {
-    const { MemStorage } = await import('../server/storage');
-    storage = new MemStorage();
-  }
-  return storage;
-}
+import { getAllEquipment, getEquipmentById, createEquipment } from './storage';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Set CORS headers
@@ -45,10 +36,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
 async function handleGet(req: VercelRequest, res: VercelResponse) {
   try {
-    const storageInstance = await getStorage();
     const warehouseId = (req.headers['x-warehouse-id'] as string) || 'default-warehouse-id';
     
-    const equipment = await storageInstance.getEquipment(warehouseId);
+    // Handle single equipment by ID
+    if (req.query.id && typeof req.query.id === 'string') {
+      const equipment = await getEquipmentById(req.query.id);
+      if (!equipment) {
+        return res.status(404).json({ message: 'Equipment not found' });
+      }
+      return res.status(200).json(equipment);
+    }
+    
+    // Get all equipment for warehouse
+    const equipment = await getAllEquipment(warehouseId);
     console.log(`Retrieved ${equipment.length} equipment items for warehouse ${warehouseId}`);
     
     return res.status(200).json(equipment);
@@ -84,7 +84,6 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
       });
     }
 
-    const storageInstance = await getStorage();
     const warehouseId = (req.headers['x-warehouse-id'] as string) || 'default-warehouse-id';
     const userId = (req.headers['x-user-id'] as string) || 'default-user-id';
 
@@ -108,7 +107,7 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
       ...otherFields
     };
 
-    const newEquipment = await storageInstance.createEquipment(equipmentData);
+    const newEquipment = await createEquipment(equipmentData);
     console.log('Equipment created successfully:', newEquipment);
     
     return res.status(201).json(newEquipment);

@@ -3,16 +3,7 @@
  */
 
 import { VercelRequest, VercelResponse } from '@vercel/node';
-
-// Use the shared storage system instead of static mock data
-let storage: any;
-async function getStorage() {
-  if (!storage) {
-    const { MemStorage } = await import('../server/storage');
-    storage = new MemStorage();
-  }
-  return storage;
-}
+import { getAllWorkOrders } from './storage';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Set CORS headers
@@ -43,7 +34,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
 async function handleGet(req: VercelRequest, res: VercelResponse) {
   try {
-    const storageInstance = await getStorage();
     const warehouseId = (req.headers['x-warehouse-id'] as string) || 'default-warehouse-id';
     const { status } = req.query;
     
@@ -52,7 +42,7 @@ async function handleGet(req: VercelRequest, res: VercelResponse) {
       filters.status = status.split(',');
     }
     
-    const workOrders = await storageInstance.getWorkOrders(warehouseId, filters);
+    const workOrders = await getAllWorkOrders(warehouseId, filters);
     console.log(`Retrieved ${workOrders.length} work orders for warehouse ${warehouseId}`);
     
     return res.status(200).json(workOrders);
