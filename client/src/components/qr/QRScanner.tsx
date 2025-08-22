@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '../ui/dialog';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { useQRScanner, useQRInput } from '../../hooks/useQRScanner';
@@ -53,6 +53,9 @@ export default function QRScanner({ isOpen, onClose, onScan }: QRScannerProps) {
               <X className='w-4 h-4' />
             </Button>
           </div>
+          <DialogDescription>
+            Use your camera to scan a QR code or enter the code manually below.
+          </DialogDescription>
         </DialogHeader>
 
         <div className='space-y-4'>

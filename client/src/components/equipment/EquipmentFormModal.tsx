@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '../ui/dialog';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
@@ -104,6 +104,9 @@ export default function EquipmentFormModal({ isOpen, onClose }: EquipmentFormMod
       <DialogContent className='max-w-2xl'>
         <DialogHeader>
           <DialogTitle>Add New Equipment</DialogTitle>
+          <DialogDescription>
+            Fill out the form below to add new equipment to your inventory.
+          </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className='space-y-4'>

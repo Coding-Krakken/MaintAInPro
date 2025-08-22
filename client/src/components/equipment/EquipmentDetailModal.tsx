@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '../ui/dialog';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
@@ -152,6 +152,9 @@ export default function EquipmentDetailModal({
         <DialogContent className='max-w-md'>
           <DialogHeader>
             <DialogTitle>Equipment Not Found</DialogTitle>
+            <DialogDescription>
+              The requested equipment could not be located in the system.
+            </DialogDescription>
           </DialogHeader>
           <div className='text-center py-8'>
             <p className='text-gray-500'>
@@ -169,6 +172,9 @@ export default function EquipmentDetailModal({
         <DialogContent className='max-w-4xl max-h-[90vh] overflow-y-auto'>
           <DialogHeader>
             <DialogTitle>Equipment Details</DialogTitle>
+            <DialogDescription>
+              View detailed information, work orders, and attachments for this equipment.
+            </DialogDescription>
           </DialogHeader>
 
           <Tabs value={activeTab} onValueChange={setActiveTab} className='w-full'>

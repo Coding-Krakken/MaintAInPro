@@ -10,6 +10,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
   DialogTrigger,
 } from '@/components/ui/dialog';
 import {
@@ -205,6 +206,11 @@ export default function VendorsPage() {
           <DialogContent className='max-w-2xl'>
             <DialogHeader>
               <DialogTitle>{editingVendor ? 'Edit Vendor' : 'Add New Vendor'}</DialogTitle>
+              <DialogDescription>
+                {editingVendor 
+                  ? 'Update the vendor information below.' 
+                  : 'Add a new vendor or contractor to your system.'}
+              </DialogDescription>
             </DialogHeader>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>

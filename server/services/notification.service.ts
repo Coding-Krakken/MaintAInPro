@@ -17,14 +17,35 @@ class NotificationServiceImpl implements NotificationService {
   private warehouseSockets = new Map<string, Set<string>>(); // warehouseId -> Set of socketIds
 
   initialize(httpServer: HTTPServer): void {
-    this.io = new SocketIOServer(httpServer, {
-      cors: {
-        origin: process.env.NODE_ENV === 'production' ? false : true,
-        methods: ['GET', 'POST'],
-        credentials: true,
-      },
-      transports: ['websocket', 'polling'],
-    });
+    try {
+      // Only initialize socket.io in non-serverless environments
+      if (process.env.NODE_ENV === 'development' || process.env.VERCEL !== '1') {
+        this.io = new SocketIOServer(httpServer, {
+          cors: {
+            origin: process.env.NODE_ENV === 'production' ? 
+              [process.env.FRONTEND_URL, process.env.PRODUCTION_URL].filter(Boolean) : 
+              true,
+            methods: ['GET', 'POST'],
+            credentials: true,
+          },
+          transports: ['websocket', 'polling'],
+          allowEIO3: true,
+        });
+
+        this.setupSocketHandlers();
+        console.log('Real-time notification service initialized with WebSocket support');
+      } else {
+        console.log('Real-time notification service initialized in serverless mode (WebSocket disabled)');
+      }
+    } catch (error) {
+      console.error('Failed to initialize notification service:', error);
+      // Continue without WebSocket support
+      console.log('Continuing without real-time notifications');
+    }
+  }
+
+  private setupSocketHandlers(): void {
+    if (!this.io) return;
 
     this.io.on('connection', socket => {
       console.log(`Socket connected: ${socket.id}`);
@@ -89,8 +110,6 @@ class NotificationServiceImpl implements NotificationService {
         console.error(`Socket error for ${socket.id}:`, error);
       });
     });
-
-    console.log('Real-time notification service initialized');
   }
 
   private cleanupSocket(socketId: string): void {
@@ -112,41 +131,39 @@ class NotificationServiceImpl implements NotificationService {
   }
 
   async sendNotification(notificationData: any): Promise<void> {
-    if (!this.io) {
-      console.warn('Socket.IO not initialized, cannot send notification');
-      return;
-    }
-
     try {
       // Store notification in database
       const notification = await storage.createNotification(notificationData as InsertNotification);
 
-      // Send real-time notification to user (userId is required in notifications table)
-      if (notificationData.userId) {
+      // Send real-time notification if WebSocket is available
+      if (this.io && notificationData.userId) {
         this.io.to(`user:${notificationData.userId}`).emit('notification', {
           type: 'notification',
           data: notification,
         });
 
         // Send to warehouse if applicable (notifications are user-scoped, so get user's warehouse)
-        const userProfile = await storage.getProfile(notificationData.userId);
-        if (userProfile?.warehouseId) {
-          this.io.to(`warehouse:${userProfile.warehouseId}`).emit('warehouse_notification', {
+        if (notificationData.warehouseId) {
+          this.io.to(`warehouse:${notificationData.warehouseId}`).emit('notification', {
             type: 'warehouse_notification',
             data: notification,
           });
         }
-      }
 
-      console.log('Notification sent:', notification.id);
-    } catch (_error) {
-      console.error('Failed to send notification:', _error);
-      throw _error;
+        console.log(`Notification sent to user ${notificationData.userId} via WebSocket`);
+      } else if (!this.io) {
+        console.log(`Notification stored in database for user ${notificationData.userId} (WebSocket unavailable)`);
+      }
+    } catch (error) {
+      console.error('Error sending notification:', error);
+      throw error;
     }
   }
-
   async sendRealTimeUpdate(userId: string, data: any): Promise<void> {
-    if (!this.io) return;
+    if (!this.io) {
+      console.log(`Real-time update skipped for user ${userId} (WebSocket unavailable)`);
+      return;
+    }
 
     this.io.to(`user:${userId}`).emit('real_time_update', {
       type: 'update',
@@ -156,7 +173,10 @@ class NotificationServiceImpl implements NotificationService {
   }
 
   async broadcastToWarehouse(warehouseId: string, data: any): Promise<void> {
-    if (!this.io) return;
+    if (!this.io) {
+      console.log(`Warehouse broadcast skipped for ${warehouseId} (WebSocket unavailable)`);
+      return;
+    }
 
     this.io.to(`warehouse:${warehouseId}`).emit('warehouse_update', {
       type: 'warehouse_update',
@@ -167,7 +187,10 @@ class NotificationServiceImpl implements NotificationService {
   }
 
   async broadcastSystemAlert(data: any): Promise<void> {
-    if (!this.io) return;
+    if (!this.io) {
+      console.log('System alert broadcast skipped (WebSocket unavailable)');
+      return;
+    }
 
     this.io.emit('system_alert', {
       type: 'system_alert',

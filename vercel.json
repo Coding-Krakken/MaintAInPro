@@ -5,8 +5,64 @@
 
   "routes": [
     {
+      "src": "/sw.js",
+      "dest": "/api/sw.js"
+    },
+    {
+      "src": "/manifest.json",
+      "dest": "/api/manifest.json"
+    },
+    {
+      "src": "/icon-192.png",
+      "dest": "/api/icon-192.png"
+    },
+    {
+      "src": "/icon-512.png", 
+      "dest": "/api/icon-512.png"
+    },
+    {
+      "src": "/favicon.ico",
+      "dest": "/api/favicon.ico"
+    },
+    {
       "src": "/health",
       "dest": "/api/health"
+    },
+    {
+      "src": "/api/profiles/([^/]+)",
+      "dest": "/api/profiles/$1"
+    },
+    {
+      "src": "/api/profiles",
+      "dest": "/api/profiles"
+    },
+    {
+      "src": "/api/equipment/([^/]+)",
+      "dest": "/api/equipment/$1"
+    },
+    {
+      "src": "/api/equipment",
+      "dest": "/api/equipment"
+    },
+    {
+      "src": "/api/parts/([^/]+)",
+      "dest": "/api/parts/$1"
+    },
+    {
+      "src": "/api/parts",
+      "dest": "/api/parts"
+    },
+    {
+      "src": "/api/work-orders",
+      "dest": "/api/work-orders"
+    },
+    {
+      "src": "/api/dashboard/stats",
+      "dest": "/api/dashboard/stats"
+    },
+    {
+      "src": "/api/notifications",
+      "dest": "/api/notifications"
     },
     {
       "src": "/api/(.*)",

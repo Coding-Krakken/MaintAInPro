@@ -140,6 +140,65 @@ export function securityHeaders(req: Request, res: Response, next: NextFunction)
 }
 
 /**
+ * PWA and static file MIME type middleware
+ */
+export function pwaHeaders(req: Request, res: Response, next: NextFunction): void {
+  const url = req.url;
+  
+  // Service Worker - ensure proper MIME type
+  if (url === '/sw.js' || url.endsWith('sw.js')) {
+    res.set({
+      'Content-Type': 'application/javascript; charset=utf-8',
+      'Service-Worker-Allowed': '/',
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+    });
+  }
+  
+  // Web App Manifest - ensure proper MIME type
+  if (url === '/manifest.json' || url.endsWith('manifest.json')) {
+    res.set({
+      'Content-Type': 'application/manifest+json; charset=utf-8',
+      'Cache-Control': 'public, max-age=3600', // Cache for 1 hour
+    });
+  }
+  
+  // PWA icons and other static assets
+  if (url.match(/\.(png|jpg|jpeg|gif|svg|ico|webp)$/)) {
+    res.set({
+      'Cache-Control': 'public, max-age=86400', // Cache for 24 hours
+    });
+  }
+
+  next();
+}
+
+/**
+ * Service Worker specific handler that overrides static file handling
+ */
+export function serviceWorkerHandler(req: Request, res: Response, next: NextFunction): void {
+  const url = req.url;
+  
+  if (url === '/sw.js') {
+    // Set proper headers before serving the file
+    res.set({
+      'Content-Type': 'application/javascript; charset=utf-8',
+      'Service-Worker-Allowed': '/',
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0',
+    });
+  } else if (url === '/manifest.json') {
+    // Set proper headers before serving the file
+    res.set({
+      'Content-Type': 'application/manifest+json; charset=utf-8',
+      'Cache-Control': 'public, max-age=3600',
+    });
+  }
+  
+  next();
+}
+
+/**
  * Enhanced input sanitization middleware
  */
 export function sanitizeInput(req: Request, res: Response, next: NextFunction): void {
@@ -551,4 +610,4 @@ export async function validateSession(req: any, res: Response, next: NextFunctio
  * Complete security middleware stack
  * Apply all security measures in the correct order
  */
-export const securityStack = [securityHeaders, sanitizeInput, sqlInjectionProtection, auditLogger];
+export const securityStack = [securityHeaders, pwaHeaders, sanitizeInput, sqlInjectionProtection, auditLogger];

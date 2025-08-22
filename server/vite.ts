@@ -81,6 +81,48 @@ export function serveStatic(app: Express) {
   }
 
   console.log('Setting up static file serving from:', distPath);
+  
+  // Custom file handler for PWA files before generic static middleware
+  app.get('/sw.js', (req, res) => {
+    const swPath = path.resolve(distPath, 'sw.js');
+    console.log('Serving service worker from:', swPath);
+    console.log('Service worker exists:', fs.existsSync(swPath));
+    
+    res.set({
+      'Content-Type': 'application/javascript; charset=utf-8',
+      'Service-Worker-Allowed': '/',
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0',
+    });
+    
+    if (fs.existsSync(swPath)) {
+      res.sendFile(swPath);
+    } else {
+      console.error('Service worker file not found at:', swPath);
+      res.status(404).send('Service worker not found');
+    }
+  });
+  
+  app.get('/manifest.json', (req, res) => {
+    const manifestPath = path.resolve(distPath, 'manifest.json');
+    console.log('Serving manifest from:', manifestPath);
+    console.log('Manifest exists:', fs.existsSync(manifestPath));
+    
+    res.set({
+      'Content-Type': 'application/manifest+json; charset=utf-8',
+      'Cache-Control': 'public, max-age=3600',
+    });
+    
+    if (fs.existsSync(manifestPath)) {
+      res.sendFile(manifestPath);
+    } else {
+      console.error('Manifest file not found at:', manifestPath);
+      res.status(404).send('Manifest not found');
+    }
+  });
+  
+  // Generic static file middleware for everything else
   app.use(express.static(distPath));
 
   // fall through to index.html if the file doesn't exist
