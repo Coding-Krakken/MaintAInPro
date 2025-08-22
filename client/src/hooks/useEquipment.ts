@@ -67,9 +67,12 @@ export function useCreateEquipment() {
       // Snapshot the previous value
       const previousEquipment = queryClient.getQueryData<Equipment[]>(['/api/equipment']);
 
+      // Create a unique temporary ID
+      const tempId = `temp-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+
       // Optimistically update to the new value
       const optimisticEquipment: Equipment = {
-        id: `temp-${Date.now()}`, // Temporary ID until server responds
+        id: tempId,
         assetTag: newEquipment.assetTag,
         model: newEquipment.model,
         description: newEquipment.description || '',
@@ -96,17 +99,17 @@ export function useCreateEquipment() {
         return old ? [...old, optimisticEquipment] : [optimisticEquipment];
       });
 
-      // Return a context object with the snapshotted value
-      return { previousEquipment };
+      // Return a context object with the snapshotted value and temp ID
+      return { previousEquipment, tempId };
     },
     onSuccess: (data, variables, context) => {
-      // Replace the optimistic equipment with the real one from the server
+      // Replace the specific optimistic equipment with the real one from the server
       queryClient.setQueryData<Equipment[]>(['/api/equipment'], (old) => {
         if (!old) return [data];
         
-        // Find and replace the temporary equipment with the real one
+        // Find and replace the specific temporary equipment with the real one
         return old.map(equipment => 
-          equipment.id.startsWith('temp-') ? data : equipment
+          equipment.id === context?.tempId ? data : equipment
         );
       });
     },
