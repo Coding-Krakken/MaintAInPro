@@ -1,8 +1,20 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import { randomUUID } from 'crypto';
-import { storage } from '../server/storage';
-import { insertVendorSchema } from '@shared/schema';
+import * as storageModule from './storage.js';
 import { z } from 'zod';
+
+// Define the vendor schema directly since we can't import from shared in serverless
+const insertVendorSchema = z.object({
+  name: z.string().min(1, 'Name is required'),
+  type: z.enum(['supplier', 'contractor']),
+  email: z.string().email().optional().or(z.literal('')),
+  phone: z.string().optional(),
+  address: z.string().optional(),
+  contactPerson: z.string().optional(),
+  warehouseId: z.string(),
+  id: z.string().optional(),
+  active: z.boolean().optional()
+});
 
 // Helper function to get current user and warehouse from request headers
 const getCurrentUser = (req: VercelRequest) => {
@@ -40,29 +52,35 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       case 'GET':
         if (req.query.id) {
           // Get single vendor
-          const vendor = await storage.getVendor(req.query.id as string);
+          const vendor = await storageModule.getVendorById(req.query.id as string);
           if (!vendor) {
             return res.status(404).json({ message: 'Vendor not found' });
           }
           return res.json(vendor);
         } else {
           // Get all vendors for warehouse
-          const vendors = await storage.getVendors(warehouseId);
+          const vendors = await storageModule.getAllVendors(warehouseId);
           return res.json(vendors);
         }
 
       case 'POST':
         const vendorData = {
-          ...req.body,
-          id: req.body.id || randomUUID(),
+          name: req.body.name,
+          type: req.body.type,
+          email: req.body.email,
+          phone: req.body.phone,
+          address: req.body.address,
+          contactPerson: req.body.contactPerson,
           warehouseId: warehouseId,
-          type: req.body.type || 'supplier',
-          active: req.body.active !== undefined ? req.body.active : true,
         };
 
         try {
-          const parsedData = insertVendorSchema.parse(vendorData);
-          const vendor = await storage.createVendor(parsedData);
+          const parsedData = insertVendorSchema.parse({
+            ...vendorData,
+            id: req.body.id || randomUUID(),
+            active: req.body.active !== undefined ? req.body.active : true,
+          });
+          const vendor = await storageModule.createVendor(vendorData);
           return res.status(201).json(vendor);
         } catch (error) {
           if (error instanceof z.ZodError) {
@@ -81,7 +99,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
         try {
           const updateData = insertVendorSchema.partial().parse(req.body);
-          const vendor = await storage.updateVendor(req.query.id as string, updateData);
+          const vendor = await storageModule.updateVendor(req.query.id as string, updateData);
+          if (!vendor) {
+            return res.status(404).json({ message: 'Vendor not found' });
+          }
           return res.json(vendor);
         } catch (error) {
           if (error instanceof z.ZodError) {
@@ -89,9 +110,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
               message: 'Invalid vendor data', 
               errors: error.errors 
             });
-          }
-          if (error.message === 'Vendor not found') {
-            return res.status(404).json({ message: 'Vendor not found' });
           }
           throw error;
         }
@@ -101,12 +119,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           return res.status(400).json({ message: 'Vendor ID is required' });
         }
 
-        const existingVendor = await storage.getVendor(req.query.id as string);
-        if (!existingVendor) {
+        const deleted = await storageModule.deleteVendor(req.query.id as string);
+        if (!deleted) {
           return res.status(404).json({ message: 'Vendor not found' });
         }
 
-        await storage.deleteVendor(req.query.id as string);
         return res.status(204).end();
 
       default:

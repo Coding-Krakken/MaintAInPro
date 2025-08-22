@@ -1,7 +1,19 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { storage } from '../../server/storage';
-import { insertVendorSchema } from '@shared/schema';
+import * as storageModule from '../storage.js';
 import { z } from 'zod';
+
+// Define the vendor schema directly since we can't import from shared in serverless
+const insertVendorSchema = z.object({
+  name: z.string().min(1, 'Name is required'),
+  type: z.enum(['supplier', 'contractor']),
+  email: z.string().email().optional().or(z.literal('')),
+  phone: z.string().optional(),
+  address: z.string().optional(),
+  contactPerson: z.string().optional(),
+  warehouseId: z.string(),
+  id: z.string().optional(),
+  active: z.boolean().optional()
+});
 
 // Helper function to get current user and warehouse from request headers
 const getCurrentUser = (req: VercelRequest) => {
@@ -39,7 +51,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     switch (req.method) {
       case 'GET':
-        const vendor = await storage.getVendor(vendorId);
+        const vendor = await storageModule.getVendorById(vendorId);
         if (!vendor) {
           return res.status(404).json({ message: 'Vendor not found' });
         }
@@ -48,7 +60,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       case 'PATCH':
         try {
           const updateData = insertVendorSchema.partial().parse(req.body);
-          const updatedVendor = await storage.updateVendor(vendorId, updateData);
+          const updatedVendor = await storageModule.updateVendor(vendorId, updateData);
+          if (!updatedVendor) {
+            return res.status(404).json({ message: 'Vendor not found' });
+          }
           return res.json(updatedVendor);
         } catch (error) {
           if (error instanceof z.ZodError) {
@@ -57,19 +72,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
               errors: error.errors 
             });
           }
-          if (error.message === 'Vendor not found') {
-            return res.status(404).json({ message: 'Vendor not found' });
-          }
           throw error;
         }
 
       case 'DELETE':
-        const existingVendor = await storage.getVendor(vendorId);
-        if (!existingVendor) {
+        const deleted = await storageModule.deleteVendor(vendorId);
+        if (!deleted) {
           return res.status(404).json({ message: 'Vendor not found' });
         }
 
-        await storage.deleteVendor(vendorId);
         return res.status(204).end();
 
       default:
