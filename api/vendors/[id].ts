@@ -1,18 +1,7 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { initializeApp } from '../../server';
 import { storage } from '../../server/storage';
 import { insertVendorSchema } from '@shared/schema';
 import { z } from 'zod';
-
-// Initialize the app to set up middleware and authentication
-let app: any = null;
-
-const initializeIfNeeded = async () => {
-  if (!app) {
-    app = await initializeApp();
-  }
-  return app;
-};
 
 // Helper function to get current user and warehouse from request headers
 const getCurrentUser = (req: VercelRequest) => {
@@ -35,12 +24,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    await initializeIfNeeded();
-
-    // Authentication check (skip for development with demo-token)
+    // Authentication check (allow demo-token for development)
     const token = req.headers.authorization?.replace('Bearer ', '');
-    if (!token || (token !== 'demo-token' && process.env.NODE_ENV === 'development')) {
-      if (process.env.NODE_ENV !== 'development') {
+    if (!token || token !== 'demo-token') {
+      if (process.env.NODE_ENV === 'production') {
         return res.status(401).json({ message: 'Authentication required' });
       }
     }

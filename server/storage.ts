@@ -1,12 +1,4 @@
-// Alias for test compatibility (after all class/interface definitions)
-
-// Alias for test compatibility (after all class/interface definitions)
-
-// Alias for test compatibility (after all class/interface definitions)
-
-export { storage };
-// Alias for test compatibility (after all class/interface definitions)
-
+import { randomUUID } from 'crypto';
 import {
   profiles as _profiles,
   warehouses as _warehouses,
@@ -204,7 +196,7 @@ export class MemStorage implements IStorage {
   }
 
   private generateId(): string {
-    return crypto.randomUUID();
+    return randomUUID();
   }
 
   private seedData() {
@@ -1268,7 +1260,6 @@ export class MemStorage implements IStorage {
 }
 
 // Use in-memory storage for development, database storage for production
-let storage: IStorage;
 
 // Load environment variables
 import dotenv from 'dotenv';
@@ -1302,20 +1293,14 @@ async function initializeStorage(): Promise<IStorage> {
 
 // Initialize storage with fallback mechanism
 console.log('🚀 Initializing storage system...');
-storage = new MemStorage(); // Default fallback
-initializeStorage()
-  .then(initializedStorage => {
-    storage = initializedStorage;
-    console.log('🎯 Storage initialization complete');
-  })
-  .catch(_error => {
-    console.error('❌ Storage initialization error:', _error);
-    storage = new MemStorage(); // Fallback to MemStorage
-  });
+const storage: IStorage = new MemStorage(); // Use synchronous initialization for serverless compatibility
+
+// Export storage immediately for serverless functions
+export { storage };
 
 if (process.env.DATABASE_URL) {
   console.log('🔗 PostgreSQL database connection available');
-  console.log('� Database tables configured and ready');
+  console.log('📊 Database tables configured and ready');
   console.log('💡 To enable PostgreSQL storage, implement DatabaseStorage integration');
 }
 
