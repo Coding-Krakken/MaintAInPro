@@ -3,7 +3,15 @@
  */
 
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { getDashboardStats } from '../storage';
+
+// Robust import with error handling
+let storageModule: any;
+try {
+  storageModule = require('./storage');
+  console.log('Dashboard Stats: Storage module imported successfully');
+} catch (error) {
+  console.error('Dashboard Stats: Failed to import storage module:', error);
+}
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Set CORS headers
@@ -21,8 +29,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
+    if (!storageModule) {
+      return res.status(500).json({ message: 'Storage module not available' });
+    }
+
     const warehouseId = (req.headers['x-warehouse-id'] as string) || 'default-warehouse-id';
-    const stats = await getDashboardStats(warehouseId);
+    const stats = await storageModule.getDashboardStats(warehouseId);
     console.log(`Retrieved dashboard stats for warehouse ${warehouseId}`);
     
     return res.status(200).json(stats);

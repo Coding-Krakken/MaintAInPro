@@ -4,7 +4,10 @@
  */
 
 import { promises as fs } from 'fs';
-import { join } from 'path';
+
+// Add runtime check to ensure we can access fs module
+console.log('Storage module loading - fs module available:', typeof fs);
+console.log('Storage module loading - environment:', process.env.NODE_ENV);
 
 // Types for our data structures
 interface Equipment {
@@ -97,6 +100,8 @@ async function loadData(): Promise<StorageData> {
     return cachedData;
   }
 
+  console.log('Loading data from storage file:', STORAGE_FILE);
+  
   try {
     const fileContent = await fs.readFile(STORAGE_FILE, 'utf-8');
     const data = JSON.parse(fileContent, (key, value) => {
@@ -108,10 +113,11 @@ async function loadData(): Promise<StorageData> {
     });
     cachedData = data;
     lastLoadTime = now;
-    console.log('Loaded data from storage file');
+    console.log('Successfully loaded data from storage file');
     return data;
   } catch (error) {
-    console.log('No existing storage file found, initializing with sample data');
+    console.log('No existing storage file found or error reading it:', error);
+    console.log('Initializing with sample data');
     const data = await initializeData();
     await saveData(data);
     return data;
@@ -119,13 +125,25 @@ async function loadData(): Promise<StorageData> {
 }
 
 async function saveData(data: StorageData): Promise<void> {
+  console.log('Attempting to save data to:', STORAGE_FILE);
+  
   try {
+    // Ensure /tmp directory exists
+    await fs.mkdir('/tmp', { recursive: true });
+    console.log('/tmp directory ensured');
+    
     await fs.writeFile(STORAGE_FILE, JSON.stringify(data, null, 2));
     cachedData = data;
     lastLoadTime = Date.now();
-    console.log('Saved data to storage file');
+    console.log('Successfully saved data to storage file');
   } catch (error) {
     console.error('Failed to save data:', error);
+    console.error('Error details:', {
+      message: error instanceof Error ? error.message : 'Unknown',
+      code: (error as any)?.code,
+      errno: (error as any)?.errno,
+      path: (error as any)?.path
+    });
     throw error;
   }
 }

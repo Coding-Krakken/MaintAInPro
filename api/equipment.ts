@@ -4,20 +4,30 @@
  */
 
 import { VercelRequest, VercelResponse } from '@vercel/node';
-// Import directly from the local storage file to ensure serverless compatibility
-import { getAllEquipment, getEquipmentById, createEquipment } from './storage';
 
-// Verify storage import at module level
-console.log('Equipment API module loaded - verifying storage import...');
+// Log startup information
+console.log('Equipment API module loading...');
+console.log('Node.js version:', process.version);
+console.log('Environment:', process.env.NODE_ENV);
+console.log('Platform:', process.platform);
+
+// Import directly from the local storage file to ensure serverless compatibility
+let storageModule: any;
 try {
+  storageModule = require('./storage');
+  console.log('Storage module imported successfully');
   console.log('Storage functions available:', {
-    getAllEquipment: typeof getAllEquipment,
-    getEquipmentById: typeof getEquipmentById, 
-    createEquipment: typeof createEquipment
+    getAllEquipment: typeof storageModule.getAllEquipment,
+    getEquipmentById: typeof storageModule.getEquipmentById, 
+    createEquipment: typeof storageModule.createEquipment
   });
-  console.log('Storage import verification successful');
 } catch (error) {
-  console.error('Storage import verification failed:', error);
+  console.error('CRITICAL: Failed to import storage module:', error);
+  console.error('Error details:', {
+    message: error instanceof Error ? error.message : 'Unknown',
+    stack: error instanceof Error ? error.stack : 'No stack',
+    name: error instanceof Error ? error.name : 'Unknown'
+  });
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -37,6 +47,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
+    // Check if storage module is available
+    if (!storageModule) {
+      console.error('Storage module not available - cannot process request');
+      return res.status(500).json({ 
+        message: 'Storage module not available',
+        error: 'Failed to import storage module at startup'
+      });
+    }
+
     console.log(`Processing ${req.method} request`);
     switch (req.method) {
       case 'GET':
@@ -63,7 +82,7 @@ async function handleGet(req: VercelRequest, res: VercelResponse) {
     
     // Handle single equipment by ID
     if (req.query.id && typeof req.query.id === 'string') {
-      const equipment = await getEquipmentById(req.query.id);
+      const equipment = await storageModule.getEquipmentById(req.query.id);
       if (!equipment) {
         return res.status(404).json({ message: 'Equipment not found' });
       }
@@ -71,7 +90,7 @@ async function handleGet(req: VercelRequest, res: VercelResponse) {
     }
     
     // Get all equipment for warehouse
-    const equipment = await getAllEquipment(warehouseId);
+    const equipment = await storageModule.getAllEquipment(warehouseId);
     console.log(`Retrieved ${equipment.length} equipment items for warehouse ${warehouseId}`);
     
     return res.status(200).json(equipment);
@@ -143,7 +162,7 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
     console.log('Equipment data to create:', JSON.stringify(equipmentData, null, 2));
     console.log('About to call createEquipment function...');
     
-    const newEquipment = await createEquipment(equipmentData);
+    const newEquipment = await storageModule.createEquipment(equipmentData);
     console.log('Equipment created successfully:', JSON.stringify(newEquipment, null, 2));
     console.log('=== EQUIPMENT CREATION SUCCESS ===');
     

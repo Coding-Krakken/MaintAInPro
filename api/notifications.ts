@@ -3,7 +3,15 @@
  */
 
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { getAllNotifications } from './storage';
+
+// Robust import with error handling
+let storageModule: any;
+try {
+  storageModule = require('./storage');
+  console.log('Notifications: Storage module imported successfully');
+} catch (error) {
+  console.error('Notifications: Failed to import storage module:', error);
+}
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Set CORS headers
@@ -17,6 +25,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
+    if (!storageModule) {
+      return res.status(500).json({ message: 'Storage module not available' });
+    }
+
     switch (req.method) {
       case 'GET':
         return handleGet(req, res);
@@ -36,7 +48,7 @@ async function handleGet(req: VercelRequest, res: VercelResponse) {
   try {
     const userId = (req.headers['x-user-id'] as string) || 'default-user-id';
     
-    const notifications = await getAllNotifications(userId);
+    const notifications = await storageModule.getAllNotifications(userId);
     console.log(`Retrieved ${notifications.length} notifications for user ${userId}`);
     
     return res.status(200).json(notifications);

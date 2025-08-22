@@ -3,7 +3,15 @@
  */
 
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { getAllWorkOrders } from './storage';
+
+// Robust import with error handling
+let storageModule: any;
+try {
+  storageModule = require('./storage');
+  console.log('Work Orders: Storage module imported successfully');
+} catch (error) {
+  console.error('Work Orders: Failed to import storage module:', error);
+}
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Set CORS headers
@@ -17,6 +25,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
+    if (!storageModule) {
+      return res.status(500).json({ message: 'Storage module not available' });
+    }
+
     switch (req.method) {
       case 'GET':
         return handleGet(req, res);
@@ -42,7 +54,7 @@ async function handleGet(req: VercelRequest, res: VercelResponse) {
       filters.status = status.split(',');
     }
     
-    const workOrders = await getAllWorkOrders(warehouseId, filters);
+    const workOrders = await storageModule.getAllWorkOrders(warehouseId, filters);
     console.log(`Retrieved ${workOrders.length} work orders for warehouse ${warehouseId}`);
     
     return res.status(200).json(workOrders);
