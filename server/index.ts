@@ -26,6 +26,12 @@ import {
 
 const app = express();
 
+// Configure MIME types for PWA files
+express.static.mime.define({
+  'application/javascript': ['js'],
+  'application/manifest+json': ['webmanifest']
+});
+
 // Initialize services
 const _cacheService = CacheService.getInstance({
   // Use memory cache only - simple and effective for development

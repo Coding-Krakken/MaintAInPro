@@ -25,7 +25,7 @@ import {
   performanceMiddleware,
   errorTrackingMiddleware,
 } from './middleware/performance.middleware';
-import { securityHeaders, sanitizeInput, validateRequest } from './middleware/security.middleware';
+import { securityHeaders, pwaHeaders, serviceWorkerHandler, sanitizeInput, validateRequest } from './middleware/security.middleware';
 import performanceMonitoringRoutes from './routes/monitoring';
 import path from 'path';
 
@@ -79,6 +79,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Security middleware (applied first)
   app.use(securityHeaders);
+  app.use(serviceWorkerHandler);
+  app.use(pwaHeaders);
   app.use(sanitizeInput);
   app.use(validateRequest);
   console.log('Security middleware enabled');
@@ -2326,6 +2328,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Register labor time routes
   registerLaborTimeRoutes(app);
   console.log('Labor time routes registered');
+
+  // PWA file routes with proper MIME types
+  app.get('/sw.js', (req, res, next) => {
+    // Set proper Content-Type header before serving
+    res.type('application/javascript');
+    next();
+  });
+  
+  app.get('/manifest.json', (req, res, next) => {
+    // Set proper Content-Type header before serving
+    res.type('application/manifest+json');
+    next();
+  });
+  console.log('PWA file routes registered');
 
   // Add error tracking middleware (should be last)
   app.use(errorTrackingMiddleware);
