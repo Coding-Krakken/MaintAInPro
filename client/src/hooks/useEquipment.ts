@@ -60,7 +60,51 @@ export function useCreateEquipment() {
       const response = await apiRequest('POST', '/api/equipment', equipment);
       return response.json();
     },
-    onSuccess: () => {
+    onMutate: async (newEquipment: InsertEquipment) => {
+      // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
+      await queryClient.cancelQueries({ queryKey: ['/api/equipment'] });
+
+      // Snapshot the previous value
+      const previousEquipment = queryClient.getQueryData<Equipment[]>(['/api/equipment']);
+
+      // Optimistically update to the new value
+      const optimisticEquipment: Equipment = {
+        id: `temp-${Date.now()}`, // Temporary ID until server responds
+        assetTag: newEquipment.assetTag,
+        model: newEquipment.model,
+        description: newEquipment.name || newEquipment.description || '',
+        area: newEquipment.area || null,
+        status: newEquipment.status || 'active',
+        criticality: newEquipment.criticality || 'medium',
+        installDate: null,
+        warrantyExpiry: null,
+        manufacturer: newEquipment.manufacturer || null,
+        serialNumber: null,
+        specifications: null,
+        organizationId: null,
+        warehouseId: null,
+        tsv: null,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        deletedAt: null,
+        createdBy: null,
+        updatedBy: null,
+        qrCode: null,
+      };
+
+      queryClient.setQueryData<Equipment[]>(['/api/equipment'], (old) => {
+        return old ? [...old, optimisticEquipment] : [optimisticEquipment];
+      });
+
+      // Return a context object with the snapshotted value
+      return { previousEquipment };
+    },
+    onError: (_err, _newEquipment, context) => {
+      // If the mutation fails, use the context returned from onMutate to roll back
+      queryClient.setQueryData(['/api/equipment'], context?.previousEquipment);
+    },
+    onSettled: () => {
+      // Always refetch after error or success to ensure server state is correct
       queryClient.invalidateQueries({ queryKey: ['/api/equipment'] });
     },
   });
