@@ -98,8 +98,8 @@ async function handleAPIRequest(request) {
     const networkResponse = await fetch(request.clone());
 
     if (networkResponse.ok) {
-      // Cache successful responses for critical endpoints
-      if (shouldCacheAPI(request.url)) {
+      // Only cache GET requests - POST/PUT/PATCH/DELETE cannot be cached
+      if (request.method === 'GET' && shouldCacheAPI(request.url)) {
         const cache = await caches.open(cacheName);
         cache.put(request.clone(), networkResponse.clone());
       }
@@ -109,23 +109,28 @@ async function handleAPIRequest(request) {
   } catch (error) {
     console.log('[SW] Network failed, trying cache for:', request.url);
 
-    // Fallback to cache
-    const cachedResponse = await caches.match(request);
-    if (cachedResponse) {
-      // Add offline header to indicate stale data
-      const headers = new Headers(cachedResponse.headers);
-      headers.set('X-Served-By', 'service-worker');
-      headers.set('X-Cache-Status', 'offline');
+    // Only try cache fallback for GET requests
+    if (request.method === 'GET') {
+      const cachedResponse = await caches.match(request);
+      if (cachedResponse) {
+        // Add offline header to indicate stale data
+        const headers = new Headers(cachedResponse.headers);
+        headers.set('X-Served-By', 'service-worker');
+        headers.set('X-Cache-Status', 'offline');
 
-      return new Response(cachedResponse.body, {
-        status: cachedResponse.status,
-        statusText: cachedResponse.statusText,
-        headers,
-      });
+        return new Response(cachedResponse.body, {
+          status: cachedResponse.status,
+          statusText: cachedResponse.statusText,
+          headers,
+        });
+      }
+
+      // Return offline fallback for critical GET data
+      return getOfflineFallback(request.url);
+    } else {
+      // For non-GET requests, just throw the original error
+      throw error;
     }
-
-    // Return offline fallback for critical data
-    return getOfflineFallback(request.url);
   }
 }
 
