@@ -4,29 +4,15 @@
 
 import { VercelRequest, VercelResponse } from '@vercel/node';
 
-// Mock notifications data
-const mockNotifications = [
-  {
-    id: '1',
-    userId: 'default-user-id',
-    warehouseId: 'default-warehouse-id',
-    type: 'work_order',
-    title: 'New Work Order Assigned',
-    message: 'Work order WO-001 has been assigned to you',
-    read: false,
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: '2',
-    userId: 'default-user-id', 
-    warehouseId: 'default-warehouse-id',
-    type: 'equipment',
-    title: 'Equipment Maintenance Due',
-    message: 'Conveyor belt EQ001 is due for maintenance',
-    read: true,
-    createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+// Use the shared storage system instead of static mock data
+let storage: any;
+async function getStorage() {
+  if (!storage) {
+    const { MemStorage } = await import('../server/storage');
+    storage = new MemStorage();
   }
-];
+  return storage;
+}
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Set CORS headers
@@ -56,9 +42,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 }
 
 async function handleGet(req: VercelRequest, res: VercelResponse) {
-  // Return mock notifications for the user
-  const userId = req.headers['x-user-id'] || 'default-user-id';
-  const userNotifications = mockNotifications.filter(n => n.userId === userId);
-  
-  return res.status(200).json(userNotifications);
+  try {
+    const storageInstance = await getStorage();
+    const userId = (req.headers['x-user-id'] as string) || 'default-user-id';
+    
+    const notifications = await storageInstance.getNotifications(userId);
+    console.log(`Retrieved ${notifications.length} notifications for user ${userId}`);
+    
+    return res.status(200).json(notifications);
+  } catch (error) {
+    console.error('Error fetching notifications:', error);
+    return res.status(500).json({ 
+      message: 'Failed to fetch notifications',
+      error: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
 }

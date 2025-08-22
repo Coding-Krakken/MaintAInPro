@@ -3,22 +3,16 @@
  */
 
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import crypto from 'crypto';
 
-// Mock storage for serverless deployment
-const mockEquipment = [
-  {
-    id: '1',
-    assetTag: 'EQ001',
-    model: 'Conveyor Belt X1',
-    description: 'Main production line conveyor',
-    area: 'Production Floor A',
-    status: 'active',
-    criticality: 'high',
-    warehouseId: 'default-warehouse-id',
-    createdAt: new Date().toISOString(),
-  },
-];
+// Use the shared storage system instead of static mock data
+let storage: any;
+async function getStorage() {
+  if (!storage) {
+    const { MemStorage } = await import('../server/storage');
+    storage = new MemStorage();
+  }
+  return storage;
+}
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Set CORS headers
@@ -50,13 +44,26 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 }
 
 async function handleGet(req: VercelRequest, res: VercelResponse) {
-  // Return mock equipment data
-  return res.status(200).json(mockEquipment);
+  try {
+    const storageInstance = await getStorage();
+    const warehouseId = (req.headers['x-warehouse-id'] as string) || 'default-warehouse-id';
+    
+    const equipment = await storageInstance.getEquipment(warehouseId);
+    console.log(`Retrieved ${equipment.length} equipment items for warehouse ${warehouseId}`);
+    
+    return res.status(200).json(equipment);
+  } catch (error) {
+    console.error('Error fetching equipment:', error);
+    return res.status(500).json({ 
+      message: 'Failed to fetch equipment',
+      error: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
 }
 
 async function handlePost(req: VercelRequest, res: VercelResponse) {
   try {
-    const { name, assetTag, description, model, area, status, criticality } = req.body;
+    const { name, assetTag, description, model, area, status, criticality, ...otherFields } = req.body;
 
     // Validate required fields
     if (!name && !description) {
@@ -77,22 +84,31 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
       });
     }
 
-    // Create new equipment
-    const newEquipment = {
-      id: crypto.randomUUID(),
-      assetTag: assetTag,
-      model: model,
+    const storageInstance = await getStorage();
+    const warehouseId = (req.headers['x-warehouse-id'] as string) || 'default-warehouse-id';
+    const userId = (req.headers['x-user-id'] as string) || 'default-user-id';
+
+    // Create equipment using the storage system
+    const equipmentData = {
+      assetTag,
+      model,
       description: name || description, // Use name if provided, fallback to description
       area: area || '',
       status: status || 'active',
       criticality: criticality || 'medium',
-      warehouseId: req.headers['x-warehouse-id'] || 'default-warehouse-id',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      warehouseId,
+      organizationId: 'default-organization-id',
+      createdBy: userId,
+      updatedBy: userId,
+      installDate: null,
+      warrantyExpiry: null,
+      manufacturer: null,
+      serialNumber: null,
+      specifications: null,
+      ...otherFields
     };
 
-    // In a real implementation, this would save to database
-    // For now, we'll just return the created equipment
+    const newEquipment = await storageInstance.createEquipment(equipmentData);
     console.log('Equipment created successfully:', newEquipment);
     
     return res.status(201).json(newEquipment);

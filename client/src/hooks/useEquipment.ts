@@ -99,14 +99,23 @@ export function useCreateEquipment() {
       // Return a context object with the snapshotted value
       return { previousEquipment };
     },
+    onSuccess: (data, variables, context) => {
+      // Replace the optimistic equipment with the real one from the server
+      queryClient.setQueryData<Equipment[]>(['/api/equipment'], (old) => {
+        if (!old) return [data];
+        
+        // Find and replace the temporary equipment with the real one
+        return old.map(equipment => 
+          equipment.id.startsWith('temp-') ? data : equipment
+        );
+      });
+    },
     onError: (_err, _newEquipment, context) => {
       // If the mutation fails, use the context returned from onMutate to roll back
       queryClient.setQueryData(['/api/equipment'], context?.previousEquipment);
     },
-    onSettled: () => {
-      // Always refetch after error or success to ensure server state is correct
-      queryClient.invalidateQueries({ queryKey: ['/api/equipment'] });
-    },
+    // Remove onSettled to prevent immediate invalidation
+    // Equipment list will be updated through onSuccess with the actual server data
   });
 }
 

@@ -4,31 +4,15 @@
 
 import { VercelRequest, VercelResponse } from '@vercel/node';
 
-// Mock work orders data
-const mockWorkOrders = [
-  {
-    id: '1',
-    foNumber: 'WO-001',
-    type: 'corrective',
-    description: 'Repair conveyor belt motor',
-    status: 'new',
-    priority: 'high',
-    equipmentId: '1',
-    warehouseId: 'default-warehouse-id',
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: '2', 
-    foNumber: 'WO-002',
-    type: 'preventive',
-    description: 'Monthly maintenance check',
-    status: 'in_progress',
-    priority: 'medium',
-    equipmentId: '1',
-    warehouseId: 'default-warehouse-id',
-    createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+// Use the shared storage system instead of static mock data
+let storage: any;
+async function getStorage() {
+  if (!storage) {
+    const { MemStorage } = await import('../server/storage');
+    storage = new MemStorage();
   }
-];
+  return storage;
+}
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Set CORS headers
@@ -58,17 +42,25 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 }
 
 async function handleGet(req: VercelRequest, res: VercelResponse) {
-  const { status } = req.query;
-  
-  let filteredWorkOrders = mockWorkOrders;
-  
-  // Filter by status if provided
-  if (status && typeof status === 'string') {
-    const statusFilters = status.split(',');
-    filteredWorkOrders = mockWorkOrders.filter(wo => 
-      statusFilters.includes(wo.status)
-    );
+  try {
+    const storageInstance = await getStorage();
+    const warehouseId = (req.headers['x-warehouse-id'] as string) || 'default-warehouse-id';
+    const { status } = req.query;
+    
+    const filters: any = {};
+    if (status && typeof status === 'string') {
+      filters.status = status.split(',');
+    }
+    
+    const workOrders = await storageInstance.getWorkOrders(warehouseId, filters);
+    console.log(`Retrieved ${workOrders.length} work orders for warehouse ${warehouseId}`);
+    
+    return res.status(200).json(workOrders);
+  } catch (error) {
+    console.error('Error fetching work orders:', error);
+    return res.status(500).json({ 
+      message: 'Failed to fetch work orders',
+      error: error instanceof Error ? error.message : 'Unknown error'
+    });
   }
-  
-  return res.status(200).json(filteredWorkOrders);
 }
