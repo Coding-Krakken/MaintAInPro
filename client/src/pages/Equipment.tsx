@@ -193,6 +193,7 @@ export default function EquipmentPage() {
                 key={item.id}
                 className='cursor-pointer hover:shadow-md transition-shadow'
                 onClick={() => setSelectedEquipment(item.id)}
+                data-testid='equipment-card'
               >
                 <CardContent className='p-6'>
                   <div className='flex items-start justify-between mb-4'>
@@ -238,6 +239,7 @@ export default function EquipmentPage() {
       {/* Equipment Detail Modal */}
       {selectedEquipment && (
         <EquipmentDetailModal
+          key={selectedEquipment} // Add key to ensure re-render when equipment changes
           isOpen={!!selectedEquipment}
           onClose={() => setSelectedEquipment(null)}
           equipmentId={selectedEquipment}

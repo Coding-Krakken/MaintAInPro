@@ -3,10 +3,10 @@ import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import { Equipment, WorkOrder } from '../../types';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { formatDistanceToNow } from 'date-fns';
 import { Settings, Calendar, MapPin, Hash, FileText } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import WorkOrderModal from '../work-orders/WorkOrderModal';
 import FileUpload from '../FileUpload';
 import DocumentPreview from '../DocumentPreview';
@@ -29,8 +29,20 @@ export default function EquipmentDetailModal({
   const [showWorkOrderModal, setShowWorkOrderModal] = useState(false);
   const [activeTab, setActiveTab] = useState('details');
   const { toast } = useToast();
+  const queryClient = useQueryClient();
 
-  // Fetch equipment by ID or asset tag
+  // Check if this is a temporary equipment ID (from optimistic update)
+  const isTemporaryId = equipmentId?.startsWith('temp-');
+
+  // Get equipment data from cache first (for both temporary and newly created equipment)
+  const equipmentFromCache = useMemo(() => {
+    if (!equipmentId) return null;
+    
+    const allEquipment = queryClient.getQueryData<Equipment[]>(['/api/equipment']);
+    return allEquipment?.find(eq => eq.id === equipmentId) || null;
+  }, [equipmentId, queryClient]);
+
+  // Fetch equipment by ID or asset tag (skip fetch if temporary ID)
   const { data: equipment, isLoading } = useQuery<Equipment>({
     queryKey: equipmentId ? ['/api/equipment', equipmentId] : ['/api/equipment/asset', assetTag],
     queryFn: async () => {
@@ -47,14 +59,21 @@ export default function EquipmentDetailModal({
       if (!response.ok) throw new Error('Failed to fetch equipment');
       return response.json();
     },
-    enabled: isOpen && (!!equipmentId || !!assetTag),
+    enabled: isOpen && (!!equipmentId || !!assetTag) && !isTemporaryId && !equipmentFromCache,
+    // Add staleTime to prevent showing stale data
+    staleTime: 0,
+    // Refetch when the modal opens with a different equipment ID
+    refetchOnMount: 'always',
   });
+
+  // Use cached equipment data first (for both temporary and newly created), otherwise use fetched data
+  const finalEquipment = equipmentFromCache || equipment;
 
   // Fetch recent work orders for this equipment
   const { data: workOrders } = useQuery<WorkOrder[]>({
-    queryKey: ['/api/work-orders', { equipmentId: equipment?.id }],
+    queryKey: ['/api/work-orders', { equipmentId: finalEquipment?.id }],
     queryFn: async () => {
-      const response = await fetch(`/api/work-orders?equipmentId=${equipment?.id}`, {
+      const response = await fetch(`/api/work-orders?equipmentId=${finalEquipment?.id}`, {
         headers: {
           'x-user-id': localStorage.getItem('userId') || 'default-user-id',
           'x-warehouse-id': localStorage.getItem('warehouseId') || 'default-warehouse-id',
@@ -63,11 +82,11 @@ export default function EquipmentDetailModal({
       if (!response.ok) throw new Error('Failed to fetch work orders');
       return response.json();
     },
-    enabled: !!equipment?.id,
+    enabled: !!finalEquipment?.id && !isTemporaryId, // Don't fetch work orders for temporary equipment
   });
 
   // Fetch attachments for this equipment
-  const { attachments, deleteAttachment } = useAttachments(undefined, equipment?.id);
+  const { attachments, deleteAttachment } = useAttachments(undefined, finalEquipment?.id);
 
   const handleDeleteAttachment = async (attachmentId: string) => {
     try {
@@ -132,10 +151,16 @@ export default function EquipmentDetailModal({
 
   const recentWorkOrders = workOrders?.slice(0, 3) || [];
 
-  if (isLoading) {
+  if (isLoading && !isTemporaryId) {
     return (
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent className='max-w-md'>
+          <DialogHeader>
+            <DialogTitle>Loading Equipment</DialogTitle>
+            <DialogDescription>
+              Please wait while we load the equipment details.
+            </DialogDescription>
+          </DialogHeader>
           <div className='animate-pulse space-y-4'>
             <div className='h-6 bg-gray-200 rounded w-3/4'></div>
             <div className='h-16 bg-gray-200 rounded'></div>
@@ -146,7 +171,7 @@ export default function EquipmentDetailModal({
     );
   }
 
-  if (!equipment) {
+  if (!finalEquipment) {
     return (
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent className='max-w-md'>
@@ -159,6 +184,31 @@ export default function EquipmentDetailModal({
           <div className='text-center py-8'>
             <p className='text-gray-500'>
               No equipment found with {equipmentId ? 'ID' : 'asset tag'}: {equipmentId || assetTag}
+            </p>
+          </div>
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
+  // Safety check: ensure the equipment data matches the requested ID (skip for temporary IDs)
+  if (equipmentId && finalEquipment.id !== equipmentId && !isTemporaryId) {
+    console.warn(`Equipment ID mismatch: requested ${equipmentId}, got ${finalEquipment.id}`);
+    return (
+      <Dialog open={isOpen} onOpenChange={onClose}>
+        <DialogContent className='max-w-md'>
+          <DialogHeader>
+            <DialogTitle>Data Mismatch Error</DialogTitle>
+            <DialogDescription>
+              There was a data consistency issue. Please try again.
+            </DialogDescription>
+          </DialogHeader>
+          <div className='text-center py-8'>
+            <p className='text-gray-500'>
+              Expected equipment ID: {equipmentId}, but received: {finalEquipment.id}
+            </p>
+            <p className='text-sm text-gray-400 mt-2'>
+              This may be a temporary caching issue. Try closing and reopening the modal.
             </p>
           </div>
         </DialogContent>
@@ -193,8 +243,8 @@ export default function EquipmentDetailModal({
                 <div className='w-16 h-16 bg-primary-100 rounded-xl mx-auto mb-3 flex items-center justify-center'>
                   <Settings className='w-8 h-8 text-primary-600' />
                 </div>
-                <h3 className='font-semibold text-gray-900'>{equipment.assetTag}</h3>
-                <p className='text-sm text-gray-600'>{equipment.description}</p>
+                <h3 className='font-semibold text-gray-900'>{finalEquipment.assetTag}</h3>
+                <p className='text-sm text-gray-600'>{finalEquipment.description}</p>
               </div>
 
               {/* Equipment Details Grid */}
@@ -204,7 +254,7 @@ export default function EquipmentDetailModal({
                     <Hash className='w-4 h-4 text-gray-400' />
                     <p className='text-sm font-medium text-gray-500'>Status</p>
                   </div>
-                  <Badge className={getStatusColor(equipment.status)}>{equipment.status}</Badge>
+                  <Badge className={getStatusColor(finalEquipment.status)}>{finalEquipment.status}</Badge>
                 </div>
 
                 <div>
@@ -212,7 +262,7 @@ export default function EquipmentDetailModal({
                     <MapPin className='w-4 h-4 text-gray-400' />
                     <p className='text-sm font-medium text-gray-500'>Location</p>
                   </div>
-                  <p className='text-sm text-gray-900'>{equipment.area || 'Not specified'}</p>
+                  <p className='text-sm text-gray-900'>{finalEquipment.area || 'Not specified'}</p>
                 </div>
 
                 <div>
@@ -220,7 +270,7 @@ export default function EquipmentDetailModal({
                     <Settings className='w-4 h-4 text-gray-400' />
                     <p className='text-sm font-medium text-gray-500'>Model</p>
                   </div>
-                  <p className='text-sm text-gray-900'>{equipment.model}</p>
+                  <p className='text-sm text-gray-900'>{finalEquipment.model}</p>
                 </div>
 
                 <div>
@@ -228,24 +278,24 @@ export default function EquipmentDetailModal({
                     <Calendar className='w-4 h-4 text-gray-400' />
                     <p className='text-sm font-medium text-gray-500'>Criticality</p>
                   </div>
-                  <Badge className={getCriticalityColor(equipment.criticality)}>
-                    {equipment.criticality}
+                  <Badge className={getCriticalityColor(finalEquipment.criticality)}>
+                    {finalEquipment.criticality}
                   </Badge>
                 </div>
               </div>
 
               {/* Additional Info */}
-              {equipment.manufacturer && (
+              {finalEquipment.manufacturer && (
                 <div>
                   <p className='text-sm font-medium text-gray-500'>Manufacturer</p>
-                  <p className='text-sm text-gray-900'>{equipment.manufacturer}</p>
+                  <p className='text-sm text-gray-900'>{finalEquipment.manufacturer}</p>
                 </div>
               )}
 
-              {equipment.serialNumber && (
+              {finalEquipment.serialNumber && (
                 <div>
                   <p className='text-sm font-medium text-gray-500'>Serial Number</p>
-                  <p className='text-sm text-gray-900'>{equipment.serialNumber}</p>
+                  <p className='text-sm text-gray-900'>{finalEquipment.serialNumber}</p>
                 </div>
               )}
 
@@ -285,7 +335,7 @@ export default function EquipmentDetailModal({
                 <div>
                   <h4 className='font-medium text-gray-900 mb-2'>Upload New Attachment</h4>
                   <FileUpload
-                    equipmentId={equipment.id}
+                    equipmentId={finalEquipment.id}
                     onUploadSuccess={handleUploadSuccess}
                     onUploadError={handleUploadError}
                     maxFiles={10}
