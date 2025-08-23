@@ -19,7 +19,7 @@ interface PMTemplateFormData {
   frequency: 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'annually';
   estimatedDuration: number;
   description?: string;
-  customFields?: Record<string, any>;
+  customFields?: Record<string, unknown>;
 }
 
 export default function PMTemplateManager() {
@@ -169,7 +169,7 @@ export default function PMTemplateManager() {
       frequency: template.frequency,
       estimatedDuration: template.estimatedDuration || 60,
       description: template.description || '',
-      customFields: template.customFields || {},
+      customFields: (template.customFields as Record<string, unknown>) || {},
     });
     setIsCreateDialogOpen(true);
   };

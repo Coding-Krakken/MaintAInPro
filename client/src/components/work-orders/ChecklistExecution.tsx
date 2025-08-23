@@ -87,9 +87,15 @@ const ChecklistExecution: React.FC<ChecklistExecutionProps> = ({
   // Voice-to-text functionality (Web Speech API)
   const startVoiceRecognition = (itemId: string) => {
     if ('speechRecognition' in window || 'webkitSpeechRecognition' in window) {
+      interface WindowWithSpeechRecognition {
+        speechRecognition?: unknown;
+        webkitSpeechRecognition?: unknown;
+      }
+      
       const SpeechRecognition =
-        (window as any).speechRecognition || (window as any).webkitSpeechRecognition;
-      const recognition = new SpeechRecognition();
+        (window as unknown as WindowWithSpeechRecognition).speechRecognition || 
+        (window as unknown as WindowWithSpeechRecognition).webkitSpeechRecognition;
+      const recognition = new (SpeechRecognition as unknown as new() => any)();
 
       recognition.continuous = true;
       recognition.interimResults = true;

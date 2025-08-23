@@ -41,7 +41,7 @@ export function usePWA() {
     });
 
     const unsubscribeNetwork = pwaService.addEventListener('networkChange', data => {
-      setStatus(prev => ({ ...prev, isOnline: (data as any).isOnline }));
+      setStatus(prev => ({ ...prev, isOnline: (data as { isOnline: boolean }).isOnline }));
     });
 
     const unsubscribeUpdate = pwaService.addEventListener('updateAvailable', () => {

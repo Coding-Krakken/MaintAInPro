@@ -6,7 +6,7 @@ interface OfflineAction {
   id: string;
   type: 'create' | 'update' | 'delete';
   table: string;
-  data: any;
+  data: Record<string, unknown>;
   timestamp: number;
 }
 
@@ -63,11 +63,23 @@ class OfflineService {
   }
 
   private getConnectionType(): string {
-    // @ts-ignore - experimental API - navigator.connection is not in TypeScript types
+    // Type assertion for experimental connection API
+    interface NavigatorWithConnection {
+      connection?: {
+        effectiveType?: string;
+      };
+      mozConnection?: {
+        effectiveType?: string;
+      };
+      webkitConnection?: {
+        effectiveType?: string;
+      };
+    }
+    
     const connection =
-      (navigator as any).connection ||
-      (navigator as any).mozConnection ||
-      (navigator as any).webkitConnection;
+      (navigator as NavigatorWithConnection).connection ||
+      (navigator as NavigatorWithConnection).mozConnection ||
+      (navigator as NavigatorWithConnection).webkitConnection;
     return connection?.effectiveType || 'unknown';
   }
 
@@ -217,7 +229,7 @@ class OfflineService {
     const { type, table, data } = action;
     let url = '';
     let method = '';
-    let body: any = null;
+    let body: Record<string, unknown> | null = null;
 
     switch (type) {
       case 'create':

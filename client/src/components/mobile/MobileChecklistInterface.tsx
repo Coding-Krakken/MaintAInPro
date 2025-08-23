@@ -100,9 +100,16 @@ const MobileChecklistInterface: React.FC<MobileChecklistInterfaceProps> = ({
       return;
     }
 
+    // Type assertion for speech recognition which may not be available in all browsers
+    interface WindowWithSpeechRecognition {
+      webkitSpeechRecognition?: unknown;
+      SpeechRecognition?: unknown;
+    }
+    
     const SpeechRecognition =
-      (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
-    const recognition = new SpeechRecognition();
+      (window as unknown as WindowWithSpeechRecognition).webkitSpeechRecognition || 
+      (window as unknown as WindowWithSpeechRecognition).SpeechRecognition;
+      const recognition = new (SpeechRecognition as unknown as new() => any)();
 
     recognition.continuous = true;
     recognition.interimResults = true;

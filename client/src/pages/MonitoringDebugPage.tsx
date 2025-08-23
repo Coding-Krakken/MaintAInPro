@@ -8,7 +8,13 @@ import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
 function MonitoringDebugPage() {
-  const [testResults, setTestResults] = useState<any>({});
+  const [testResults, setTestResults] = useState<Record<string, {
+    success: boolean;
+    status?: string | number;
+    data?: unknown;
+    error?: string;
+    headers?: Record<string, string>;
+  }>>({});
 
   const testEndpoint = async (endpoint: string) => {
     try {
@@ -66,7 +72,7 @@ function MonitoringDebugPage() {
         </Button>
 
         <div className='space-y-4'>
-          {Object.entries(testResults).map(([endpoint, result]: [string, any]) => (
+          {Object.entries(testResults).map(([endpoint, result]) => (
             <Alert key={endpoint} variant={result.success ? 'default' : 'destructive'}>
               <AlertDescription>
                 <strong>{endpoint}</strong>

@@ -26,7 +26,12 @@ export async function uploadFile(file: File, bucket: string, _path: string): Pro
 export async function compressImage(file: File, quality: number = 0.8): Promise<File> {
   return new Promise(resolve => {
     const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d')!;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) {
+      // Fallback: return original file if canvas context unavailable
+      resolve(file);
+      return;
+    }
     const img = new Image();
 
     img.onload = () => {
