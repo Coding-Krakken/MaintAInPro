@@ -184,7 +184,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.status(200).send('OK');
   });
 
+  // Backup status endpoint (admin access required)
+  app.get('/api/backup/status', async (req, res) => {
+    try {
+      const { backupService } = await import('./services/backup.service');
+      const status = await backupService.getStatus();
+      
+      res.status(200).json({
+        timestamp: new Date().toISOString(),
+        backup: status,
+      });
+    } catch (error) {
+      console.error('Backup status API error:', error);
+      res.status(500).json({
+        message: 'Failed to get backup status',
+        error: process.env.NODE_ENV === 'development' ? error.message : undefined,
+      });
+    }
+  });
+
   console.log('Health check endpoint registered');
+  console.log('Backup status endpoint registered');
 
   // Register performance monitoring routes
   app.use('/api/monitoring', performanceMonitoringRoutes);

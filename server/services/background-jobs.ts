@@ -1,5 +1,6 @@
 import { escalationEngine } from './escalation-engine';
 import { PMEngine } from './pm-engine';
+import { backupService } from './backup.service';
 
 export interface ScheduledJob {
   name: string;
@@ -66,6 +67,18 @@ export class BackgroundJobScheduler {
         enabled: true,
       },
       this.runNotificationCleanup.bind(this)
+    );
+
+    // Database backup every 24 hours (at 2 AM offset)
+    this.addJob(
+      'database-backup',
+      {
+        name: 'Database Backup',
+        interval: 24 * 60 * 60 * 1000, // 24 hours
+        running: false,
+        enabled: process.env.BACKUP_ENABLED !== 'false',
+      },
+      this.runDatabaseBackup.bind(this)
     );
 
     console.log('Background job scheduler initialized with', this.jobs.size, 'jobs');
@@ -180,6 +193,8 @@ export class BackgroundJobScheduler {
         return this.runPMGeneration.bind(this);
       case 'notification-cleanup':
         return this.runNotificationCleanup.bind(this);
+      case 'database-backup':
+        return this.runDatabaseBackup.bind(this);
       default:
         return null;
     }
@@ -232,6 +247,30 @@ export class BackgroundJobScheduler {
       console.log('Notification cleanup job completed');
     } catch (error) {
       console.error('Error in notification cleanup job:', error);
+    }
+  }
+
+  /**
+   * Run database backup job
+   */
+  private async runDatabaseBackup(): Promise<void> {
+    try {
+      console.log('Starting automated database backup...');
+      const result = await backupService.createBackup();
+      
+      if (result.success) {
+        console.log('Database backup completed successfully');
+        console.log(`- Backup file: ${result.backupFile}`);
+        console.log(`- File size: ${result.size} bytes`);
+        console.log(`- Duration: ${result.duration}ms`);
+        if (result.checksum) {
+          console.log(`- Checksum: ${result.checksum}`);
+        }
+      } else {
+        console.error('Database backup failed:', result.error);
+      }
+    } catch (error) {
+      console.error('Error in database backup job:', error);
     }
   }
 
