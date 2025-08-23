@@ -21,7 +21,7 @@ export default function EquipmentFormModal({ isOpen, onClose }: EquipmentFormMod
   const [criticality, setCriticality] = useState('medium');
   const [area, setArea] = useState('');
   const { toast } = useToast();
-  
+
   const createEquipmentMutation = useCreateEquipment();
 
   // Reset form when modal closes
@@ -51,7 +51,7 @@ export default function EquipmentFormModal({ isOpen, onClose }: EquipmentFormMod
 
     if (!assetTag.trim()) {
       toast({
-        title: 'Error', 
+        title: 'Error',
         description: 'Asset tag is required',
         variant: 'destructive',
       });

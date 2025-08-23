@@ -9,7 +9,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-user-id, x-warehouse-id');
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'Content-Type, Authorization, x-user-id, x-warehouse-id'
+  );
 
   // Handle preflight requests
   if (req.method === 'OPTIONS') {
@@ -27,9 +30,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
   } catch (error) {
     console.error('Profiles API error:', error);
-    return res.status(500).json({ 
+    return res.status(500).json({
       message: 'Internal server error',
-      error: error instanceof Error ? error.message : 'Unknown error'
+      error: error instanceof Error ? error.message : 'Unknown error',
     });
   }
 }
@@ -47,7 +50,7 @@ async function handleGet(req: VercelRequest, res: VercelResponse) {
         avatar: null,
         phone: '+1-555-0123',
         location: 'Main Facility',
-        status: 'active'
+        status: 'active',
       },
       {
         id: 'tech-2',
@@ -58,7 +61,7 @@ async function handleGet(req: VercelRequest, res: VercelResponse) {
         avatar: null,
         phone: '+1-555-0124',
         location: 'North Wing',
-        status: 'active'
+        status: 'active',
       },
       {
         id: 'manager-1',
@@ -69,18 +72,17 @@ async function handleGet(req: VercelRequest, res: VercelResponse) {
         avatar: null,
         phone: '+1-555-0125',
         location: 'Main Office',
-        status: 'active'
-      }
+        status: 'active',
+      },
     ];
 
     console.log(`Retrieved ${mockProfiles.length} profiles`);
     return res.status(200).json(mockProfiles);
-    
   } catch (error) {
     console.error('Error fetching profiles:', error);
-    return res.status(500).json({ 
+    return res.status(500).json({
       message: 'Failed to fetch profiles',
-      error: error instanceof Error ? error.message : 'Unknown error'
+      error: error instanceof Error ? error.message : 'Unknown error',
     });
   }
 }
@@ -88,25 +90,24 @@ async function handleGet(req: VercelRequest, res: VercelResponse) {
 async function handlePost(req: VercelRequest, res: VercelResponse) {
   try {
     const profileData = req.body;
-    
+
     // Generate ID if not provided
     if (!profileData.id) {
       profileData.id = `user-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
     }
-    
+
     // Set default values
     profileData.createdAt = profileData.createdAt || new Date().toISOString();
     profileData.updatedAt = new Date().toISOString();
     profileData.status = profileData.status || 'active';
-    
+
     console.log('Created profile:', profileData.id);
     return res.status(201).json(profileData);
-    
   } catch (error) {
     console.error('Error creating profile:', error);
-    return res.status(500).json({ 
+    return res.status(500).json({
       message: 'Failed to create profile',
-      error: error instanceof Error ? error.message : 'Unknown error'
+      error: error instanceof Error ? error.message : 'Unknown error',
     });
   }
 }

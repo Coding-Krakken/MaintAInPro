@@ -9,7 +9,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-user-id, x-warehouse-id');
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'Content-Type, Authorization, x-user-id, x-warehouse-id'
+  );
 
   // Handle preflight requests
   if (req.method === 'OPTIONS') {
@@ -18,7 +21,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   try {
     const { id } = req.query;
-    
+
     if (!id || Array.isArray(id)) {
       return res.status(400).json({ message: 'Part ID is required' });
     }
@@ -36,9 +39,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
   } catch (error) {
     console.error('Parts API error:', error);
-    return res.status(500).json({ 
+    return res.status(500).json({
       message: 'Internal server error',
-      error: error instanceof Error ? error.message : 'Unknown error'
+      error: error instanceof Error ? error.message : 'Unknown error',
     });
   }
 }
@@ -48,7 +51,9 @@ async function handleGet(req: VercelRequest, res: VercelResponse, id: string) {
     // Mock part data
     const mockPart = {
       id: id,
-      partNumber: id.startsWith('part-') ? id.replace('part-', 'PART-').toUpperCase() : `PART-${id.toUpperCase()}`,
+      partNumber: id.startsWith('part-')
+        ? id.replace('part-', 'PART-').toUpperCase()
+        : `PART-${id.toUpperCase()}`,
       name: `Part ${id}`,
       description: `Description for part ${id}`,
       category: 'General',
@@ -64,20 +69,19 @@ async function handleGet(req: VercelRequest, res: VercelResponse, id: string) {
       specifications: {
         material: 'Steel',
         dimensions: '10 x 5 x 2 cm',
-        weight: '0.5 kg'
+        weight: '0.5 kg',
       },
       createdAt: '2023-01-01T00:00:00Z',
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     };
 
     console.log(`Retrieved part: ${id}`);
     return res.status(200).json(mockPart);
-    
   } catch (error) {
     console.error('Error fetching part:', error);
-    return res.status(500).json({ 
+    return res.status(500).json({
       message: 'Failed to fetch part',
-      error: error instanceof Error ? error.message : 'Unknown error'
+      error: error instanceof Error ? error.message : 'Unknown error',
     });
   }
 }
@@ -87,15 +91,14 @@ async function handleUpdate(req: VercelRequest, res: VercelResponse, id: string)
     const updateData = req.body;
     updateData.id = id;
     updateData.updatedAt = new Date().toISOString();
-    
+
     console.log('Updated part:', id);
     return res.status(200).json(updateData);
-    
   } catch (error) {
     console.error('Error updating part:', error);
-    return res.status(500).json({ 
+    return res.status(500).json({
       message: 'Failed to update part',
-      error: error instanceof Error ? error.message : 'Unknown error'
+      error: error instanceof Error ? error.message : 'Unknown error',
     });
   }
 }
@@ -104,12 +107,11 @@ async function handleDelete(req: VercelRequest, res: VercelResponse, id: string)
   try {
     console.log('Deleted part:', id);
     return res.status(204).end();
-    
   } catch (error) {
     console.error('Error deleting part:', error);
-    return res.status(500).json({ 
+    return res.status(500).json({
       message: 'Failed to delete part',
-      error: error instanceof Error ? error.message : 'Unknown error'
+      error: error instanceof Error ? error.message : 'Unknown error',
     });
   }
 }

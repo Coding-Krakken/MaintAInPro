@@ -8,7 +8,7 @@
  *
  * Performance Targets (based on UI responsiveness requirements):
  * - Date formatting: < 1ms per operation
- * - Currency formatting: < 0.5ms per operation  
+ * - Currency formatting: < 0.5ms per operation
  * - Number formatting: < 0.5ms per operation
  * - File size formatting: < 0.5ms per operation
  * - Duration formatting: < 0.5ms per operation
@@ -230,7 +230,7 @@ describe('Client Formatter Performance Benchmarks', () => {
  * - Bulk formatting (100 items) should complete in <100ms for acceptable UX
  * - Complex date operations may be slower due to date-fns library overhead
  * - Consider memoization for expensive operations called repeatedly with same inputs
- * 
+ *
  * Critical Performance Factors:
  * - Date parsing and validation (date-fns operations)
  * - Intl.NumberFormat instantiation (consider caching)

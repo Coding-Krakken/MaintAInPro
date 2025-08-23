@@ -13,7 +13,7 @@ nodes:
       - evidence/risk_mitigation_plan.md # Update after mitigation planning
       - evidence/automation_log.md # Update after automation events
     action:
-      - "Contributors and automation must update all evidence files before proceeding."
+      - 'Contributors and automation must update all evidence files before proceeding.'
     next: gate-design
   - id: gate-design
     kind: gate
@@ -29,7 +29,7 @@ nodes:
       - requirements/nfr.yml # Update after NFR documentation
       - evidence/automation_log.md # Update after automation events
     action:
-      - "Contributors and automation must update all evidence files before proceeding."
+      - 'Contributors and automation must update all evidence files before proceeding.'
     next: implementation
   - id: implementation
     kind: activity
@@ -43,7 +43,7 @@ nodes:
       - evidence/problems_pane_log.md # Update after problems pane review
       - evidence/automation_log.md # Update after automation events
     action:
-      - "Contributors and automation must update all evidence files before proceeding."
+      - 'Contributors and automation must update all evidence files before proceeding.'
     next: gate-commit-hygiene
   - id: gate-commit-hygiene
     kind: gate
@@ -54,7 +54,7 @@ nodes:
       - evidence/commit_log.md # Update after commit hygiene review
       - evidence/automation_log.md # Update after automation events
     action:
-      - "Contributors and automation must update all evidence files before proceeding."
+      - 'Contributors and automation must update all evidence files before proceeding.'
     next: gate-implementation
   - id: gate-implementation
     kind: gate
@@ -70,7 +70,7 @@ nodes:
       - evidence/mutation report # Update after mutation testing
       - evidence/automation_log.md # Update after automation events
     action:
-      - "Contributors and automation must update all evidence files before proceeding."
+      - 'Contributors and automation must update all evidence files before proceeding.'
     next: verification
   - id: verification
     kind: activity
@@ -88,7 +88,7 @@ nodes:
       - evidence/audit log config # Update after audit log review
       - evidence/automation_log.md # Update after automation events
     action:
-      - "Contributors and automation must update all evidence files before proceeding."
+      - 'Contributors and automation must update all evidence files before proceeding.'
     next: release
   - id: release
     kind: activity
@@ -106,7 +106,7 @@ nodes:
       - evidence/postmortem template # Update after postmortem
       - evidence/automation_log.md # Update after automation events
     action:
-      - "Contributors and automation must update all evidence files before proceeding."
+      - 'Contributors and automation must update all evidence files before proceeding.'
     next: operate
   - id: operate
     kind: activity

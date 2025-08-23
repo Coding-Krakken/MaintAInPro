@@ -29,7 +29,7 @@ const app = express();
 // Configure MIME types for PWA files
 express.static.mime.define({
   'application/javascript': ['js'],
-  'application/manifest+json': ['webmanifest']
+  'application/manifest+json': ['webmanifest'],
 });
 
 // Initialize services

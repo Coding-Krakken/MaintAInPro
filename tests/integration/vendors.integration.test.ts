@@ -30,12 +30,10 @@ describe('Vendor API Integration Tests', () => {
         email: 'test@vendor.com',
         phone: '555-1234',
         address: '123 Test St',
-        contactPerson: 'John Doe'
+        contactPerson: 'John Doe',
       };
 
-      const response = await authRequest('post', '/api/vendors')
-        .send(vendorData)
-        .expect(201);
+      const response = await authRequest('post', '/api/vendors').send(vendorData).expect(201);
 
       expect(response.body).toMatchObject({
         name: vendorData.name,
@@ -44,7 +42,7 @@ describe('Vendor API Integration Tests', () => {
         phone: vendorData.phone,
         address: vendorData.address,
         contactPerson: vendorData.contactPerson,
-        active: true
+        active: true,
       });
       expect(response.body.id).toBeDefined();
     });
@@ -52,30 +50,26 @@ describe('Vendor API Integration Tests', () => {
     it('should create a vendor with minimal data', async () => {
       const vendorData = {
         name: 'Minimal Vendor',
-        type: 'contractor'
+        type: 'contractor',
       };
 
-      const response = await authRequest('post', '/api/vendors')
-        .send(vendorData)
-        .expect(201);
+      const response = await authRequest('post', '/api/vendors').send(vendorData).expect(201);
 
       expect(response.body).toMatchObject({
         name: vendorData.name,
         type: vendorData.type,
-        active: true
+        active: true,
       });
       expect(response.body.id).toBeDefined();
     });
 
     it('should return 400 for missing required fields', async () => {
       const vendorData = {
-        email: 'test@vendor.com'
+        email: 'test@vendor.com',
         // Missing required 'name' field
       };
 
-      const response = await authRequest('post', '/api/vendors')
-        .send(vendorData)
-        .expect(400);
+      const response = await authRequest('post', '/api/vendors').send(vendorData).expect(400);
 
       expect(response.body.message).toContain('Invalid vendor data');
     });
@@ -84,12 +78,10 @@ describe('Vendor API Integration Tests', () => {
       const vendorData = {
         name: 'Test Vendor',
         type: 'supplier',
-        email: 'invalid-email'
+        email: 'invalid-email',
       };
 
-      const response = await authRequest('post', '/api/vendors')
-        .send(vendorData)
-        .expect(400);
+      const response = await authRequest('post', '/api/vendors').send(vendorData).expect(400);
 
       expect(response.body.message).toContain('Invalid vendor data');
     });
@@ -97,12 +89,10 @@ describe('Vendor API Integration Tests', () => {
     it('should return 400 for invalid vendor type', async () => {
       const vendorData = {
         name: 'Test Vendor',
-        type: 'invalid-type'
+        type: 'invalid-type',
       };
 
-      const response = await authRequest('post', '/api/vendors')
-        .send(vendorData)
-        .expect(400);
+      const response = await authRequest('post', '/api/vendors').send(vendorData).expect(400);
 
       expect(response.body.message).toContain('Invalid vendor data');
     });
@@ -111,12 +101,10 @@ describe('Vendor API Integration Tests', () => {
       const vendorData = {
         name: 'Test Vendor',
         type: 'supplier',
-        email: ''
+        email: '',
       };
 
-      const response = await authRequest('post', '/api/vendors')
-        .send(vendorData)
-        .expect(201);
+      const response = await authRequest('post', '/api/vendors').send(vendorData).expect(201);
 
       expect(response.body.name).toBe(vendorData.name);
     });
@@ -124,8 +112,7 @@ describe('Vendor API Integration Tests', () => {
 
   describe('GET /api/vendors', () => {
     it('should return empty array when no vendors exist', async () => {
-      const response = await authRequest('get', '/api/vendors')
-        .expect(200);
+      const response = await authRequest('get', '/api/vendors').expect(200);
 
       expect(Array.isArray(response.body)).toBe(true);
     });
@@ -134,15 +121,12 @@ describe('Vendor API Integration Tests', () => {
       // Create a vendor first
       const vendorData = {
         name: 'Test Vendor for Get',
-        type: 'supplier'
+        type: 'supplier',
       };
 
-      await authRequest('post', '/api/vendors')
-        .send(vendorData)
-        .expect(201);
+      await authRequest('post', '/api/vendors').send(vendorData).expect(201);
 
-      const response = await authRequest('get', '/api/vendors')
-        .expect(200);
+      const response = await authRequest('get', '/api/vendors').expect(200);
 
       expect(Array.isArray(response.body)).toBe(true);
       const vendor = response.body.find((v: any) => v.name === vendorData.name);
@@ -156,19 +140,17 @@ describe('Vendor API Integration Tests', () => {
       // Create a vendor first
       const vendorData = {
         name: 'Original Vendor',
-        type: 'supplier'
+        type: 'supplier',
       };
 
-      const createResponse = await authRequest('post', '/api/vendors')
-        .send(vendorData)
-        .expect(201);
+      const createResponse = await authRequest('post', '/api/vendors').send(vendorData).expect(201);
 
       const vendorId = createResponse.body.id;
 
       // Update the vendor
       const updateData = {
         name: 'Updated Vendor',
-        email: 'updated@vendor.com'
+        email: 'updated@vendor.com',
       };
 
       const updateResponse = await authRequest('patch', `/api/vendors/${vendorId}`)
@@ -183,12 +165,10 @@ describe('Vendor API Integration Tests', () => {
     it('should return 404 for non-existent vendor', async () => {
       const fakeId = '00000000-0000-0000-0000-000000000000';
       const updateData = {
-        name: 'Updated Vendor'
+        name: 'Updated Vendor',
       };
 
-      await authRequest('patch', `/api/vendors/${fakeId}`)
-        .send(updateData)
-        .expect(404);
+      await authRequest('patch', `/api/vendors/${fakeId}`).send(updateData).expect(404);
     });
   });
 
@@ -197,29 +177,24 @@ describe('Vendor API Integration Tests', () => {
       // Create a vendor first
       const vendorData = {
         name: 'Vendor to Delete',
-        type: 'contractor'
+        type: 'contractor',
       };
 
-      const createResponse = await authRequest('post', '/api/vendors')
-        .send(vendorData)
-        .expect(201);
+      const createResponse = await authRequest('post', '/api/vendors').send(vendorData).expect(201);
 
       const vendorId = createResponse.body.id;
 
       // Delete the vendor
-      await authRequest('delete', `/api/vendors/${vendorId}`)
-        .expect(204);
+      await authRequest('delete', `/api/vendors/${vendorId}`).expect(204);
 
       // Verify it's deleted
-      await authRequest('get', `/api/vendors/${vendorId}`)
-        .expect(404);
+      await authRequest('get', `/api/vendors/${vendorId}`).expect(404);
     });
 
     it('should return 404 for non-existent vendor', async () => {
       const fakeId = '00000000-0000-0000-0000-000000000000';
 
-      await authRequest('delete', `/api/vendors/${fakeId}`)
-        .expect(404);
+      await authRequest('delete', `/api/vendors/${fakeId}`).expect(404);
     });
   });
 });

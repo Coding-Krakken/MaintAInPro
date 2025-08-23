@@ -18,7 +18,10 @@ const createMockResponse = (): VercelResponse => {
 };
 
 // Mock VercelRequest
-const createMockRequest = (method: string = 'GET', query: Record<string, any> = {}): VercelRequest => {
+const createMockRequest = (
+  method: string = 'GET',
+  query: Record<string, any> = {}
+): VercelRequest => {
   return {
     method,
     query,
@@ -38,21 +41,27 @@ describe('KPI API Handler', () => {
   describe('CORS Headers', () => {
     it('should set CORS headers for all requests', async () => {
       mockReq = createMockRequest('GET');
-      
+
       await handler(mockReq, mockRes);
-      
+
       expect(mockRes.setHeader).toHaveBeenCalledWith('Access-Control-Allow-Origin', '*');
-      expect(mockRes.setHeader).toHaveBeenCalledWith('Access-Control-Allow-Methods', 'GET, OPTIONS');
-      expect(mockRes.setHeader).toHaveBeenCalledWith('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+      expect(mockRes.setHeader).toHaveBeenCalledWith(
+        'Access-Control-Allow-Methods',
+        'GET, OPTIONS'
+      );
+      expect(mockRes.setHeader).toHaveBeenCalledWith(
+        'Access-Control-Allow-Headers',
+        'Content-Type, Authorization'
+      );
     });
   });
 
   describe('OPTIONS Method', () => {
     it('should handle OPTIONS preflight requests', async () => {
       mockReq = createMockRequest('OPTIONS');
-      
+
       await handler(mockReq, mockRes);
-      
+
       expect(mockRes.status).toHaveBeenCalledWith(200);
       expect(mockRes.end).toHaveBeenCalled();
       expect(mockRes.json).not.toHaveBeenCalled();
@@ -62,9 +71,9 @@ describe('KPI API Handler', () => {
   describe('GET Method', () => {
     it('should return KPI metrics with correct structure', async () => {
       mockReq = createMockRequest('GET');
-      
+
       await handler(mockReq, mockRes);
-      
+
       expect(mockRes.status).toHaveBeenCalledWith(200);
       expect(mockRes.json).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -112,39 +121,39 @@ describe('KPI API Handler', () => {
 
     it('should default to 24h range when no parameter provided', async () => {
       mockReq = createMockRequest('GET');
-      
+
       await handler(mockReq, mockRes);
-      
+
       const callArgs = (mockRes.json as any).mock.calls[0][0];
       expect(callArgs.period).toBe('24h');
     });
 
     it('should handle range parameter correctly', async () => {
       mockReq = createMockRequest('GET', { range: '7d' });
-      
+
       await handler(mockReq, mockRes);
-      
+
       const callArgs = (mockRes.json as any).mock.calls[0][0];
       expect(callArgs.period).toBe('7d');
     });
 
     it('should handle custom range parameter', async () => {
       mockReq = createMockRequest('GET', { range: '30d' });
-      
+
       await handler(mockReq, mockRes);
-      
+
       const callArgs = (mockRes.json as any).mock.calls[0][0];
       expect(callArgs.period).toBe('30d');
     });
 
     it('should generate work orders metrics within expected ranges', async () => {
       mockReq = createMockRequest('GET');
-      
+
       await handler(mockReq, mockRes);
-      
+
       const callArgs = (mockRes.json as any).mock.calls[0][0];
       const workOrders = callArgs.workOrders;
-      
+
       expect(workOrders.total).toBeGreaterThanOrEqual(100);
       expect(workOrders.total).toBeLessThanOrEqual(600);
       expect(workOrders.completed).toBeGreaterThanOrEqual(80);
@@ -161,12 +170,12 @@ describe('KPI API Handler', () => {
 
     it('should generate equipment metrics within expected ranges', async () => {
       mockReq = createMockRequest('GET');
-      
+
       await handler(mockReq, mockRes);
-      
+
       const callArgs = (mockRes.json as any).mock.calls[0][0];
       const equipment = callArgs.equipment;
-      
+
       expect(equipment.total).toBeGreaterThanOrEqual(50);
       expect(equipment.total).toBeLessThanOrEqual(250);
       expect(equipment.operational).toBeGreaterThanOrEqual(40);
@@ -183,12 +192,12 @@ describe('KPI API Handler', () => {
 
     it('should generate maintenance metrics within expected ranges', async () => {
       mockReq = createMockRequest('GET');
-      
+
       await handler(mockReq, mockRes);
-      
+
       const callArgs = (mockRes.json as any).mock.calls[0][0];
       const maintenance = callArgs.maintenance;
-      
+
       expect(maintenance.scheduled).toBeGreaterThanOrEqual(20);
       expect(maintenance.scheduled).toBeLessThanOrEqual(120);
       expect(maintenance.completed).toBeGreaterThanOrEqual(15);
@@ -203,12 +212,12 @@ describe('KPI API Handler', () => {
 
     it('should generate costs metrics within expected ranges', async () => {
       mockReq = createMockRequest('GET');
-      
+
       await handler(mockReq, mockRes);
-      
+
       const callArgs = (mockRes.json as any).mock.calls[0][0];
       const costs = callArgs.costs;
-      
+
       expect(costs.total).toBeGreaterThanOrEqual(10000);
       expect(costs.total).toBeLessThanOrEqual(60000);
       expect(costs.labor).toBeGreaterThanOrEqual(5000);
@@ -223,12 +232,12 @@ describe('KPI API Handler', () => {
 
     it('should generate performance metrics within expected ranges', async () => {
       mockReq = createMockRequest('GET');
-      
+
       await handler(mockReq, mockRes);
-      
+
       const callArgs = (mockRes.json as any).mock.calls[0][0];
       const performance = callArgs.performance;
-      
+
       expect(performance.avgResponseTime).toBeGreaterThanOrEqual(50);
       expect(performance.avgResponseTime).toBeLessThanOrEqual(150);
       expect(performance.systemUptime).toBeGreaterThanOrEqual(95);
@@ -241,9 +250,9 @@ describe('KPI API Handler', () => {
 
     it('should return timestamp in ISO format', async () => {
       mockReq = createMockRequest('GET');
-      
+
       await handler(mockReq, mockRes);
-      
+
       const callArgs = (mockRes.json as any).mock.calls[0][0];
       expect(() => new Date(callArgs.timestamp)).not.toThrow();
       expect(callArgs.timestamp).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/);
@@ -251,9 +260,9 @@ describe('KPI API Handler', () => {
 
     it('should handle array query parameter correctly', async () => {
       mockReq = createMockRequest('GET', { range: ['24h', '7d'] });
-      
+
       await handler(mockReq, mockRes);
-      
+
       const callArgs = (mockRes.json as any).mock.calls[0][0];
       // When array is passed, it maintains the array (the actual API would handle this differently)
       expect(callArgs.period).toEqual(['24h', '7d']);
@@ -261,18 +270,18 @@ describe('KPI API Handler', () => {
 
     it('should handle undefined range parameter', async () => {
       mockReq = createMockRequest('GET', { range: undefined });
-      
+
       await handler(mockReq, mockRes);
-      
+
       const callArgs = (mockRes.json as any).mock.calls[0][0];
       expect(callArgs.period).toBe('24h');
     });
 
     it('should handle empty string range parameter', async () => {
       mockReq = createMockRequest('GET', { range: '' });
-      
+
       await handler(mockReq, mockRes);
-      
+
       const callArgs = (mockRes.json as any).mock.calls[0][0];
       expect(callArgs.period).toBe('24h');
     });
@@ -286,9 +295,9 @@ describe('KPI API Handler', () => {
       });
 
       mockReq = createMockRequest('GET');
-      
+
       await handler(mockReq, mockRes);
-      
+
       expect(mockRes.status).toHaveBeenCalledWith(500);
       expect(mockRes.json).toHaveBeenCalledWith({
         _error: 'Failed to fetch KPI metrics',
@@ -302,9 +311,9 @@ describe('KPI API Handler', () => {
       });
 
       mockReq = createMockRequest('GET');
-      
+
       await handler(mockReq, mockRes);
-      
+
       expect(mockRes.status).toHaveBeenCalledWith(500);
       expect(mockRes.json).toHaveBeenCalledWith({
         _error: 'Failed to fetch KPI metrics',
@@ -319,15 +328,15 @@ describe('KPI API Handler', () => {
       });
 
       mockReq = createMockRequest('GET');
-      
+
       await handler(mockReq, mockRes);
-      
+
       expect(mockRes.status).toHaveBeenCalledWith(500);
       expect(mockRes.json).toHaveBeenCalledWith({
         _error: 'Failed to fetch KPI metrics',
         message: expect.any(String), // Accept any error message
       });
-      
+
       mathRandomSpy.mockRestore();
     });
 
@@ -337,30 +346,27 @@ describe('KPI API Handler', () => {
       });
 
       mockReq = createMockRequest('GET');
-      
+
       await handler(mockReq, mockRes);
-      
+
       expect(mockRes.status).toHaveBeenCalledWith(500);
       expect(mockRes.json).toHaveBeenCalledWith({
         _error: 'Failed to fetch KPI metrics',
         message: 'Date conversion failed',
       });
-      
+
       dateProtoSpy.mockRestore();
     });
   });
 
   describe('Unsupported Methods', () => {
-    it.each(['POST', 'PUT', 'DELETE', 'PATCH'])(
-      'should return 405 for %s method',
-      async (method) => {
-        mockReq = createMockRequest(method);
-        
-        await handler(mockReq, mockRes);
-        
-        expect(mockRes.status).toHaveBeenCalledWith(405);
-        expect(mockRes.json).toHaveBeenCalledWith({ error: 'Method not allowed' });
-      }
-    );
+    it.each(['POST', 'PUT', 'DELETE', 'PATCH'])('should return 405 for %s method', async method => {
+      mockReq = createMockRequest(method);
+
+      await handler(mockReq, mockRes);
+
+      expect(mockRes.status).toHaveBeenCalledWith(405);
+      expect(mockRes.json).toHaveBeenCalledWith({ error: 'Method not allowed' });
+    });
   });
 });

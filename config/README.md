@@ -1,10 +1,12 @@
 # Feature Flags Configuration
 
-This directory contains the feature flag configuration for the MaintAInPro CMMS platform, enabling safer rollouts and controlled experimentation.
+This directory contains the feature flag configuration for the MaintAInPro CMMS
+platform, enabling safer rollouts and controlled experimentation.
 
 ## Overview
 
 Feature flags allow us to:
+
 - **Safe Rollouts**: Deploy features with controlled rollout percentages
 - **Environment Control**: Enable features only in specific environments
 - **Experimentation**: A/B test new functionality with targeted user groups
@@ -61,41 +63,49 @@ const enabledFeatures = getEnabledFeatures('development');
 ## Feature Categories
 
 ### Core Work Order Features
+
 - `workOrderAutomation`: Automated work order generation
 - `workOrderEscalation`: Automatic escalation system
 - `workOrderBatchOperations`: Bulk work order operations
 
 ### Equipment & Asset Management
+
 - `qrCodeGeneration`: QR code generation for equipment
 - `equipmentPerformanceAnalytics`: MTBF/MTTR analytics
 - `predictiveMaintenanceAlerts`: AI-powered predictions
 
 ### Inventory & Parts Management
+
 - `partsConsumptionTracking`: Real-time inventory updates
 - `inventoryReorderAlerts`: Low stock notifications
 - `bulkInventoryOperations`: Bulk inventory management
 
 ### Preventive Maintenance
+
 - `automaticPMScheduling`: Automated PM scheduling
 - `pmComplianceTracking`: PM compliance monitoring
 - `pmTemplateLibrary`: Reusable PM templates
 
 ### User Experience & Interface
+
 - `realTimeNotifications`: WebSocket notifications
 - `darkModeSupport`: Dark theme support
 - `mobileOptimization`: Enhanced mobile interface
 
 ### Integration & API Features
+
 - `webhookIntegrations`: External system integration
 - `apiRateLimiting`: Enhanced rate limiting
 - `auditLogExport`: Compliance report exports
 
 ### Performance & Caching
+
 - `redisCache`: Redis-based caching
 - `queryOptimization`: Database query optimization
 - `fileCompressionUpload`: Automatic file compression
 
 ### Security & Compliance
+
 - `twoFactorAuthentication`: 2FA support
 - `encryptedFileStorage`: Encrypted file storage
 - `advancedAuditLogging`: Enhanced audit logging
@@ -104,13 +114,13 @@ const enabledFeatures = getEnabledFeatures('development');
 
 Each feature flag includes:
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `enabled` | boolean | Global on/off switch |
-| `description` | string | Human-readable description |
-| `rolloutPercentage` | number | Gradual rollout control (0-100%) |
-| `environments` | string[] | Allowed environments |
-| `metadata` | object | Additional configuration data |
+| Property            | Type     | Description                      |
+| ------------------- | -------- | -------------------------------- |
+| `enabled`           | boolean  | Global on/off switch             |
+| `description`       | string   | Human-readable description       |
+| `rolloutPercentage` | number   | Gradual rollout control (0-100%) |
+| `environments`      | string[] | Allowed environments             |
+| `metadata`          | object   | Additional configuration data    |
 
 ## Environment Strategy
 
@@ -156,14 +166,8 @@ import { isFeatureEnabled } from '../config/feature-flags';
 
 const WorkOrderPage = () => {
   const showBatchOperations = isFeatureEnabled('workOrderBatchOperations');
-  
-  return (
-    <div>
-      {showBatchOperations && (
-        <BatchOperationsPanel />
-      )}
-    </div>
-  );
+
+  return <div>{showBatchOperations && <BatchOperationsPanel />}</div>;
 };
 ```
 
@@ -176,7 +180,7 @@ app.post('/api/webhooks', (req, res) => {
   if (!isFeatureEnabled('webhookIntegrations')) {
     return res.status(404).json({ error: 'Feature not available' });
   }
-  
+
   // Process webhook
 });
 ```

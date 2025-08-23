@@ -108,7 +108,10 @@ describeMode('Enhanced Database Service - Production Integration Tests', () => {
 
       testContext.organizationId = testOrganization.id;
     } catch (error) {
-      console.warn('Database connection failed, skipping database integration tests:', error.message);
+      console.warn(
+        'Database connection failed, skipping database integration tests:',
+        error.message
+      );
       enhancedDbService = null;
     }
   });

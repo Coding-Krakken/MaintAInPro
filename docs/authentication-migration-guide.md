@@ -2,7 +2,9 @@
 
 ## Overview
 
-MaintAInPro has migrated from Supabase authentication to a comprehensive JWT-based authentication system. This document outlines the current authentication implementation and any migration considerations.
+MaintAInPro has migrated from Supabase authentication to a comprehensive
+JWT-based authentication system. This document outlines the current
+authentication implementation and any migration considerations.
 
 ---
 
@@ -10,9 +12,11 @@ MaintAInPro has migrated from Supabase authentication to a comprehensive JWT-bas
 
 ### Architecture
 
-The MaintAInPro CMMS now uses a **custom JWT-based authentication system** with the following features:
+The MaintAInPro CMMS now uses a **custom JWT-based authentication system** with
+the following features:
 
 #### 🔐 Core Authentication Features
+
 - **JWT Access Tokens**: Short-lived tokens for API authentication
 - **JWT Refresh Tokens**: Long-lived tokens for token renewal
 - **Session Management**: Secure session tracking with device fingerprinting
@@ -20,6 +24,7 @@ The MaintAInPro CMMS now uses a **custom JWT-based authentication system** with 
 - **Account Security**: Login attempt tracking, account lockout protection
 
 #### 🛡️ Advanced Security Features
+
 - **Multi-Factor Authentication (MFA)**: TOTP, SMS, and email-based MFA
 - **Threat Detection**: IP blacklisting, suspicious activity detection
 - **Rate Limiting**: Configurable rate limits per endpoint
@@ -27,9 +32,12 @@ The MaintAInPro CMMS now uses a **custom JWT-based authentication system** with 
 - **Audit Logging**: Comprehensive security event tracking
 
 #### 👥 Role-Based Access Control (RBAC)
-- **User Roles**: Admin, Manager, Supervisor, Technician, Inventory Clerk, Contractor, Requester
+
+- **User Roles**: Admin, Manager, Supervisor, Technician, Inventory Clerk,
+  Contractor, Requester
 - **Warehouse Isolation**: Multi-tenant access control by warehouse
-- **Resource-Level Permissions**: Granular access control for different resources
+- **Resource-Level Permissions**: Granular access control for different
+  resources
 - **Dynamic Authorization**: Runtime permission checking
 
 ---
@@ -117,9 +125,12 @@ SMTP_PASS=your-smtp-password
 
 ### Security Considerations
 
-1. **JWT Secret Keys**: Use cryptographically secure random keys (minimum 64 characters)
-2. **Database Security**: Ensure PostgreSQL is properly secured with SSL connections
-3. **Environment Isolation**: Different secrets for development, staging, and production
+1. **JWT Secret Keys**: Use cryptographically secure random keys (minimum 64
+   characters)
+2. **Database Security**: Ensure PostgreSQL is properly secured with SSL
+   connections
+3. **Environment Isolation**: Different secrets for development, staging, and
+   production
 4. **Key Rotation**: Regularly rotate JWT secrets in production
 
 ---
@@ -221,10 +232,12 @@ The authentication system includes comprehensive integration tests:
 
 - **87% Coverage**: Authentication logic thoroughly tested
 - **22 Test Suites**: Core authentication flows validated
-- **Security Testing**: Input sanitization, error handling, malicious input protection
+- **Security Testing**: Input sanitization, error handling, malicious input
+  protection
 - **Token Validation**: JWT structure and claims verification
 
 Run tests with:
+
 ```bash
 npm run test:integration
 ```
@@ -285,8 +298,11 @@ All authentication events are logged:
 
 ### Getting Help
 
-- Check the [Authentication Integration Tests](../tests/integration/auth.integration.test.ts) for examples
-- Review [API Documentation](../attached_assets/APISpecification_1752515902050.md)
+- Check the
+  [Authentication Integration Tests](../tests/integration/auth.integration.test.ts)
+  for examples
+- Review
+  [API Documentation](../attached_assets/APISpecification_1752515902050.md)
 - Examine [Authentication Service Implementation](../server/services/auth/)
 
 ---
@@ -295,10 +311,15 @@ All authentication events are logged:
 
 The migration to JWT-based authentication provides:
 
-✅ **Enhanced Security**: Modern JWT standards with comprehensive security features  
-✅ **Better Performance**: Stateless authentication with efficient token validation  
+✅ **Enhanced Security**: Modern JWT standards with comprehensive security
+features  
+✅ **Better Performance**: Stateless authentication with efficient token
+validation  
 ✅ **Improved Scalability**: No dependency on external authentication services  
-✅ **Full Control**: Complete control over authentication logic and user management  
-✅ **Enterprise Features**: MFA, audit logging, session management, and RBAC  
+✅ **Full Control**: Complete control over authentication logic and user
+management  
+✅ **Enterprise Features**: MFA, audit logging, session management, and RBAC
 
-The new authentication system maintains all existing functionality while providing a more robust, secure, and maintainable foundation for the MaintAInPro CMMS platform.
+The new authentication system maintains all existing functionality while
+providing a more robust, secure, and maintainable foundation for the MaintAInPro
+CMMS platform.

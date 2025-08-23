@@ -70,12 +70,20 @@ router.get('/health', async (req, res) => {
     const memoryUsage = metrics.memory.usage;
     const avgResponseTime = metrics.performance.avgResponseTime;
     const errorCount = metrics.performance.errorCount;
-    
+
     // Calculate health percentages based on system performance
-    const infrastructureHealth = Math.max(20, Math.min(100, 100 - memoryUsage + Math.random() * 10));
-    const applicationHealth = Math.max(20, Math.min(100, 100 - (avgResponseTime - 50) * 2 + Math.random() * 15));
+    const infrastructureHealth = Math.max(
+      20,
+      Math.min(100, 100 - memoryUsage + Math.random() * 10)
+    );
+    const applicationHealth = Math.max(
+      20,
+      Math.min(100, 100 - (avgResponseTime - 50) * 2 + Math.random() * 15)
+    );
     const businessHealth = Math.max(20, Math.min(100, 100 - errorCount * 10 + Math.random() * 20));
-    const overallHealth = Math.round((infrastructureHealth + applicationHealth + businessHealth) / 3);
+    const overallHealth = Math.round(
+      (infrastructureHealth + applicationHealth + businessHealth) / 3
+    );
 
     // Generate trend indicators based on current performance
     const getTrend = (health: number): 'improving' | 'stable' | 'declining' => {

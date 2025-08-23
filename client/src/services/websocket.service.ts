@@ -30,11 +30,12 @@ export class WebSocketService {
 
   constructor() {
     // Check if we're in a serverless environment where WebSocket isn't supported
-    const isServerless = typeof window !== 'undefined' && 
-                        (window.location.hostname.includes('vercel.app') || 
-                         window.location.hostname.includes('netlify.app')) ||
-                        process.env.NODE_ENV === 'production';
-    
+    const isServerless =
+      (typeof window !== 'undefined' &&
+        (window.location.hostname.includes('vercel.app') ||
+          window.location.hostname.includes('netlify.app'))) ||
+      process.env.NODE_ENV === 'production';
+
     if (isServerless) {
       console.log('WebSocket disabled in serverless environment');
       return;

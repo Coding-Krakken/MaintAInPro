@@ -12,16 +12,16 @@ const insertVendorSchema = z.object({
   contactPerson: z.string().optional(),
   warehouseId: z.string(),
   id: z.string().optional(),
-  active: z.boolean().optional()
+  active: z.boolean().optional(),
 });
 
 // Helper function to get current user and warehouse from request headers
 const getCurrentUser = (req: VercelRequest) => {
-  return req.headers['x-user-id'] as string || '00000000-0000-0000-0000-000000000001';
+  return (req.headers['x-user-id'] as string) || '00000000-0000-0000-0000-000000000001';
 };
 
 const getCurrentWarehouse = (req: VercelRequest) => {
-  return req.headers['x-warehouse-id'] as string || '00000000-0000-0000-0000-000000000001';
+  return (req.headers['x-warehouse-id'] as string) || '00000000-0000-0000-0000-000000000001';
 };
 
 // Individual vendor API handler (for /api/vendors/[id])
@@ -29,7 +29,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, PATCH, DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-user-id, x-warehouse-id');
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'Content-Type, Authorization, x-user-id, x-warehouse-id'
+  );
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
@@ -67,9 +70,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           return res.json(updatedVendor);
         } catch (error) {
           if (error instanceof z.ZodError) {
-            return res.status(400).json({ 
-              message: 'Invalid vendor data', 
-              errors: error.errors 
+            return res.status(400).json({
+              message: 'Invalid vendor data',
+              errors: error.errors,
             });
           }
           throw error;
@@ -89,9 +92,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
   } catch (error) {
     console.error('Vendor API error:', error);
-    return res.status(500).json({ 
+    return res.status(500).json({
       message: 'Internal server error',
-      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined,
     });
   }
 }

@@ -37,8 +37,8 @@ access, and operational control.
 **3. Auth Integration:**
 
 - JWT-based authentication with access and refresh tokens
-- `profiles` table with `role` column and `warehouse_id` for
-  multi-warehouse support
+- `profiles` table with `role` column and `warehouse_id` for multi-warehouse
+  support
 - Enforce access via application-level authorization and client logic
 
 ---

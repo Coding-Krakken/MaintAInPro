@@ -9,7 +9,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-user-id, x-warehouse-id');
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'Content-Type, Authorization, x-user-id, x-warehouse-id'
+  );
 
   // Handle preflight requests
   if (req.method === 'OPTIONS') {
@@ -18,7 +21,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   try {
     const { id } = req.query;
-    
+
     if (!id || Array.isArray(id)) {
       return res.status(400).json({ message: 'Profile ID is required' });
     }
@@ -35,17 +38,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       location: 'Main Facility',
       status: 'active',
       createdAt: '2024-01-01T00:00:00Z',
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     };
 
     console.log(`Retrieved profile for user: ${id}`);
     return res.status(200).json(mockProfile);
-    
   } catch (error) {
     console.error('Profiles API error:', error);
-    return res.status(500).json({ 
+    return res.status(500).json({
       message: 'Internal server error',
-      error: error instanceof Error ? error.message : 'Unknown error'
+      error: error instanceof Error ? error.message : 'Unknown error',
     });
   }
 }

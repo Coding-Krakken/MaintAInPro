@@ -110,12 +110,12 @@ const CACHE_TTL = 5000; // 5 seconds cache TTL
 
 async function loadData(): Promise<StorageData> {
   const now = Date.now();
-  if (cachedData && (now - lastLoadTime) < CACHE_TTL) {
+  if (cachedData && now - lastLoadTime < CACHE_TTL) {
     return cachedData;
   }
 
   console.log('Loading data from storage file:', STORAGE_FILE);
-  
+
   try {
     const fileContent = await fs.readFile(STORAGE_FILE, 'utf-8');
     const data = JSON.parse(fileContent, (key, value) => {
@@ -140,12 +140,12 @@ async function loadData(): Promise<StorageData> {
 
 async function saveData(data: StorageData): Promise<void> {
   console.log('Attempting to save data to:', STORAGE_FILE);
-  
+
   try {
     // Ensure /tmp directory exists
     await fs.mkdir('/tmp', { recursive: true });
     console.log('/tmp directory ensured');
-    
+
     await fs.writeFile(STORAGE_FILE, JSON.stringify(data, null, 2));
     cachedData = data;
     lastLoadTime = Date.now();
@@ -156,7 +156,7 @@ async function saveData(data: StorageData): Promise<void> {
       message: error instanceof Error ? error.message : 'Unknown',
       code: (error as any)?.code,
       errno: (error as any)?.errno,
-      path: (error as any)?.path
+      path: (error as any)?.path,
     });
     throw error;
   }
@@ -164,7 +164,7 @@ async function saveData(data: StorageData): Promise<void> {
 
 async function initializeData(): Promise<StorageData> {
   console.log('Initializing sample data for serverless storage');
-  
+
   const equipment1: Equipment = {
     id: 'equip-1',
     assetTag: 'UAS-001',
@@ -183,7 +183,7 @@ async function initializeData(): Promise<StorageData> {
     warrantyExpiry: new Date('2025-01-15'),
     manufacturer: 'ConveyorCorp',
     serialNumber: 'CB2000X-001',
-    specifications: { speed: '2.5 m/s', capacity: '500 kg' }
+    specifications: { speed: '2.5 m/s', capacity: '500 kg' },
   };
 
   const equipment2: Equipment = {
@@ -204,7 +204,7 @@ async function initializeData(): Promise<StorageData> {
     warrantyExpiry: new Date('2024-06-20'),
     manufacturer: 'ClimateControl Inc',
     serialNumber: 'HVAC500-205',
-    specifications: { capacity: '50 tons', efficiency: '95%' }
+    specifications: { capacity: '50 tons', efficiency: '95%' },
   };
 
   const workOrder1: WorkOrder = {
@@ -227,7 +227,7 @@ async function initializeData(): Promise<StorageData> {
     createdBy: 'supervisor-1',
     updatedBy: 'supervisor-1',
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
   };
 
   return {
@@ -235,7 +235,7 @@ async function initializeData(): Promise<StorageData> {
     workOrders: [workOrder1],
     notifications: [],
     vendors: [],
-    initialized: true
+    initialized: true,
   };
 }
 
@@ -265,15 +265,15 @@ export async function createEquipment(equipmentData: {
 }): Promise<Equipment> {
   console.log('=== STORAGE createEquipment START ===');
   console.log('Input equipmentData:', JSON.stringify(equipmentData, null, 2));
-  
+
   try {
     console.log('Loading data from storage...');
     const data = await loadData();
     console.log(`Current equipment count: ${data.equipment.length}`);
-    
+
     const id = `equip-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
     console.log('Generated equipment ID:', id);
-    
+
     const equipment: Equipment = {
       id,
       assetTag: equipmentData.assetTag,
@@ -292,18 +292,18 @@ export async function createEquipment(equipmentData: {
       warrantyExpiry: equipmentData.warrantyExpiry ? new Date(equipmentData.warrantyExpiry) : null,
       manufacturer: equipmentData.manufacturer || null,
       serialNumber: equipmentData.serialNumber || null,
-      specifications: equipmentData.specifications || null
+      specifications: equipmentData.specifications || null,
     };
 
     console.log('Equipment object created:', JSON.stringify(equipment, null, 2));
 
     data.equipment.push(equipment);
     console.log('Equipment added to data array. New count:', data.equipment.length);
-    
+
     console.log('Saving data...');
     await saveData(data);
     console.log('Data saved successfully');
-    
+
     console.log('=== STORAGE createEquipment SUCCESS ===');
     console.log(`Created equipment with ID: ${id}, total equipment: ${data.equipment.length}`);
     return equipment;
@@ -316,11 +316,14 @@ export async function createEquipment(equipmentData: {
 }
 
 // Work order operations
-export async function getAllWorkOrders(warehouseId: string, filters?: {
-  status?: string[];
-  assignedTo?: string;
-  priority?: string[];
-}): Promise<WorkOrder[]> {
+export async function getAllWorkOrders(
+  warehouseId: string,
+  filters?: {
+    status?: string[];
+    assignedTo?: string;
+    priority?: string[];
+  }
+): Promise<WorkOrder[]> {
   const data = await loadData();
   let workOrders = data.workOrders.filter(wo => wo.warehouseId === warehouseId);
 
@@ -334,7 +337,9 @@ export async function getAllWorkOrders(warehouseId: string, filters?: {
     workOrders = workOrders.filter(wo => filters.priority!.includes(wo.priority));
   }
 
-  return workOrders.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  return workOrders.sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
 }
 
 export async function getWorkOrderById(id: string): Promise<WorkOrder | undefined> {
@@ -354,20 +359,20 @@ export async function getAllNotifications(userId: string): Promise<Notification[
 export async function getDashboardStats(warehouseId: string): Promise<DashboardStats> {
   const equipment = await getAllEquipment(warehouseId);
   const workOrders = await getAllWorkOrders(warehouseId);
-  
+
   const now = new Date();
-  
+
   return {
     totalEquipment: equipment.length,
     totalWorkOrders: workOrders.length,
     newWorkOrders: workOrders.filter(wo => wo.status === 'new').length,
     inProgressWorkOrders: workOrders.filter(wo => wo.status === 'in_progress').length,
     completedWorkOrders: workOrders.filter(wo => wo.status === 'completed').length,
-    overdueWorkOrders: workOrders.filter(wo => 
-      wo.status !== 'completed' && new Date(wo.dueDate) < now
+    overdueWorkOrders: workOrders.filter(
+      wo => wo.status !== 'completed' && new Date(wo.dueDate) < now
     ).length,
     activeEquipment: equipment.filter(e => e.status === 'active').length,
-    maintenanceEquipment: equipment.filter(e => e.status === 'maintenance').length
+    maintenanceEquipment: equipment.filter(e => e.status === 'maintenance').length,
   };
 }
 
@@ -392,7 +397,7 @@ export async function createVendor(vendorData: {
   warehouseId: string;
 }): Promise<Vendor> {
   const data = await loadData();
-  
+
   const newVendor: Vendor = {
     id: `vendor-${Date.now()}`,
     name: vendorData.name,
@@ -403,28 +408,31 @@ export async function createVendor(vendorData: {
     contactPerson: vendorData.contactPerson,
     active: true,
     warehouseId: vendorData.warehouseId,
-    createdAt: new Date()
+    createdAt: new Date(),
   };
-  
+
   data.vendors.push(newVendor);
   await saveData(data);
-  
+
   return newVendor;
 }
 
-export async function updateVendor(id: string, updates: Partial<Vendor>): Promise<Vendor | undefined> {
+export async function updateVendor(
+  id: string,
+  updates: Partial<Vendor>
+): Promise<Vendor | undefined> {
   const data = await loadData();
   const vendorIndex = data.vendors.findIndex(v => v.id === id);
-  
+
   if (vendorIndex === -1) {
     return undefined;
   }
-  
+
   data.vendors[vendorIndex] = {
     ...data.vendors[vendorIndex],
-    ...updates
+    ...updates,
   };
-  
+
   await saveData(data);
   return data.vendors[vendorIndex];
 }
@@ -432,13 +440,13 @@ export async function updateVendor(id: string, updates: Partial<Vendor>): Promis
 export async function deleteVendor(id: string): Promise<boolean> {
   const data = await loadData();
   const vendorIndex = data.vendors.findIndex(v => v.id === id);
-  
+
   if (vendorIndex === -1) {
     return false;
   }
-  
+
   data.vendors.splice(vendorIndex, 1);
   await saveData(data);
-  
+
   return true;
 }

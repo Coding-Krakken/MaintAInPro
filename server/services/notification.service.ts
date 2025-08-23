@@ -22,9 +22,10 @@ class NotificationServiceImpl implements NotificationService {
       if (process.env.NODE_ENV === 'development' || process.env.VERCEL !== '1') {
         this.io = new SocketIOServer(httpServer, {
           cors: {
-            origin: process.env.NODE_ENV === 'production' ? 
-              [process.env.FRONTEND_URL, process.env.PRODUCTION_URL].filter(Boolean) : 
-              true,
+            origin:
+              process.env.NODE_ENV === 'production'
+                ? [process.env.FRONTEND_URL, process.env.PRODUCTION_URL].filter(Boolean)
+                : true,
             methods: ['GET', 'POST'],
             credentials: true,
           },
@@ -35,7 +36,9 @@ class NotificationServiceImpl implements NotificationService {
         this.setupSocketHandlers();
         console.log('Real-time notification service initialized with WebSocket support');
       } else {
-        console.log('Real-time notification service initialized in serverless mode (WebSocket disabled)');
+        console.log(
+          'Real-time notification service initialized in serverless mode (WebSocket disabled)'
+        );
       }
     } catch (error) {
       console.error('Failed to initialize notification service:', error);
@@ -152,7 +155,9 @@ class NotificationServiceImpl implements NotificationService {
 
         console.log(`Notification sent to user ${notificationData.userId} via WebSocket`);
       } else if (!this.io) {
-        console.log(`Notification stored in database for user ${notificationData.userId} (WebSocket unavailable)`);
+        console.log(
+          `Notification stored in database for user ${notificationData.userId} (WebSocket unavailable)`
+        );
       }
     } catch (error) {
       console.error('Error sending notification:', error);

@@ -80,30 +80,40 @@ Examples (choose what fits this repo after analysis):
 
 ## 2) Create 5 GitHub Issues as Markdown Files
 
-
 For each task **T1..T5**:
 
 - Title: concise, imperative, scoped to unique path(s).
-- Body: Use `.github/issues/template.md` as the base template. Fill in all sections with task-specific details:
+- Body: Use `.github/issues/template.md` as the base template. Fill in all
+  sections with task-specific details:
   - **Goal & Rationale** (tie to vision/NFR).
   - **Start & End Date** (when to begin and complete the task).
   - **Task Description** (what to do, why, and how).
   - **Scope** (explicit file globs this task may edit).
   - **Out of Scope** (name adjacent high-risk files/modules).
-  - **Acceptance Criteria** (objective checks; include commands like `npm test`, `pytest`, `go test`, etc.).
+  - **Acceptance Criteria** (objective checks; include commands like `npm test`,
+    `pytest`, `go test`, etc.).
   - **Risk & Rollback** (how to revert safely).
   - **Links** (vision docs/ADRs/graph node if applicable).
-  - **Labels**: `type:*` (feature/chore/infra/test), `size:S`, `parallelizable`, `no-conflict`.
+  - **Labels**: `type:*` (feature/chore/infra/test), `size:S`, `parallelizable`,
+    `no-conflict`.
   - **Assignee**: Copilot account.
   - **Process-as-code and optimal step directives:**
-    - Every issue must instruct Copilot to operate as if given the instructions from `Initialize.prompt.md` and `Next.prompt.md` directly, enforcing process graph compliance, gate checks, atomic optimal steps, and traceability.
+    - Every issue must instruct Copilot to operate as if given the instructions
+      from `Initialize.prompt.md` and `Next.prompt.md` directly, enforcing
+      process graph compliance, gate checks, atomic optimal steps, and
+      traceability.
     - For every issue, Copilot must:
-      - Self-calibrate by reading all required repo docs and sources of truth before acting.
-      - Execute the single next most optimal, atomic step, keeping all gates passing and recording decisions as ADRs if non-trivial.
-      - Output plan, diff summary, gate results, results, and next step at every iteration, autocontinuing unless paused.
-      - Never bypass gates or improvise outside the process graph; always anchor actions in repo conventions and workflow.
+      - Self-calibrate by reading all required repo docs and sources of truth
+        before acting.
+      - Execute the single next most optimal, atomic step, keeping all gates
+        passing and recording decisions as ADRs if non-trivial.
+      - Output plan, diff summary, gate results, results, and next step at every
+        iteration, autocontinuing unless paused.
+      - Never bypass gates or improvise outside the process graph; always anchor
+        actions in repo conventions and workflow.
 
-- Save each issue as a markdown file in `.github/issues/` named descriptively and uniquely.
+- Save each issue as a markdown file in `.github/issues/` named descriptively
+  and uniquely.
 
 Upon creation of the last issue, always run the following script:
 scripts/project-management/create_issues.py

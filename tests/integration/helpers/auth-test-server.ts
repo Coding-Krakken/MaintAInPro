@@ -28,12 +28,14 @@ export class AuthTestServer {
     this.app.use(express.json({ limit: '10mb' }));
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(compression());
-    
+
     // Security headers but with relaxed settings for testing
-    this.app.use(helmet({
-      contentSecurityPolicy: false,
-      crossOriginEmbedderPolicy: false,
-    }));
+    this.app.use(
+      helmet({
+        contentSecurityPolicy: false,
+        crossOriginEmbedderPolicy: false,
+      })
+    );
 
     // Apply security stack
     this.app.use(securityStack);
@@ -99,7 +101,7 @@ export class AuthTestServer {
   async stop(): Promise<void> {
     return new Promise((resolve, reject) => {
       if (this.server) {
-        this.server.close((err) => {
+        this.server.close(err => {
           if (err) reject(err);
           else resolve();
         });
@@ -144,7 +146,9 @@ export class AuthTestServer {
     } while (registerResponse.status === 429 && attempts < maxAttempts);
 
     if (registerResponse.status !== 201) {
-      throw new Error(`Failed to register test user: ${registerResponse.status} - ${registerResponse.body.message || 'Unknown error'}`);
+      throw new Error(
+        `Failed to register test user: ${registerResponse.status} - ${registerResponse.body.message || 'Unknown error'}`
+      );
     }
 
     // Then login to get tokens with retry logic
@@ -152,12 +156,10 @@ export class AuthTestServer {
     attempts = 0;
 
     do {
-      loginResponse = await this.request()
-        .post('/api/auth/login')
-        .send({
-          email: userData.email,
-          password: userData.password,
-        });
+      loginResponse = await this.request().post('/api/auth/login').send({
+        email: userData.email,
+        password: userData.password,
+      });
 
       if (loginResponse.status === 429) {
         // Wait briefly and retry
@@ -167,7 +169,9 @@ export class AuthTestServer {
     } while (loginResponse.status === 429 && attempts < maxAttempts);
 
     if (loginResponse.status !== 200) {
-      throw new Error(`Failed to login test user: ${loginResponse.status} - ${loginResponse.body.message || 'Unknown error'}`);
+      throw new Error(
+        `Failed to login test user: ${loginResponse.status} - ${loginResponse.body.message || 'Unknown error'}`
+      );
     }
 
     return loginResponse.body;

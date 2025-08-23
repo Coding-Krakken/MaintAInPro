@@ -20,15 +20,18 @@ const createTestApp = (storage: MemStorage) => {
     try {
       const { status, criticality, area, warehouse_id, search, qr_code, page, limit } = req.query;
       let equipment = await storage.equipment.getAll();
-      
+
       // Apply filters
       if (status) equipment = equipment.filter(e => e.status === status);
       if (criticality) equipment = equipment.filter(e => e.criticality === criticality);
       if (area) equipment = equipment.filter(e => e.area === area);
       if (warehouse_id) equipment = equipment.filter(e => e.warehouse_id === warehouse_id);
       if (qr_code) equipment = equipment.filter(e => e.qr_code === qr_code);
-      if (search) equipment = equipment.filter(e => e.name?.toLowerCase().includes((search as string).toLowerCase()));
-      
+      if (search)
+        equipment = equipment.filter(e =>
+          e.name?.toLowerCase().includes((search as string).toLowerCase())
+        );
+
       // Apply pagination
       if (page && limit) {
         const pageNum = parseInt(page as string, 10);
@@ -36,7 +39,7 @@ const createTestApp = (storage: MemStorage) => {
         const startIndex = (pageNum - 1) * limitNum;
         equipment = equipment.slice(startIndex, startIndex + limitNum);
       }
-      
+
       res.json(equipment);
     } catch (error) {
       res.status(500).json({ error: 'Internal server error' });
@@ -60,14 +63,14 @@ const createTestApp = (storage: MemStorage) => {
     try {
       const { page, limit } = req.query;
       let workOrders = await storage.workOrders.getAll();
-      
+
       if (page && limit) {
         const pageNum = parseInt(page as string, 10);
         const limitNum = parseInt(limit as string, 10);
         const startIndex = (pageNum - 1) * limitNum;
         workOrders = workOrders.slice(startIndex, startIndex + limitNum);
       }
-      
+
       res.json(workOrders);
     } catch (error) {
       res.status(500).json({ error: 'Internal server error' });
@@ -94,7 +97,7 @@ const createTestApp = (storage: MemStorage) => {
       const workOrders = await storage.workOrders.getAll();
       const totalWorkOrders = workOrders.length;
       const pendingWorkOrders = workOrders.filter(wo => wo.status === 'pending').length;
-      
+
       res.json({
         totalWorkOrders,
         pendingWorkOrders,
@@ -553,11 +556,11 @@ describe('API Performance Tests', () => {
   describe('Asset Query Performance Benchmarks', () => {
     /**
      * Asset Query Performance Benchmarks
-     * 
+     *
      * These tests validate asset/equipment query performance against NFR requirements:
      * - P95 latency <= 500ms for all API endpoints (nfr.yml)
      * - Equipment management features from EquipmentAssetModule specification
-     * 
+     *
      * Test scenarios cover:
      * - Asset filtering by various criteria
      * - Asset search and lookup performance
@@ -585,7 +588,7 @@ describe('API Performance Tests', () => {
         .expect(200);
 
       const duration = Date.now() - start;
-      
+
       // NFR compliance: P95 latency ≤ 500ms
       expect(duration).toBeLessThan(500);
       expect(response.body.id).toBe(asset.id);
@@ -612,14 +615,14 @@ describe('API Performance Tests', () => {
       // Test QR lookup performance
       const testQr = qrCodes[50]; // Middle QR code
       const start = Date.now();
-      
+
       const response = await request(app)
         .get(`/api/equipment?qr_code=${testQr}`)
         .set('Authorization', `Bearer ${authToken}`)
         .expect(200);
 
       const duration = Date.now() - start;
-      
+
       // NFR compliance: P95 latency ≤ 500ms
       expect(duration).toBeLessThan(500);
       expect(response.body.length).toBe(1);
@@ -641,15 +644,15 @@ describe('API Performance Tests', () => {
       }
 
       const start = Date.now();
-      
+
       const response = await request(app)
         .get('/api/equipment?criticality=critical')
         .set('Authorization', `Bearer ${authToken}`)
         .expect(200);
 
       const duration = Date.now() - start;
-      
-      // NFR compliance: P95 latency ≤ 500ms  
+
+      // NFR compliance: P95 latency ≤ 500ms
       expect(duration).toBeLessThan(500);
       expect(response.body.length).toBe(50); // Every 4th item is critical
       expect(response.body.every(eq => eq.criticality === 'critical')).toBe(true);
@@ -657,7 +660,13 @@ describe('API Performance Tests', () => {
 
     it('should filter assets by area/location within NFR target (≤500ms)', async () => {
       // Create assets in different areas
-      const areas = ['Production Zone A', 'Production Zone B', 'Maintenance Shop', 'Warehouse', 'Office'];
+      const areas = [
+        'Production Zone A',
+        'Production Zone B',
+        'Maintenance Shop',
+        'Warehouse',
+        'Office',
+      ];
       for (let i = 0; i < 250; i++) {
         await storage.equipment.create({
           id: `equipment-area-${i}`,
@@ -671,14 +680,14 @@ describe('API Performance Tests', () => {
       }
 
       const start = Date.now();
-      
+
       const response = await request(app)
         .get('/api/equipment?area=Production Zone A')
         .set('Authorization', `Bearer ${authToken}`)
         .expect(200);
 
       const duration = Date.now() - start;
-      
+
       // NFR compliance: P95 latency ≤ 500ms
       expect(duration).toBeLessThan(500);
       expect(response.body.length).toBe(50); // Every 5th item is in Production Zone A
@@ -689,7 +698,7 @@ describe('API Performance Tests', () => {
       // Create diverse asset dataset
       const statuses = ['operational', 'maintenance', 'out-of-service'];
       const criticalities = ['low', 'medium', 'high', 'critical'];
-      
+
       for (let i = 0; i < 300; i++) {
         await storage.equipment.create({
           id: `equipment-multi-${i}`,
@@ -703,17 +712,17 @@ describe('API Performance Tests', () => {
       }
 
       const start = Date.now();
-      
+
       const response = await request(app)
         .get('/api/equipment?status=operational&criticality=high&warehouse_id=warehouse-1')
         .set('Authorization', `Bearer ${authToken}`)
         .expect(200);
 
       const duration = Date.now() - start;
-      
+
       // NFR compliance: P95 latency ≤ 500ms
       expect(duration).toBeLessThan(500);
-      
+
       // Verify filtering worked correctly
       response.body.forEach(eq => {
         expect(eq.status).toBe('operational');
@@ -738,17 +747,17 @@ describe('API Performance Tests', () => {
       }
 
       const start = Date.now();
-      
+
       const response = await request(app)
         .get('/api/equipment?search=Pump')
         .set('Authorization', `Bearer ${authToken}`)
         .expect(200);
 
       const duration = Date.now() - start;
-      
+
       // NFR compliance: P95 latency ≤ 500ms
       expect(duration).toBeLessThan(500);
-      
+
       // Verify search results
       expect(response.body.length).toBeGreaterThan(0);
       response.body.forEach(eq => {
@@ -776,7 +785,7 @@ describe('API Performance Tests', () => {
         .set('Authorization', `Bearer ${authToken}`)
         .expect(200);
       const duration1 = Date.now() - start1;
-      
+
       // Test pagination performance - page 10
       const start2 = Date.now();
       const response2 = await request(app)
@@ -788,7 +797,7 @@ describe('API Performance Tests', () => {
       // NFR compliance: P95 latency ≤ 500ms for both pages
       expect(duration1).toBeLessThan(500);
       expect(duration2).toBeLessThan(500);
-      
+
       // Verify pagination works
       expect(response1.body.length).toBeLessThanOrEqual(50);
       expect(response2.body.length).toBeLessThanOrEqual(50);
@@ -798,7 +807,7 @@ describe('API Performance Tests', () => {
       // Create comprehensive test dataset
       const testDataSize = 500;
       console.log(`\n📊 Asset Query Performance Benchmark - Dataset Size: ${testDataSize}`);
-      
+
       for (let i = 0; i < testDataSize; i++) {
         await storage.equipment.create({
           id: `benchmark-${i}`,
@@ -821,23 +830,25 @@ describe('API Performance Tests', () => {
         'Paginated Query': '/api/equipment?page=1&limit=50',
       };
 
-      const results: { [key: string]: { duration: number; resultCount: number; nfrCompliant: boolean } } = {};
-      
+      const results: {
+        [key: string]: { duration: number; resultCount: number; nfrCompliant: boolean };
+      } = {};
+
       for (const [testName, endpoint] of Object.entries(benchmarks)) {
         const start = Date.now();
-        
+
         const response = await request(app)
           .get(endpoint)
           .set('Authorization', `Bearer ${authToken}`)
           .expect(200);
-          
+
         const duration = Date.now() - start;
         results[testName] = {
           duration,
           resultCount: response.body.length,
-          nfrCompliant: duration <= 500
+          nfrCompliant: duration <= 500,
         };
-        
+
         // All queries must meet NFR target
         expect(duration).toBeLessThan(500);
       }
@@ -847,10 +858,14 @@ describe('API Performance Tests', () => {
       console.log('='.repeat(60));
       Object.entries(results).forEach(([testName, result]) => {
         const complianceIcon = result.nfrCompliant ? '✅' : '❌';
-        console.log(`${complianceIcon} ${testName.padEnd(25)} | ${result.duration.toString().padStart(3)}ms | ${result.resultCount.toString().padStart(4)} results`);
+        console.log(
+          `${complianceIcon} ${testName.padEnd(25)} | ${result.duration.toString().padStart(3)}ms | ${result.resultCount.toString().padStart(4)} results`
+        );
       });
       console.log('='.repeat(60));
-      console.log(`NFR Target: ≤500ms P95 latency | All tests: ${Object.values(results).every(r => r.nfrCompliant) ? 'PASSED ✅' : 'FAILED ❌'}`);
+      console.log(
+        `NFR Target: ≤500ms P95 latency | All tests: ${Object.values(results).every(r => r.nfrCompliant) ? 'PASSED ✅' : 'FAILED ❌'}`
+      );
     });
   });
 

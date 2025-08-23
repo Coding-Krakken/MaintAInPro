@@ -206,32 +206,32 @@ system_logs
 // JWT Authentication Flow
 interface AuthenticationFlow {
   login: {
-    endpoint: 'POST /api/auth/login',
+    endpoint: 'POST /api/auth/login';
     request: {
       email: string;
       password: string;
       mfaToken?: string;
       rememberMe?: boolean;
-    },
+    };
     response: {
       success: boolean;
       user: UserProfile;
       token: string; // JWT access token
       refreshToken: string;
       sessionId: string;
-    }
-  },
-  
+    };
+  };
+
   refresh: {
-    endpoint: 'POST /api/auth/refresh',
-    request: { refreshToken: string },
-    response: { token: string; refreshToken: string }
-  },
-  
+    endpoint: 'POST /api/auth/refresh';
+    request: { refreshToken: string };
+    response: { token: string; refreshToken: string };
+  };
+
   logout: {
-    endpoint: 'POST /api/auth/logout',
-    request: { sessionId: string }
-  }
+    endpoint: 'POST /api/auth/logout';
+    request: { sessionId: string };
+  };
 }
 
 // Authorization middleware validates JWT tokens
@@ -275,10 +275,12 @@ CREATE POLICY "Managers can see cross-warehouse data" ON work_orders
 // Implementation using Express.js with cron jobs or external schedulers
 // Services run independently with JWT-based internal authentication
 ```
+
 3. pm-scheduler: Generate PM work orders
 4. audit-logger: Centralized audit logging
 5. file-processor: Image compression and metadata
-```
+
+````
 
 ---
 
@@ -290,7 +292,7 @@ CREATE POLICY "Managers can see cross-warehouse data" ON work_orders
 - notifications: For user alerts
 - part_transactions: For inventory changes
 - system_logs: For audit trail (admin only)
-```
+````
 
 ---
 

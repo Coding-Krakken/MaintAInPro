@@ -1,10 +1,17 @@
 # Feature Flag Testing Strategy
 
 ## Overview
-This document outlines the comprehensive testing approach for feature flags in the CMMS platform. Feature flags enable gradual rollouts, A/B testing, and safe deployment of new functionality while maintaining system stability and user experience.
+
+This document outlines the comprehensive testing approach for feature flags in
+the CMMS platform. Feature flags enable gradual rollouts, A/B testing, and safe
+deployment of new functionality while maintaining system stability and user
+experience.
 
 ## Feature Flag Implementation
-Our feature flag system uses environment-based configuration with the following current flags:
+
+Our feature flag system uses environment-based configuration with the following
+current flags:
+
 - `FEATURE_AI_ENABLED` - AI-powered maintenance recommendations
 - `FEATURE_REALTIME_ENABLED` - Real-time notifications and updates
 - `FEATURE_ADVANCED_ANALYTICS` - Enhanced reporting and analytics
@@ -13,11 +20,13 @@ Our feature flag system uses environment-based configuration with the following 
 ## Testing Strategy Overview
 
 ### Testing Pyramid for Feature Flags
+
 1. **Unit Tests** (70%) - Test flag conditions and business logic
 2. **Integration Tests** (20%) - Test flag interactions with services
 3. **End-to-End Tests** (10%) - Test complete user workflows with flags
 
 ### Core Testing Principles
+
 - **Test Both States**: Always test both enabled and disabled states
 - **Isolation**: Each flag state should be tested independently
 - **Performance**: Verify flags don't impact system performance
@@ -35,7 +44,7 @@ Our feature flag system uses environment-based configuration with the following 
 describe('AIRecommendationsWidget', () => {
   it('renders AI recommendations when feature is enabled', () => {
     const mockConfig = { FEATURE_AI_ENABLED: 'true' };
-    
+
     render(
       <FeatureFlagProvider config={mockConfig}>
         <AIRecommendationsWidget workOrderId="WO-001" />
@@ -48,7 +57,7 @@ describe('AIRecommendationsWidget', () => {
 
   it('shows fallback content when AI feature is disabled', () => {
     const mockConfig = { FEATURE_AI_ENABLED: 'false' };
-    
+
     render(
       <FeatureFlagProvider config={mockConfig}>
         <AIRecommendationsWidget workOrderId="WO-001" />
@@ -68,7 +77,7 @@ describe('AIRecommendationsWidget', () => {
 describe('useRealtimeUpdates', () => {
   it('establishes WebSocket connection when realtime is enabled', () => {
     const mockConfig = { FEATURE_REALTIME_ENABLED: 'true' };
-    
+
     const { result } = renderHook(() => useRealtimeUpdates('work-orders'), {
       wrapper: ({ children }) => (
         <FeatureFlagProvider config={mockConfig}>
@@ -83,7 +92,7 @@ describe('useRealtimeUpdates', () => {
 
   it('uses polling fallback when realtime is disabled', () => {
     const mockConfig = { FEATURE_REALTIME_ENABLED: 'false' };
-    
+
     const { result } = renderHook(() => useRealtimeUpdates('work-orders'), {
       wrapper: ({ children }) => (
         <FeatureFlagProvider config={mockConfig}>
@@ -105,7 +114,7 @@ describe('useRealtimeUpdates', () => {
 describe('WorkOrderAssignmentService', () => {
   it('uses AI-based assignment when feature is enabled', async () => {
     process.env.FEATURE_AI_ENABLED = 'true';
-    
+
     const workOrder = createMockWorkOrder({ priority: 'high' });
     const assignment = await assignWorkOrder(workOrder);
 
@@ -116,12 +125,16 @@ describe('WorkOrderAssignmentService', () => {
 
   it('uses manual assignment rules when AI is disabled', async () => {
     process.env.FEATURE_AI_ENABLED = 'false';
-    
+
     const workOrder = createMockWorkOrder({ priority: 'high' });
     const assignment = await assignWorkOrder(workOrder);
 
     expect(assignment.assignmentMethod).toBe('rule-based');
-    expect(assignment.criteria).toEqual(['availability', 'proximity', 'skill_match']);
+    expect(assignment.criteria).toEqual([
+      'availability',
+      'proximity',
+      'skill_match',
+    ]);
   });
 });
 ```
@@ -142,7 +155,7 @@ describe('Analytics API Integration', () => {
 
   it('returns advanced analytics when feature is enabled', async () => {
     process.env.FEATURE_ADVANCED_ANALYTICS = 'true';
-    
+
     const response = await request(app)
       .get('/api/analytics/work-orders')
       .set('Authorization', `Bearer ${authToken}`)
@@ -156,7 +169,7 @@ describe('Analytics API Integration', () => {
 
   it('returns basic analytics when advanced feature is disabled', async () => {
     process.env.FEATURE_ADVANCED_ANALYTICS = 'false';
-    
+
     const response = await request(app)
       .get('/api/analytics/work-orders')
       .set('Authorization', `Bearer ${authToken}`)
@@ -177,7 +190,7 @@ describe('Analytics API Integration', () => {
 describe('Equipment Monitoring Integration', () => {
   it('stores sensor data when realtime feature is enabled', async () => {
     process.env.FEATURE_REALTIME_ENABLED = 'true';
-    
+
     const sensorData = {
       equipment_id: 'EQ-001',
       temperature: 75.5,
@@ -202,7 +215,7 @@ describe('Equipment Monitoring Integration', () => {
 
   it('skips real-time processing when feature is disabled', async () => {
     process.env.FEATURE_REALTIME_ENABLED = 'false';
-    
+
     const sensorData = {
       equipment_id: 'EQ-001',
       temperature: 75.5,
@@ -218,7 +231,7 @@ describe('Equipment Monitoring Integration', () => {
       .where(eq(sensor_readings.equipment_id, 'EQ-001'));
 
     expect(storedData).toHaveLength(1); // Data still stored
-    
+
     // Verify no real-time notification sent
     const notifications = await getRealtimeNotifications('EQ-001');
     expect(notifications).toHaveLength(0);
@@ -234,7 +247,9 @@ describe('Equipment Monitoring Integration', () => {
 
 ```typescript
 // Example: Mobile app workflow with feature flags
-test('Mobile technician workflow with all features enabled', async ({ page }) => {
+test('Mobile technician workflow with all features enabled', async ({
+  page,
+}) => {
   // Set feature flags via environment or test configuration
   await page.addInitScript(() => {
     window.featureFlags = {
@@ -249,7 +264,9 @@ test('Mobile technician workflow with all features enabled', async ({ page }) =>
   await loginAsTechnician(page);
 
   // Verify mobile-specific features are available
-  await expect(page.locator('[data-testid="offline-sync-indicator"]')).toBeVisible();
+  await expect(
+    page.locator('[data-testid="offline-sync-indicator"]')
+  ).toBeVisible();
   await expect(page.locator('[data-testid="qr-scanner-button"]')).toBeVisible();
 
   // Navigate to work order
@@ -257,18 +274,24 @@ test('Mobile technician workflow with all features enabled', async ({ page }) =>
   await page.click('[data-testid="work-order-card"]:first-child');
 
   // Verify AI recommendations are shown
-  await expect(page.locator('[data-testid="ai-recommendations"]')).toBeVisible();
+  await expect(
+    page.locator('[data-testid="ai-recommendations"]')
+  ).toBeVisible();
   await expect(page.locator('[data-testid="suggested-parts"]')).toBeVisible();
 
   // Complete work order with real-time updates
   await page.click('[data-testid="start-work-button"]');
-  
+
   // Verify real-time status update
-  await expect(page.locator('[data-testid="status-indicator"]')).toHaveText('In Progress');
-  
+  await expect(page.locator('[data-testid="status-indicator"]')).toHaveText(
+    'In Progress'
+  );
+
   // Complete and verify real-time sync
   await page.click('[data-testid="complete-work-order"]');
-  await expect(page.locator('[data-testid="success-notification"]')).toBeVisible();
+  await expect(
+    page.locator('[data-testid="success-notification"]')
+  ).toBeVisible();
 });
 
 test('Fallback workflow with mobile features disabled', async ({ page }) => {
@@ -287,10 +310,12 @@ test('Fallback workflow with mobile features disabled', async ({ page }) => {
   // Verify desktop features work without mobile enhancements
   await loginAsTechnician(page);
   await page.click('[data-testid="work-orders-menu"]');
-  
+
   // No AI recommendations shown
-  await expect(page.locator('[data-testid="ai-recommendations"]')).not.toBeVisible();
-  
+  await expect(
+    page.locator('[data-testid="ai-recommendations"]')
+  ).not.toBeVisible();
+
   // Manual refresh required instead of real-time updates
   await expect(page.locator('[data-testid="refresh-button"]')).toBeVisible();
 });
@@ -304,8 +329,8 @@ test('A/B test new analytics dashboard', async ({ page, context }) => {
   // Simulate 50% rollout
   const userId = await getUserId(context);
   const isInTestGroup = userId.hashCode() % 2 === 0;
-  
-  await page.addInitScript((inTestGroup) => {
+
+  await page.addInitScript(inTestGroup => {
     window.featureFlags = {
       FEATURE_ADVANCED_ANALYTICS: inTestGroup ? 'true' : 'false',
     };
@@ -317,17 +342,25 @@ test('A/B test new analytics dashboard', async ({ page, context }) => {
   if (isInTestGroup) {
     // Test new analytics features
     await page.click('[data-testid="analytics-menu"]');
-    await expect(page.locator('[data-testid="predictive-charts"]')).toBeVisible();
-    await expect(page.locator('[data-testid="optimization-insights"]')).toBeVisible();
-    
+    await expect(
+      page.locator('[data-testid="predictive-charts"]')
+    ).toBeVisible();
+    await expect(
+      page.locator('[data-testid="optimization-insights"]')
+    ).toBeVisible();
+
     // Verify enhanced functionality
     await page.click('[data-testid="generate-forecast-button"]');
-    await expect(page.locator('[data-testid="forecast-results"]')).toBeVisible();
+    await expect(
+      page.locator('[data-testid="forecast-results"]')
+    ).toBeVisible();
   } else {
     // Test control group experience
     await page.click('[data-testid="analytics-menu"]');
     await expect(page.locator('[data-testid="basic-reports"]')).toBeVisible();
-    await expect(page.locator('[data-testid="predictive-charts"]')).not.toBeVisible();
+    await expect(
+      page.locator('[data-testid="predictive-charts"]')
+    ).not.toBeVisible();
   }
 });
 ```
@@ -343,13 +376,16 @@ test('A/B test new analytics dashboard', async ({ page, context }) => {
 describe('Feature Flag Performance', () => {
   it('evaluates flags without significant performance impact', async () => {
     const iterations = 10000;
-    
+
     const startTime = Date.now();
-    
+
     for (let i = 0; i < iterations; i++) {
       const isAIEnabled = evaluateFeatureFlag('FEATURE_AI_ENABLED', 'user123');
-      const isRealtimeEnabled = evaluateFeatureFlag('FEATURE_REALTIME_ENABLED', 'user123');
-      
+      const isRealtimeEnabled = evaluateFeatureFlag(
+        'FEATURE_REALTIME_ENABLED',
+        'user123'
+      );
+
       // Simulate typical flag-dependent operation
       if (isAIEnabled && isRealtimeEnabled) {
         await processWithAIAndRealtime();
@@ -357,10 +393,10 @@ describe('Feature Flag Performance', () => {
         await processStandard();
       }
     }
-    
+
     const endTime = Date.now();
     const avgTime = (endTime - startTime) / iterations;
-    
+
     // Flag evaluation should add minimal overhead (< 1ms per evaluation)
     expect(avgTime).toBeLessThan(1);
   });
@@ -374,19 +410,19 @@ describe('Feature Flag Performance', () => {
 describe('Feature Flag Memory Usage', () => {
   it('does not cause memory leaks with frequent flag checks', () => {
     const initialMemory = process.memoryUsage().heapUsed;
-    
+
     // Simulate heavy flag usage
     for (let i = 0; i < 100000; i++) {
       const config = getFeatureFlagConfig();
       evaluateFlags(config, `user-${i % 1000}`);
     }
-    
+
     // Force garbage collection
     if (global.gc) global.gc();
-    
+
     const finalMemory = process.memoryUsage().heapUsed;
     const memoryIncrease = finalMemory - initialMemory;
-    
+
     // Memory increase should be minimal (< 10MB for 100k operations)
     expect(memoryIncrease).toBeLessThan(10 * 1024 * 1024);
   });
@@ -421,18 +457,21 @@ describe('Feature Flag Security', () => {
 
   it('prevents feature flag tampering via client-side', async ({ page }) => {
     await page.goto('/dashboard');
-    
+
     // Attempt to modify flags via browser console
     await page.evaluate(() => {
       window.featureFlags = { FEATURE_AI_ENABLED: 'true' };
-      localStorage.setItem('featureFlags', JSON.stringify({
-        FEATURE_AI_ENABLED: 'true'
-      }));
+      localStorage.setItem(
+        'featureFlags',
+        JSON.stringify({
+          FEATURE_AI_ENABLED: 'true',
+        })
+      );
     });
 
     // Refresh to ensure server-side validation
     await page.reload();
-    
+
     // Verify server-side flags take precedence
     const aiSection = page.locator('[data-testid="ai-recommendations"]');
     if (process.env.FEATURE_AI_ENABLED !== 'true') {
@@ -461,18 +500,18 @@ jobs:
         ai_enabled: ['true', 'false']
         realtime_enabled: ['true', 'false']
         analytics_enabled: ['true', 'false']
-    
+
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-          
+
       - name: Install dependencies
         run: npm ci
-        
+
       - name: Run tests with feature flag combination
         env:
           FEATURE_AI_ENABLED: ${{ matrix.ai_enabled }}
@@ -500,12 +539,12 @@ describe('Deployment Readiness', () => {
     for (const flags of flagCombinations) {
       // Set environment variables
       Object.assign(process.env, flags);
-      
+
       // Test critical workflows
       await testWorkOrderCreation();
       await testEquipmentMonitoring();
       await testUserAuthentication();
-      
+
       console.log(`✅ Combination validated:`, flags);
     }
   });
@@ -520,10 +559,10 @@ describe('Deployment Readiness', () => {
     // Core functionality should still work
     const workOrder = await createWorkOrder(mockWorkOrderData);
     expect(workOrder.id).toBeDefined();
-    
+
     const equipment = await getEquipmentList();
     expect(equipment.length).toBeGreaterThan(0);
-    
+
     const users = await getUserList();
     expect(users.length).toBeGreaterThan(0);
   });
@@ -541,15 +580,21 @@ describe('Deployment Readiness', () => {
 describe('Feature Flag Metrics', () => {
   it('tracks feature flag usage accurately', async () => {
     const metricsCollector = createMockMetricsCollector();
-    
+
     // Simulate user interactions with features
     await simulateUserSession({
       userId: 'user123',
       actions: [
         { type: 'VIEW_AI_RECOMMENDATIONS', featureFlag: 'FEATURE_AI_ENABLED' },
-        { type: 'USE_REALTIME_UPDATES', featureFlag: 'FEATURE_REALTIME_ENABLED' },
-        { type: 'GENERATE_ANALYTICS', featureFlag: 'FEATURE_ADVANCED_ANALYTICS' },
-      ]
+        {
+          type: 'USE_REALTIME_UPDATES',
+          featureFlag: 'FEATURE_REALTIME_ENABLED',
+        },
+        {
+          type: 'GENERATE_ANALYTICS',
+          featureFlag: 'FEATURE_ADVANCED_ANALYTICS',
+        },
+      ],
     });
 
     // Verify metrics are collected
@@ -568,9 +613,9 @@ describe('Feature Flag Metrics', () => {
 describe('Feature Flag Error Monitoring', () => {
   it('includes feature flag context in error reports', async () => {
     const errorReporter = createMockErrorReporter();
-    
+
     process.env.FEATURE_AI_ENABLED = 'true';
-    
+
     try {
       await generateAIRecommendations('invalid-work-order-id');
     } catch (error) {
@@ -581,7 +626,7 @@ describe('Feature Flag Error Monitoring', () => {
           FEATURE_REALTIME_ENABLED: 'false',
           FEATURE_ADVANCED_ANALYTICS: 'false',
           FEATURE_MOBILE_APP: 'false',
-        }
+        },
       });
     }
   });
@@ -595,6 +640,7 @@ describe('Feature Flag Error Monitoring', () => {
 ### 8.1. Feature Flag Testing Checklist
 
 **Before Releasing a Feature Flag:**
+
 - [ ] Unit tests cover both enabled/disabled states
 - [ ] Integration tests validate service interactions
 - [ ] Performance impact assessed and acceptable
@@ -607,6 +653,7 @@ describe('Feature Flag Error Monitoring', () => {
 ### 8.2. Common Testing Patterns
 
 **DO:**
+
 - ✅ Test both flag states in every test suite
 - ✅ Use consistent flag naming conventions
 - ✅ Mock feature flags in unit tests
@@ -616,6 +663,7 @@ describe('Feature Flag Error Monitoring', () => {
 - ✅ Test combinations of multiple flags
 
 **DON'T:**
+
 - ❌ Rely only on manual testing
 - ❌ Skip testing the disabled state
 - ❌ Hardcode flag values in tests
@@ -632,10 +680,10 @@ describe('Feature Flag Lifecycle', () => {
   it('safely removes deprecated feature flags', async () => {
     // Test that removing flag doesn't break existing functionality
     delete process.env.DEPRECATED_FEATURE_FLAG;
-    
+
     // Core functionality should remain intact
     await testCoreWorkflows();
-    
+
     // Verify no references to deprecated flag exist
     const codebase = await scanCodebaseForReferences('DEPRECATED_FEATURE_FLAG');
     expect(codebase.references).toHaveLength(0);
@@ -649,11 +697,11 @@ describe('Feature Flag Lifecycle', () => {
 // Example: Test environment setup
 export function setupFeatureFlagTestEnvironment(flags: Record<string, string>) {
   const originalEnv = { ...process.env };
-  
+
   beforeEach(() => {
     Object.assign(process.env, flags);
   });
-  
+
   afterEach(() => {
     process.env = originalEnv;
   });
@@ -665,7 +713,7 @@ describe('Work Order Service with AI', () => {
     FEATURE_AI_ENABLED: 'true',
     FEATURE_REALTIME_ENABLED: 'false',
   });
-  
+
   // Tests run with consistent flag configuration
 });
 ```
@@ -674,7 +722,8 @@ describe('Work Order Service with AI', () => {
 
 ## Conclusion
 
-Feature flag testing is crucial for maintaining system reliability while enabling rapid feature deployment. This strategy ensures that:
+Feature flag testing is crucial for maintaining system reliability while
+enabling rapid feature deployment. This strategy ensures that:
 
 - All feature states are thoroughly tested
 - Performance impact is monitored and controlled
@@ -682,4 +731,5 @@ Feature flag testing is crucial for maintaining system reliability while enablin
 - Rollback procedures are reliable and tested
 - Team confidence in deployments remains high
 
-Regular review and updates of this testing strategy will ensure it continues to meet the evolving needs of the CMMS platform and its users.
+Regular review and updates of this testing strategy will ensure it continues to
+meet the evolving needs of the CMMS platform and its users.

@@ -1,30 +1,36 @@
 # Asset Query Performance Benchmark Documentation
 
 ## Overview
-This document provides details on the comprehensive asset query performance benchmarks implemented in `tests/performance/api-performance.test.ts` to validate API latency against NFR requirements.
+
+This document provides details on the comprehensive asset query performance
+benchmarks implemented in `tests/performance/api-performance.test.ts` to
+validate API latency against NFR requirements.
 
 ## NFR Requirements
+
 - **P95 latency**: ≤ 500ms for all API endpoints (from requirements/nfr.yml)
-- **Throughput**: ≥ 100 requests/sec sustained  
+- **Throughput**: ≥ 100 requests/sec sustained
 - **Max assets**: ≥ 100,000 equipment records
 
 ## Benchmarks Implemented
 
 ### Asset Query Performance Benchmarks
-The following comprehensive benchmarks have been added to validate asset query performance:
+
+The following comprehensive benchmarks have been added to validate asset query
+performance:
 
 1. **Asset lookup by ID** (≤500ms NFR compliance)
    - Single asset retrieval by unique identifier
    - Tests direct database lookup performance
    - Validates response structure and timing
 
-2. **QR code asset lookup** (≤500ms NFR compliance) 
+2. **QR code asset lookup** (≤500ms NFR compliance)
    - Asset retrieval via QR code scanning functionality
    - Tests filtered query performance on QR code index
    - Critical for mobile app performance
 
 3. **Asset filtering by criticality** (≤500ms NFR compliance)
-   - Filters assets by criticality level (low, medium, high, critical)  
+   - Filters assets by criticality level (low, medium, high, critical)
    - Tests query performance with WHERE clauses
    - Important for operational prioritization
 
@@ -43,7 +49,7 @@ The following comprehensive benchmarks have been added to validate asset query p
    - Tests search index performance
    - Critical for user experience in asset discovery
 
-7. **Asset pagination performance** (≤500ms NFR compliance) 
+7. **Asset pagination performance** (≤500ms NFR compliance)
    - Tests pagination across large asset datasets
    - Validates LIMIT/OFFSET query performance
    - Ensures consistent performance across result pages
@@ -56,11 +62,13 @@ The following comprehensive benchmarks have been added to validate asset query p
 ## Test Scenarios Covered
 
 ### Dataset Sizes
+
 - Small datasets: 50-100 assets for basic functionality
-- Medium datasets: 250-500 assets for realistic workloads  
+- Medium datasets: 250-500 assets for realistic workloads
 - Large datasets: 1000+ assets for stress testing
 
 ### Query Patterns
+
 - Direct ID lookups
 - Filtered queries (single and multi-criteria)
 - Search queries with text matching
@@ -68,6 +76,7 @@ The following comprehensive benchmarks have been added to validate asset query p
 - Relationship queries (asset to work orders)
 
 ### Performance Validations
+
 - Response time measurement (milliseconds)
 - Result count validation
 - NFR compliance checking (≤500ms)
@@ -77,17 +86,19 @@ The following comprehensive benchmarks have been added to validate asset query p
 ## Results Documentation
 
 Each benchmark provides:
+
 - **Duration**: Actual response time in milliseconds
 - **Result Count**: Number of records returned
 - **NFR Compliance**: Pass/fail against ≤500ms target
 - **Performance Logging**: Detailed metrics with visual indicators
 
 Example output:
+
 ```
 📈 Asset Query Performance Results:
 ============================================================
 ✅ List All Assets          |  45ms |  500 results
-✅ Filter by Status         |  32ms |  167 results  
+✅ Filter by Status         |  32ms |  167 results
 ✅ Filter by Criticality    |  28ms |  125 results
 ✅ Search by Name           |  41ms |   83 results
 ✅ Multi-criteria Filter    |  38ms |   42 results
@@ -98,7 +109,9 @@ NFR Target: ≤500ms P95 latency | All tests: PASSED ✅
 
 ## Integration with Existing Tests
 
-The new asset query benchmarks are integrated with existing performance test structure:
+The new asset query benchmarks are integrated with existing performance test
+structure:
+
 - Uses same test setup and teardown patterns
 - Leverages existing mock authentication
 - Follows existing assertion patterns
@@ -107,11 +120,13 @@ The new asset query benchmarks are integrated with existing performance test str
 ## Usage
 
 The benchmarks run automatically as part of the performance test suite:
+
 ```bash
 npm run test:performance
 ```
 
 Or run specifically:
+
 ```bash
 npx vitest run tests/performance/api-performance.test.ts
 ```
@@ -119,7 +134,7 @@ npx vitest run tests/performance/api-performance.test.ts
 ## Future Enhancements
 
 - Database-specific optimizations (indexes, query plans)
-- Caching layer performance validation  
+- Caching layer performance validation
 - Real-time subscription performance
 - Mobile app specific scenarios
 - Load testing with concurrent users

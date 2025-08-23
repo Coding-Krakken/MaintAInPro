@@ -15,10 +15,10 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
 
     // Path to icon file (using generated-icon.png as the source)
     const iconPath = path.join(process.cwd(), 'generated-icon.png');
-    
+
     console.log('Serving icon-512 from:', iconPath);
     console.log('Icon file exists:', fs.existsSync(iconPath));
-    
+
     if (fs.existsSync(iconPath)) {
       const iconData = fs.readFileSync(iconPath);
       res.status(200).send(iconData);

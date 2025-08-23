@@ -16,7 +16,7 @@ export async function apiRequest(
     'x-user-id': localStorage.getItem('userId') || 'default-user-id',
     'x-warehouse-id': localStorage.getItem('warehouseId') || 'default-warehouse-id',
   };
-  
+
   if (data) {
     headers['Content-Type'] = 'application/json';
   }

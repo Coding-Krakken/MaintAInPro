@@ -150,8 +150,8 @@ export function EnterprisePerformanceMonitor() {
     memory: metrics.memory?.usage || 0,
     responseTime: metrics.performance?.avgResponseTime || 0,
     throughput: metrics.performance?.throughput || 0,
-    errorRate: metrics.performance?.errorCount 
-      ? ((metrics.performance.errorCount / metrics.performance.requestCount) * 100) 
+    errorRate: metrics.performance?.errorCount
+      ? (metrics.performance.errorCount / metrics.performance.requestCount) * 100
       : 0,
     disk: 0, // No disk data in current interface, using 0 for chart compatibility
   }));
@@ -350,7 +350,9 @@ export function EnterprisePerformanceMonitor() {
                 <Clock className='h-5 w-5 text-yellow-600' />
                 <div>
                   <p className='text-sm font-medium'>Response Time</p>
-                  <p className='text-2xl font-bold'>{latestMetrics.performance?.avgResponseTime || 0}ms</p>
+                  <p className='text-2xl font-bold'>
+                    {latestMetrics.performance?.avgResponseTime || 0}ms
+                  </p>
                 </div>
               </div>
             </CardContent>
@@ -362,7 +364,9 @@ export function EnterprisePerformanceMonitor() {
                 <Users className='h-5 w-5 text-purple-600' />
                 <div>
                   <p className='text-sm font-medium'>DB Connections</p>
-                  <p className='text-2xl font-bold'>{latestMetrics.database?.activeConnections || 0}</p>
+                  <p className='text-2xl font-bold'>
+                    {latestMetrics.database?.activeConnections || 0}
+                  </p>
                 </div>
               </div>
             </CardContent>

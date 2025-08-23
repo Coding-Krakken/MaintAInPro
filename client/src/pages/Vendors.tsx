@@ -95,7 +95,7 @@ export default function VendorsPage() {
       console.log('Creating vendor with data:', data);
       const response = await fetch(API_BASE, {
         method: 'POST',
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${localStorage.getItem('authToken') || 'demo-token'}`,
           'x-user-id': localStorage.getItem('userId') || 'default-user-id',
@@ -103,15 +103,15 @@ export default function VendorsPage() {
         },
         body: JSON.stringify(data),
       });
-      
+
       console.log('Vendor creation response status:', response.status);
-      
+
       if (!response.ok) {
         const errorBody = await response.text();
         console.error('Vendor creation failed:', response.status, errorBody);
         throw new Error(`Failed to create vendor: ${response.status} - ${errorBody}`);
       }
-      
+
       const result = await response.json();
       console.log('Vendor creation successful:', result);
       return result;
@@ -133,7 +133,7 @@ export default function VendorsPage() {
     mutationFn: async ({ id, data }: { id: string; data: VendorFormData }) => {
       const response = await fetch(`${API_BASE}/${id}`, {
         method: 'PATCH',
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${localStorage.getItem('authToken') || 'demo-token'}`,
           'x-user-id': localStorage.getItem('userId') || 'default-user-id',
@@ -240,8 +240,8 @@ export default function VendorsPage() {
             <DialogHeader>
               <DialogTitle>{editingVendor ? 'Edit Vendor' : 'Add New Vendor'}</DialogTitle>
               <DialogDescription>
-                {editingVendor 
-                  ? 'Update the vendor information below.' 
+                {editingVendor
+                  ? 'Update the vendor information below.'
                   : 'Add a new vendor or contractor to your system.'}
               </DialogDescription>
             </DialogHeader>

@@ -18,7 +18,10 @@ const createMockResponse = (): VercelResponse => {
 };
 
 // Mock VercelRequest
-const createMockRequest = (method: string = 'GET', query: Record<string, any> = {}): VercelRequest => {
+const createMockRequest = (
+  method: string = 'GET',
+  query: Record<string, any> = {}
+): VercelRequest => {
   return {
     method,
     query,
@@ -32,7 +35,7 @@ vi.spyOn(process, 'memoryUsage').mockReturnValue({
   heapTotal: 150 * 1024 * 1024, // 150MB
   rss: 0,
   external: 0,
-  arrayBuffers: 0
+  arrayBuffers: 0,
 });
 
 vi.spyOn(process, 'uptime').mockReturnValue(7200); // 2 hours
@@ -44,37 +47,43 @@ describe('Metrics API Handler', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockRes = createMockResponse();
-    
+
     // Set up process mocks
     vi.spyOn(process, 'memoryUsage').mockReturnValue({
       heapUsed: 75 * 1024 * 1024, // 75MB
       heapTotal: 150 * 1024 * 1024, // 150MB
       rss: 0,
       external: 0,
-      arrayBuffers: 0
+      arrayBuffers: 0,
     });
-    
+
     vi.spyOn(process, 'uptime').mockReturnValue(7200); // 2 hours
   });
 
   describe('CORS Headers', () => {
     it('should set CORS headers for all requests', async () => {
       mockReq = createMockRequest('GET');
-      
+
       await handler(mockReq, mockRes);
-      
+
       expect(mockRes.setHeader).toHaveBeenCalledWith('Access-Control-Allow-Origin', '*');
-      expect(mockRes.setHeader).toHaveBeenCalledWith('Access-Control-Allow-Methods', 'GET, OPTIONS');
-      expect(mockRes.setHeader).toHaveBeenCalledWith('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+      expect(mockRes.setHeader).toHaveBeenCalledWith(
+        'Access-Control-Allow-Methods',
+        'GET, OPTIONS'
+      );
+      expect(mockRes.setHeader).toHaveBeenCalledWith(
+        'Access-Control-Allow-Headers',
+        'Content-Type, Authorization'
+      );
     });
   });
 
   describe('OPTIONS Method', () => {
     it('should handle OPTIONS preflight requests', async () => {
       mockReq = createMockRequest('OPTIONS');
-      
+
       await handler(mockReq, mockRes);
-      
+
       expect(mockRes.status).toHaveBeenCalledWith(200);
       expect(mockRes.end).toHaveBeenCalled();
       expect(mockRes.json).not.toHaveBeenCalled();
@@ -84,9 +93,9 @@ describe('Metrics API Handler', () => {
   describe('GET Method', () => {
     it('should return metrics with correct structure', async () => {
       mockReq = createMockRequest('GET');
-      
+
       await handler(mockReq, mockRes);
-      
+
       expect(mockRes.status).toHaveBeenCalledWith(200);
       expect(mockRes.json).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -115,12 +124,12 @@ describe('Metrics API Handler', () => {
 
     it('should calculate memory metrics correctly', async () => {
       mockReq = createMockRequest('GET');
-      
+
       await handler(mockReq, mockRes);
-      
+
       const callArgs = (mockRes.json as any).mock.calls[0][0];
       const memory = callArgs.memory;
-      
+
       // heapUsed: 75MB, heapTotal: 150MB
       expect(memory.used).toBe(75); // 75MB used
       expect(memory.free).toBe(75); // 150MB total - 75MB used = 75MB free
@@ -130,21 +139,21 @@ describe('Metrics API Handler', () => {
 
     it('should include correct process uptime', async () => {
       mockReq = createMockRequest('GET');
-      
+
       await handler(mockReq, mockRes);
-      
+
       const callArgs = (mockRes.json as any).mock.calls[0][0];
       expect(callArgs.performance.uptime).toBe(7200);
     });
 
     it('should generate performance metrics within expected ranges', async () => {
       mockReq = createMockRequest('GET');
-      
+
       await handler(mockReq, mockRes);
-      
+
       const callArgs = (mockRes.json as any).mock.calls[0][0];
       const performance = callArgs.performance;
-      
+
       expect(performance.avgResponseTime).toBeGreaterThanOrEqual(25);
       expect(performance.avgResponseTime).toBeLessThanOrEqual(175);
       expect(performance.requestCount).toBeGreaterThanOrEqual(100);
@@ -155,12 +164,12 @@ describe('Metrics API Handler', () => {
 
     it('should generate business metrics within expected ranges', async () => {
       mockReq = createMockRequest('GET');
-      
+
       await handler(mockReq, mockRes);
-      
+
       const callArgs = (mockRes.json as any).mock.calls[0][0];
       const business = callArgs.business;
-      
+
       expect(business.activeWorkOrders).toBeGreaterThanOrEqual(2);
       expect(business.activeWorkOrders).toBeLessThanOrEqual(12);
       expect(business.overdueWorkOrders).toBeGreaterThanOrEqual(0);
@@ -173,9 +182,9 @@ describe('Metrics API Handler', () => {
 
     it('should return timestamp in ISO format', async () => {
       mockReq = createMockRequest('GET');
-      
+
       await handler(mockReq, mockRes);
-      
+
       const callArgs = (mockRes.json as any).mock.calls[0][0];
       expect(() => new Date(callArgs.timestamp)).not.toThrow();
       expect(callArgs.timestamp).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/);
@@ -188,21 +197,21 @@ describe('Metrics API Handler', () => {
         heapTotal: 100 * 1024 * 1024,
         rss: 0,
         external: 0,
-        arrayBuffers: 0
+        arrayBuffers: 0,
       });
 
       mockReq = createMockRequest('GET');
-      
+
       await handler(mockReq, mockRes);
-      
+
       const callArgs = (mockRes.json as any).mock.calls[0][0];
       const memory = callArgs.memory;
-      
+
       expect(memory.used).toBe(0);
       expect(memory.free).toBe(100);
       expect(memory.total).toBe(100);
       expect(memory.usage).toBe(0);
-      
+
       memoryUsageSpy.mockRestore();
     });
 
@@ -213,21 +222,21 @@ describe('Metrics API Handler', () => {
         heapTotal: heapSize,
         rss: 0,
         external: 0,
-        arrayBuffers: 0
+        arrayBuffers: 0,
       });
 
       mockReq = createMockRequest('GET');
-      
+
       await handler(mockReq, mockRes);
-      
+
       const callArgs = (mockRes.json as any).mock.calls[0][0];
       const memory = callArgs.memory;
-      
+
       expect(memory.used).toBe(100);
       expect(memory.free).toBe(0);
       expect(memory.total).toBe(100);
       expect(memory.usage).toBe(100);
-      
+
       memoryUsageSpy.mockRestore();
     });
   });
@@ -240,15 +249,15 @@ describe('Metrics API Handler', () => {
       });
 
       mockReq = createMockRequest('GET');
-      
+
       await handler(mockReq, mockRes);
-      
+
       expect(mockRes.status).toHaveBeenCalledWith(500);
       expect(mockRes.json).toHaveBeenCalledWith({
         _error: 'Failed to fetch system metrics',
         message: 'Memory access failed',
       });
-      
+
       memoryUsageSpy.mockRestore();
     });
 
@@ -258,15 +267,15 @@ describe('Metrics API Handler', () => {
       });
 
       mockReq = createMockRequest('GET');
-      
+
       await handler(mockReq, mockRes);
-      
+
       expect(mockRes.status).toHaveBeenCalledWith(500);
       expect(mockRes.json).toHaveBeenCalledWith({
         _error: 'Failed to fetch system metrics',
         message: 'Unknown _error',
       });
-      
+
       memoryUsageSpy.mockRestore();
     });
 
@@ -276,30 +285,27 @@ describe('Metrics API Handler', () => {
       });
 
       mockReq = createMockRequest('GET');
-      
+
       await handler(mockReq, mockRes);
-      
+
       expect(mockRes.status).toHaveBeenCalledWith(500);
       expect(mockRes.json).toHaveBeenCalledWith({
         _error: 'Failed to fetch system metrics',
         message: 'Date conversion failed',
       });
-      
+
       dateProtoSpy.mockRestore();
     });
   });
 
   describe('Unsupported Methods', () => {
-    it.each(['POST', 'PUT', 'DELETE', 'PATCH'])(
-      'should return 405 for %s method',
-      async (method) => {
-        mockReq = createMockRequest(method);
-        
-        await handler(mockReq, mockRes);
-        
-        expect(mockRes.status).toHaveBeenCalledWith(405);
-        expect(mockRes.json).toHaveBeenCalledWith({ error: 'Method not allowed' });
-      }
-    );
+    it.each(['POST', 'PUT', 'DELETE', 'PATCH'])('should return 405 for %s method', async method => {
+      mockReq = createMockRequest(method);
+
+      await handler(mockReq, mockRes);
+
+      expect(mockRes.status).toHaveBeenCalledWith(405);
+      expect(mockRes.json).toHaveBeenCalledWith({ error: 'Method not allowed' });
+    });
   });
 });

@@ -18,11 +18,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Enhanced logging for debugging
   console.log(`Equipment API called: ${req.method} ${req.url}`);
   console.log('Request headers:', JSON.stringify(req.headers, null, 2));
-  
+
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-user-id, x-warehouse-id');
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'Content-Type, Authorization, x-user-id, x-warehouse-id'
+  );
 
   // Handle preflight requests
   if (req.method === 'OPTIONS') {
@@ -43,10 +46,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   } catch (error) {
     console.error('Equipment API error:', error);
     console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace');
-    return res.status(500).json({ 
+    return res.status(500).json({
       message: 'Failed to process equipment request',
       error: error instanceof Error ? error.message : 'Unknown error',
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   }
 }
@@ -54,7 +57,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 async function handleGet(req: VercelRequest, res: VercelResponse) {
   try {
     const warehouseId = (req.headers['x-warehouse-id'] as string) || 'default-warehouse-id';
-    
+
     // Handle single equipment by ID
     if (req.query.id && typeof req.query.id === 'string') {
       const equipment = await storageModule.getEquipmentById(req.query.id);
@@ -63,17 +66,17 @@ async function handleGet(req: VercelRequest, res: VercelResponse) {
       }
       return res.status(200).json(equipment);
     }
-    
+
     // Get all equipment for warehouse
     const equipment = await storageModule.getAllEquipment(warehouseId);
     console.log(`Retrieved ${equipment.length} equipment items for warehouse ${warehouseId}`);
-    
+
     return res.status(200).json(equipment);
   } catch (error) {
     console.error('Error fetching equipment:', error);
-    return res.status(500).json({ 
+    return res.status(500).json({
       message: 'Failed to fetch equipment',
-      error: error instanceof Error ? error.message : 'Unknown error'
+      error: error instanceof Error ? error.message : 'Unknown error',
     });
   }
 }
@@ -81,31 +84,40 @@ async function handleGet(req: VercelRequest, res: VercelResponse) {
 async function handlePost(req: VercelRequest, res: VercelResponse) {
   console.log('=== EQUIPMENT CREATION START ===');
   console.log('Request body:', JSON.stringify(req.body, null, 2));
-  
-  try {
-    const { name, assetTag, description, model, area, status, criticality, ...otherFields } = req.body;
 
-    console.log('Extracted fields:', { name, assetTag, description, model, area, status, criticality });
+  try {
+    const { name, assetTag, description, model, area, status, criticality, ...otherFields } =
+      req.body;
+
+    console.log('Extracted fields:', {
+      name,
+      assetTag,
+      description,
+      model,
+      area,
+      status,
+      criticality,
+    });
 
     // Validate required fields
     if (!name && !description) {
       console.log('Validation failed: missing name/description');
-      return res.status(400).json({ 
-        message: 'Equipment name or description is required' 
+      return res.status(400).json({
+        message: 'Equipment name or description is required',
       });
     }
 
     if (!assetTag) {
       console.log('Validation failed: missing assetTag');
-      return res.status(400).json({ 
-        message: 'Asset tag is required' 
+      return res.status(400).json({
+        message: 'Asset tag is required',
       });
     }
 
     if (!model) {
       console.log('Validation failed: missing model');
-      return res.status(400).json({ 
-        message: 'Model is required' 
+      return res.status(400).json({
+        message: 'Model is required',
       });
     }
 
@@ -131,27 +143,27 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
       manufacturer: null,
       serialNumber: null,
       specifications: null,
-      ...otherFields
+      ...otherFields,
     };
 
     console.log('Equipment data to create:', JSON.stringify(equipmentData, null, 2));
     console.log('About to call createEquipment function...');
-    
+
     const newEquipment = await storageModule.createEquipment(equipmentData);
     console.log('Equipment created successfully:', JSON.stringify(newEquipment, null, 2));
     console.log('=== EQUIPMENT CREATION SUCCESS ===');
-    
+
     return res.status(201).json(newEquipment);
   } catch (error) {
     console.error('=== EQUIPMENT CREATION ERROR ===');
     console.error('Error in handlePost:', error);
     console.error('Error message:', error instanceof Error ? error.message : 'Unknown');
     console.error('Error stack:', error instanceof Error ? error.stack : 'No stack');
-    
-    return res.status(500).json({ 
+
+    return res.status(500).json({
       message: 'Failed to create equipment',
       error: error instanceof Error ? error.message : 'Unknown error',
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   }
 }

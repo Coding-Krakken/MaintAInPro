@@ -27,7 +27,7 @@ const mockEquipmentData = [
     deletedAt: null,
     createdBy: 'user-1',
     updatedBy: 'user-1',
-    qrCode: 'qr-uas-001'
+    qrCode: 'qr-uas-001',
   },
   {
     id: 'hvac-205-id',
@@ -50,8 +50,8 @@ const mockEquipmentData = [
     deletedAt: null,
     createdBy: 'user-1',
     updatedBy: 'user-1',
-    qrCode: 'qr-hvac-205'
-  }
+    qrCode: 'qr-hvac-205',
+  },
 ];
 
 // Mock the fetch function
@@ -70,9 +70,9 @@ describe('Equipment Modal Data Consistency', () => {
         },
       },
     });
-    
+
     // Mock the equipment list endpoint
-    mockFetch.mockImplementation((url) => {
+    mockFetch.mockImplementation(url => {
       if (typeof url === 'string') {
         if (url.includes('/api/equipment') && !url.includes('/api/equipment/')) {
           // Equipment list endpoint
@@ -81,7 +81,7 @@ describe('Equipment Modal Data Consistency', () => {
             json: () => Promise.resolve(mockEquipmentData),
           } as Response);
         }
-        
+
         if (url.includes('/api/equipment/uas-001-id')) {
           // Individual equipment endpoint
           return Promise.resolve({
@@ -89,7 +89,7 @@ describe('Equipment Modal Data Consistency', () => {
             json: () => Promise.resolve(mockEquipmentData[0]),
           } as Response);
         }
-        
+
         if (url.includes('/api/equipment/hvac-205-id')) {
           // Individual equipment endpoint
           return Promise.resolve({
@@ -98,7 +98,7 @@ describe('Equipment Modal Data Consistency', () => {
           } as Response);
         }
       }
-      
+
       return Promise.resolve({
         ok: false,
         json: () => Promise.resolve({}),
@@ -121,7 +121,7 @@ describe('Equipment Modal Data Consistency', () => {
     // Find and click the UAS-001 card
     const uasCard = screen.getByText('UAS-001').closest('[data-testid="equipment-card"]');
     expect(uasCard).toBeInTheDocument();
-    
+
     if (uasCard) {
       fireEvent.click(uasCard);
     }
@@ -152,7 +152,7 @@ describe('Equipment Modal Data Consistency', () => {
     // Find and click the HVAC-205 card
     const hvacCard = screen.getByText('HVAC-205').closest('[data-testid="equipment-card"]');
     expect(hvacCard).toBeInTheDocument();
-    
+
     if (hvacCard) {
       fireEvent.click(hvacCard);
     }

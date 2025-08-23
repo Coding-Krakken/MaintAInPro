@@ -145,7 +145,7 @@ export function securityHeaders(req: Request, res: Response, next: NextFunction)
  */
 export function pwaHeaders(req: Request, res: Response, next: NextFunction): void {
   const url = req.url;
-  
+
   // Service Worker - ensure proper MIME type
   if (url === '/sw.js' || url.endsWith('sw.js')) {
     res.set({
@@ -154,7 +154,7 @@ export function pwaHeaders(req: Request, res: Response, next: NextFunction): voi
       'Cache-Control': 'no-cache, no-store, must-revalidate',
     });
   }
-  
+
   // Web App Manifest - ensure proper MIME type
   if (url === '/manifest.json' || url.endsWith('manifest.json')) {
     res.set({
@@ -162,7 +162,7 @@ export function pwaHeaders(req: Request, res: Response, next: NextFunction): voi
       'Cache-Control': 'public, max-age=3600', // Cache for 1 hour
     });
   }
-  
+
   // PWA icons and other static assets
   if (url.match(/\.(png|jpg|jpeg|gif|svg|ico|webp)$/)) {
     res.set({
@@ -178,15 +178,15 @@ export function pwaHeaders(req: Request, res: Response, next: NextFunction): voi
  */
 export function serviceWorkerHandler(req: Request, res: Response, next: NextFunction): void {
   const url = req.url;
-  
+
   if (url === '/sw.js') {
     // Set proper headers before serving the file
     res.set({
       'Content-Type': 'application/javascript; charset=utf-8',
       'Service-Worker-Allowed': '/',
       'Cache-Control': 'no-cache, no-store, must-revalidate',
-      'Pragma': 'no-cache',
-      'Expires': '0',
+      Pragma: 'no-cache',
+      Expires: '0',
     });
   } else if (url === '/manifest.json') {
     // Set proper headers before serving the file
@@ -195,7 +195,7 @@ export function serviceWorkerHandler(req: Request, res: Response, next: NextFunc
       'Cache-Control': 'public, max-age=3600',
     });
   }
-  
+
   next();
 }
 
@@ -459,20 +459,21 @@ export function auditLogger(req: any, res: Response, next: NextFunction): void {
       body: req.method !== 'GET' ? req.body : undefined,
     };
 
-    // Log to system_logs table if available  
+    // Log to system_logs table if available
     if (db && req.user?.id) {
       (async () => {
         try {
           const { systemLogs } = await import('../../shared/schema');
           const { randomUUID } = await import('crypto');
-          
+
           // Check if the user exists first to avoid foreign key constraint violations
           const { profiles } = await import('../../shared/schema');
-          const userExists = await db.select({ id: profiles.id })
+          const userExists = await db
+            .select({ id: profiles.id })
             .from(profiles)
             .where(eq(profiles.id, req.user.id))
             .limit(1);
-          
+
           if (userExists.length > 0) {
             await db.insert(systemLogs).values({
               id: randomUUID(),
@@ -626,4 +627,10 @@ export async function validateSession(req: any, res: Response, next: NextFunctio
  * Complete security middleware stack
  * Apply all security measures in the correct order
  */
-export const securityStack = [securityHeaders, pwaHeaders, sanitizeInput, sqlInjectionProtection, auditLogger];
+export const securityStack = [
+  securityHeaders,
+  pwaHeaders,
+  sanitizeInput,
+  sqlInjectionProtection,
+  auditLogger,
+];

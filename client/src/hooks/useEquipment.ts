@@ -77,8 +77,10 @@ export function useCreateEquipment() {
         model: newEquipment.model,
         description: newEquipment.description || '',
         area: newEquipment.area || null,
-        status: (newEquipment.status as 'active' | 'inactive' | 'maintenance' | 'retired') || 'active',
-        criticality: (newEquipment.criticality as 'low' | 'medium' | 'high' | 'critical') || 'medium',
+        status:
+          (newEquipment.status as 'active' | 'inactive' | 'maintenance' | 'retired') || 'active',
+        criticality:
+          (newEquipment.criticality as 'low' | 'medium' | 'high' | 'critical') || 'medium',
         installDate: null,
         warrantyExpiry: null,
         manufacturer: newEquipment.manufacturer || null,
@@ -95,7 +97,7 @@ export function useCreateEquipment() {
         qrCode: null,
       };
 
-      queryClient.setQueryData<Equipment[]>(['/api/equipment'], (old) => {
+      queryClient.setQueryData<Equipment[]>(['/api/equipment'], old => {
         return old ? [...old, optimisticEquipment] : [optimisticEquipment];
       });
 
@@ -104,13 +106,11 @@ export function useCreateEquipment() {
     },
     onSuccess: (data, variables, context) => {
       // Replace the specific optimistic equipment with the real one from the server
-      queryClient.setQueryData<Equipment[]>(['/api/equipment'], (old) => {
+      queryClient.setQueryData<Equipment[]>(['/api/equipment'], old => {
         if (!old) return [data];
-        
+
         // Find and replace the specific temporary equipment with the real one
-        return old.map(equipment => 
-          equipment.id === context?.tempId ? data : equipment
-        );
+        return old.map(equipment => (equipment.id === context?.tempId ? data : equipment));
       });
 
       // Also set the individual equipment query cache for the new equipment

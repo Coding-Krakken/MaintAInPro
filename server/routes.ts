@@ -25,7 +25,13 @@ import {
   performanceMiddleware,
   errorTrackingMiddleware,
 } from './middleware/performance.middleware';
-import { securityHeaders, pwaHeaders, serviceWorkerHandler, sanitizeInput, validateRequest } from './middleware/security.middleware';
+import {
+  securityHeaders,
+  pwaHeaders,
+  serviceWorkerHandler,
+  sanitizeInput,
+  validateRequest,
+} from './middleware/security.middleware';
 import performanceMonitoringRoutes from './routes/monitoring';
 import path from 'path';
 
@@ -85,15 +91,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
     securityHeaders(req, res, next);
   });
-  
+
   app.use((req, res, next) => {
-    // Skip service worker handler for non-PWA files  
+    // Skip service worker handler for non-PWA files
     if (req.path === '/sw.js' || req.path === '/manifest.json') {
       return next();
     }
     serviceWorkerHandler(req, res, next);
   });
-  
+
   app.use((req, res, next) => {
     // Skip PWA headers for files that have custom handlers
     if (req.path === '/sw.js' || req.path === '/manifest.json') {
@@ -101,7 +107,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
     pwaHeaders(req, res, next);
   });
-  
+
   app.use(sanitizeInput);
   app.use(validateRequest);
   console.log('Security middleware enabled');
@@ -197,7 +203,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const token = req.headers.authorization?.replace('Bearer ', '');
-      
+
       // In development mode, allow anonymous access when no token is provided
       if (!token) {
         if (process.env.NODE_ENV === 'development') {
@@ -213,7 +219,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
         return res.status(401).json({ message: 'Authentication required' });
       }
-      
+
       // Accept mock token in development mode
       if (process.env.NODE_ENV === 'development' && token === 'demo-token') {
         req.user = {
@@ -224,7 +230,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         };
         return next();
       }
-      
+
       // In test environment, accept mock-token
       if (process.env.NODE_ENV === 'test' && token === 'mock-token') {
         req.user = {
@@ -233,14 +239,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         };
         return next();
       }
-      
+
       // Use advanced JWT validation
       const { AuthService } = await import('./services/auth');
       const tokenValidation = await new AuthService().validateToken(token);
       if (!tokenValidation.valid) {
         return res.status(401).json({ message: 'Invalid or expired token' });
       }
-      
+
       // Check if session is still valid
       const sessionValid = await new AuthService().validateSession(
         tokenValidation.payload.sessionId
@@ -248,7 +254,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!sessionValid) {
         return res.status(401).json({ message: 'Session expired' });
       }
-      
+
       req.user = {
         id: tokenValidation.payload.userId,
         warehouseId: tokenValidation.payload.warehouseId,
@@ -763,23 +769,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.log('GET /api/equipment called');
       const warehouseId = getCurrentWarehouse(req) || '00000000-0000-0000-0000-000000000001';
       console.log('Using warehouse ID:', warehouseId);
-      
+
       if (!storage) {
         console.error('Storage not initialized');
-        return res.status(503).json({ 
+        return res.status(503).json({
           message: 'Service temporarily unavailable - storage initializing',
-          code: 'STORAGE_NOT_READY'
+          code: 'STORAGE_NOT_READY',
         });
       }
-      
+
       const equipment = await storage.getEquipment(warehouseId);
       console.log('Equipment count:', equipment?.length || 0);
       res.json(equipment || []);
     } catch (_error) {
       console.error('Equipment API error:', _error);
-      res.status(500).json({ 
+      res.status(500).json({
         message: 'Failed to get equipment',
-        error: process.env.NODE_ENV === 'development' ? _error.message : undefined
+        error: process.env.NODE_ENV === 'development' ? _error.message : undefined,
       });
     }
   });
@@ -829,10 +835,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (_error) {
       console.error('Equipment creation error:', _error);
       if (_error instanceof z.ZodError) {
-        return res.status(400).json({ 
-          message: 'Invalid equipment data', 
+        return res.status(400).json({
+          message: 'Invalid equipment data',
           errors: _error.errors,
-          received: req.body
+          received: req.body,
         });
       }
       res.status(500).json({ message: 'Failed to create equipment', error: _error.message });
@@ -873,30 +879,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.log('GET /api/work-orders called');
       const warehouseId = getCurrentWarehouse(req);
       console.log('Using warehouse ID:', warehouseId);
-      
+
       if (!storage) {
         console.error('Storage not initialized');
-        return res.status(503).json({ 
+        return res.status(503).json({
           message: 'Service temporarily unavailable - storage initializing',
-          code: 'STORAGE_NOT_READY'
+          code: 'STORAGE_NOT_READY',
         });
       }
-      
+
       const filters = {
         status: req.query.status ? String(req.query.status).split(',') : undefined,
         assignedTo: req.query.assignedTo ? String(req.query.assignedTo) : undefined,
         priority: req.query.priority ? String(req.query.priority).split(',') : undefined,
       };
       console.log('Filters:', filters);
-      
+
       const workOrders = await storage.getWorkOrders(warehouseId, filters);
       console.log('Work orders count:', workOrders?.length || 0);
       res.json(workOrders || []);
     } catch (_error) {
       console.error('Work orders API error:', _error);
-      res.status(500).json({ 
+      res.status(500).json({
         message: 'Failed to get work orders',
-        error: process.env.NODE_ENV === 'development' ? _error.message : undefined
+        error: process.env.NODE_ENV === 'development' ? _error.message : undefined,
       });
     }
   });
@@ -1961,23 +1967,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.log('GET /api/notifications called');
       const userId = getCurrentUser(req) || '00000000-0000-0000-0000-000000000001';
       console.log('Using user ID:', userId);
-      
+
       if (!storage) {
         console.error('Storage not initialized');
-        return res.status(503).json({ 
+        return res.status(503).json({
           message: 'Service temporarily unavailable - storage initializing',
-          code: 'STORAGE_NOT_READY'
+          code: 'STORAGE_NOT_READY',
         });
       }
-      
+
       const notifications = await storage.getNotifications(userId);
       console.log('Notifications count:', notifications?.length || 0);
       res.json(notifications || []);
     } catch (_error) {
       console.error('Notifications API error:', _error);
-      res.status(500).json({ 
+      res.status(500).json({
         message: 'Failed to get notifications',
-        error: process.env.NODE_ENV === 'development' ? _error.message : undefined
+        error: process.env.NODE_ENV === 'development' ? _error.message : undefined,
       });
     }
   });
@@ -1997,15 +2003,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.log('GET /api/dashboard/stats called');
       const warehouseId = getCurrentWarehouse(req) || '00000000-0000-0000-0000-000000000001';
       console.log('Using warehouse ID:', warehouseId);
-      
+
       if (!storage) {
         console.error('Storage not initialized');
-        return res.status(503).json({ 
+        return res.status(503).json({
           message: 'Service temporarily unavailable - storage initializing',
-          code: 'STORAGE_NOT_READY'
+          code: 'STORAGE_NOT_READY',
         });
       }
-      
+
       const [workOrders, equipment, parts] = await Promise.all([
         storage.getWorkOrders(warehouseId).catch(err => {
           console.error('Failed to get work orders for dashboard:', err);
@@ -2018,7 +2024,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         storage.getParts(warehouseId).catch(err => {
           console.error('Failed to get parts for dashboard:', err);
           return [];
-        })
+        }),
       ]);
 
       const stats = {
@@ -2046,14 +2052,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         ).length,
         totalParts: parts.length,
       };
-      
+
       console.log('Dashboard stats:', stats);
       res.json(stats);
     } catch (_error) {
       console.error('Dashboard stats API error:', _error);
-      res.status(500).json({ 
+      res.status(500).json({
         message: 'Failed to get dashboard stats',
-        error: process.env.NODE_ENV === 'development' ? _error.message : undefined
+        error: process.env.NODE_ENV === 'development' ? _error.message : undefined,
       });
     }
   });

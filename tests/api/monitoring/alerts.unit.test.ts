@@ -44,19 +44,25 @@ describe('Alerts API Handler', () => {
   describe('CORS and Method Handling', () => {
     it('should set CORS headers for all requests', async () => {
       mockReq = createMockRequest('GET');
-      
+
       await handler(mockReq, mockRes);
-      
+
       expect(mockSetHeader).toHaveBeenCalledWith('Access-Control-Allow-Origin', '*');
-      expect(mockSetHeader).toHaveBeenCalledWith('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-      expect(mockSetHeader).toHaveBeenCalledWith('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+      expect(mockSetHeader).toHaveBeenCalledWith(
+        'Access-Control-Allow-Methods',
+        'GET, POST, OPTIONS'
+      );
+      expect(mockSetHeader).toHaveBeenCalledWith(
+        'Access-Control-Allow-Headers',
+        'Content-Type, Authorization'
+      );
     });
 
     it('should handle OPTIONS preflight requests', async () => {
       mockReq = createMockRequest('OPTIONS');
-      
+
       await handler(mockReq, mockRes);
-      
+
       expect(mockStatus).toHaveBeenCalledWith(200);
       expect(mockEnd).toHaveBeenCalled();
       expect(mockJson).not.toHaveBeenCalled();
@@ -64,9 +70,9 @@ describe('Alerts API Handler', () => {
 
     it('should return 405 for unsupported methods', async () => {
       mockReq = createMockRequest('PUT');
-      
+
       await handler(mockReq, mockRes);
-      
+
       expect(mockStatus).toHaveBeenCalledWith(405);
       expect(mockJson).toHaveBeenCalledWith({ error: 'Method not allowed' });
     });
@@ -75,9 +81,9 @@ describe('Alerts API Handler', () => {
   describe('GET Method', () => {
     it('should return alerts array with correct structure', async () => {
       mockReq = createMockRequest('GET');
-      
+
       await handler(mockReq, mockRes);
-      
+
       expect(mockStatus).toHaveBeenCalledWith(200);
       expect(mockJson).toHaveBeenCalledWith(
         expect.arrayContaining([
@@ -90,16 +96,16 @@ describe('Alerts API Handler', () => {
             source: expect.any(String),
             severity: expect.any(String),
             details: expect.any(String),
-          })
+          }),
         ])
       );
     });
 
     it('should return exactly 2 alerts', async () => {
       mockReq = createMockRequest('GET');
-      
+
       await handler(mockReq, mockRes);
-      
+
       const callArgs = mockJson.mock.calls[0][0];
       expect(callArgs).toHaveLength(2);
     });
@@ -111,9 +117,9 @@ describe('Alerts API Handler', () => {
       });
 
       mockReq = createMockRequest('GET');
-      
+
       await handler(mockReq, mockRes);
-      
+
       expect(mockStatus).toHaveBeenCalledWith(500);
       expect(mockJson).toHaveBeenCalledWith({
         _error: 'Failed to fetch performance alerts',
@@ -125,9 +131,9 @@ describe('Alerts API Handler', () => {
   describe('POST Method', () => {
     it('should handle alert resolution successfully', async () => {
       mockReq = createMockRequest('POST', {}, '/api/monitoring/alerts/123/resolve');
-      
+
       await handler(mockReq, mockRes);
-      
+
       expect(mockStatus).toHaveBeenCalledWith(200);
       // The alert ID parsing may not work as expected in the mock, so let's just check structure
       expect(mockJson).toHaveBeenCalledWith({
@@ -138,9 +144,9 @@ describe('Alerts API Handler', () => {
 
     it('should handle POST without alert ID in URL', async () => {
       mockReq = createMockRequest('POST', {}, '/api/monitoring/alerts');
-      
+
       await handler(mockReq, mockRes);
-      
+
       expect(mockStatus).toHaveBeenCalledWith(200);
       expect(mockJson).toHaveBeenCalledWith({
         message: 'Alert resolved successfully',

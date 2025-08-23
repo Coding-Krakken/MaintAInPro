@@ -18,10 +18,10 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
 
     // Path to service worker in production build
     const swPath = path.join(process.cwd(), 'dist', 'public', 'sw.js');
-    
+
     console.log('Serving service worker from:', swPath);
     console.log('Service worker exists:', fs.existsSync(swPath));
-    
+
     if (fs.existsSync(swPath)) {
       const swContent = fs.readFileSync(swPath, 'utf-8');
       res.status(200).send(swContent);

@@ -86,26 +86,24 @@ describe('Monitoring API Integration Tests', () => {
     it('should return health status with proper structure', async () => {
       const response = await request(app).get('/api/monitoring/health').expect(200);
 
-      expect(response.body).toHaveProperty('status');
-      expect(response.body).toHaveProperty('timestamp');
-      expect(response.body).toHaveProperty('uptime');
-      expect(response.body).toHaveProperty('metrics');
-      expect(response.body).toHaveProperty('activeAlerts');
-      expect(response.body).toHaveProperty('environment');
-      expect(response.body).toHaveProperty('deployment');
+      expect(response.body).toHaveProperty('overall');
+      expect(response.body).toHaveProperty('infrastructure');
+      expect(response.body).toHaveProperty('application');
+      expect(response.body).toHaveProperty('business');
+      expect(response.body).toHaveProperty('trends');
 
-      // Validate metrics structure
-      expect(response.body.metrics).toHaveProperty('memoryUsage');
-      expect(response.body.metrics).toHaveProperty('avgResponseTime');
-      expect(response.body.metrics).toHaveProperty('requestCount');
-      expect(response.body.metrics).toHaveProperty('errorCount');
+      // Validate trends structure
+      expect(response.body.trends).toHaveProperty('overall');
+      expect(response.body.trends).toHaveProperty('infrastructure');
+      expect(response.body.trends).toHaveProperty('application');
+      expect(response.body.trends).toHaveProperty('business');
 
       // Validate data types
-      expect(typeof response.body.status).toBe('string');
-      expect(typeof response.body.timestamp).toBe('string');
-      expect(typeof response.body.uptime).toBe('number');
-      expect(typeof response.body.activeAlerts).toBe('number');
-      expect(typeof response.body.environment).toBe('string');
+      expect(typeof response.body.overall).toBe('number');
+      expect(typeof response.body.infrastructure).toBe('number');
+      expect(typeof response.body.application).toBe('number');
+      expect(typeof response.body.business).toBe('number');
+      expect(typeof response.body.trends.overall).toBe('string');
     });
 
     it('should handle CORS preflight requests', async () => {
@@ -393,11 +391,25 @@ describe('Monitoring API Integration Tests', () => {
       // This test verifies that the error handling structure is in place
       // The actual error conditions are hard to simulate in the serverless functions
       // but we can at least verify the error response structure would be correct
-      const response = await request(app).get('/api/monitoring/health').expect(200); // Should succeed normally
+      // Simulate error by calling handler directly with a mock that throws
+      const mockReq = { method: 'GET' };
+      const mockRes = {
+        statusCode: 0,
+        body: undefined,
+        setHeader: () => {},
+        status: function(code: number) { this.statusCode = code; return this; },
+        json: function(obj: any) { this.body = obj; return this; },
+      };
+      // Force error
+      const originalMemoryUsage = process.memoryUsage;
+      (process as any).memoryUsage = () => { throw new Error('Memory access failed'); };
+      healthHandler(mockReq as any, mockRes as any);
+      (process as any).memoryUsage = originalMemoryUsage;
 
-      // Verify the success response has the expected structure
-      expect(response.body).toHaveProperty('status');
-      expect(response.body.status).toBe('healthy');
+      expect(mockRes.statusCode).toBe(500);
+      expect(mockRes.body).toHaveProperty('status', 'error');
+      expect(mockRes.body).toHaveProperty('timestamp');
+      expect(mockRes.body).toHaveProperty('error', 'Memory access failed');
     });
 
     it('should validate response structure consistency', async () => {
@@ -407,8 +419,8 @@ describe('Monitoring API Integration Tests', () => {
 
       // Both responses should have the same structure
       expect(Object.keys(healthResponse1.body)).toEqual(Object.keys(healthResponse2.body));
-      expect(Object.keys(healthResponse1.body.metrics)).toEqual(
-        Object.keys(healthResponse2.body.metrics)
+      expect(Object.keys(healthResponse1.body.trends)).toEqual(
+        Object.keys(healthResponse2.body.trends)
       );
     });
   });

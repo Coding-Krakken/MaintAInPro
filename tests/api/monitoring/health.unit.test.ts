@@ -137,72 +137,49 @@ describe('Health API Handler', () => {
       expect(validTrends).toContain(callArgs.trends.business);
     });
   });
-  });
 
   describe('Error Handling', () => {
-    it('should handle errors gracefully by returning fallback PerformanceHealth', async () => {
+    it('should handle errors gracefully by returning error response', async () => {
       // Mock process.memoryUsage to throw an error
       const memoryUsageSpy = vi.spyOn(process, 'memoryUsage').mockImplementationOnce(() => {
         throw new Error('Memory access failed');
       });
 
       mockReq = createMockRequest('GET');
-      
       await handler(mockReq, mockRes);
-      
+
       expect(mockRes.status).toHaveBeenCalledWith(500);
-      expect(mockRes.json).toHaveBeenCalledWith({
-        overall: 25,
-        infrastructure: 25,
-        application: 25,
-        business: 25,
-        trends: {
-          overall: 'declining',
-          infrastructure: 'declining',
-          application: 'declining',
-          business: 'declining',
-        },
-      });
-      
+      expect(mockRes.json).toHaveBeenCalledWith(expect.objectContaining({
+        status: 'error',
+        error: 'Memory access failed',
+        timestamp: expect.any(String),
+      }));
       memoryUsageSpy.mockRestore();
     });
 
-    it('should handle non-Error exceptions by returning fallback PerformanceHealth', async () => {
+    it('should handle non-Error exceptions by returning error response', async () => {
       // Mock process.memoryUsage to throw a non-Error object
       const memoryUsageSpy = vi.spyOn(process, 'memoryUsage').mockImplementationOnce(() => {
         throw 'String error';
       });
 
       mockReq = createMockRequest('GET');
-      
       await handler(mockReq, mockRes);
-      
+
       expect(mockRes.status).toHaveBeenCalledWith(500);
-      expect(mockRes.json).toHaveBeenCalledWith({
-        overall: 25,
-        infrastructure: 25,
-        application: 25,
-        business: 25,
-        trends: {
-          overall: 'declining',
-          infrastructure: 'declining',
-          application: 'declining',
-          business: 'declining',
-        },
-      });
-      
+      expect(mockRes.json).toHaveBeenCalledWith(expect.objectContaining({
+        status: 'error',
+        error: 'Unknown error',
+        timestamp: expect.any(String),
+      }));
       memoryUsageSpy.mockRestore();
     });
   });
 
   describe('Unsupported Methods', () => {
-    it.each(['POST', 'PUT', 'DELETE', 'PATCH'])(
-      'should return 405 for %s method',
-      async (method) => {
+  it.each(['POST', 'PUT', 'DELETE', 'PATCH'])('should return 405 for %s method', async (method) => {
         mockReq = createMockRequest(method);
-        
         await handler(mockReq, mockRes);
-        
         expect(mockRes.status).toHaveBeenCalledWith(405);
         expect(mockRes.json).toHaveBeenCalledWith({ error: 'Method not allowed' });
       }

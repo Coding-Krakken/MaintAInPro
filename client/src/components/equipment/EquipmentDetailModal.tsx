@@ -37,7 +37,7 @@ export default function EquipmentDetailModal({
   // Get equipment data from cache first (for both temporary and newly created equipment)
   const equipmentFromCache = useMemo(() => {
     if (!equipmentId) return null;
-    
+
     const allEquipment = queryClient.getQueryData<Equipment[]>(['/api/equipment']);
     return allEquipment?.find(eq => eq.id === equipmentId) || null;
   }, [equipmentId, queryClient]);
@@ -157,9 +157,7 @@ export default function EquipmentDetailModal({
         <DialogContent className='max-w-md'>
           <DialogHeader>
             <DialogTitle>Loading Equipment</DialogTitle>
-            <DialogDescription>
-              Please wait while we load the equipment details.
-            </DialogDescription>
+            <DialogDescription>Please wait while we load the equipment details.</DialogDescription>
           </DialogHeader>
           <div className='animate-pulse space-y-4'>
             <div className='h-6 bg-gray-200 rounded w-3/4'></div>
@@ -254,7 +252,9 @@ export default function EquipmentDetailModal({
                     <Hash className='w-4 h-4 text-gray-400' />
                     <p className='text-sm font-medium text-gray-500'>Status</p>
                   </div>
-                  <Badge className={getStatusColor(finalEquipment.status)}>{finalEquipment.status}</Badge>
+                  <Badge className={getStatusColor(finalEquipment.status)}>
+                    {finalEquipment.status}
+                  </Badge>
                 </div>
 
                 <div>

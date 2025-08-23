@@ -18,5 +18,8 @@ Document all architectural and process decisions for MaintAInPro CMMS.
 - Maintain traceability throughout the decision lifecycle
 
 ## Related Documentation
-- **Traceability Framework**: [Documentation/Blueprint/5-Traceability/traceability.md](../../Documentation/Blueprint/5-Traceability/traceability.md)
-- **ADR Template**: [/artifacts/adr/ADR_TEMPLATE.md](../../artifacts/adr/ADR_TEMPLATE.md)
+
+- **Traceability Framework**:
+  [Documentation/Blueprint/5-Traceability/traceability.md](../../Documentation/Blueprint/5-Traceability/traceability.md)
+- **ADR Template**:
+  [/artifacts/adr/ADR_TEMPLATE.md](../../artifacts/adr/ADR_TEMPLATE.md)

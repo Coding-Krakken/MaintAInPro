@@ -25,26 +25,26 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   try {
     console.log('=== STORAGE TEST START ===');
-    
+
     if (!storageModule) {
       return res.status(500).json({
         message: 'Storage module not available',
-        error: 'Failed to import storage module'
+        error: 'Failed to import storage module',
       });
     }
-    
+
     if (req.method === 'GET') {
       // Test reading equipment
       const equipment = await storageModule.getAllEquipment('test-warehouse');
       console.log('Test: Retrieved equipment count:', equipment.length);
-      
+
       return res.status(200).json({
         message: 'Storage read test successful',
         equipmentCount: equipment.length,
-        equipment: equipment.slice(0, 2) // Return first 2 for testing
+        equipment: equipment.slice(0, 2), // Return first 2 for testing
       });
     }
-    
+
     if (req.method === 'POST') {
       // Test creating equipment
       const testEquipment = {
@@ -57,30 +57,29 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         warehouseId: 'test-warehouse',
         organizationId: 'test-org',
         createdBy: 'test-user',
-        updatedBy: 'test-user'
+        updatedBy: 'test-user',
       };
-      
+
       console.log('Test: Creating equipment with data:', testEquipment);
       const created = await storageModule.createEquipment(testEquipment);
       console.log('Test: Equipment created with ID:', created.id);
-      
+
       return res.status(201).json({
         message: 'Storage write test successful',
-        createdEquipment: created
+        createdEquipment: created,
       });
     }
-    
+
     return res.status(405).json({ message: 'Method not allowed' });
-    
   } catch (error) {
     console.error('=== STORAGE TEST ERROR ===');
     console.error('Storage test error:', error);
     console.error('Error stack:', error instanceof Error ? error.stack : 'No stack');
-    
+
     return res.status(500).json({
       message: 'Storage test failed',
       error: error instanceof Error ? error.message : 'Unknown error',
-      stack: error instanceof Error ? error.stack : undefined
+      stack: error instanceof Error ? error.stack : undefined,
     });
   }
 }

@@ -26,12 +26,12 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
       path.join(process.cwd(), 'dist', 'public', 'manifest.json'),
       path.join(process.cwd(), 'client', 'public', 'manifest.json'),
       path.join(__dirname, '..', 'dist', 'public', 'manifest.json'),
-      path.join(__dirname, '..', 'client', 'public', 'manifest.json')
+      path.join(__dirname, '..', 'client', 'public', 'manifest.json'),
     ];
-    
+
     let manifestPath = null;
     let manifestContent = null;
-    
+
     for (const testPath of possiblePaths) {
       if (fs.existsSync(testPath)) {
         manifestPath = testPath;
@@ -39,51 +39,51 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
         break;
       }
     }
-    
+
     console.log('Serving manifest from:', manifestPath);
-    
+
     if (manifestContent) {
       return res.status(200).send(manifestContent);
     } else {
       // Fallback manifest for PWA compatibility
       const fallbackManifest = {
-        name: "MaintAInPro",
-        short_name: "MaintAIn",
-        description: "Computerized Maintenance Management System",
-        start_url: "/",
-        display: "standalone",
-        background_color: "#ffffff",
-        theme_color: "#000000",
+        name: 'MaintAInPro',
+        short_name: 'MaintAIn',
+        description: 'Computerized Maintenance Management System',
+        start_url: '/',
+        display: 'standalone',
+        background_color: '#ffffff',
+        theme_color: '#000000',
         icons: [
           {
-            src: "/icon-192.png",
-            sizes: "192x192",
-            type: "image/png"
+            src: '/icon-192.png',
+            sizes: '192x192',
+            type: 'image/png',
           },
           {
-            src: "/icon-512.png", 
-            sizes: "512x512",
-            type: "image/png"
-          }
-        ]
+            src: '/icon-512.png',
+            sizes: '512x512',
+            type: 'image/png',
+          },
+        ],
       };
-      
+
       console.log('Using fallback manifest');
       return res.status(200).json(fallbackManifest);
     }
   } catch (error) {
     console.error('Error serving manifest:', error);
-    
+
     // Return a basic fallback manifest even on error
     const errorManifest = {
-      name: "MaintAInPro",
-      short_name: "MaintAIn",
-      start_url: "/",
-      display: "standalone",
-      background_color: "#ffffff",
-      theme_color: "#000000"
+      name: 'MaintAInPro',
+      short_name: 'MaintAIn',
+      start_url: '/',
+      display: 'standalone',
+      background_color: '#ffffff',
+      theme_color: '#000000',
     };
-    
+
     return res.status(200).json(errorManifest);
   }
 }
