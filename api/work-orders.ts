@@ -49,7 +49,7 @@ async function handleGet(req: VercelRequest, res: VercelResponse) {
     const warehouseId = (req.headers['x-warehouse-id'] as string) || 'default-warehouse-id';
     const { status } = req.query;
 
-    const filters: any = {};
+    const filters: { status?: string[] } = {};
     if (status && typeof status === 'string') {
       filters.status = status.split(',');
     }
