@@ -355,6 +355,78 @@ export async function getAllNotifications(userId: string): Promise<Notification[
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 }
 
+export async function createNotification(notification: any): Promise<Notification> {
+  const data = await loadData();
+  const newNotification: Notification = {
+    id: generateId(),
+    ...notification,
+    createdAt: new Date(),
+  };
+  data.notifications.push(newNotification);
+  await saveData(data);
+  return newNotification;
+}
+
+export async function markNotificationRead(id: string): Promise<void> {
+  const data = await loadData();
+  const notification = data.notifications.find(n => n.id === id);
+  if (notification) {
+    notification.read = true;
+    await saveData(data);
+  }
+}
+
+export async function deleteNotification(id: string): Promise<void> {
+  const data = await loadData();
+  data.notifications = data.notifications.filter(n => n.id !== id);
+  await saveData(data);
+}
+
+// Notification preferences (placeholder - these would normally be in a separate table)
+export async function getNotificationPreferences(userId: string): Promise<any[]> {
+  // For now, return empty array. In production, this would query the preferences table
+  return [];
+}
+
+export async function createNotificationPreference(preference: any): Promise<any> {
+  // Placeholder implementation
+  return {
+    id: generateId(),
+    ...preference,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
+}
+
+export async function updateNotificationPreference(userId: string, notificationType: string, updates: any): Promise<any> {
+  // Placeholder implementation
+  return null;
+}
+
+export async function deleteNotificationPreference(userId: string, notificationType: string): Promise<void> {
+  // Placeholder implementation
+}
+
+// Push subscriptions (placeholder)
+export async function getPushSubscriptions(userId: string): Promise<any[]> {
+  // For now, return empty array. In production, this would query the subscriptions table
+  return [];
+}
+
+export async function createPushSubscription(subscription: any): Promise<any> {
+  // Placeholder implementation
+  return {
+    id: generateId(),
+    ...subscription,
+    createdAt: new Date(),
+    lastUsed: new Date(),
+  };
+}
+
+export async function deletePushSubscription(id: string): Promise<void> {
+  // Placeholder implementation
+}
+
 // Dashboard stats
 export async function getDashboardStats(warehouseId: string): Promise<DashboardStats> {
   const equipment = await getAllEquipment(warehouseId);
