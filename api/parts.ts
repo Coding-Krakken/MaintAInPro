@@ -4,6 +4,7 @@
  */
 
 import { VercelRequest, VercelResponse } from '@vercel/node';
+import type { Part } from '@shared/schema';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Set CORS headers
@@ -38,7 +39,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 }
 
 // In-memory storage for demo purposes
-const _partsStorage: any[] = [
+const _partsStorage: Part[] = [
   {
     id: 'part-1',
     partNumber: 'PART-001',

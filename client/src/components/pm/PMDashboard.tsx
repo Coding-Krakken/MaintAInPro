@@ -44,7 +44,11 @@ interface PMTemplate {
 
 const PMDashboard: React.FC = () => {
   const [selectedEquipmentId, setSelectedEquipmentId] = useState<string | null>(null);
-  const [generationResult, setGenerationResult] = useState<any>(null);
+  const [generationResult, setGenerationResult] = useState<{
+    success: boolean;
+    generated?: number;
+    errors?: string[];
+  } | null>(null);
   const queryClient = useQueryClient();
 
   // Fetch equipment

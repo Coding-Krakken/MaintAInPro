@@ -8,6 +8,7 @@ import { Progress } from '@/components/ui/progress';
 import { useToast } from '@/hooks/use-toast';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useOfflineService } from '@/services/offline';
+import type { NetworkStatus } from '@/types';
 import {
   CheckCircle,
   XCircle,
@@ -61,8 +62,8 @@ const MobileChecklistExecution: React.FC<MobileChecklistExecutionProps> = ({
 
   // Network status monitoring
   useEffect(() => {
-    const handleNetworkChange = (event: unknown) => {
-      setNetworkStatus((event as any).detail as any);
+    const handleNetworkChange = (event: Event) => {
+      setNetworkStatus((event as CustomEvent).detail as NetworkStatus);
     };
 
     const handleSyncComplete = () => {
@@ -185,9 +186,15 @@ const MobileChecklistExecution: React.FC<MobileChecklistExecutionProps> = ({
         return;
       }
 
+      interface WindowWithSpeechRecognition {
+        webkitSpeechRecognition?: unknown;
+        SpeechRecognition?: unknown;
+      }
+
       const SpeechRecognition =
-        (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
-      const recognition = new SpeechRecognition();
+        (window as unknown as WindowWithSpeechRecognition).webkitSpeechRecognition || 
+        (window as unknown as WindowWithSpeechRecognition).SpeechRecognition;
+      const recognition = new (SpeechRecognition as unknown as new() => any)();
 
       recognition.continuous = true;
       recognition.interimResults = true;
@@ -202,9 +209,9 @@ const MobileChecklistExecution: React.FC<MobileChecklistExecutionProps> = ({
       };
 
       recognition.onresult = (event: unknown) => {
-        const transcript = Array.from((event as any).results as any)
-          .map((result: unknown) => (result as any)[0])
-          .map((result: unknown) => (result as any).transcript as any)
+        const transcript = Array.from((event as { results: unknown[] }).results)
+          .map((result: unknown) => (result as { 0: { transcript: string } })[0])
+          .map((result: { transcript: string }) => result.transcript)
           .join('');
 
         const currentItem = getCurrentItem();
@@ -462,11 +469,11 @@ const MobileChecklistExecution: React.FC<MobileChecklistExecutionProps> = ({
           </div>
 
           {/* Photo thumbnails */}
-          {photos.get(currentItem.id) && photos.get(currentItem.id)!.length > 0 && (
+          {photos.get(currentItem.id) && (photos.get(currentItem.id)?.length ?? 0) > 0 && (
             <div className='space-y-2'>
               <label className='text-sm font-medium'>Attached Photos</label>
               <div className='grid grid-cols-3 gap-2'>
-                {photos.get(currentItem.id)!.map((photo, index) => (
+                {(photos.get(currentItem.id) ?? []).map((photo, index) => (
                   <div
                     key={index}
                     className='relative aspect-square border rounded-lg overflow-hidden'

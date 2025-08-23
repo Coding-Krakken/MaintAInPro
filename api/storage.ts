@@ -28,7 +28,7 @@ interface Equipment {
   warrantyExpiry?: Date | null;
   manufacturer?: string | null;
   serialNumber?: string | null;
-  specifications?: Record<string, any> | null;
+  specifications?: Record<string, unknown> | null;
 }
 
 interface WorkOrder {
@@ -154,9 +154,9 @@ async function saveData(data: StorageData): Promise<void> {
     console.error('Failed to save data:', error);
     console.error('Error details:', {
       message: error instanceof Error ? error.message : 'Unknown',
-      code: (error as any)?.code,
-      errno: (error as any)?.errno,
-      path: (error as any)?.path,
+      code: (error as NodeJS.ErrnoException)?.code,
+      errno: (error as NodeJS.ErrnoException)?.errno,
+      path: (error as NodeJS.ErrnoException)?.path,
     });
     throw error;
   }
@@ -261,7 +261,7 @@ export async function createEquipment(equipmentData: {
   organizationId: string;
   createdBy: string;
   updatedBy: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }): Promise<Equipment> {
   console.log('=== STORAGE createEquipment START ===');
   console.log('Input equipmentData:', JSON.stringify(equipmentData, null, 2));
@@ -280,8 +280,8 @@ export async function createEquipment(equipmentData: {
       model: equipmentData.model,
       description: equipmentData.description,
       area: equipmentData.area || '',
-      status: (equipmentData.status as any) || 'active',
-      criticality: (equipmentData.criticality as any) || 'medium',
+      status: (equipmentData.status as string) || 'active',
+      criticality: (equipmentData.criticality as string) || 'medium',
       organizationId: equipmentData.organizationId,
       warehouseId: equipmentData.warehouseId,
       createdBy: equipmentData.createdBy,
@@ -327,14 +327,14 @@ export async function getAllWorkOrders(
   const data = await loadData();
   let workOrders = data.workOrders.filter(wo => wo.warehouseId === warehouseId);
 
-  if (filters?.status) {
-    workOrders = workOrders.filter(wo => filters.status!.includes(wo.status));
+  if (filters?.status && filters.status.length > 0) {
+    workOrders = workOrders.filter(wo => filters.status?.includes(wo.status));
   }
   if (filters?.assignedTo) {
     workOrders = workOrders.filter(wo => wo.assignedTo === filters.assignedTo);
   }
-  if (filters?.priority) {
-    workOrders = workOrders.filter(wo => filters.priority!.includes(wo.priority));
+  if (filters?.priority && filters.priority.length > 0) {
+    workOrders = workOrders.filter(wo => filters.priority?.includes(wo.priority));
   }
 
   return workOrders.sort(

@@ -142,7 +142,10 @@ export function useUpdateChecklistItem() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ id: _id, data }: { id: string; data: any }) => {
+    mutationFn: async ({ id: _id, data }: { 
+      id: string; 
+      data: { updates: { status?: string; notes?: string } } 
+    }) => {
       const response = await apiRequest('PATCH', `/api/checklist-items/${_id}`, data);
       return response.json();
     },

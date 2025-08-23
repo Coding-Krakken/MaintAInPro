@@ -244,7 +244,12 @@ export class PWAService {
   async requestBackgroundSync(tag: string): Promise<void> {
     if (this.registration && 'sync' in window.ServiceWorkerRegistration.prototype) {
       try {
-        await (this.registration as any).sync.register(tag);
+        interface ServiceWorkerRegistrationWithSync extends ServiceWorkerRegistration {
+          sync?: {
+            register(_tag: string): Promise<void>;
+          };
+        }
+        await (this.registration as ServiceWorkerRegistrationWithSync).sync?.register(tag);
         console.log(`Background sync registered: ${tag}`);
       } catch (_error) {
         console.error('Background sync registration failed:', _error);
@@ -259,17 +264,18 @@ export class PWAService {
     // Check if running in standalone mode (installed)
     this.status.isInstalled =
       window.matchMedia('(display-mode: standalone)').matches ||
-      (navigator as any).standalone ||
+      (navigator as { standalone?: boolean }).standalone ||
       document.referrer.includes('android-app://');
   }
 
   /**
    * Handle service worker messages
    */
-  private handleServiceWorkerMessage(data: any): void {
+  private handleServiceWorkerMessage(data: unknown): void {
     console.log('Message from service worker:', data);
 
-    switch (data.type) {
+    const messageData = data as { type?: string };
+    switch (messageData.type) {
       case 'SYNC_STATUS':
         this.notifyListeners('syncStatus', data);
         break;
@@ -321,7 +327,7 @@ export class PWAService {
       this.listeners.set(event, []);
     }
 
-    this.listeners.get(event)!.push(callback);
+    this.listeners.get(event)?.push(callback);
 
     // Return unsubscribe function
     return () => {

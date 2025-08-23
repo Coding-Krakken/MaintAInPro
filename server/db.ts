@@ -9,6 +9,7 @@ const { Pool } = pkg;
 import * as schema from '../shared/schema';
 
 // Check if DATABASE_URL is set for production PostgreSQL usage
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let db: any = null;
 
 if (!process.env.DATABASE_URL) {

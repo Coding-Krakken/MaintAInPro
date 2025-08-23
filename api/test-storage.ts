@@ -5,7 +5,7 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
 
 // Robust import with error handling
-let _storageModule: any;
+let _storageModule: unknown;
 try {
   _storageModule = require('./storage');
   console.log('Test Storage: Storage module imported successfully');
