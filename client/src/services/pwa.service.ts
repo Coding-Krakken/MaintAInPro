@@ -246,7 +246,7 @@ export class PWAService {
       try {
         interface ServiceWorkerRegistrationWithSync extends ServiceWorkerRegistration {
           sync?: {
-            register(tag: string): Promise<void>;
+            register(_tag: string): Promise<void>;
           };
         }
         await (this.registration as ServiceWorkerRegistrationWithSync).sync?.register(tag);
@@ -327,7 +327,7 @@ export class PWAService {
       this.listeners.set(event, []);
     }
 
-    this.listeners.get(event)!.push(callback);
+    this.listeners.get(event)?.push(callback);
 
     // Return unsubscribe function
     return () => {
