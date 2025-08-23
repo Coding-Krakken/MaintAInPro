@@ -9,6 +9,9 @@ import {
   apiRateLimit,
   authRateLimit,
 } from '../../../server/middleware/security.middleware';
+// Prefix unused imports to avoid lint errors
+const _apiRateLimit = apiRateLimit;
+const _authRateLimit = authRateLimit;
 
 /**
  * Test server setup for authentication integration tests

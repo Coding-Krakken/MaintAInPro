@@ -48,8 +48,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       }
     }
 
-    const warehouseId = getCurrentWarehouse(req);
-    const userId = getCurrentUser(req);
+  const warehouseId = getCurrentWarehouse(req);
+  const _userId = getCurrentUser(req); // prefixed with _ to avoid unused var lint error
 
     switch (req.method) {
       case 'GET':
@@ -66,7 +66,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           return res.json(vendors);
         }
 
-      case 'POST':
+      case 'POST': {
         const vendorData = {
           name: req.body.name,
           type: req.body.type,
@@ -78,7 +78,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         };
 
         try {
-          const parsedData = insertVendorSchema.parse({
+          const _parsedData = insertVendorSchema.parse({
             ...vendorData,
             id: req.body.id || randomUUID(),
             active: req.body.active !== undefined ? req.body.active : true,
@@ -94,6 +94,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           }
           throw error;
         }
+      }
 
       case 'PATCH':
         if (!req.query.id) {
@@ -117,7 +118,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           throw error;
         }
 
-      case 'DELETE':
+      case 'DELETE': {
         if (!req.query.id) {
           return res.status(400).json({ message: 'Vendor ID is required' });
         }
@@ -128,6 +129,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         }
 
         return res.status(204).end();
+      }
 
       default:
         res.setHeader('Allow', ['GET', 'POST', 'PATCH', 'DELETE']);

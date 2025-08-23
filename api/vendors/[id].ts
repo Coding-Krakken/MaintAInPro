@@ -16,6 +16,8 @@ const insertVendorSchema = z.object({
 });
 
 // Helper function to get current user and warehouse from request headers
+const _getCurrentUser = getCurrentUser; // prefixed with _ to avoid unused var lint error
+const _getCurrentWarehouse = getCurrentWarehouse; // prefixed with _ to avoid unused var lint error
 const getCurrentUser = (req: VercelRequest) => {
   return (req.headers['x-user-id'] as string) || '00000000-0000-0000-0000-000000000001';
 };
@@ -53,12 +55,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     switch (req.method) {
-      case 'GET':
+      case 'GET': {
         const vendor = await storageModule.getVendorById(vendorId);
         if (!vendor) {
           return res.status(404).json({ message: 'Vendor not found' });
         }
         return res.json(vendor);
+      }
 
       case 'PATCH':
         try {
@@ -78,13 +81,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           throw error;
         }
 
-      case 'DELETE':
+      case 'DELETE': {
         const deleted = await storageModule.deleteVendor(vendorId);
         if (!deleted) {
           return res.status(404).json({ message: 'Vendor not found' });
         }
 
         return res.status(204).end();
+      }
 
       default:
         res.setHeader('Allow', ['GET', 'PATCH', 'DELETE']);

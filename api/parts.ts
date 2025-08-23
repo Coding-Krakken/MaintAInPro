@@ -38,7 +38,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 }
 
 // In-memory storage for demo purposes
-const partsStorage: any[] = [
+const _partsStorage: any[] = [
   {
     id: 'part-1',
     partNumber: 'PART-001',
@@ -94,8 +94,8 @@ const partsStorage: any[] = [
 
 async function handleGet(req: VercelRequest, res: VercelResponse) {
   try {
-    console.log(`Retrieved ${partsStorage.length} parts`);
-    return res.status(200).json(partsStorage);
+  console.log(`Retrieved ${_partsStorage.length} parts`);
+  return res.status(200).json(_partsStorage);
   } catch (error) {
     console.error('Error fetching parts:', error);
     return res.status(500).json({
@@ -135,7 +135,7 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
     };
 
     // Add to storage
-    partsStorage.push(newPart);
+  _partsStorage.push(newPart);
 
     console.log('Created part:', newPart.id, newPart.name);
     return res.status(201).json(newPart);
