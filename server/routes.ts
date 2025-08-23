@@ -540,6 +540,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  /**
+   * @swagger
+   * /auth/logout:
+   *   post:
+   *     summary: User logout
+   *     description: Logout the current user and invalidate their session
+   *     tags: [Authentication]
+   *     security:
+   *       - bearerAuth: []
+   *     responses:
+   *       200:
+   *         description: Logout successful
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 message:
+   *                   type: string
+   *                   example: Logout successful
+   *       401:
+   *         $ref: '#/components/responses/UnauthorizedError'
+   */
   app.post('/api/auth/logout', authenticateRequest, async (req, res) => {
     try {
       const { AuthService } = await import('./services/auth');
@@ -795,7 +818,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Profiles
+  /**
+   * @swagger
+   * /profiles/me:
+   *   get:
+   *     summary: Get current user profile
+   *     description: Retrieve the profile information for the currently authenticated user
+   *     tags: [User Profile]
+   *     security:
+   *       - bearerAuth: []
+   *     responses:
+   *       200:
+   *         description: User profile information
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/Profile'
+   *       401:
+   *         $ref: '#/components/responses/UnauthorizedError'
+   */
   app.get('/api/profiles/me', async (req, res) => {
     try {
       const token = req.headers.authorization?.replace('Bearer ', '');
@@ -1086,6 +1127,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  /**
+   * @swagger
+   * /work-orders/{id}:
+   *   get:
+   *     summary: Get work order by ID
+   *     description: Retrieve a specific work order by its ID
+   *     tags: [Work Orders]
+   *     security:
+   *       - bearerAuth: []
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema:
+   *           type: string
+   *           format: uuid
+   *         description: Work order unique identifier
+   *     responses:
+   *       200:
+   *         description: Work order details
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/WorkOrder'
+   *       404:
+   *         $ref: '#/components/responses/NotFoundError'
+   *       401:
+   *         $ref: '#/components/responses/UnauthorizedError'
+   */
   app.get('/api/work-orders/:id', authenticateRequest, async (req, res) => {
     try {
       const workOrder = await storage.getWorkOrder(req.params.id);
