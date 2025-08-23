@@ -165,18 +165,6 @@ export function advancedSecurityHeaders(req: Request, res: Response, next: NextF
     // Referrer Policy
     referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
     
-    // Permissions Policy
-    permissionsPolicy: {
-      geolocation: [],
-      microphone: [],
-      camera: [],
-      payment: [],
-      usb: [],
-      magnetometer: [],
-      gyroscope: [],
-      speaker: [],
-    },
-    
     // Cross-Origin Embedder Policy
     crossOriginEmbedderPolicy: false,
     
@@ -185,12 +173,6 @@ export function advancedSecurityHeaders(req: Request, res: Response, next: NextF
     
     // DNS Prefetch Control
     dnsPrefetchControl: { allow: false },
-    
-    // Expect-CT (for certificate transparency)
-    expectCt: {
-      maxAge: 86400, // 24 hours
-      enforce: true,
-    },
   })(req, res, () => {
     // Additional custom headers
     res.set({
@@ -201,6 +183,7 @@ export function advancedSecurityHeaders(req: Request, res: Response, next: NextF
       'X-API-Version': '1.0.0',
       'X-Powered-By': 'MaintAInPro-CMMS',
       'X-Request-ID': req.headers['x-request-id'] || crypto.randomUUID(),
+      'Permissions-Policy': 'geolocation=(), microphone=(), camera=(), payment=(), usb=(), magnetometer=(), gyroscope=(), speaker=()',
     });
 
     // Enhanced CORS headers for API endpoints

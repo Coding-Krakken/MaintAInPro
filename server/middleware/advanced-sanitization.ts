@@ -54,49 +54,57 @@ const XSS_PATTERNS = [
  */
 const SQL_INJECTION_PATTERNS = [
   // Union-based injections
-  /(\b(UNION|union)\s+(ALL\s+)?(SELECT|select))/i,
-  /(\b(SELECT|select)\b.*\b(FROM|from)\b.*\b(WHERE|where)\b.*(\bOR\b|\bAND\b).*=)/i,
+  /(\bunion\s+(all\s+)?select\b)/i,
+  /(\bselect\b.*\bfrom\b.*\bwhere\b.*(\bor\b|\band\b).*=)/i,
   
   // Boolean-based injections
-  /(\b(OR|or|AND|and)\s+(\d+\s*[=<>!]+\s*\d+|\w+\s*[=<>!]+\s*\w+))/i,
-  /('.*'.*=.*'.*'|".*".*=.*".*")/i,
+  /(\b(or|and)\s+\d+\s*[=<>!]+\s*\d+)/i,
+  /(\b(or|and)\s+['"]\w*['"]?\s*[=<>!]+\s*['"]\w*['"]?)/i,
+  /(('.*')|(".*"))\s*=\s*(('.*')|(".*"))/i,
   
   // Time-based injections
-  /(\b(WAITFOR|waitfor)\s+(DELAY|delay)|BENCHMARK\s*\(|pg_sleep\s*\()/i,
+  /(\bwaitfor\s+delay\b|\bbenchmark\s*\(|\bpg_sleep\s*\()/i,
   
   // Error-based injections
-  /(\b(CAST|cast|CONVERT|convert)\s*\(.*\b(AS|as)\s+(INT|int|VARCHAR|varchar))/i,
+  /(\bcast\s*\(.*\bas\s+(int|varchar)\b)/i,
+  /(\bconvert\s*\(.*\bas\s+(int|varchar)\b)/i,
   
   // Stacked queries
-  /;\s*(DROP|drop|DELETE|delete|INSERT|insert|UPDATE|update|CREATE|create|ALTER|alter)\s+/i,
+  /;\s*(drop|delete|insert|update|create|alter)\s+/i,
   
   // Comment injections
-  /(--|#|\/\*|\*\/)/,
+  /(--[^\r\n]*|\/\*[\s\S]*?\*\/|#[^\r\n]*)/,
   
   // Information schema queries
-  /\b(information_schema|INFORMATION_SCHEMA)\./i,
+  /\binformation_schema\b/i,
   
   // Database-specific functions
-  /\b(version|user|database|schema)\s*\(\s*\)/i,
+  /\b(version|user|database|schema|current_user|system_user)\s*\(\s*\)/i,
   /\b(load_file|into\s+outfile|dumpfile)\b/i,
+  
+  // Common injection patterns
+  /\b(exec|execute)\s*\(/i,
+  /('\s*(or|and)\s*')/i,
+  /(--\s*$|#\s*$)/,
 ];
 
 /**
  * NoSQL injection patterns
  */
 const NOSQL_INJECTION_PATTERNS = [
-  /\$where\s*:/i,
-  /\$ne\s*:/i,
-  /\$gt\s*:/i,
-  /\$gte\s*:/i,
-  /\$lt\s*:/i,
-  /\$lte\s*:/i,
-  /\$regex\s*:/i,
-  /\$in\s*:/i,
-  /\$nin\s*:/i,
-  /\$exists\s*:/i,
-  /\$eval\s*:/i,
+  /\$where/i,
+  /\$ne/i,
+  /\$gt/i,
+  /\$gte/i,
+  /\$lt/i,
+  /\$lte/i,
+  /\$regex/i,
+  /\$in/i,
+  /\$nin/i,
+  /\$exists/i,
+  /\$eval/i,
   /this\.\w+/i,
+  /function\s*\(/i,
 ];
 
 /**
@@ -121,10 +129,19 @@ class AdvancedSanitizer {
   sanitizeXSS(input: string): string {
     let sanitized = input;
     
-    // Remove dangerous patterns
+    // Remove dangerous patterns first
     XSS_PATTERNS.forEach(pattern => {
       sanitized = sanitized.replace(pattern, '');
     });
+    
+    // Remove dangerous words/content that might remain
+    sanitized = sanitized
+      .replace(/alert\s*\(/gi, 'removed(')
+      .replace(/document\./gi, 'removed.')
+      .replace(/window\./gi, 'removed.')
+      .replace(/eval\s*\(/gi, 'removed(')
+      .replace(/setTimeout\s*\(/gi, 'removed(')
+      .replace(/setInterval\s*\(/gi, 'removed(');
     
     // Encode remaining HTML entities
     sanitized = sanitized
@@ -136,7 +153,7 @@ class AdvancedSanitizer {
       .replace(/\//g, '&#x2F;');
     
     // Remove null bytes and control characters
-    sanitized = sanitized.replace(/[\x00-\x1F\x7F]/g, '');
+    sanitized = sanitized.replace(/[\u0000-\u001F\u007F]/g, '');
     
     return sanitized.trim();
   }
@@ -151,7 +168,7 @@ class AdvancedSanitizer {
   /**
    * Check for NoSQL injection patterns
    */
-  detectNoSQLInjection(input: any): boolean {
+  detectNoSQLInjection(input: unknown): boolean {
     if (typeof input === 'string') {
       return NOSQL_INJECTION_PATTERNS.some(pattern => pattern.test(input));
     }
@@ -185,7 +202,7 @@ class AdvancedSanitizer {
   /**
    * Comprehensive input sanitization
    */
-  sanitizeInput(input: any): any {
+  sanitizeInput(input: unknown): unknown {
     if (typeof input === 'string') {
       // Check for various injection patterns
       if (this.detectSQLInjection(input)) {
@@ -214,8 +231,8 @@ class AdvancedSanitizer {
         throw new Error('NoSQL injection pattern detected in object');
       }
       
-      const sanitized: any = {};
-      for (const [key, value] of Object.entries(input)) {
+      const sanitized: Record<string, unknown> = {};
+      for (const [key, value] of Object.entries(input as Record<string, unknown>)) {
         // Sanitize keys
         const cleanKey = this.sanitizeXSS(key);
         sanitized[cleanKey] = this.sanitizeInput(value);
@@ -257,7 +274,7 @@ export function advancedSanitizationMiddleware(req: Request, res: Response, next
       for (const file of files) {
         if (file && typeof file === 'object' && 'originalname' in file) {
           // Validate file name
-          if (advancedSanitizer.detectPathTraversal(file.originalname)) {
+          if (advancedSanitizer.detectPathTraversal(file.originalname as string)) {
             res.status(400).json({
               error: 'INVALID_FILE_NAME',
               message: 'Invalid file name detected',
@@ -267,7 +284,7 @@ export function advancedSanitizationMiddleware(req: Request, res: Response, next
           }
           
           // Sanitize file name
-          (file as any).originalname = advancedSanitizer.sanitizeFileName(file.originalname);
+          (file as { originalname: string }).originalname = advancedSanitizer.sanitizeFileName(file.originalname as string);
         }
       }
     }

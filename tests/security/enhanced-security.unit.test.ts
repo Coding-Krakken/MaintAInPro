@@ -172,7 +172,7 @@ describe('Enhanced Security Middleware Tests', () => {
 
     describe('IP Blocking After Multiple Violations', () => {
       it('should block IP after multiple suspicious activities', async () => {
-        const suspiciousRequests = Array.from({ length: 15 }, (_, i) => 
+        const suspiciousRequests = Array.from({ length: 15 }, () => 
           request(app)
             .get('/test')
             .set('User-Agent', 'sqlmap/1.0')
