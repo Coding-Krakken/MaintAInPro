@@ -1269,7 +1269,7 @@ dotenv.config();
 // For now, use in-memory storage but prepare for PostgreSQL transition
 // Phase 1 Migration: Storage Layer Activation
 // Switch from MemStorage to DatabaseStorage in production
-async function initializeStorage(): Promise<IStorage> {
+async function _initializeStorage(): Promise<IStorage> {
   if (process.env.DATABASE_URL && process.env.NODE_ENV === 'production') {
     console.log('🔗 Initializing PostgreSQL storage for production');
     console.log('📊 Phase 1: Storage Layer Activation - DatabaseStorage');

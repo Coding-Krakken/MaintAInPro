@@ -5,9 +5,9 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
 
 // Robust import with error handling
-let storageModule: any;
+let _storageModule: any;
 try {
-  storageModule = require('./storage');
+  _storageModule = require('./storage');
   console.log('Test Storage: Storage module imported successfully');
 } catch (error) {
   console.error('Test Storage: Failed to import storage module:', error);
@@ -26,7 +26,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     console.log('=== STORAGE TEST START ===');
 
-    if (!storageModule) {
+      if (!_storageModule) {
       return res.status(500).json({
         message: 'Storage module not available',
         error: 'Failed to import storage module',
@@ -35,7 +35,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     if (req.method === 'GET') {
       // Test reading equipment
-      const equipment = await storageModule.getAllEquipment('test-warehouse');
+        const equipment = await _storageModule.getAllEquipment('test-warehouse');
       console.log('Test: Retrieved equipment count:', equipment.length);
 
       return res.status(200).json({
@@ -61,7 +61,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       };
 
       console.log('Test: Creating equipment with data:', testEquipment);
-      const created = await storageModule.createEquipment(testEquipment);
+        const created = await _storageModule.createEquipment(testEquipment);
       console.log('Test: Equipment created with ID:', created.id);
 
       return res.status(201).json({

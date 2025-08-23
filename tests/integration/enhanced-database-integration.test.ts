@@ -46,7 +46,7 @@ describeMode('Enhanced Database Service - Production Integration Tests', () => {
   let testWorkOrders: WorkOrder[] = [];
 
   // Helper function to skip tests if database is not available
-  const checkDatabaseAvailable = () => {
+  const _checkDatabaseAvailable = () => {
     if (!enhancedDbService) {
       console.log('Skipping test - database not available');
       return false;
