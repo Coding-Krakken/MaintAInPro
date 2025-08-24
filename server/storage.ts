@@ -1,3 +1,75 @@
+export interface PmTemplate {
+  id: string;
+  model: string;
+  component: string;
+  action: string;
+  description: string;
+  estimatedDuration: number;
+  frequency: 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'annually';
+  customFields: Record<string, unknown> | {};
+  active: boolean;
+  warehouseId: string;
+  createdAt: Date;
+  enabled: boolean;
+}
+export interface InsertVendor {
+  name: string;
+  type?: 'supplier' | 'contractor';
+  email?: string;
+  phone?: string;
+  address?: string;
+  contactPerson?: string;
+  active?: boolean;
+  warehouseId?: string;
+}
+
+export interface InsertPmTemplate {
+  model: string;
+  component: string;
+  action: string;
+  description?: string;
+  estimatedDuration?: number;
+  frequency?: 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'annually';
+  customFields?: Record<string, unknown>;
+  active?: boolean;
+  warehouseId?: string;
+  enabled?: boolean;
+}
+export interface InsertLaborTime {
+  workOrderId: string;
+  userId: string;
+  startTime?: Date;
+  endTime?: Date;
+  duration?: number;
+  description: string;
+  isActive?: boolean;
+  isManual?: boolean;
+}
+
+export interface InsertAttachment {
+  fileName: string;
+  fileType?: string;
+  fileSize?: number;
+  fileUrl?: string;
+  mimeType?: string;
+  filePath?: string;
+  thumbnailPath?: string;
+  workOrderId?: string;
+  equipmentId?: string;
+  pmTemplateId?: string;
+  vendorId?: string;
+  uploadedBy?: string;
+}
+// Manual interface for InsertWarehouse to resolve TypeScript property access errors
+export interface InsertWarehouse {
+  name: string;
+  address?: string;
+  timezone?: string;
+  operatingHoursStart?: string;
+  operatingHoursEnd?: string;
+  emergencyContact?: string;
+  active?: boolean;
+}
 import { randomUUID } from 'crypto';
 import {
   profiles as _profiles,
@@ -16,7 +88,6 @@ import {
   type Profile,
   type InsertProfile,
   type Warehouse,
-  type InsertWarehouse,
   type Equipment,
   type InsertEquipment,
   type WorkOrder,
@@ -26,11 +97,7 @@ import {
   type InsertPart,
   type PartsUsage,
   type LaborTime,
-  type InsertLaborTime,
   type Vendor,
-  type InsertVendor,
-  type PmTemplate,
-  type InsertPmTemplate,
   type Notification,
   type InsertNotification,
   type NotificationPreference,
@@ -38,7 +105,6 @@ import {
   type PushSubscription,
   type InsertPushSubscription,
   type Attachment,
-  type InsertAttachment,
   type SystemLog,
 } from '@shared/schema';
 
@@ -66,7 +132,11 @@ export interface IStorage {
   updateEquipment(_id: string, _equipment: Partial<InsertEquipment>): Promise<Equipment>;
 
   // Work Orders
-  getWorkOrders(_warehouseId: string, _filters?: any): Promise<WorkOrder[]>;
+  getWorkOrders(_warehouseId: string, _filters?: {
+    status?: string[];
+    assignedTo?: string;
+    priority?: string[];
+  }): Promise<WorkOrder[]>;
   getWorkOrder(_id: string): Promise<WorkOrder | undefined>;
   createWorkOrder(_workOrder: InsertWorkOrder): Promise<WorkOrder>;
   updateWorkOrder(_id: string, _workOrder: Partial<InsertWorkOrder>): Promise<WorkOrder>;
@@ -684,10 +754,39 @@ export class MemStorage implements IStorage {
 
   async createProfile(insertProfile: InsertProfile): Promise<Profile> {
     const id = this.generateId();
+    const validRoles = [
+      'technician',
+      'supervisor',
+      'manager',
+      'admin',
+      'inventory_clerk',
+      'contractor',
+      'requester',
+    ] as const;
+    const role = validRoles.includes(insertProfile.role as typeof validRoles[number])
+      ? (insertProfile.role as typeof validRoles[number])
+      : 'technician';
     const profile: Profile = {
       id,
-      ...(insertProfile as any),
+      email: insertProfile.email,
+      firstName: insertProfile.firstName || '',
+      lastName: insertProfile.lastName || '',
+      role,
+      organizationId: insertProfile.organizationId,
+      warehouseId: insertProfile.warehouseId ?? '',
+      active: true,
+      emailVerified: false,
+      emailVerificationToken: null,
+      lastLoginAt: null,
+      loginAttempts: 0,
+      lockedUntil: null,
+      phoneNumber: null,
+      preferences: null,
       createdAt: new Date(),
+      updatedAt: new Date(),
+      deletedAt: null,
+      createdBy: null,
+      updatedBy: null,
     };
     this.profiles.set(id, profile);
     return profile;
@@ -718,7 +817,7 @@ export class MemStorage implements IStorage {
         'contractor',
         'requester',
       ] as const;
-      if (validRoles.includes(processedUpdate.role as any)) {
+  if (validRoles.includes(processedUpdate.role as typeof validRoles[number])) {
         roleUpdate = processedUpdate.role as
           | 'technician'
           | 'supervisor'
@@ -752,11 +851,17 @@ export class MemStorage implements IStorage {
     return this.warehouses.get(id);
   }
 
-  async createWarehouse(insertWarehouse: any): Promise<Warehouse> {
+  async createWarehouse(insertWarehouse: InsertWarehouse): Promise<Warehouse> {
+    // Validate and type input using Zod schema
     const id = this.generateId();
     const warehouse: Warehouse = {
       id,
-      ...insertWarehouse,
+      name: insertWarehouse.name ?? '',
+      address: insertWarehouse.address ?? '',
+      timezone: insertWarehouse.timezone ?? 'UTC',
+      operatingHoursStart: insertWarehouse.operatingHoursStart ?? '08:00',
+      operatingHoursEnd: insertWarehouse.operatingHoursEnd ?? '17:00',
+      emergencyContact: insertWarehouse.emergencyContact ?? '',
       active: insertWarehouse.active ?? true,
       createdAt: new Date(),
     };
@@ -777,13 +882,32 @@ export class MemStorage implements IStorage {
     return Array.from(this.equipment.values()).find(e => e.assetTag === assetTag);
   }
 
-  async createEquipment(insertEquipment: any): Promise<Equipment> {
+  async createEquipment(insertEquipment: InsertEquipment): Promise<Equipment> {
     const id = this.generateId();
+    const now = new Date();
     const equipment: Equipment = {
       id,
-      ...insertEquipment,
-      createdAt: new Date(),
-    };
+      assetTag: insertEquipment.assetTag ?? '',
+      model: insertEquipment.model ?? '',
+      description: insertEquipment.description ?? '',
+      area: insertEquipment.area ?? '',
+      status: (insertEquipment.status as 'active' | 'inactive' | 'maintenance' | 'retired') ?? 'active',
+      criticality: (insertEquipment.criticality as 'low' | 'medium' | 'high' | 'critical') ?? 'medium',
+      installDate: insertEquipment.installDate ?? null,
+      warrantyExpiry: insertEquipment.warrantyExpiry ?? null,
+      manufacturer: insertEquipment.manufacturer ?? '',
+      serialNumber: insertEquipment.serialNumber ?? '',
+      specifications: insertEquipment.specifications ?? {},
+      organizationId: insertEquipment.organizationId ?? '',
+      warehouseId: insertEquipment.warehouseId ?? '',
+      tsv: '',
+      createdAt: now,
+      updatedAt: now,
+      deletedAt: null,
+      createdBy: '',
+      updatedBy: '',
+      qrCode: '',
+    } as Equipment;
     this.equipment.set(id, equipment);
     return equipment;
   }
@@ -805,8 +929,8 @@ export class MemStorage implements IStorage {
     let statusUpdate: 'active' | 'inactive' | 'maintenance' | 'retired' | undefined = undefined;
     if (updates.status) {
       const validStatuses = ['active', 'inactive', 'maintenance', 'retired'] as const;
-      if (validStatuses.includes(updates.status as any)) {
-        statusUpdate = updates.status as 'active' | 'inactive' | 'maintenance' | 'retired';
+      if (validStatuses.includes(updates.status as typeof validStatuses[number])) {
+        statusUpdate = updates.status as typeof validStatuses[number];
       } else {
         statusUpdate = 'active'; // Default to active if invalid
       }
@@ -816,8 +940,8 @@ export class MemStorage implements IStorage {
     let criticalityUpdate: 'low' | 'medium' | 'high' | 'critical' | undefined = undefined;
     if (updates.criticality) {
       const validCriticalities = ['low', 'medium', 'high', 'critical'] as const;
-      if (validCriticalities.includes(updates.criticality as any)) {
-        criticalityUpdate = updates.criticality as 'low' | 'medium' | 'high' | 'critical';
+      if (validCriticalities.includes(updates.criticality as typeof validCriticalities[number])) {
+        criticalityUpdate = updates.criticality as typeof validCriticalities[number];
       } else {
         criticalityUpdate = 'medium'; // Default to medium if invalid
       }
@@ -837,7 +961,11 @@ export class MemStorage implements IStorage {
   }
 
   // Work Order methods
-  async getWorkOrders(warehouseId: string, filters?: any): Promise<WorkOrder[]> {
+  async getWorkOrders(warehouseId: string, filters?: {
+    status?: string[];
+    assignedTo?: string;
+    priority?: string[];
+  }): Promise<WorkOrder[]> {
     let workOrders = Array.from(this.workOrders.values()).filter(
       wo => wo.warehouseId === warehouseId
     );
@@ -866,12 +994,53 @@ export class MemStorage implements IStorage {
   async createWorkOrder(insertWorkOrder: InsertWorkOrder): Promise<WorkOrder> {
     const id = this.generateId();
     const foNumber = `WO-${String(this.workOrders.size + 1).padStart(3, '0')}`;
+    const validTypes = ['corrective', 'preventive', 'emergency'] as const;
+    const validStatuses = ['new', 'assigned', 'in_progress', 'completed', 'verified', 'closed'] as const;
+    const validPriorities = ['low', 'medium', 'high', 'critical'] as const;
+    const type = validTypes.includes(insertWorkOrder.type as typeof validTypes[number])
+      ? (insertWorkOrder.type as typeof validTypes[number])
+      : 'corrective';
+    const status = validStatuses.includes(insertWorkOrder.status as typeof validStatuses[number])
+      ? (insertWorkOrder.status as typeof validStatuses[number])
+      : 'new';
+    const priority = validPriorities.includes(insertWorkOrder.priority as typeof validPriorities[number])
+      ? (insertWorkOrder.priority as typeof validPriorities[number])
+      : 'medium';
+    const estimatedHours = typeof insertWorkOrder.estimatedHours === 'string'
+      ? insertWorkOrder.estimatedHours
+      : String(insertWorkOrder.estimatedHours ?? '0');
+    const actualHours = typeof insertWorkOrder.actualHours === 'string'
+      ? insertWorkOrder.actualHours
+      : String(insertWorkOrder.actualHours ?? '0');
     const workOrder: WorkOrder = {
       id,
       foNumber,
-      ...(insertWorkOrder as any),
+      type,
+      description: insertWorkOrder.description,
+      area: insertWorkOrder.area ?? '',
+      assetModel: insertWorkOrder.assetModel ?? '',
+      status,
+      priority,
+      requestedBy: insertWorkOrder.requestedBy,
+      assignedTo: insertWorkOrder.assignedTo ?? '',
+      equipmentId: insertWorkOrder.equipmentId ?? '',
+      dueDate: insertWorkOrder.dueDate ?? null,
+      completedAt: insertWorkOrder.completedAt ?? null,
+      verifiedBy: insertWorkOrder.verifiedBy ?? '',
+      estimatedHours,
+      actualHours,
+      notes: insertWorkOrder.notes ?? '',
+      followUp: insertWorkOrder.followUp ?? false,
+      escalated: insertWorkOrder.escalated ?? false,
+      escalationLevel: insertWorkOrder.escalationLevel ?? 0,
+      organizationId: insertWorkOrder.organizationId ?? '',
+      warehouseId: insertWorkOrder.warehouseId ?? '',
       createdAt: new Date(),
       updatedAt: new Date(),
+      deletedAt: null,
+      createdBy: '',
+      updatedBy: '',
+      tsv: '',
     };
     this.workOrders.set(id, workOrder);
     return workOrder;
@@ -882,7 +1051,7 @@ export class MemStorage implements IStorage {
     if (!existing) throw new Error('Work order not found');
 
     // Convert dueDate string to Date if needed
-    const processedUpdates: any = { ...updateWorkOrder };
+  const processedUpdates: Partial<InsertWorkOrder> = { ...updateWorkOrder };
     if (processedUpdates.dueDate && typeof processedUpdates.dueDate === 'string') {
       processedUpdates.dueDate = new Date(processedUpdates.dueDate);
     }
@@ -890,6 +1059,11 @@ export class MemStorage implements IStorage {
     const updated: WorkOrder = {
       ...existing,
       ...processedUpdates,
+      type: (processedUpdates.type as 'corrective' | 'preventive' | 'emergency') ?? existing.type,
+      status: (processedUpdates.status as 'new' | 'assigned' | 'in_progress' | 'completed' | 'verified' | 'closed') ?? existing.status,
+      priority: (processedUpdates.priority as 'low' | 'medium' | 'high' | 'critical') ?? existing.priority,
+  estimatedHours: processedUpdates.estimatedHours !== undefined ? String(processedUpdates.estimatedHours) : existing.estimatedHours,
+  actualHours: processedUpdates.actualHours !== undefined ? String(processedUpdates.actualHours) : existing.actualHours,
       updatedAt: new Date(),
     };
     this.workOrders.set(id, updated);
@@ -965,9 +1139,24 @@ export class MemStorage implements IStorage {
 
   async createPart(insertPart: InsertPart): Promise<Part> {
     const id = this.generateId();
+    const unitCost = typeof insertPart.unitCost === 'string'
+      ? insertPart.unitCost
+      : String(insertPart.unitCost ?? '0');
     const part: Part = {
       id,
-      ...(insertPart as any),
+      partNumber: insertPart.partNumber,
+      name: insertPart.name,
+      description: insertPart.description,
+      category: insertPart.category ?? '',
+      unitOfMeasure: insertPart.unitOfMeasure,
+      unitCost,
+      stockLevel: insertPart.stockLevel ?? 0,
+      reorderPoint: insertPart.reorderPoint ?? 0,
+      maxStock: insertPart.maxStock ?? 0,
+      location: insertPart.location ?? '',
+      vendor: insertPart.vendor ?? '',
+      active: insertPart.active ?? true,
+      warehouseId: insertPart.warehouseId,
       createdAt: new Date(),
     };
     this.parts.set(id, part);
@@ -979,10 +1168,12 @@ export class MemStorage implements IStorage {
     if (!existing) throw new Error('Part not found');
 
     // Convert InsertPart types to Part types for compatibility
-    const partUpdates: Partial<Part> = { ...updatePart } as any;
-    if (updatePart.unitCost !== undefined && typeof updatePart.unitCost === 'number') {
-      partUpdates.unitCost = updatePart.unitCost.toString();
-    }
+    // Omit unitCost from spread and assign explicitly
+    const { unitCost, ...rest } = updatePart;
+    const partUpdates: Partial<Part> = {
+      ...rest,
+      unitCost: unitCost !== undefined ? String(unitCost) : undefined,
+    };
 
     const updated: Part = {
       ...existing,
@@ -1033,7 +1224,7 @@ export class MemStorage implements IStorage {
     // Filter by date
     if (filters.startDate) {
       usageList = usageList.filter(
-        usage => usage.createdAt && new Date(usage.createdAt) >= filters.startDate!
+        usage => usage.createdAt && filters.startDate && new Date(usage.createdAt) >= filters.startDate
       );
     }
 
@@ -1065,7 +1256,14 @@ export class MemStorage implements IStorage {
     const id = this.generateId();
     const vendor: Vendor = {
       id,
-      ...(insertVendor as any),
+      name: insertVendor.name,
+      type: insertVendor.type ?? 'supplier',
+      email: insertVendor.email ?? '',
+      phone: insertVendor.phone ?? '',
+      address: insertVendor.address ?? '',
+      contactPerson: insertVendor.contactPerson ?? '',
+      active: insertVendor.active ?? true,
+      warehouseId: insertVendor.warehouseId ?? '',
       createdAt: new Date(),
     };
     this.vendors.set(id, vendor);
@@ -1106,8 +1304,17 @@ export class MemStorage implements IStorage {
     const id = this.generateId();
     const template: PmTemplate = {
       id,
-      ...(insertTemplate as any),
+      model: insertTemplate.model,
+      component: insertTemplate.component,
+      action: insertTemplate.action,
+      description: insertTemplate.description ?? '',
+      estimatedDuration: insertTemplate.estimatedDuration ?? 60,
+      frequency: insertTemplate.frequency ?? 'monthly',
+      customFields: insertTemplate.customFields ?? {},
+      active: insertTemplate.active ?? true,
+      warehouseId: insertTemplate.warehouseId ?? '',
       createdAt: new Date(),
+      enabled: insertTemplate.enabled ?? true,
     };
     this.pmTemplates.set(id, template);
     return template;
@@ -1121,17 +1328,11 @@ export class MemStorage implements IStorage {
     if (!existing) return null;
 
     // Type-safe frequency update
-    let frequencyUpdate: 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'annually' | undefined =
-      undefined;
-    if ((updates as any).frequency) {
+    let frequencyUpdate: 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'annually' | undefined = undefined;
+    if (updates.frequency) {
       const validFrequencies = ['daily', 'weekly', 'monthly', 'quarterly', 'annually'] as const;
-      if (validFrequencies.includes((updates as any).frequency as any)) {
-        frequencyUpdate = (updates as any).frequency as
-          | 'daily'
-          | 'weekly'
-          | 'monthly'
-          | 'quarterly'
-          | 'annually';
+      if (validFrequencies.includes(updates.frequency)) {
+        frequencyUpdate = updates.frequency;
       }
     }
 
@@ -1163,7 +1364,17 @@ export class MemStorage implements IStorage {
     const id = this.generateId();
     const notification: Notification = {
       id,
-      ...(insertNotification as any),
+      userId: insertNotification.userId,
+      type: insertNotification.type,
+      title: insertNotification.title,
+      message: insertNotification.message,
+      read: insertNotification.read ?? false,
+      workOrderId: insertNotification.workOrderId ?? null,
+      equipmentId: insertNotification.equipmentId ?? null,
+      partId: insertNotification.partId ?? null,
+      metadata: insertNotification.metadata ?? null,
+      priority: insertNotification.priority ?? 'medium',
+      expiresAt: insertNotification.expiresAt ?? null,
       createdAt: new Date(),
     };
     this.notifications.set(id, notification);
@@ -1287,8 +1498,8 @@ export class MemStorage implements IStorage {
       a =>
         (workOrderId && a.workOrderId === workOrderId) ||
         (equipmentId && a.equipmentId === equipmentId) ||
-        (pmTemplateId && (a as any).pmTemplateId === pmTemplateId) ||
-        (vendorId && (a as any).vendorId === vendorId)
+        (pmTemplateId && a.pmTemplateId === pmTemplateId) ||
+        (vendorId && a.vendorId === vendorId)
     );
   }
 
@@ -1300,7 +1511,18 @@ export class MemStorage implements IStorage {
     const id = this.generateId();
     const attachment: Attachment = {
       id,
-      ...(insertAttachment as any),
+      fileName: insertAttachment.fileName ?? '',
+      fileType: insertAttachment.fileType ?? '',
+      fileSize: insertAttachment.fileSize ?? 0,
+      fileUrl: insertAttachment.fileUrl ?? '',
+      mimeType: insertAttachment.mimeType ?? '',
+      filePath: insertAttachment.filePath ?? '',
+      thumbnailPath: insertAttachment.thumbnailPath ?? '',
+      workOrderId: insertAttachment.workOrderId ?? '',
+      equipmentId: insertAttachment.equipmentId ?? '',
+      pmTemplateId: insertAttachment.pmTemplateId ?? '',
+      vendorId: insertAttachment.vendorId ?? '',
+      uploadedBy: insertAttachment.uploadedBy ?? '',
       createdAt: new Date(),
     };
     this.attachments.set(id, attachment);
@@ -1324,7 +1546,7 @@ export class MemStorage implements IStorage {
 
     const fileTypes: Record<string, number> = {};
     attachments.forEach(att => {
-      const type = (att as any).mimeType?.split('/')[0] || 'unknown';
+      const type = att.mimeType?.split('/')[0] || 'unknown';
       fileTypes[type] = (fileTypes[type] || 0) + 1;
     });
 
@@ -1341,11 +1563,20 @@ export class MemStorage implements IStorage {
   }
 
   async createLaborTime(laborTime: InsertLaborTime): Promise<LaborTime> {
+  const validLaborTime = laborTime as InsertLaborTime;
     const id = this.generateId();
+    const now = new Date();
     const newLaborTime: LaborTime = {
       id,
-      ...(laborTime as any),
-      createdAt: new Date(),
+      description: validLaborTime.description,
+      duration: validLaborTime.duration ?? 0,
+      workOrderId: validLaborTime.workOrderId ?? '',
+      userId: validLaborTime.userId ?? '',
+      startTime: validLaborTime.startTime ?? now,
+      endTime: validLaborTime.endTime ?? now,
+      isActive: validLaborTime.isActive ?? false,
+      isManual: validLaborTime.isManual ?? false,
+      createdAt: now,
     };
     this.laborTime.set(id, newLaborTime);
     return newLaborTime;
@@ -1356,7 +1587,13 @@ export class MemStorage implements IStorage {
     if (!existing) {
       throw new Error('Labor time entry not found');
     }
-    const updated: LaborTime = { ...existing, ...(laborTime as any) };
+    const updated: LaborTime = {
+      ...existing,
+      description: laborTime.description ?? existing.description,
+      duration: laborTime.duration ?? existing.duration,
+      workOrderId: laborTime.workOrderId ?? existing.workOrderId,
+      userId: laborTime.userId ?? existing.userId,
+    };
     this.laborTime.set(id, updated);
     return updated;
   }

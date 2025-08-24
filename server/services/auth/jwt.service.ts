@@ -115,7 +115,7 @@ export class JWTService {
     }
   }
 
-  static decodeToken(token: string): any {
+  static decodeToken(token: string): unknown {
     try {
       return jwt.decode(token);
     } catch (_error) {

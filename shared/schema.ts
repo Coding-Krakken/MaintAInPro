@@ -778,7 +778,8 @@ export const insertNotificationSchema = createFlexibleSchema({
   workOrderId: fieldValidators.optionalUuid('Work Order ID'),
   equipmentId: fieldValidators.optionalUuid('Equipment ID'),
   partId: fieldValidators.optionalUuid('Part ID'),
-  metadata: z.record(z.any()).optional(),
+  warehouseId: fieldValidators.optionalUuid('Warehouse ID'),
+  metadata: z.record(z.unknown()).optional(),
   priority: z.enum(['low', 'medium', 'high', 'critical']).optional().default('medium'),
   expiresAt: flexibleDateSchema.optional(),
 });

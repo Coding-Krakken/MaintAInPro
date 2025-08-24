@@ -474,7 +474,7 @@ export class PWAService {
   /**
    * Notify all listeners for an event
    */
-  private notifyListeners(event: string, data: any): void {
+  private notifyListeners(event: string, data: unknown): void {
     const callbacks = this.listeners.get(event);
     if (callbacks) {
       callbacks.forEach(callback => callback(data));

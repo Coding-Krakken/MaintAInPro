@@ -290,7 +290,7 @@ export class DatabaseStorage implements IStorage {
 
     await db
       .insert(workOrders)
-      .values(workOrdersList as any)
+  .values(workOrdersList as unknown)
       .returning();
 
     console.log('Database initialized with sample data');
@@ -310,7 +310,7 @@ export class DatabaseStorage implements IStorage {
   async createProfile(profile: InsertProfile): Promise<Profile> {
     const newProfile = {
       id: this.generateId(),
-      ...(profile as any),
+  ...(profile as Record<string, unknown>),
       createdAt: new Date(),
     };
     const [created] = await db.insert(profiles).values(newProfile).returning();
@@ -339,7 +339,7 @@ export class DatabaseStorage implements IStorage {
   async createWarehouse(warehouse: InsertWarehouse): Promise<Warehouse> {
     const newWarehouse = {
       id: this.generateId(),
-      ...(warehouse as any),
+  ...(warehouse as Record<string, unknown>),
       createdAt: new Date(),
     };
     const [created] = await db.insert(warehouses).values(newWarehouse).returning();
@@ -368,7 +368,7 @@ export class DatabaseStorage implements IStorage {
   async createEquipment(equipmentData: InsertEquipment): Promise<Equipment> {
     const newEquipment = {
       id: this.generateId(),
-      ...(equipmentData as any),
+  ...(equipmentData as Record<string, unknown>),
       createdAt: new Date(),
     };
     const [created] = await db.insert(equipment).values(newEquipment).returning();
@@ -400,7 +400,7 @@ export class DatabaseStorage implements IStorage {
   async createWorkOrder(workOrder: InsertWorkOrder): Promise<WorkOrder> {
     const newWorkOrder = {
       id: this.generateId(),
-      ...(workOrder as any),
+  ...(workOrder as Record<string, unknown>),
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -410,7 +410,7 @@ export class DatabaseStorage implements IStorage {
 
   async updateWorkOrder(id: string, workOrder: Partial<InsertWorkOrder>): Promise<WorkOrder> {
     const updateData = {
-      ...(workOrder as any),
+  ...(workOrder as Record<string, unknown>),
       updatedAt: new Date(),
     };
     const [updated] = await db
@@ -485,7 +485,7 @@ export class DatabaseStorage implements IStorage {
   async createPart(part: InsertPart): Promise<Part> {
     const newPart = {
       id: this.generateId(),
-      ...(part as any),
+  ...(part as Record<string, unknown>),
       createdAt: new Date(),
     };
     const [created] = await db.insert(parts).values(newPart).returning();
@@ -523,7 +523,7 @@ export class DatabaseStorage implements IStorage {
   async updatePartsUsage(id: string, usage: Partial<PartsUsage>): Promise<PartsUsage> {
     const [updated] = await db
       .update(partsUsage)
-      .set(usage as any)
+  .set(usage as unknown)
       .where(eq(partsUsage.id, id))
       .returning();
     return updated;
@@ -553,12 +553,12 @@ export class DatabaseStorage implements IStorage {
     }
     if (filters.equipmentId) {
       // Join with workOrders to filter by equipment
-      query = query.leftJoin(workOrders, eq(partsUsage.workOrderId, workOrders.id)) as any;
+  query = query.leftJoin(workOrders, eq(partsUsage.workOrderId, workOrders.id)) as unknown;
       conditions.push(eq(workOrders.equipmentId, filters.equipmentId));
     }
 
     if (conditions.length > 0) {
-      query = query.where(and(...conditions)) as any;
+  query = query.where(and(...conditions)) as unknown;
     }
 
     const results = await query;
@@ -592,7 +592,7 @@ export class DatabaseStorage implements IStorage {
   async createVendor(vendor: InsertVendor): Promise<Vendor> {
     const newVendor = {
       id: this.generateId(),
-      ...(vendor as any),
+  ...(vendor as Record<string, unknown>),
       createdAt: new Date(),
     };
     const [created] = await db.insert(vendors).values(newVendor).returning();
@@ -602,7 +602,7 @@ export class DatabaseStorage implements IStorage {
   async updateVendor(id: string, vendor: Partial<InsertVendor>): Promise<Vendor> {
     const [updated] = await db
       .update(vendors)
-      .set(vendor as any)
+  .set(vendor as unknown)
       .where(eq(vendors.id, id))
       .returning();
     return updated;
@@ -625,7 +625,7 @@ export class DatabaseStorage implements IStorage {
   async createPmTemplate(template: InsertPmTemplate): Promise<PmTemplate> {
     const newTemplate = {
       id: this.generateId(),
-      ...(template as any),
+  ...(template as Record<string, unknown>),
       createdAt: new Date(),
     };
     const [created] = await db.insert(pmTemplates).values(newTemplate).returning();
@@ -656,7 +656,7 @@ export class DatabaseStorage implements IStorage {
   async createNotification(notification: InsertNotification): Promise<Notification> {
     const newNotification = {
       id: this.generateId(),
-      ...(notification as any),
+  ...(notification as Record<string, unknown>),
       createdAt: new Date(),
     };
     const [created] = await db.insert(notifications).values(newNotification).returning();
@@ -666,7 +666,7 @@ export class DatabaseStorage implements IStorage {
   async markNotificationRead(id: string): Promise<void> {
     await db
       .update(notifications)
-      .set({ read: true } as any)
+  .set({ read: true } as unknown)
       .where(eq(notifications.id, id));
   }
 
@@ -803,7 +803,7 @@ export class DatabaseStorage implements IStorage {
     }
 
     if (conditions.length > 0) {
-      query = query.where(or(...conditions)) as any;
+  query = query.where(or(...conditions)) as unknown;
     }
 
     return await query;
@@ -853,7 +853,7 @@ export class DatabaseStorage implements IStorage {
   async createAttachment(attachment: InsertAttachment): Promise<Attachment> {
     const newAttachment = {
       id: this.generateId(),
-      ...(attachment as any),
+  ...(attachment as Record<string, unknown>),
       createdAt: new Date(),
     };
     const [created] = await db.insert(attachments).values(newAttachment).returning();
@@ -877,7 +877,7 @@ export class DatabaseStorage implements IStorage {
         id: this.generateId(),
         ...insertLaborTime,
         createdAt: new Date(),
-      } as any)
+  } as unknown)
       .returning();
     return laborTimeEntry;
   }
@@ -885,7 +885,7 @@ export class DatabaseStorage implements IStorage {
   async updateLaborTime(id: string, updateData: Partial<InsertLaborTime>): Promise<LaborTime> {
     const [updated] = await db
       .update(laborTime)
-      .set(updateData as any)
+  .set(updateData as unknown)
       .where(eq(laborTime.id, id))
       .returning();
     return updated;

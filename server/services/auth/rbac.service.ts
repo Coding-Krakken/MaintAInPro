@@ -1,7 +1,7 @@
 interface Permission {
   resource: string;
   action: string;
-  conditions?: Record<string, any>;
+  conditions?: Record<string, unknown>;
 }
 
 interface RoleDefinition {
@@ -246,7 +246,7 @@ export class RBACService {
   }
 
   private static evaluateConditions(
-    conditions: Record<string, any>,
+  conditions: Record<string, unknown>,
     context: AccessControlContext
   ): boolean {
     for (const [key, value] of Object.entries(conditions)) {
@@ -291,7 +291,7 @@ export class RBACService {
   static canAccessResource(
     context: AccessControlContext,
     resource: Resource,
-    resourceData?: any
+  resourceData?: unknown
   ): boolean {
     // Basic read permission check
     if (!this.hasPermission(context, resource, 'read')) {
@@ -303,7 +303,7 @@ export class RBACService {
       switch (resource) {
         case 'work_orders': {
           // Check if user can access this specific work order
-          const workOrder = resourceData;
+          const workOrder = resourceData as any;
           if (context.role === 'technician' || context.role === 'contractor') {
             return workOrder.assignedTo === context.userId;
           }
@@ -315,7 +315,7 @@ export class RBACService {
 
         case 'users': {
           // Users can only access users in same warehouse (unless admin)
-          const user = resourceData;
+          const user = resourceData as any;
           if (context.role !== 'admin' && user.warehouseId !== context.warehouseId) {
             return false;
           }

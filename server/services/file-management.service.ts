@@ -159,19 +159,12 @@ export class FileManagementService {
         if (result.success) {
           // Send real-time notification about new file
           await notificationService.sendNotification({
-            id: uuidv4(),
             userId: context.userId,
             warehouseId: context.warehouseId,
             title: 'File Uploaded',
             message: `New file "${result.fileName}" has been uploaded`,
-            type: 'info',
+            type: 'equipment_alert',
             read: false,
-            createdAt: new Date(),
-            data: {
-              fileId: result.fileId,
-              fileName: result.fileName,
-              context: context.type,
-            },
           });
 
           res.status(201).json(result);
@@ -232,19 +225,12 @@ export class FileManagementService {
         // Send notification for successful uploads
         if (successful.length > 0) {
           await notificationService.sendNotification({
-            id: uuidv4(),
             userId: context.userId,
             warehouseId: context.warehouseId,
             title: 'Files Uploaded',
             message: `${successful.length} file(s) uploaded successfully${failed.length > 0 ? `, ${failed.length} failed` : ''}`,
-            type: failed.length > 0 ? 'warning' : 'info',
+            type: failed.length > 0 ? 'equipment_alert' : 'equipment_alert',
             read: false,
-            createdAt: new Date(),
-            data: {
-              successful: successful.length,
-              failed: failed.length,
-              context: context.type,
-            },
           });
         }
 

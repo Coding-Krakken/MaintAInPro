@@ -7,7 +7,7 @@ export interface AuthenticatedUser {
   id: string;
   email: string;
   role: string;
-  organizationId: string;
+  organizationId?: string; // Optional to match schema
   sessionId?: string;
   warehouseId?: string;
 }
@@ -67,12 +67,11 @@ export function isAuthenticated(req: Request): req is AuthenticatedRequest {
  */
 export function hasCompleteUser(user: unknown): user is AuthenticatedUser {
   return (
-    user &&
     typeof user === 'object' &&
     user !== null &&
-    typeof (user as any).id === 'string' &&
-    typeof (user as any).email === 'string' &&
-    typeof (user as any).role === 'string' &&
-    typeof (user as any).organizationId === 'string'
+    'id' in user && typeof (user as { id: unknown }).id === 'string' &&
+    'email' in user && typeof (user as { email: unknown }).email === 'string' &&
+    'role' in user && typeof (user as { role: unknown }).role === 'string'
+    // organizationId is optional, so not checking for it
   );
 }

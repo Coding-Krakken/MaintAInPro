@@ -21,7 +21,7 @@ export interface ValidationOptions {
   transformFields?: boolean;
   stripUnknown?: boolean;
   errorHandler?: (
-    _error: any,
+    _error: unknown,
     _req: Request | EnhancedRequest,
     _res: Response,
     _next: NextFunction
@@ -451,12 +451,12 @@ export function validationChain(
  * Sanitize and normalize common field types
  */
 export function sanitizeInput(req: Request, res: Response, next: NextFunction) {
-  const sanitizeObject = (obj: any): any => {
+  const sanitizeObject = (obj: unknown): unknown => {
     if (!obj || typeof obj !== 'object') return obj;
 
-    const sanitized: any = {};
+    const sanitized: Record<string, unknown> = {};
 
-    for (const [key, value] of Object.entries(obj)) {
+    for (const [key, value] of Object.entries(obj as Record<string, unknown>)) {
       if (typeof value === 'string') {
         // Trim whitespace and normalize empty strings to null
         sanitized[key] = value.trim() || null;
@@ -474,13 +474,13 @@ export function sanitizeInput(req: Request, res: Response, next: NextFunction) {
 
   // Sanitize body, query, and params
   if (req.body) {
-    (req as any).body = sanitizeObject(req.body);
+    req.body = sanitizeObject(req.body);
   }
-  if ((req as any).query) {
-    (req as any).query = sanitizeObject((req as any).query);
+  if (req.query) {
+    req.query = sanitizeObject(req.query) as typeof req.query;
   }
-  if ((req as any).params) {
-    (req as any).params = sanitizeObject((req as any).params);
+  if (req.params) {
+    req.params = sanitizeObject(req.params) as typeof req.params;
   }
 
   next();

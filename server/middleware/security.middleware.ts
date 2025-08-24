@@ -290,13 +290,14 @@ export function sanitizeInput(req: Request, res: Response, next: NextFunction): 
 export function sqlInjectionProtection(req: Request, res: Response, next: NextFunction): void {
   // This is now handled by advancedSanitizationMiddleware
   // Keep this for backward compatibility but it's essentially a no-op
+
   next();
 }
 
 /**
  * Enhanced authentication middleware with session validation
  */
-export async function enhancedAuth(req: any, res: Response, next: NextFunction): Promise<void> {
+export async function enhancedAuth(req: Request & { user?: { id: string; sessionId?: string } }, res: Response, next: NextFunction): Promise<void> {
   try {
     const token = req.headers.authorization?.replace('Bearer ', '');
 
@@ -331,7 +332,11 @@ export async function enhancedAuth(req: any, res: Response, next: NextFunction):
       // Attach user info to request
       req.user = {
         id: session[0].user_id,
+        email: session[0].email || '',
+        role: session[0].role || '',
+        organizationId: session[0].organization_id || '',
         sessionId: session[0].id,
+        warehouseId: session[0].warehouse_id || '',
       };
     }
 
@@ -349,7 +354,7 @@ export async function enhancedAuth(req: any, res: Response, next: NextFunction):
  * Role-based authorization middleware
  */
 export function requireRole(allowedRoles: string[]) {
-  return async (req: any, res: Response, next: NextFunction): Promise<void> => {
+  return async (req: Request & { user?: { id: string; sessionId?: string; role?: string } }, res: Response, next: NextFunction): Promise<void> => {
     try {
       if (!req.user?.id) {
         res.status(401).json({
@@ -595,7 +600,7 @@ export function createIPWhitelist(allowedIPs: string[]) {
 /**
  * Session validation middleware
  */
-export async function validateSession(req: any, res: Response, next: NextFunction): Promise<void> {
+export async function validateSession(req: Request & { user?: { id: string; sessionId?: string } }, res: Response, next: NextFunction): Promise<void> {
   try {
     // Skip session validation for health checks and public endpoints
     const publicPaths = ['/api/health', '/api/monitoring', '/login', '/register'];
@@ -603,7 +608,15 @@ export async function validateSession(req: any, res: Response, next: NextFunctio
       return next();
     }
 
-    const sessionId = req.headers['x-session-id'] || req.user?.sessionId;
+    let sessionId: string | undefined;
+    const headerSessionId = req.headers['x-session-id'];
+    if (typeof headerSessionId === 'string') {
+      sessionId = headerSessionId;
+    } else if (Array.isArray(headerSessionId)) {
+      sessionId = headerSessionId[0];
+    } else if (req.user?.sessionId) {
+      sessionId = req.user.sessionId;
+    }
     if (!sessionId) {
       res.status(401).json({
         error: 'Unauthorized',

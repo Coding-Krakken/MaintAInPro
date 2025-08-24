@@ -1,7 +1,41 @@
+interface PasswordResetToken {
+  userId: string;
+  expiresAt: Date;
+}
+interface User {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  role: UserRole;
+  warehouseId: string;
+  emailVerified?: boolean;
+  mfaEnabled?: boolean;
+  active?: boolean;
+  lastLoginAt?: Date;
+}
+
+interface UserCredentials {
+  id: string;
+  userId: string;
+  passwordHash: string;
+  passwordSalt: string;
+  mustChangePassword?: boolean;
+  previousPasswords?: string[];
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+interface UserMFAConfig {
+  isEnabled: boolean;
+  type?: 'totp' | 'sms' | 'email';
+  secret?: string;
+}
 import { PasswordService } from './password.service';
 import { JWTService, TokenPair } from './jwt.service';
 import { SessionService, CreateSessionOptions } from './session.service';
-import { RBACService, UserRole, AccessControlContext } from './rbac.service';
+import { RBACService, UserRole, AccessControlContext, Resource, Action } from './rbac.service';
+// ...existing code...
 import { MFAService, MFASetupResult, MFAVerificationResult } from './mfa.service';
 import { SecurityService } from './security.service';
 import { AuditService } from './audit.service';
@@ -59,10 +93,10 @@ export interface PasswordResetConfirm {
 
 export class AuthService {
   // Mock user storage - in a real implementation, this would use a database
-  private static users = new Map<string, any>();
-  private static userCredentials = new Map<string, any>();
-  private static userMFA = new Map<string, any>();
-  private static passwordResetTokens = new Map<string, any>();
+  private static users = new Map<string, User>();
+  private static userCredentials = new Map<string, UserCredentials>();
+  private static userMFA = new Map<string, UserMFAConfig>();
+  private static passwordResetTokens = new Map<string, PasswordResetToken>();
 
   static async login(
     credentials: LoginCredentials,
@@ -113,7 +147,7 @@ export class AuthService {
       }
 
       // Find user by email
-      const user = Array.from(this.users.values()).find(u => u.email === email);
+  const user = Array.from(this.users.values()).find(u => u.email === email);
       if (!user) {
         SecurityService.recordFailedLogin(lockoutKey);
         await AuditService.logLogin('', ipAddress, userAgent, false, {
@@ -724,7 +758,7 @@ export class AuthService {
     resource: string,
     action: string,
     resourceId?: string
-  ): Promise<{ allowed: boolean; user?: any; error?: string }> {
+  ): Promise<{ allowed: boolean; user?: unknown; error?: string }> {
     try {
       // Validate session
       const sessionValidation = await SessionService.validateSession(sessionId);
@@ -752,7 +786,7 @@ export class AuthService {
         resourceId,
       };
 
-      const allowed = RBACService.hasPermission(context, resource as any, action as any);
+  const allowed = RBACService.hasPermission(context, resource as Resource, action as Action);
 
       if (allowed) {
         // Log successful access
@@ -836,7 +870,7 @@ export class AuthService {
   /**
    * Validate JWT token
    */
-  async validateToken(token: string): Promise<{ valid: boolean; payload?: any; error?: string }> {
+  async validateToken(token: string): Promise<{ valid: boolean; payload?: unknown; error?: string }> {
     try {
       const payload = JWTService.verifyAccessToken(token);
       return { valid: true, payload };
