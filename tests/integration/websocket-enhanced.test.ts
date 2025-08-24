@@ -27,7 +27,7 @@ global.localStorage = localStorageMock as any;
 describe('Enhanced WebSocket Service', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    localStorageMock.getItem.mockImplementation((key) => {
+    localStorageMock.getItem.mockImplementation(key => {
       switch (key) {
         case 'userId':
           return 'test-user-123';
@@ -213,7 +213,7 @@ describe('Enhanced WebSocket Service', () => {
   describe('Connection Management', () => {
     it('should provide connection status', () => {
       const status = webSocketService.getConnectionStatus();
-      
+
       expect(status).toHaveProperty('connected');
       expect(status).toHaveProperty('socketId');
       expect(status).toHaveProperty('reconnectAttempts');
@@ -222,7 +222,7 @@ describe('Enhanced WebSocket Service', () => {
 
     it('should handle reconnection', () => {
       webSocketService.reconnect();
-      
+
       // Should attempt to connect (exact implementation may vary)
       expect(mockSocket.connect).toHaveBeenCalled();
     });
@@ -256,7 +256,7 @@ describe('Enhanced WebSocket Service', () => {
       const unsubscribe = webSocketService.subscribeToNotifications(callback);
 
       expect(typeof unsubscribe).toBe('function');
-      
+
       // Test unsubscribe
       unsubscribe();
       expect(typeof unsubscribe).toBe('function');

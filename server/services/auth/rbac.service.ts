@@ -246,7 +246,7 @@ export class RBACService {
   }
 
   private static evaluateConditions(
-  conditions: Record<string, unknown>,
+    conditions: Record<string, unknown>,
     context: AccessControlContext
   ): boolean {
     for (const [key, value] of Object.entries(conditions)) {
@@ -291,7 +291,7 @@ export class RBACService {
   static canAccessResource(
     context: AccessControlContext,
     resource: Resource,
-  resourceData?: unknown
+    resourceData?: unknown
   ): boolean {
     // Basic read permission check
     if (!this.hasPermission(context, resource, 'read')) {

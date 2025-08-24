@@ -404,12 +404,19 @@ export async function createNotificationPreference(preference: any): Promise<any
   };
 }
 
-export async function updateNotificationPreference(_userId: string, _notificationType: string, _updates: any): Promise<any> {
+export async function updateNotificationPreference(
+  _userId: string,
+  _notificationType: string,
+  _updates: any
+): Promise<any> {
   // Placeholder implementation
   return null;
 }
 
-export async function deleteNotificationPreference(_userId: string, _notificationType: string): Promise<void> {
+export async function deleteNotificationPreference(
+  _userId: string,
+  _notificationType: string
+): Promise<void> {
   // Placeholder implementation
 }
 

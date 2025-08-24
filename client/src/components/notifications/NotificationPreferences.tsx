@@ -31,47 +31,50 @@ interface PushSubscriptionStatus {
   subscription?: PushSubscription;
 }
 
-const notificationTypeLabels: Record<string, { label: string; description: string; icon: React.ReactNode }> = {
+const notificationTypeLabels: Record<
+  string,
+  { label: string; description: string; icon: React.ReactNode }
+> = {
   wo_assigned: {
     label: 'Work Order Assigned',
     description: 'When a new work order is assigned to you',
-    icon: <Bell className="w-4 h-4" />
+    icon: <Bell className='w-4 h-4' />,
   },
   wo_overdue: {
     label: 'Work Order Overdue',
     description: 'When a work order becomes overdue',
-    icon: <Clock className="w-4 h-4" />
+    icon: <Clock className='w-4 h-4' />,
   },
   part_low_stock: {
     label: 'Low Stock Alerts',
     description: 'When inventory parts are running low',
-    icon: <Bell className="w-4 h-4" />
+    icon: <Bell className='w-4 h-4' />,
   },
   pm_due: {
     label: 'Preventive Maintenance Due',
     description: 'When preventive maintenance is due',
-    icon: <Bell className="w-4 h-4" />
+    icon: <Bell className='w-4 h-4' />,
   },
   equipment_alert: {
     label: 'Equipment Alerts',
     description: 'Equipment status changes and alerts',
-    icon: <Bell className="w-4 h-4" />
+    icon: <Bell className='w-4 h-4' />,
   },
   pm_escalation: {
     label: 'PM Escalations',
     description: 'When preventive maintenance tasks are escalated',
-    icon: <Bell className="w-4 h-4" />
+    icon: <Bell className='w-4 h-4' />,
   },
   system_alert: {
     label: 'System Alerts',
     description: 'Important system-wide notifications',
-    icon: <Bell className="w-4 h-4" />
+    icon: <Bell className='w-4 h-4' />,
   },
   real_time_update: {
     label: 'Real-time Updates',
     description: 'Live updates and status changes',
-    icon: <Bell className="w-4 h-4" />
-  }
+    icon: <Bell className='w-4 h-4' />,
+  },
 };
 
 export const NotificationPreferences: React.FC = () => {
@@ -79,13 +82,13 @@ export const NotificationPreferences: React.FC = () => {
   const [pushStatus, setPushStatus] = useState<PushSubscriptionStatus>({
     supported: false,
     granted: false,
-    subscribed: false
+    subscribed: false,
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [globalQuietHours, setGlobalQuietHours] = useState({
     start: '22:00',
-    end: '08:00'
+    end: '08:00',
   });
 
   const loadPreferences = useCallback(async () => {
@@ -107,7 +110,7 @@ export const NotificationPreferences: React.FC = () => {
         createdAt: new Date(),
         updatedAt: new Date(),
       }));
-      
+
       setPreferences(defaultPreferences);
     } catch (error) {
       console.error('Failed to load preferences:', error);
@@ -133,14 +136,14 @@ export const NotificationPreferences: React.FC = () => {
   ) => {
     try {
       setSaving(true);
-      
+
       const success = await webSocketService.updateNotificationPreference(notificationType, {
-        [field]: value
+        [field]: value,
       });
 
       if (success) {
-        setPreferences(prev => 
-          prev.map(pref => 
+        setPreferences(prev =>
+          prev.map(pref =>
             pref.notificationType === notificationType
               ? { ...pref, [field]: value, updatedAt: new Date() }
               : pref
@@ -204,24 +207,24 @@ export const NotificationPreferences: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6 max-w-4xl">
+    <div className='space-y-6 max-w-4xl'>
       {/* Push Notification Settings */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Smartphone className="w-5 h-5" />
+          <CardTitle className='flex items-center gap-2'>
+            <Smartphone className='w-5 h-5' />
             Push Notifications
           </CardTitle>
-          <CardDescription>
-            Configure browser and mobile push notifications
-          </CardDescription>
+          <CardDescription>Configure browser and mobile push notifications</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="space-y-1">
+        <CardContent className='space-y-4'>
+          <div className='flex items-center justify-between'>
+            <div className='space-y-1'>
               <Label>Push Notification Support</Label>
-              <p className="text-sm text-muted-foreground">
-                {pushStatus.supported ? 'Your browser supports push notifications' : 'Push notifications are not supported'}
+              <p className='text-sm text-muted-foreground'>
+                {pushStatus.supported
+                  ? 'Your browser supports push notifications'
+                  : 'Push notifications are not supported'}
               </p>
             </div>
             <Badge variant={pushStatus.supported ? 'default' : 'secondary'}>
@@ -232,19 +235,19 @@ export const NotificationPreferences: React.FC = () => {
           {pushStatus.supported && (
             <>
               <Separator />
-              <div className="flex items-center justify-between">
-                <div className="space-y-1">
+              <div className='flex items-center justify-between'>
+                <div className='space-y-1'>
                   <Label>Permission Status</Label>
-                  <p className="text-sm text-muted-foreground">
+                  <p className='text-sm text-muted-foreground'>
                     {pushStatus.granted ? 'Permission granted' : 'Permission required'}
                   </p>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className='flex items-center gap-2'>
                   <Badge variant={pushStatus.granted ? 'default' : 'destructive'}>
                     {pushStatus.granted ? 'Granted' : 'Not Granted'}
                   </Badge>
                   {!pushStatus.granted && (
-                    <Button size="sm" onClick={handlePushPermissionRequest}>
+                    <Button size='sm' onClick={handlePushPermissionRequest}>
                       Request Permission
                     </Button>
                   )}
@@ -254,19 +257,21 @@ export const NotificationPreferences: React.FC = () => {
               {pushStatus.granted && (
                 <>
                   <Separator />
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-1">
+                  <div className='flex items-center justify-between'>
+                    <div className='space-y-1'>
                       <Label>Subscription Status</Label>
-                      <p className="text-sm text-muted-foreground">
-                        {pushStatus.subscribed ? 'Subscribed to push notifications' : 'Not subscribed'}
+                      <p className='text-sm text-muted-foreground'>
+                        {pushStatus.subscribed
+                          ? 'Subscribed to push notifications'
+                          : 'Not subscribed'}
                       </p>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className='flex items-center gap-2'>
                       <Badge variant={pushStatus.subscribed ? 'default' : 'secondary'}>
                         {pushStatus.subscribed ? 'Subscribed' : 'Not Subscribed'}
                       </Badge>
                       {pushStatus.subscribed && (
-                        <Button size="sm" variant="destructive" onClick={handlePushUnsubscribe}>
+                        <Button size='sm' variant='destructive' onClick={handlePushUnsubscribe}>
                           Unsubscribe
                         </Button>
                       )}
@@ -282,32 +287,30 @@ export const NotificationPreferences: React.FC = () => {
       {/* Global Settings */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Clock className="w-5 h-5" />
+          <CardTitle className='flex items-center gap-2'>
+            <Clock className='w-5 h-5' />
             Global Settings
           </CardTitle>
-          <CardDescription>
-            Settings that apply to all notification types
-          </CardDescription>
+          <CardDescription>Settings that apply to all notification types</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="quiet-start">Quiet Hours Start</Label>
+        <CardContent className='space-y-4'>
+          <div className='grid grid-cols-2 gap-4'>
+            <div className='space-y-2'>
+              <Label htmlFor='quiet-start'>Quiet Hours Start</Label>
               <Input
-                id="quiet-start"
-                type="time"
+                id='quiet-start'
+                type='time'
                 value={globalQuietHours.start}
-                onChange={(e) => setGlobalQuietHours(prev => ({ ...prev, start: e.target.value }))}
+                onChange={e => setGlobalQuietHours(prev => ({ ...prev, start: e.target.value }))}
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="quiet-end">Quiet Hours End</Label>
+            <div className='space-y-2'>
+              <Label htmlFor='quiet-end'>Quiet Hours End</Label>
               <Input
-                id="quiet-end"
-                type="time"
+                id='quiet-end'
+                type='time'
                 value={globalQuietHours.end}
-                onChange={(e) => setGlobalQuietHours(prev => ({ ...prev, end: e.target.value }))}
+                onChange={e => setGlobalQuietHours(prev => ({ ...prev, end: e.target.value }))}
               />
             </div>
           </div>
@@ -323,33 +326,31 @@ export const NotificationPreferences: React.FC = () => {
       {/* Notification Type Preferences */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Bell className="w-5 h-5" />
+          <CardTitle className='flex items-center gap-2'>
+            <Bell className='w-5 h-5' />
             Notification Types
           </CardTitle>
-          <CardDescription>
-            Configure preferences for each type of notification
-          </CardDescription>
+          <CardDescription>Configure preferences for each type of notification</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-6">
-            {preferences.map((preference) => {
+          <div className='space-y-6'>
+            {preferences.map(preference => {
               const typeInfo = notificationTypeLabels[preference.notificationType];
               if (!typeInfo) return null;
 
               return (
-                <div key={preference.notificationType} className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
+                <div key={preference.notificationType} className='space-y-4'>
+                  <div className='flex items-center justify-between'>
+                    <div className='flex items-center gap-3'>
                       {typeInfo.icon}
                       <div>
-                        <Label className="font-medium">{typeInfo.label}</Label>
-                        <p className="text-sm text-muted-foreground">{typeInfo.description}</p>
+                        <Label className='font-medium'>{typeInfo.label}</Label>
+                        <p className='text-sm text-muted-foreground'>{typeInfo.description}</p>
                       </div>
                     </div>
                     <Switch
                       checked={preference.enabled}
-                      onCheckedChange={(checked) =>
+                      onCheckedChange={checked =>
                         handlePreferenceChange(preference.notificationType, 'enabled', checked)
                       }
                       disabled={saving}
@@ -357,43 +358,55 @@ export const NotificationPreferences: React.FC = () => {
                   </div>
 
                   {preference.enabled && (
-                    <div className="ml-7 pl-4 border-l-2 border-muted">
-                      <div className="grid grid-cols-3 gap-6">
-                        <div className="flex items-center gap-2">
-                          <Mail className="w-4 h-4 text-muted-foreground" />
-                          <Label className="text-sm">Email</Label>
+                    <div className='ml-7 pl-4 border-l-2 border-muted'>
+                      <div className='grid grid-cols-3 gap-6'>
+                        <div className='flex items-center gap-2'>
+                          <Mail className='w-4 h-4 text-muted-foreground' />
+                          <Label className='text-sm'>Email</Label>
                           <Switch
                             checked={preference.emailEnabled}
-                            onCheckedChange={(checked) =>
-                              handlePreferenceChange(preference.notificationType, 'emailEnabled', checked)
+                            onCheckedChange={checked =>
+                              handlePreferenceChange(
+                                preference.notificationType,
+                                'emailEnabled',
+                                checked
+                              )
                             }
                             disabled={saving}
                           />
                         </div>
 
-                        <div className="flex items-center gap-2">
-                          <Smartphone className="w-4 h-4 text-muted-foreground" />
-                          <Label className="text-sm">Push</Label>
+                        <div className='flex items-center gap-2'>
+                          <Smartphone className='w-4 h-4 text-muted-foreground' />
+                          <Label className='text-sm'>Push</Label>
                           <Switch
                             checked={preference.pushEnabled && pushStatus.subscribed}
-                            onCheckedChange={(checked) =>
-                              handlePreferenceChange(preference.notificationType, 'pushEnabled', checked)
+                            onCheckedChange={checked =>
+                              handlePreferenceChange(
+                                preference.notificationType,
+                                'pushEnabled',
+                                checked
+                              )
                             }
                             disabled={saving || !pushStatus.subscribed}
                           />
                         </div>
 
-                        <div className="flex items-center gap-2">
-                          <MessageSquare className="w-4 h-4 text-muted-foreground" />
-                          <Label className="text-sm">SMS</Label>
+                        <div className='flex items-center gap-2'>
+                          <MessageSquare className='w-4 h-4 text-muted-foreground' />
+                          <Label className='text-sm'>SMS</Label>
                           <Switch
                             checked={preference.smsEnabled}
-                            onCheckedChange={(checked) =>
-                              handlePreferenceChange(preference.notificationType, 'smsEnabled', checked)
+                            onCheckedChange={checked =>
+                              handlePreferenceChange(
+                                preference.notificationType,
+                                'smsEnabled',
+                                checked
+                              )
                             }
                             disabled={true} // SMS not implemented yet
                           />
-                          <Badge variant="secondary" className="text-xs">
+                          <Badge variant='secondary' className='text-xs'>
                             Coming Soon
                           </Badge>
                         </div>

@@ -1,10 +1,12 @@
 # React Error Boundary System - Usage Examples
 
-This document demonstrates how to use the comprehensive Error Boundary system implemented in MaintAInPro.
+This document demonstrates how to use the comprehensive Error Boundary system
+implemented in MaintAInPro.
 
 ## Overview
 
 The Error Boundary system provides:
+
 - **Graceful error handling** with user-friendly fallback UIs
 - **Error reporting and tracking** with unique event IDs
 - **Recovery mechanisms** (retry, refresh, navigation)
@@ -17,7 +19,10 @@ The Error Boundary system provides:
 
 ```tsx
 import React from 'react';
-import { ErrorBoundary, GenericErrorFallback } from '@/components/ErrorBoundary';
+import {
+  ErrorBoundary,
+  GenericErrorFallback,
+} from '@/components/ErrorBoundary';
 
 function MyComponent() {
   return (
@@ -60,7 +65,7 @@ import { useErrorBoundary } from '@/hooks/useErrorBoundary';
 function MyComponent() {
   const { captureError, reportError } = useErrorBoundary({
     context: 'MyComponent',
-    onError: (error) => console.log('Error reported:', error.message),
+    onError: error => console.log('Error reported:', error.message),
   });
 
   const handleAction = async () => {
@@ -75,11 +80,7 @@ function MyComponent() {
     }
   };
 
-  return (
-    <button onClick={handleAction}>
-      Perform Action
-    </button>
-  );
+  return <button onClick={handleAction}>Perform Action</button>;
 }
 ```
 
@@ -140,7 +141,10 @@ function App() {
 ### Route-Level Protection
 
 ```tsx
-import { ErrorBoundary, GenericErrorFallback } from '@/components/ErrorBoundary';
+import {
+  ErrorBoundary,
+  GenericErrorFallback,
+} from '@/components/ErrorBoundary';
 import { reportError } from '@/utils/error-reporting';
 
 function ProtectedRoute({ children }) {
@@ -148,7 +152,7 @@ function ProtectedRoute({ children }) {
     <ErrorBoundary
       fallback={GenericErrorFallback}
       onError={async (error, errorInfo) => {
-        await reportError(error, errorInfo, { 
+        await reportError(error, errorInfo, {
           context: 'Route Protection',
           userId: currentUser?.id,
         });
@@ -171,7 +175,8 @@ const InventoryErrorBoundary = createErrorBoundary({
   context: 'Inventory Management',
   fallbackProps: {
     title: 'Inventory System Error',
-    description: 'There was an issue with the inventory system. Please try refreshing.',
+    description:
+      'There was an issue with the inventory system. Please try refreshing.',
     showHomeButton: true,
   },
 });
@@ -199,7 +204,7 @@ const CustomErrorFallback: React.FC<ErrorFallbackProps> = ({
   eventId,
 }) => {
   return (
-    <div className="custom-error-container">
+    <div className='custom-error-container'>
       <h2>Oops! Something went wrong in our app</h2>
       <p>We've been notified about this issue.</p>
       <details>
@@ -207,7 +212,7 @@ const CustomErrorFallback: React.FC<ErrorFallbackProps> = ({
         <pre>{error?.message}</pre>
         <p>Error ID: {eventId}</p>
       </details>
-      <div className="error-actions">
+      <div className='error-actions'>
         <button onClick={resetError}>Try Again</button>
         <button onClick={() => window.location.reload()}>Refresh Page</button>
       </div>
@@ -225,7 +230,11 @@ const ProtectedComponent = withErrorBoundary(MyComponent, {
 ## Error Reporting Integration
 
 ```tsx
-import { reportError, reportNetworkError, reportChunkError } from '@/utils/error-reporting';
+import {
+  reportError,
+  reportNetworkError,
+  reportChunkError,
+} from '@/utils/error-reporting';
 
 // Manual error reporting
 async function handleError(error: Error) {
@@ -235,18 +244,15 @@ async function handleError(error: Error) {
     tags: { feature: 'inventory', action: 'create' },
     extra: { timestamp: new Date().toISOString() },
   });
-  
+
   console.log('Error reported with ID:', eventId);
 }
 
 // Network error reporting
 async function handleNetworkError(response: Response) {
-  await reportNetworkError(
-    response.url,
-    response.status,
-    response.statusText,
-    { context: 'API Request' }
-  );
+  await reportNetworkError(response.url, response.status, response.statusText, {
+    context: 'API Request',
+  });
 }
 
 // Chunk error reporting
@@ -274,18 +280,18 @@ const ThrowError = ({ shouldThrow = true }) => {
 describe('Error Boundary Tests', () => {
   it('should catch and display errors', () => {
     const WrappedComponent = withErrorBoundary(ThrowError);
-    
+
     render(<WrappedComponent />);
-    
+
     expect(screen.getByText('Something went wrong')).toBeInTheDocument();
     expect(screen.getByText('Try Again')).toBeInTheDocument();
   });
-  
+
   it('should render normally when no error', () => {
     const WrappedComponent = withErrorBoundary(ThrowError);
-    
+
     render(<WrappedComponent shouldThrow={false} />);
-    
+
     expect(screen.getByText('No error')).toBeInTheDocument();
   });
 });
@@ -294,12 +300,15 @@ describe('Error Boundary Tests', () => {
 ## Best Practices
 
 1. **Strategic Placement**: Place error boundaries at route and feature levels
-2. **Context Information**: Always provide meaningful context for error reporting
+2. **Context Information**: Always provide meaningful context for error
+   reporting
 3. **User Experience**: Use appropriate fallback UIs for different error types
 4. **Recovery Options**: Provide clear recovery paths (retry, refresh, navigate)
-5. **Error Tracking**: Include relevant metadata for debugging (user ID, feature, action)
+5. **Error Tracking**: Include relevant metadata for debugging (user ID,
+   feature, action)
 6. **Testing**: Test both error and success scenarios
-7. **Performance**: Use lazy loading with chunk error boundaries for code splitting
+7. **Performance**: Use lazy loading with chunk error boundaries for code
+   splitting
 
 ## Monitoring and Debugging
 
@@ -320,4 +329,6 @@ const sessionId = errorReportingService.getSessionId();
 console.log('Current session:', sessionId);
 ```
 
-This comprehensive error boundary system ensures that your React application handles errors gracefully while providing excellent user experience and debugging capabilities.
+This comprehensive error boundary system ensures that your React application
+handles errors gracefully while providing excellent user experience and
+debugging capabilities.

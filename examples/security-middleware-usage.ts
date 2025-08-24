@@ -4,16 +4,14 @@
  */
 
 import express from 'express';
-import { 
-  enhancedSecurityStack, 
-  rateLimiters, 
+import {
+  enhancedSecurityStack,
+  rateLimiters,
   initializeSecurity,
   getSecurityStats,
-  unblockIP 
+  unblockIP,
 } from '../server/middleware/security.middleware';
-import { 
-  advancedSchemaValidation 
-} from '../server/middleware/advanced-sanitization';
+import { advancedSchemaValidation } from '../server/middleware/advanced-sanitization';
 import { z } from 'zod';
 
 const app = express();
@@ -50,13 +48,10 @@ const createUserSchema = {
   }),
 };
 
-app.post('/api/users', 
-  advancedSchemaValidation(createUserSchema),
-  (req, res) => {
-    // Request body is now validated and sanitized
-    res.json({ success: true, user: req.body });
-  }
-);
+app.post('/api/users', advancedSchemaValidation(createUserSchema), (req, res) => {
+  // Request body is now validated and sanitized
+  res.json({ success: true, user: req.body });
+});
 
 // Admin endpoint to check security statistics
 app.get('/api/admin/security/stats', async (req, res) => {
@@ -67,9 +62,9 @@ app.get('/api/admin/security/stats', async (req, res) => {
       stats,
     });
   } catch (error) {
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Failed to fetch security stats',
-      message: error.message 
+      message: error.message,
     });
   }
 });
@@ -78,29 +73,29 @@ app.get('/api/admin/security/stats', async (req, res) => {
 app.post('/api/admin/security/unblock-ip', async (req, res) => {
   try {
     const { ip } = req.body;
-    
+
     if (!ip) {
-      return res.status(400).json({ 
-        error: 'IP address is required' 
+      return res.status(400).json({
+        error: 'IP address is required',
       });
     }
-    
+
     const success = unblockIP(ip);
-    
+
     if (success) {
-      res.json({ 
-        success: true, 
-        message: `IP ${ip} has been unblocked` 
+      res.json({
+        success: true,
+        message: `IP ${ip} has been unblocked`,
       });
     } else {
-      res.status(500).json({ 
-        error: 'Failed to unblock IP address' 
+      res.status(500).json({
+        error: 'Failed to unblock IP address',
       });
     }
   } catch (error) {
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Failed to unblock IP',
-      message: error.message 
+      message: error.message,
     });
   }
 });

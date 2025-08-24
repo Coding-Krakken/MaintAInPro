@@ -147,7 +147,7 @@ export class AuthService {
       }
 
       // Find user by email
-  const user = Array.from(this.users.values()).find(u => u.email === email);
+      const user = Array.from(this.users.values()).find(u => u.email === email);
       if (!user) {
         SecurityService.recordFailedLogin(lockoutKey);
         await AuditService.logLogin('', ipAddress, userAgent, false, {
@@ -786,7 +786,7 @@ export class AuthService {
         resourceId,
       };
 
-  const allowed = RBACService.hasPermission(context, resource as Resource, action as Action);
+      const allowed = RBACService.hasPermission(context, resource as Resource, action as Action);
 
       if (allowed) {
         // Log successful access
@@ -870,7 +870,9 @@ export class AuthService {
   /**
    * Validate JWT token
    */
-  async validateToken(token: string): Promise<{ valid: boolean; payload?: unknown; error?: string }> {
+  async validateToken(
+    token: string
+  ): Promise<{ valid: boolean; payload?: unknown; error?: string }> {
     try {
       const payload = JWTService.verifyAccessToken(token);
       return { valid: true, payload };

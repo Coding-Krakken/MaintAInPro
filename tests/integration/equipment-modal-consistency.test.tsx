@@ -118,7 +118,7 @@ describe('Equipment Modal Data Consistency', () => {
       expect(screen.getAllByText('UAS-001').length).toBeGreaterThan(0);
     });
 
-    // Find and click the UAS-001 card (use getAllByText and pick first one) 
+    // Find and click the UAS-001 card (use getAllByText and pick first one)
     const uasTextElements = screen.getAllByText('UAS-001');
     const uasCard = uasTextElements[0].closest('[data-testid="equipment-card"]');
     expect(uasCard).toBeInTheDocument();

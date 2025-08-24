@@ -1,7 +1,10 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import request from 'supertest';
 import express from 'express';
-import { advancedSanitizationMiddleware, inputSanitizationUtils } from '../../server/middleware/advanced-sanitization';
+import {
+  advancedSanitizationMiddleware,
+  inputSanitizationUtils,
+} from '../../server/middleware/advanced-sanitization';
 import { rateLimiters, suspiciousActivityDetector } from '../../server/middleware/rate-limiting';
 import { enhancedSecurityStack } from '../../server/middleware/security.middleware';
 
@@ -44,10 +47,8 @@ describe('Enhanced Security Middleware Tests', () => {
         '<meta http-equiv="refresh" content="0;url=javascript:alert(1)">',
       ];
 
-      it.each(xssPayloads)('should sanitize XSS payload: %s', async (payload) => {
-        const response = await request(app)
-          .post('/test')
-          .send({ input: payload });
+      it.each(xssPayloads)('should sanitize XSS payload: %s', async payload => {
+        const response = await request(app).post('/test').send({ input: payload });
 
         expect(response.status).toBe(200);
         expect(response.body.received.input).not.toContain('<script>');
@@ -71,10 +72,8 @@ describe('Enhanced Security Middleware Tests', () => {
         "' AND 1=0 UNION ALL SELECT 'admin', '81dc9bdb52d04dc20036dbd8313ed055'",
       ];
 
-      it.each(sqlPayloads)('should detect and block SQL injection: %s', async (payload) => {
-        const response = await request(app)
-          .post('/test')
-          .send({ query: payload });
+      it.each(sqlPayloads)('should detect and block SQL injection: %s', async payload => {
+        const response = await request(app).post('/test').send({ query: payload });
 
         expect(response.status).toBe(400);
         expect(response.body.error).toBe('INVALID_INPUT');
@@ -93,10 +92,8 @@ describe('Enhanced Security Middleware Tests', () => {
         { $or: [{ user: 'admin' }, { user: 'root' }] },
       ];
 
-      it.each(nosqlPayloads)('should detect and block NoSQL injection: %o', async (payload) => {
-        const response = await request(app)
-          .post('/test')
-          .send(payload);
+      it.each(nosqlPayloads)('should detect and block NoSQL injection: %o', async payload => {
+        const response = await request(app).post('/test').send(payload);
 
         expect(response.status).toBe(400);
         expect(response.body.error).toBe('INVALID_INPUT');
@@ -112,14 +109,15 @@ describe('Enhanced Security Middleware Tests', () => {
         '..%252f..%252f..%252fetc%252fpasswd',
       ];
 
-      it.each(pathTraversalPayloads)('should detect and block path traversal: %s', async (payload) => {
-        const response = await request(app)
-          .post('/test')
-          .send({ path: payload });
+      it.each(pathTraversalPayloads)(
+        'should detect and block path traversal: %s',
+        async payload => {
+          const response = await request(app).post('/test').send({ path: payload });
 
-        expect(response.status).toBe(400);
-        expect(response.body.error).toBe('INVALID_INPUT');
-      });
+          expect(response.status).toBe(400);
+          expect(response.body.error).toBe('INVALID_INPUT');
+        }
+      );
     });
   });
 
@@ -142,11 +140,9 @@ describe('Enhanced Security Middleware Tests', () => {
         'OWASP ZAP',
       ];
 
-      it.each(suspiciousUserAgents)('should detect suspicious user agent: %s', async (userAgent) => {
+      it.each(suspiciousUserAgents)('should detect suspicious user agent: %s', async userAgent => {
         // First request should be blocked
-        const response = await request(app)
-          .get('/test')
-          .set('User-Agent', userAgent);
+        const response = await request(app).get('/test').set('User-Agent', userAgent);
 
         expect(response.status).toBe(403);
         expect(response.body.error).toBe('FORBIDDEN');
@@ -162,20 +158,21 @@ describe('Enhanced Security Middleware Tests', () => {
         '/admin/login',
       ];
 
-      it.each(suspiciousEndpoints)('should detect suspicious endpoint access: %s', async (endpoint) => {
-        const response = await request(app).get(endpoint);
+      it.each(suspiciousEndpoints)(
+        'should detect suspicious endpoint access: %s',
+        async endpoint => {
+          const response = await request(app).get(endpoint);
 
-        // Should either be blocked or result in 404, but tracked as suspicious
-        expect([403, 404]).toContain(response.status);
-      });
+          // Should either be blocked or result in 404, but tracked as suspicious
+          expect([403, 404]).toContain(response.status);
+        }
+      );
     });
 
     describe('IP Blocking After Multiple Violations', () => {
       it('should block IP after multiple suspicious activities', async () => {
-        const suspiciousRequests = Array.from({ length: 15 }, () => 
-          request(app)
-            .get('/test')
-            .set('User-Agent', 'sqlmap/1.0')
+        const suspiciousRequests = Array.from({ length: 15 }, () =>
+          request(app).get('/test').set('User-Agent', 'sqlmap/1.0')
         );
 
         // Make multiple suspicious requests
@@ -184,9 +181,7 @@ describe('Enhanced Security Middleware Tests', () => {
         }
 
         // Final request should be blocked due to IP blocking
-        const finalResponse = await request(app)
-          .get('/test')
-          .set('User-Agent', 'normal-browser');
+        const finalResponse = await request(app).get('/test').set('User-Agent', 'normal-browser');
 
         expect(finalResponse.status).toBe(403);
         expect(finalResponse.body.message).toContain('suspicious activity');
@@ -204,10 +199,8 @@ describe('Enhanced Security Middleware Tests', () => {
       });
 
       it('should rate limit authentication attempts', async () => {
-        const requests = Array.from({ length: 10 }, () => 
-          request(app)
-            .post('/auth/login')
-            .send({ email: 'test@example.com', password: 'wrong' })
+        const requests = Array.from({ length: 10 }, () =>
+          request(app).post('/auth/login').send({ email: 'test@example.com', password: 'wrong' })
         );
 
         const responses = await Promise.all(requests);
@@ -220,16 +213,14 @@ describe('Enhanced Security Middleware Tests', () => {
 
       it('should include retry-after header in rate limit responses', async () => {
         // First, exhaust the rate limit
-        const exhaustRequests = Array.from({ length: 6 }, () => 
+        const exhaustRequests = Array.from({ length: 6 }, () =>
           request(app).post('/auth/login').send({})
         );
-        
+
         await Promise.all(exhaustRequests);
 
         // Next request should be rate limited
-        const response = await request(app)
-          .post('/auth/login')
-          .send({});
+        const response = await request(app).post('/auth/login').send({});
 
         expect(response.status).toBe(429);
         expect(response.body.retryAfter).toBeDefined();
@@ -246,9 +237,7 @@ describe('Enhanced Security Middleware Tests', () => {
       });
 
       it('should allow normal API usage within limits', async () => {
-        const requests = Array.from({ length: 50 }, () => 
-          request(app).get('/api/test')
-        );
+        const requests = Array.from({ length: 50 }, () => request(app).get('/api/test'));
 
         const responses = await Promise.all(requests);
         const successfulResponses = responses.filter(r => r.status === 200);
@@ -257,9 +246,7 @@ describe('Enhanced Security Middleware Tests', () => {
       });
 
       it('should rate limit excessive API requests', async () => {
-        const requests = Array.from({ length: 150 }, () => 
-          request(app).get('/api/test')
-        );
+        const requests = Array.from({ length: 150 }, () => request(app).get('/api/test'));
 
         const responses = await Promise.all(requests);
         const rateLimitedResponses = responses.filter(r => r.status === 429);
@@ -277,7 +264,7 @@ describe('Enhanced Security Middleware Tests', () => {
       });
 
       it('should rate limit file uploads', async () => {
-        const requests = Array.from({ length: 60 }, () => 
+        const requests = Array.from({ length: 60 }, () =>
           request(app).post('/upload').send({ file: 'fake-file-data' })
         );
 
@@ -323,9 +310,7 @@ describe('Enhanced Security Middleware Tests', () => {
         res.json({ success: true });
       });
 
-      const response = await request(app)
-        .get('/api/test')
-        .set('Origin', 'http://localhost:3000');
+      const response = await request(app).get('/api/test').set('Origin', 'http://localhost:3000');
 
       expect(response.headers['access-control-allow-origin']).toBe('http://localhost:3000');
       expect(response.headers['access-control-allow-credentials']).toBe('true');
@@ -353,7 +338,7 @@ describe('Enhanced Security Middleware Tests', () => {
       });
 
       it('should not flag normal queries as SQL injection', () => {
-        const normalQuery = "SELECT name FROM products WHERE price > 100";
+        const normalQuery = 'SELECT name FROM products WHERE price > 100';
         const isSQLInjection = inputSanitizationUtils.detectSQLInjection(normalQuery);
 
         expect(isSQLInjection).toBe(false);
@@ -439,9 +424,7 @@ describe('Enhanced Security Middleware Tests', () => {
       app.use(enhancedSecurityStack);
       app.get('/test', (req, res) => res.json({ success: true }));
 
-      await request(app)
-        .get('/test')
-        .set('User-Agent', 'sqlmap/1.0');
+      await request(app).get('/test').set('User-Agent', 'sqlmap/1.0');
 
       const stats = suspiciousActivityDetector.getStats();
 

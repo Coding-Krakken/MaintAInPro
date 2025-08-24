@@ -1,4 +1,3 @@
-
 ---
 mode: agent
 ---
@@ -100,23 +99,21 @@ For each prioritized finding, produce:
 - **Change Plan (≤10 lines):** intent, scope, risks, rollback.
 - **Minimal Diff:** exact patch (unified diff) for each file.
 - **Validation:** runnable commands (autodetect stack):
-
-  - JS/TS:  
+  - JS/TS:
     ```sh
     pnpm install && pnpm lint && pnpm typecheck && pnpm test -i
     ```
-  - Python:  
+  - Python:
     ```sh
     uv sync && ruff check . && mypy . && pytest -q
     ```
-  - Java:  
+  - Java:
     ```sh
     mvn -q -DskipITs=false verify
     ```
 
 - **Telemetry Check:** expected log/metric/trace change & how to verify.
 - **Docs:** update as needed:
-
   - `docs/adr/NNN-<slug>.md`
   - `CHANGELOG.md`
   - `docs/runbooks/<topic>.md`
@@ -125,19 +122,17 @@ For each prioritized finding, produce:
 
 ```markdown
 ### Fix <ID>: <Short Title>
-Finding:
-Impact:
-Evidence (paths/snippets):
-Proposed Patch:
-<unified diff>
+
+Finding: Impact: Evidence (paths/snippets): Proposed Patch: <unified diff>
 
 Validation Steps:
-1) <command>
-2) <command>
-Expected Result:
-Docs to Update/Add:
-Risk & Rollback:
-````
+
+1. <command>
+2. <command>
+   Expected Result:
+   Docs to Update/Add:
+   Risk & Rollback:
+```
 
 ---
 
@@ -145,11 +140,12 @@ Risk & Rollback:
 
 Create `artifacts/remediation/roadmap.md` with 3 tiers:
 
-* **P0 (now):** correctness, security, build/test gates, data loss risks.
-* **P1 (next):** reliability, performance wins, maintainability.
-* **P2 (later):** polish, nice-to-have, quality-of-life.
+- **P0 (now):** correctness, security, build/test gates, data loss risks.
+- **P1 (next):** reliability, performance wins, maintainability.
+- **P2 (later):** polish, nice-to-have, quality-of-life.
 
-Each item links to its **Fix <ID>** with ETA (S/M/L), risk level, and owner placeholder.
+Each item links to its **Fix <ID>** with ETA (S/M/L), risk level, and owner
+placeholder.
 
 ---
 
@@ -163,11 +159,13 @@ Work in **small batches**:
    ```
    APPLY <ID(s)>
    ```
+
 3. Return **exact diffs** for those IDs.
 4. Provide **validation commands + expected results**.
 5. On success → proceed to next batch.
 
-If a change risks breaking builds or public APIs, **gate behind a flag** or provide **compat shim + migration notes**.
+If a change risks breaking builds or public APIs, **gate behind a flag** or
+provide **compat shim + migration notes**.
 
 ---
 
@@ -175,54 +173,52 @@ If a change risks breaking builds or public APIs, **gate behind a flag** or prov
 
 Start by:
 
-* Autodetect stack & produce `artifacts/baseline/inventory.md`.
+- Autodetect stack & produce `artifacts/baseline/inventory.md`.
 
-* Run/read (or simulate if needed):
+- Run/read (or simulate if needed):
+  - Install deps
+  - Format/Lint/Typecheck
+  - Unit/Integration/E2E tests
 
-  * Install deps
-  * Format/Lint/Typecheck
-  * Unit/Integration/E2E tests
+- Produce the **Universal Findings Checklist** with P0/P1/P2 tags.
 
-* Produce the **Universal Findings Checklist** with P0/P1/P2 tags.
-
-* Propose the first **2–3 P0 fixes** with patches + validation.
+- Propose the first **2–3 P0 fixes** with patches + validation.
 
 ---
 
 ## I) Strict Output
 
-* Use **clear headings**
-* **Code fences** for diffs
-* **Runnable command blocks**
-* Reference files by **relative path from repo root**
-* No vague advice—always provide **concrete diffs or stubs**
-* If unproven safely, mark as **Requires Manual Review** with instructions
+- Use **clear headings**
+- **Code fences** for diffs
+- **Runnable command blocks**
+- Reference files by **relative path from repo root**
+- No vague advice—always provide **concrete diffs or stubs**
+- If unproven safely, mark as **Requires Manual Review** with instructions
 
 ---
 
 ## J) Traceability (required)
 
-* Add/update ADRs under `artifacts/adr/`.
-* Reflect operational changes in `runbooks/*`.
-* Update product/architecture intent in `docs/*` and requirements if needed.
+- Add/update ADRs under `artifacts/adr/`.
+- Reflect operational changes in `runbooks/*`.
+- Update product/architecture intent in `docs/*` and requirements if needed.
 
 ---
 
 ## K) Chat Output (each iteration)
 
-* **PLAN:** bullets (≤8) of what you will do now
-* **DIFF SUMMARY:** files added/changed with 1-line purpose each
-* **GATES:** confirm outcomes of repo CI checks
-* **RESULTS:** current status + follow-ups
-* **NEXT:** the next single optimal step
+- **PLAN:** bullets (≤8) of what you will do now
+- **DIFF SUMMARY:** files added/changed with 1-line purpose each
+- **GATES:** confirm outcomes of repo CI checks
+- **RESULTS:** current status + follow-ups
+- **NEXT:** the next single optimal step
 
 ---
 
 ## L) Autonomy & Safety
 
-* **Autocontinue:** After RESULTS, immediately continue to NEXT (A→K loop) unless `PAUSE` is typed.
-* Stop before destructive/high-risk actions; post rollback plan first.
-* If required input is missing, propose a **minimal stub** aligned to patterns and proceed.
-
-
-
+- **Autocontinue:** After RESULTS, immediately continue to NEXT (A→K loop)
+  unless `PAUSE` is typed.
+- Stop before destructive/high-risk actions; post rollback plan first.
+- If required input is missing, propose a **minimal stub** aligned to patterns
+  and proceed.

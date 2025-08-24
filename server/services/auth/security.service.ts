@@ -133,10 +133,10 @@ export class SecurityService {
       legacyHeaders: false,
       // Custom key generator that can handle both IP and user-based limiting
       keyGenerator: (req: unknown) => {
-  const userId = (req as Record<string, unknown>).headers?.['x-user-id'] as string;
+        const userId = (req as Record<string, unknown>).headers?.['x-user-id'] as string;
         if (userId) return `user:${userId}`;
         // Use express-rate-limit's ipKeyGenerator for IPv6 compatibility
-  return `ip:${ipKeyGenerator(req as any)}`;
+        return `ip:${ipKeyGenerator(req as any)}`;
       },
     });
   }
@@ -209,7 +209,7 @@ export class SecurityService {
   static detectThreat(
     ipAddress: string,
     userAgent: string,
-  requestData?: unknown
+    requestData?: unknown
   ): ThreatDetectionResult {
     const reasons: string[] = [];
     let threatLevel: ThreatDetectionResult['threatLevel'] = 'low';

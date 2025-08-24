@@ -1,12 +1,19 @@
 # ADR: Elite CI/CD Pipeline for MaintAInPro
 
 ## Status
+
 Accepted
 
 ## Context
-MaintAInPro requires a world-class CI/CD pipeline, modeled after elite engineering organizations, to ensure code quality, security, and rapid, reliable delivery. The pipeline must enforce lint, type-check, test, coverage, security, build, deploy, rollback, and audit gates, tailored to this codebase and its multi-tenant, compliance-driven architecture.
+
+MaintAInPro requires a world-class CI/CD pipeline, modeled after elite
+engineering organizations, to ensure code quality, security, and rapid, reliable
+delivery. The pipeline must enforce lint, type-check, test, coverage, security,
+build, deploy, rollback, and audit gates, tailored to this codebase and its
+multi-tenant, compliance-driven architecture.
 
 ## Decision
+
 - Implement a GitHub Actions workflow (`.github/workflows/ci-cd.yml`) with:
   - Preflight: lint, type-check, custom gates
   - Test: unit/integration, coverage
@@ -20,9 +27,12 @@ MaintAInPro requires a world-class CI/CD pipeline, modeled after elite engineeri
 - All steps atomic, traceable, and non-destructive
 
 ## Consequences
+
 - All PRs and merges are gated by quality, security, and compliance checks
 - Deployments are auditable and reversible
 - Documentation and traceability are enforced
 
 ---
-See `.github/workflows/ci-cd.yml` and `docs/ops/README.md` for implementation details.
+
+See `.github/workflows/ci-cd.yml` and `docs/ops/README.md` for implementation
+details.

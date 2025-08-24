@@ -136,8 +136,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     console.log('Rate limiting enabled');
   } else {
     // Create no-op middleware for tests
-  authRateLimit = (req, res, next) => next();
-  apiRateLimit = (req, res, next) => next();
+    authRateLimit = (req, res, next) => next();
+    apiRateLimit = (req, res, next) => next();
     console.log('Rate limiting disabled for tests');
   }
 
@@ -235,13 +235,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // OpenAPI 3.0 Documentation with Swagger UI
-  app.use('/api/api-docs', swaggerUi.serve, swaggerUi.setup(specs, {
-    customCss: '.swagger-ui .topbar { display: none }',
-    customSiteTitle: 'MaintAInPro CMMS API Documentation',
-    swaggerOptions: {
-      persistAuthorization: true,
-    },
-  }));
+  app.use(
+    '/api/api-docs',
+    swaggerUi.serve,
+    swaggerUi.setup(specs, {
+      customCss: '.swagger-ui .topbar { display: none }',
+      customSiteTitle: 'MaintAInPro CMMS API Documentation',
+      swaggerOptions: {
+        persistAuthorization: true,
+      },
+    })
+  );
 
   console.log('Health check endpoint registered');
   console.log('API documentation available at /api/api-docs');
@@ -298,7 +302,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // In test mode, reject invalid tokens with 401
       if (process.env.NODE_ENV === 'test') {
         // Check for obviously invalid tokens
-        if (!token || token.length < 10 || token === 'invalid-jwt-token' || token.startsWith('Bearer ') || token === 'Bearer') {
+        if (
+          !token ||
+          token.length < 10 ||
+          token === 'invalid-jwt-token' ||
+          token.startsWith('Bearer ') ||
+          token === 'Bearer'
+        ) {
           return res.status(401).json({ message: 'Invalid token' });
         }
         // For malformed JWT structure
@@ -325,9 +335,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Check if session is still valid
       const payload = tokenValidation.payload as any;
-      const sessionValid = await new AuthService().validateSession(
-        payload.sessionId
-      );
+      const sessionValid = await new AuthService().validateSession(payload.sessionId);
       if (!sessionValid) {
         return res.status(401).json({ message: 'Session expired' });
       }
@@ -358,7 +366,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // RBAC middleware for role-based access control
   const requireRole = (..._allowedRoles: string[]) => {
-  return async (req: any, res: any, next: any) => {
+    return async (req: any, res: any, next: any) => {
       try {
         const { AuthService } = await import('./services/auth');
 
@@ -430,9 +438,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const getCurrentUser = (req: unknown) => {
     const request = req as any;
     return (
-      request.user?.id ||
-      request.headers['x-user-id'] ||
-      '00000000-0000-0000-0000-000000000001'
+      request.user?.id || request.headers['x-user-id'] || '00000000-0000-0000-0000-000000000001'
     );
   };
 
@@ -586,7 +592,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { AuthService } = await import('./services/auth');
 
-  const sessionId = (req as any).user?.sessionId;
+      const sessionId = (req as any).user?.sessionId;
       if (sessionId) {
         const context = {
           ipAddress: req.ip || req.connection.remoteAddress || 'Unknown',
@@ -825,7 +831,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Get user from request (set by authenticateRequest middleware)
-  const user = (req as any).user;
+      const user = (req as any).user;
       if (!user) {
         return res.status(401).json({ message: 'Not authenticated' });
       }

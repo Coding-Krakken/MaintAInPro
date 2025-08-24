@@ -78,17 +78,17 @@ app.use(
   helmet({
     contentSecurityPolicy: {
       directives: {
-  defaultSrc: ["'self'"],
-  scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
-  styleSrc: ["'self'", "'unsafe-inline'"],
-  imgSrc: ["'self'", 'data:', 'blob:'],
-  fontSrc: ["'self'"],
-  connectSrc: ["'self'", 'ws:', 'wss:'],
-  frameSrc: ["'none'"],
-  frameAncestors: ["'none'"],
-  baseUri: ["'self'"],
-  formAction: ["'self'"],
-  workerSrc: ["'self'"],
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        imgSrc: ["'self'", 'data:', 'blob:'],
+        fontSrc: ["'self'"],
+        connectSrc: ["'self'", 'ws:', 'wss:'],
+        frameSrc: ["'none'"],
+        frameAncestors: ["'none'"],
+        baseUri: ["'self'"],
+        formAction: ["'self'"],
+        workerSrc: ["'self'"],
       },
     },
     crossOriginEmbedderPolicy: false, // Allow for development
