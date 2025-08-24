@@ -6,9 +6,6 @@ import { afterEach, vi } from 'vitest';
 
 // import { server } from './mocks/server'
 
-// Polyfills for Node.js globals that may not be available in jsdom
-import { TextEncoder, TextDecoder } from 'util';
-
 // Ensure TextEncoder is available globally
 if (typeof global.TextEncoder === 'undefined') {
   global.TextEncoder = TextEncoder;
