@@ -158,7 +158,8 @@ export class AuditService {
     ipAddress: string,
     userAgent: string,
     success: boolean,
-  details: Record<string, unknown> = {}
+
+    details: Record<string, unknown> = {}
   ): Promise<string> {
     return this.logEvent(`mfa_${action}`, 'authentication', details, {
       userId,
@@ -202,7 +203,7 @@ export class AuditService {
     resourceId: string,
     ipAddress: string,
     userAgent: string,
-  details: Record<string, unknown> = {},
+    details: Record<string, unknown> = {},
     success: boolean = true
   ): Promise<string> {
     return this.logEvent(
@@ -222,7 +223,7 @@ export class AuditService {
 
   static async logSecurityEvent(
     action: string,
-  details: Record<string, unknown>,
+    details: Record<string, unknown>,
     context: {
       userId?: string;
       sessionId?: string;
@@ -267,31 +268,21 @@ export class AuditService {
     }
 
     if (query.startDate) {
-      if (query.startDate) {
-        filteredLogs = filteredLogs.filter(log => log.timestamp >= query.startDate);
-      }
+      filteredLogs = filteredLogs.filter(log => log.timestamp >= query.startDate);
     }
-
     if (query.endDate) {
-      if (query.endDate) {
-        filteredLogs = filteredLogs.filter(log => log.timestamp <= query.endDate);
-      }
+      filteredLogs = filteredLogs.filter(log => log.timestamp <= query.endDate);
     }
-
     if (query.ipAddress) {
       filteredLogs = filteredLogs.filter(log => log.ipAddress === query.ipAddress);
     }
-
     // Sort by timestamp (newest first)
     filteredLogs.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
-
     const total = filteredLogs.length;
     const offset = query.offset || 0;
     const limit = query.limit || 50;
-
     const paginatedLogs = filteredLogs.slice(offset, offset + limit);
     const hasMore = offset + limit < total;
-
     return {
       logs: paginatedLogs,
       total,
