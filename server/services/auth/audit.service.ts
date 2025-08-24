@@ -44,9 +44,9 @@ export class AuditService {
   private static readonly MAX_LOGS_IN_MEMORY = 10000;
 
   static async logEvent(
-  action: string,
-  resource: string,
-  details: Record<string, unknown>,
+    action: string,
+    resource: string,
+    details: Record<string, unknown>,
     context: {
       userId?: string;
       sessionId?: string;
@@ -87,11 +87,11 @@ export class AuditService {
   }
 
   static async logLogin(
-  userId: string,
-  ipAddress: string,
-  userAgent: string,
-  success: boolean,
-  details: Record<string, unknown> = {}
+    userId: string,
+    ipAddress: string,
+    userAgent: string,
+    success: boolean,
+    details: Record<string, unknown> = {}
   ): Promise<string> {
     return this.logEvent(
       'login',
@@ -153,12 +153,13 @@ export class AuditService {
   }
 
   static async logMFAEvent(
-  userId: string,
-  action: 'enable' | 'disable' | 'verify' | 'backup_used',
-  ipAddress: string,
-  userAgent: string,
-  success: boolean,
-  details: Record<string, unknown> = {}
+    userId: string,
+    action: 'enable' | 'disable' | 'verify' | 'backup_used',
+    ipAddress: string,
+    userAgent: string,
+    success: boolean,
+
+    details: Record<string, unknown> = {}
   ): Promise<string> {
     return this.logEvent(`mfa_${action}`, 'authentication', details, {
       userId,
@@ -196,14 +197,14 @@ export class AuditService {
   }
 
   static async logAdminAction(
-  userId: string,
-  action: string,
-  resource: string,
-  resourceId: string,
-  ipAddress: string,
-  userAgent: string,
-  details: Record<string, unknown> = {},
-  success: boolean = true
+    userId: string,
+    action: string,
+    resource: string,
+    resourceId: string,
+    ipAddress: string,
+    userAgent: string,
+    details: Record<string, unknown> = {},
+    success: boolean = true
   ): Promise<string> {
     return this.logEvent(
       action,
@@ -382,9 +383,9 @@ export class AuditService {
   }
 
   private static determineRiskLevel(
-  action: string,
-  resource: string,
-  details: Record<string, unknown>
+    action: string,
+    resource: string,
+    details: Record<string, unknown>
   ): 'low' | 'medium' | 'high' | 'critical' {
     // Admin actions
     if (details.adminAction) {

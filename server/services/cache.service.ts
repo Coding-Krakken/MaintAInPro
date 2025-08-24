@@ -18,7 +18,7 @@ export interface CacheConfig {
   maxMemoryCacheSize?: number;
 }
 
-export interface CacheEntry<T = any> {
+export interface CacheEntry<T = unknown> {
   data: T;
   timestamp: number;
   ttl: number;
@@ -131,7 +131,7 @@ export class CacheService {
         if (memoryEntry && !this.isExpired(memoryEntry)) {
           memoryEntry.hits++;
           this.cacheStats.hits++;
-          return memoryEntry.data;
+          return memoryEntry.data as T;
         } else if (memoryEntry) {
           this.memoryCache.delete(key);
         }
@@ -146,7 +146,7 @@ export class CacheService {
 
             // Store in memory cache for next time
             if (this.config.enableMemoryCache) {
-              this.setMemoryCache(key, parsed, this.config.defaultTTL!);
+              this.setMemoryCache(key, parsed, this.config.defaultTTL ?? 60);
             }
 
             this.cacheStats.hits++;
@@ -171,7 +171,7 @@ export class CacheService {
    * Set value in cache with multi-layer strategy
    */
   async set<T>(key: string, value: T, ttl?: number): Promise<void> {
-    const finalTTL = ttl || this.config.defaultTTL!;
+  const finalTTL = ttl ?? this.config.defaultTTL ?? 60;
 
     try {
       // Set in memory cache
@@ -269,7 +269,7 @@ export class CacheService {
       for (const key of keys) {
         const memoryEntry = this.memoryCache.get(key);
         if (memoryEntry && !this.isExpired(memoryEntry)) {
-          results.set(key, memoryEntry.data);
+          results.set(key, memoryEntry.data as T);
           memoryEntry.hits++;
         } else {
           missingKeys.push(key);
@@ -295,7 +295,7 @@ export class CacheService {
 
             // Cache in memory for next time
             if (this.config.enableMemoryCache) {
-              this.setMemoryCache(missingKeys[i], parsed, this.config.defaultTTL!);
+              this.setMemoryCache(missingKeys[i], parsed, this.config.defaultTTL ?? 60);
             }
           }
         }
@@ -320,7 +320,7 @@ export class CacheService {
 
       if (!taggedKeys.includes(key)) {
         taggedKeys.push(key);
-        await this.set(tagKey, taggedKeys, ttl || this.config.defaultTTL!);
+  await this.set(tagKey, taggedKeys, ttl ?? this.config.defaultTTL ?? 60);
       }
     }
   }
@@ -359,7 +359,7 @@ export class CacheService {
    */
   private setMemoryCache<T>(key: string, value: T, ttl: number): void {
     // Remove oldest entries if cache is full
-    if (this.memoryCache.size >= this.config.maxMemoryCacheSize!) {
+  if (this.memoryCache.size >= (this.config.maxMemoryCacheSize ?? 1000)) {
       const firstKey = this.memoryCache.keys().next().value;
       if (firstKey) {
         this.memoryCache.delete(firstKey);
