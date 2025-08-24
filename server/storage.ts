@@ -100,6 +100,10 @@ import {
   type Vendor,
   type Notification,
   type InsertNotification,
+  type NotificationPreference,
+  type InsertNotificationPreference,
+  type PushSubscription,
+  type InsertPushSubscription,
   type Attachment,
   type SystemLog,
 } from '@shared/schema';
@@ -194,6 +198,20 @@ export interface IStorage {
   getNotifications(_userId: string): Promise<Notification[]>;
   createNotification(_notification: InsertNotification): Promise<Notification>;
   markNotificationRead(_id: string): Promise<void>;
+  deleteNotification(_id: string): Promise<void>;
+  
+  // Notification Preferences
+  getNotificationPreferences(_userId: string): Promise<NotificationPreference[]>;
+  createNotificationPreference(_preference: InsertNotificationPreference): Promise<NotificationPreference>;
+  updateNotificationPreference(_userId: string, _notificationType: string, _updates: Partial<InsertNotificationPreference>): Promise<NotificationPreference | null>;
+  deleteNotificationPreference(_userId: string, _notificationType: string): Promise<void>;
+  
+  // Push Subscriptions
+  getPushSubscriptions(_userId: string): Promise<PushSubscription[]>;
+  createPushSubscription(_subscription: InsertPushSubscription): Promise<PushSubscription>;
+  updatePushSubscription(_id: string, _updates: Partial<InsertPushSubscription>): Promise<PushSubscription | null>;
+  deletePushSubscription(_id: string): Promise<void>;
+  getActivePushSubscriptions(_userId: string): Promise<PushSubscription[]>;
 
   // Attachments
   getAttachments(
@@ -623,6 +641,9 @@ export class MemStorage implements IStorage {
       workOrderId: workOrderId1,
       equipmentId: equipmentId1,
       partId: null,
+      metadata: null,
+      priority: 'medium',
+      expiresAt: null,
       createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
     };
 
@@ -636,6 +657,9 @@ export class MemStorage implements IStorage {
       partId: partId1,
       equipmentId: null,
       workOrderId: null,
+      metadata: { stockLevel: 5, reorderPoint: 10 },
+      priority: 'high',
+      expiresAt: null,
       createdAt: new Date(Date.now() - 4 * 60 * 60 * 1000), // 4 hours ago
     };
 
@@ -649,6 +673,9 @@ export class MemStorage implements IStorage {
       workOrderId: workOrderId1,
       equipmentId: equipmentId1,
       partId: null,
+      metadata: { daysOverdue: 2 },
+      priority: 'critical',
+      expiresAt: null,
       createdAt: new Date(Date.now() - 6 * 60 * 60 * 1000), // 6 hours ago
     };
 
@@ -1357,6 +1384,104 @@ export class MemStorage implements IStorage {
       notification.read = true;
       this.notifications.set(id, notification);
     }
+  }
+
+  async deleteNotification(id: string): Promise<void> {
+    this.notifications.delete(id);
+  }
+
+  // Notification Preferences
+  private notificationPreferences = new Map<string, NotificationPreference>();
+
+  async getNotificationPreferences(userId: string): Promise<NotificationPreference[]> {
+    return Array.from(this.notificationPreferences.values())
+      .filter(p => p.userId === userId);
+  }
+
+  async createNotificationPreference(insertPreference: InsertNotificationPreference): Promise<NotificationPreference> {
+    const id = this.generateId();
+    const preference: NotificationPreference = {
+      id,
+      ...(insertPreference as any),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    this.notificationPreferences.set(id, preference);
+    return preference;
+  }
+
+  async updateNotificationPreference(
+    userId: string, 
+    notificationType: string, 
+    updates: Partial<InsertNotificationPreference>
+  ): Promise<NotificationPreference | null> {
+    const existingPreference = Array.from(this.notificationPreferences.values())
+      .find(p => p.userId === userId && p.notificationType === notificationType);
+    
+    if (existingPreference) {
+      const updated: NotificationPreference = {
+        ...existingPreference,
+        ...updates,
+        updatedAt: new Date(),
+      };
+      this.notificationPreferences.set(existingPreference.id, updated);
+      return updated;
+    }
+    return null;
+  }
+
+  async deleteNotificationPreference(userId: string, notificationType: string): Promise<void> {
+    const preference = Array.from(this.notificationPreferences.values())
+      .find(p => p.userId === userId && p.notificationType === notificationType);
+    if (preference) {
+      this.notificationPreferences.delete(preference.id);
+    }
+  }
+
+  // Push Subscriptions
+  private pushSubscriptions = new Map<string, PushSubscription>();
+
+  async getPushSubscriptions(userId: string): Promise<PushSubscription[]> {
+    return Array.from(this.pushSubscriptions.values())
+      .filter(s => s.userId === userId);
+  }
+
+  async createPushSubscription(insertSubscription: InsertPushSubscription): Promise<PushSubscription> {
+    const id = this.generateId();
+    const subscription: PushSubscription = {
+      id,
+      ...(insertSubscription as any),
+      createdAt: new Date(),
+      lastUsed: new Date(),
+    };
+    this.pushSubscriptions.set(id, subscription);
+    return subscription;
+  }
+
+  async updatePushSubscription(
+    id: string, 
+    updates: Partial<InsertPushSubscription>
+  ): Promise<PushSubscription | null> {
+    const subscription = this.pushSubscriptions.get(id);
+    if (subscription) {
+      const updated: PushSubscription = {
+        ...subscription,
+        ...updates,
+        lastUsed: new Date(),
+      };
+      this.pushSubscriptions.set(id, updated);
+      return updated;
+    }
+    return null;
+  }
+
+  async deletePushSubscription(id: string): Promise<void> {
+    this.pushSubscriptions.delete(id);
+  }
+
+  async getActivePushSubscriptions(userId: string): Promise<PushSubscription[]> {
+    return Array.from(this.pushSubscriptions.values())
+      .filter(s => s.userId === userId && s.active);
   }
 
   // Attachment methods

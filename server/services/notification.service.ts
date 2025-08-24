@@ -135,8 +135,11 @@ class NotificationServiceImpl implements NotificationService {
 
   async sendNotification(notificationData: InsertNotification): Promise<void> {
     try {
+      if (!isInsertNotification(notificationData)) {
+        throw new Error('Invalid notification data');
+      }
       // Store notification in database
-      const notification = await storage.createNotification(notificationData as InsertNotification);
+      const notification = await storage.createNotification(notificationData);
 
       // Send real-time notification if WebSocket is available
       if (this.io && notificationData.userId) {
@@ -144,14 +147,6 @@ class NotificationServiceImpl implements NotificationService {
           type: 'notification',
           data: notification,
         });
-
-        // Send to warehouse if applicable (notifications are user-scoped, so get user's warehouse)
-        if (notificationData.warehouseId) {
-          this.io.to(`warehouse:${notificationData.warehouseId}`).emit('notification', {
-            type: 'warehouse_notification',
-            data: notification,
-          });
-        }
 
         console.log(`Notification sent to user ${notificationData.userId} via WebSocket`);
       } else if (!this.io) {
@@ -163,6 +158,17 @@ class NotificationServiceImpl implements NotificationService {
       console.error('Error sending notification:', error);
       throw error;
     }
+// Type guard for InsertNotification
+function isInsertNotification(data: unknown): data is InsertNotification {
+  if (typeof data !== 'object' || data === null) return false;
+  const obj = data as Record<string, unknown>;
+  return (
+    typeof obj.userId === 'string' &&
+    typeof obj.type === 'string' &&
+    typeof obj.title === 'string' &&
+    typeof obj.message === 'string'
+  );
+}
   }
   async sendRealTimeUpdate<T = unknown>(userId: string, data: T): Promise<void> {
     if (!this.io) {

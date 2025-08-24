@@ -13,6 +13,8 @@ import {
   vendors,
   pmTemplates,
   notifications,
+  notificationPreferences,
+  pushSubscriptions,
   attachments,
   systemLogs,
   Profile,
@@ -35,6 +37,10 @@ import {
   InsertPmTemplate,
   Notification,
   InsertNotification,
+  NotificationPreference,
+  InsertNotificationPreference,
+  PushSubscription,
+  InsertPushSubscription,
   Attachment,
   InsertAttachment,
   SystemLog,
@@ -662,6 +668,115 @@ export class DatabaseStorage implements IStorage {
       .update(notifications)
   .set({ read: true } as unknown)
       .where(eq(notifications.id, id));
+  }
+
+  async deleteNotification(id: string): Promise<void> {
+    await db.delete(notifications).where(eq(notifications.id, id));
+  }
+
+  // Notification Preferences
+  async getNotificationPreferences(userId: string): Promise<NotificationPreference[]> {
+    return await db
+      .select()
+      .from(notificationPreferences)
+      .where(eq(notificationPreferences.userId, userId));
+  }
+
+  async createNotificationPreference(insertPreference: InsertNotificationPreference): Promise<NotificationPreference> {
+    const [preference] = await db
+      .insert(notificationPreferences)
+      .values({
+        id: this.generateId(),
+        ...insertPreference,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      } as any)
+      .returning();
+    return preference;
+  }
+
+  async updateNotificationPreference(
+    userId: string, 
+    notificationType: string, 
+    updates: Partial<InsertNotificationPreference>
+  ): Promise<NotificationPreference | null> {
+    const [preference] = await db
+      .update(notificationPreferences)
+      .set({
+        ...updates,
+        updatedAt: new Date(),
+      } as any)
+      .where(
+        and(
+          eq(notificationPreferences.userId, userId),
+          eq(notificationPreferences.notificationType, notificationType as any)
+        )
+      )
+      .returning();
+    return preference || null;
+  }
+
+  async deleteNotificationPreference(userId: string, notificationType: string): Promise<void> {
+    await db
+      .delete(notificationPreferences)
+      .where(
+        and(
+          eq(notificationPreferences.userId, userId),
+          eq(notificationPreferences.notificationType, notificationType as any)
+        )
+      );
+  }
+
+  // Push Subscriptions
+  async getPushSubscriptions(userId: string): Promise<PushSubscription[]> {
+    return await db
+      .select()
+      .from(pushSubscriptions)
+      .where(eq(pushSubscriptions.userId, userId));
+  }
+
+  async createPushSubscription(insertSubscription: InsertPushSubscription): Promise<PushSubscription> {
+    const [subscription] = await db
+      .insert(pushSubscriptions)
+      .values({
+        id: this.generateId(),
+        ...insertSubscription,
+        createdAt: new Date(),
+        lastUsed: new Date(),
+      } as any)
+      .returning();
+    return subscription;
+  }
+
+  async updatePushSubscription(
+    id: string, 
+    updates: Partial<InsertPushSubscription>
+  ): Promise<PushSubscription | null> {
+    const [subscription] = await db
+      .update(pushSubscriptions)
+      .set({
+        ...updates,
+        lastUsed: new Date(),
+      } as any)
+      .where(eq(pushSubscriptions.id, id))
+      .returning();
+    return subscription || null;
+  }
+
+  async deletePushSubscription(id: string): Promise<void> {
+    await db.delete(pushSubscriptions).where(eq(pushSubscriptions.id, id));
+  }
+
+  async getActivePushSubscriptions(userId: string): Promise<PushSubscription[]> {
+    return await db
+      .select()
+      .from(pushSubscriptions)
+      .where(
+        and(
+          eq(pushSubscriptions.userId, userId),
+          eq(pushSubscriptions.active, true)
+        )
+      );
   }
 
   // Attachments

@@ -11,13 +11,32 @@ export interface WebSocketNotification {
 export interface NotificationData {
   id: string;
   userId: string;
-  warehouseId: string;
+  warehouseId?: string;
   title: string;
   message: string;
-  type: 'info' | 'warning' | 'error' | 'success';
+  type: 'wo_assigned' | 'wo_overdue' | 'part_low_stock' | 'pm_due' | 'equipment_alert' | 'pm_escalation' | 'system_alert' | 'real_time_update' | 'info' | 'warning' | 'error' | 'success';
   read: boolean;
   createdAt: Date;
   data?: unknown;
+  priority?: 'low' | 'medium' | 'high' | 'critical';
+  expiresAt?: Date;
+  workOrderId?: string;
+  equipmentId?: string;
+  partId?: string;
+}
+
+export interface NotificationPreference {
+  id: string;
+  userId: string;
+  notificationType: string;
+  enabled: boolean;
+  emailEnabled: boolean;
+  pushEnabled: boolean;
+  smsEnabled: boolean;
+  quietHoursStart?: string;
+  quietHoursEnd?: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export class WebSocketService {
@@ -27,6 +46,8 @@ export class WebSocketService {
   private maxReconnectAttempts = 5;
   private reconnectDelay = 1000;
   private subscriptions = new Map<string, (_data: unknown) => void>();
+  private notificationPreferences: NotificationPreference[] = [];
+  private preferencesLoaded = false;
 
   constructor() {
     // Check if we're in a serverless environment where WebSocket isn't supported
@@ -99,6 +120,8 @@ export class WebSocketService {
       console.log('WebSocket authentication successful:', data);
       // Subscribe to relevant channels
       this.subscribeToDefaultChannels();
+      // Load notification preferences
+      this.loadNotificationPreferences();
     });
 
     this.socket.on('authentication_error', error => {
@@ -178,17 +201,7 @@ export class WebSocketService {
   }
 
   private handleNotification(notification: NotificationData): void {
-    console.log('Received notification:', notification);
-
-    // Show toast notification
-    toast({
-      title: notification.title,
-      description: notification.message,
-      variant: notification.type === 'error' ? 'destructive' : 'default',
-    });
-
-    // Notify subscribers
-    this.notifySubscribers('notification', notification);
+    this.handleNotificationWithPreferences(notification);
   }
 
   private handleWarehouseNotification(notification: NotificationData): void {
@@ -309,6 +322,116 @@ export class WebSocketService {
       this.authenticate();
       this.subscribeToDefaultChannels();
     }
+  }
+
+  // Notification Preferences Management
+  public async loadNotificationPreferences(): Promise<void> {
+    try {
+      const userId = localStorage.getItem('userId');
+      if (!userId) return;
+
+      const response = await fetch('/api/notification-preferences', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-user-id': userId,
+        },
+      });
+
+      if (response.ok) {
+        this.notificationPreferences = await response.json();
+        this.preferencesLoaded = true;
+        console.log('Notification preferences loaded:', this.notificationPreferences.length);
+      }
+    } catch (error) {
+      console.error('Failed to load notification preferences:', error);
+    }
+  }
+
+  public async updateNotificationPreference(
+    notificationType: string, 
+    updates: Partial<NotificationPreference>
+  ): Promise<boolean> {
+    try {
+      const userId = localStorage.getItem('userId');
+      if (!userId) return false;
+
+      const response = await fetch('/api/notification-preferences', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-user-id': userId,
+        },
+        body: JSON.stringify({
+          notificationType,
+          ...updates,
+        }),
+      });
+
+      if (response.ok) {
+        const updatedPreference = await response.json();
+        // Update local cache
+        const index = this.notificationPreferences.findIndex(
+          p => p.notificationType === notificationType
+        );
+        if (index >= 0) {
+          this.notificationPreferences[index] = updatedPreference;
+        } else {
+          this.notificationPreferences.push(updatedPreference);
+        }
+        return true;
+      }
+    } catch (error) {
+      console.error('Failed to update notification preference:', error);
+    }
+    return false;
+  }
+
+  public getNotificationPreference(notificationType: string): NotificationPreference | undefined {
+    return this.notificationPreferences.find(p => p.notificationType === notificationType);
+  }
+
+  public shouldShowNotification(notification: NotificationData): boolean {
+    if (!this.preferencesLoaded) {
+      return true; // Show all notifications if preferences not loaded
+    }
+
+    const preference = this.getNotificationPreference(notification.type);
+    if (!preference || !preference.enabled) {
+      return false;
+    }
+
+    // Check quiet hours
+    if (preference.quietHoursStart && preference.quietHoursEnd) {
+      const now = new Date();
+      const currentTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+      
+      if (currentTime >= preference.quietHoursStart && currentTime <= preference.quietHoursEnd) {
+        return false; // Don't show during quiet hours
+      }
+    }
+
+    return true;
+  }
+
+  private handleNotificationWithPreferences(notification: NotificationData): void {
+    console.log('Received notification:', notification);
+
+    // Check if notification should be shown based on user preferences
+    if (!this.shouldShowNotification(notification)) {
+      console.log('Notification filtered by user preferences:', notification.type);
+      return;
+    }
+
+    // Show toast notification
+    toast({
+      title: notification.title,
+      description: notification.message,
+      variant: notification.type === 'error' || notification.priority === 'critical' ? 'destructive' : 'default',
+    });
+
+    // Notify subscribers
+    this.notifySubscribers('notification', notification);
   }
 }
 

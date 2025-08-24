@@ -5,6 +5,8 @@ import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 // import { SpeedInsights } from "@vercel/speed-insights/react"; // Removed for now
 import { AuthProvider, useAuth } from './hooks/useAuth';
+import { ErrorBoundary, GenericErrorFallback } from './components/ErrorBoundary';
+import { reportError } from './utils/error-reporting';
 import {
   PWAInstallPrompt,
   PWAUpdatePrompt,
@@ -41,7 +43,16 @@ function LoadingScreen() {
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   // In a real app, check authentication status here
-  return <AppLayout>{children}</AppLayout>;
+  return (
+    <ErrorBoundary 
+      fallback={GenericErrorFallback}
+      onError={async (error, errorInfo) => {
+        await reportError(error, errorInfo, { context: 'Protected Route' });
+      }}
+    >
+      <AppLayout>{children}</AppLayout>
+    </ErrorBoundary>
+  );
 }
 
 function AppRoutes() {
@@ -138,17 +149,24 @@ function AppRoutes() {
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <TooltipProvider>
-          <Toaster />
-          <AppRoutes />
-          <PWAInstallPrompt />
-          <PWAUpdatePrompt />
-          <PWAOfflineIndicator />
-        </TooltipProvider>
-      </AuthProvider>
-    </QueryClientProvider>
+    <ErrorBoundary 
+      fallback={GenericErrorFallback}
+      onError={async (error, errorInfo) => {
+        await reportError(error, errorInfo, { context: 'App Root' });
+      }}
+    >
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <TooltipProvider>
+            <Toaster />
+            <AppRoutes />
+            <PWAInstallPrompt />
+            <PWAUpdatePrompt />
+            <PWAOfflineIndicator />
+          </TooltipProvider>
+        </AuthProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 }
 
