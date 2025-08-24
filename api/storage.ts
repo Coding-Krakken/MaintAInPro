@@ -4,6 +4,7 @@
  */
 
 import { promises as fs } from 'fs';
+import { randomUUID } from 'crypto';
 
 // Add runtime check to ensure we can access fs module
 console.log('Storage module loading - fs module available:', typeof fs);
@@ -107,6 +108,11 @@ const STORAGE_FILE = '/tmp/equipment-data.json';
 let cachedData: StorageData | null = null;
 let lastLoadTime: number = 0;
 const CACHE_TTL = 5000; // 5 seconds cache TTL
+
+// Helper function to generate unique IDs
+function generateId(): string {
+  return randomUUID();
+}
 
 async function loadData(): Promise<StorageData> {
   const now = Date.now();
@@ -383,7 +389,7 @@ export async function deleteNotification(id: string): Promise<void> {
 }
 
 // Notification preferences (placeholder - these would normally be in a separate table)
-export async function getNotificationPreferences(userId: string): Promise<any[]> {
+export async function getNotificationPreferences(_userId: string): Promise<any[]> {
   // For now, return empty array. In production, this would query the preferences table
   return [];
 }
@@ -398,17 +404,17 @@ export async function createNotificationPreference(preference: any): Promise<any
   };
 }
 
-export async function updateNotificationPreference(userId: string, notificationType: string, updates: any): Promise<any> {
+export async function updateNotificationPreference(_userId: string, _notificationType: string, _updates: any): Promise<any> {
   // Placeholder implementation
   return null;
 }
 
-export async function deleteNotificationPreference(userId: string, notificationType: string): Promise<void> {
+export async function deleteNotificationPreference(_userId: string, _notificationType: string): Promise<void> {
   // Placeholder implementation
 }
 
 // Push subscriptions (placeholder)
-export async function getPushSubscriptions(userId: string): Promise<any[]> {
+export async function getPushSubscriptions(_userId: string): Promise<any[]> {
   // For now, return empty array. In production, this would query the subscriptions table
   return [];
 }
@@ -423,7 +429,7 @@ export async function createPushSubscription(subscription: any): Promise<any> {
   };
 }
 
-export async function deletePushSubscription(id: string): Promise<void> {
+export async function deletePushSubscription(_id: string): Promise<void> {
   // Placeholder implementation
 }
 

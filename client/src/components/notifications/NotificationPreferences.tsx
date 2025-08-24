@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { webSocketService } from '@/services/websocket.service';
 import { pwaService } from '@/services/pwa.service';
 import { Switch } from '@/components/ui/switch';
@@ -8,8 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
-import { Bell, BellOff, Clock, Smartphone, Mail, MessageSquare } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { Bell, Clock, Smartphone, Mail, MessageSquare } from 'lucide-react';
 
 interface NotificationPreference {
   id: string;
@@ -89,12 +88,7 @@ export const NotificationPreferences: React.FC = () => {
     end: '08:00'
   });
 
-  useEffect(() => {
-    loadPreferences();
-    checkPushStatus();
-  }, []);
-
-  const loadPreferences = async () => {
+  const loadPreferences = useCallback(async () => {
     try {
       setLoading(true);
       await webSocketService.loadNotificationPreferences();
@@ -120,7 +114,12 @@ export const NotificationPreferences: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [globalQuietHours.start, globalQuietHours.end]);
+
+  useEffect(() => {
+    loadPreferences();
+    checkPushStatus();
+  }, [loadPreferences]);
 
   const checkPushStatus = async () => {
     const status = await pwaService.getPushSubscriptionStatus();

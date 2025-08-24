@@ -1,17 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { webSocketService, NotificationData } from '@/services/websocket.service';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Separator } from '@/components/ui/separator';
 import { 
   Bell, 
   BellOff, 
   Clock, 
   Search, 
-  Filter, 
   Trash2, 
   CheckCircle, 
   AlertTriangle,
@@ -73,32 +71,7 @@ export const NotificationHistory: React.FC = () => {
     return unsubscribe;
   }, []);
 
-  useEffect(() => {
-    applyFilters();
-  }, [notifications, filter]);
-
-  const loadNotifications = async () => {
-    try {
-      setLoading(true);
-      // In a real implementation, this would fetch from the API
-      const response = await fetch('/api/notifications', {
-        headers: {
-          'x-user-id': localStorage.getItem('userId') || 'default-user',
-        },
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setNotifications(data);
-      }
-    } catch (error) {
-      console.error('Failed to load notifications:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const applyFilters = () => {
+  const applyFilters = useCallback(() => {
     let filtered = [...notifications];
 
     // Filter by type
@@ -127,6 +100,31 @@ export const NotificationHistory: React.FC = () => {
     }
 
     setFilteredNotifications(filtered);
+  }, [notifications, filter]);
+
+  useEffect(() => {
+    applyFilters();
+  }, [notifications, filter, applyFilters]);
+
+  const loadNotifications = async () => {
+    try {
+      setLoading(true);
+      // In a real implementation, this would fetch from the API
+      const response = await fetch('/api/notifications', {
+        headers: {
+          'x-user-id': localStorage.getItem('userId') || 'default-user',
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setNotifications(data);
+      }
+    } catch (error) {
+      console.error('Failed to load notifications:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const markAsRead = async (notificationId: string) => {
