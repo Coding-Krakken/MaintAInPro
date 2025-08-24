@@ -154,8 +154,11 @@ class AdvancedSanitizer {
       .replace(/'/g, '&#x27;')
       .replace(/\//g, '&#x2F;');
     
-    // Remove null bytes and control characters
-    sanitized = sanitized.replace(/[\u0000-\u001F\u007F]/g, '');
+        // Remove null bytes and control characters using char codes to avoid regex lint error
+        sanitized = sanitized.split('').filter(c => {
+          const code = c.charCodeAt(0);
+          return code > 31 && code !== 127;
+        }).join('');
     
     return sanitized.trim();
   }
@@ -512,7 +515,7 @@ export function advancedSchemaValidation(schemas: {
 export const inputSanitizationUtils = {
   sanitizeXSS: (input: string) => advancedSanitizer.sanitizeXSS(input),
   detectSQLInjection: (input: string) => advancedSanitizer.detectSQLInjection(input),
-  detectNoSQLInjection: (input: any) => advancedSanitizer.detectNoSQLInjection(input),
+  detectNoSQLInjection: (input: string | object) => advancedSanitizer.detectNoSQLInjection(input),
   detectPathTraversal: (input: string) => advancedSanitizer.detectPathTraversal(input),
   sanitizeFileName: (fileName: string) => advancedSanitizer.sanitizeFileName(fileName),
 } as const;
