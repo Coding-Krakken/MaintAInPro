@@ -5,19 +5,19 @@ import { testData, testCredentials } from '../helpers/testData';
 const testUsers = {
   technician: {
     email: 'test@example.com',
-    password: 'password',
+    password: 'PlaywrightTest123!',
     name: 'Test User',
     role: 'technician',
   },
   supervisor: {
     email: 'supervisor@maintainpro.com',
-    password: 'password',
+    password: 'PlaywrightTest123!',
     name: 'John Smith',
     role: 'supervisor',
   },
   manager: {
     email: 'manager@example.com',
-    password: 'password',
+    password: 'PlaywrightTest123!',
     name: 'Mike Johnson',
     role: 'manager',
   },
@@ -68,11 +68,12 @@ test.describe('Authentication Flow', () => {
 test.describe('Work Order Management', () => {
   test.beforeEach(async ({ page }) => {
     // Login before each test
-    await page.goto('/login');
-    await page.fill('[data-testid="email-input"]', testUsers.technician.email);
-    await page.fill('[data-testid="password-input"]', testUsers.technician.password);
-    await page.click('[data-testid="login-button"]');
-    await expect(page).toHaveURL('/dashboard');
+  await page.goto('/login');
+  // Use valid seeded test user credentials
+  await page.fill('[data-testid="email-input"]', 'technician@maintainpro.com');
+  await page.fill('[data-testid="password-input"]', 'demo123');
+  await page.click('[data-testid="login-button"]');
+  await expect(page).toHaveURL('/dashboard');
   });
 
   test('technician can complete work order flow @smoke', async ({ page }) => {
@@ -83,9 +84,10 @@ test.describe('Work Order Management', () => {
     // Select first work order
     await page.click('[data-testid="work-order-card"]:first-child');
 
-    // Update status to in progress
-    await page.selectOption('[data-testid="status-select"]', 'in_progress');
-    await page.click('[data-testid="update-status-button"]');
+  // Update status to in progress (Radix UI combobox)
+  await page.click('[data-testid="status-select"]');
+  await page.click('text=In Progress');
+  await page.click('[data-testid="update-status-button"]');
 
     // Verify status update
     await expect(page.locator('[data-testid="status-badge"]')).toContainText('In Progress');
@@ -119,7 +121,9 @@ test.describe('Work Order Management', () => {
     // Fill in work order details
     await page.fill('[data-testid="fo-number-input"]', testWorkOrder.foNumber);
     await page.fill('[data-testid="description-input"]', testWorkOrder.description);
-    await page.selectOption('[data-testid="priority-select"]', testWorkOrder.priority);
+  // Select priority (Radix UI combobox)
+  await page.click('[data-testid="priority-select"]');
+  await page.click(`text=${testWorkOrder.priority}`);
 
     // Select equipment
     await page.click('[data-testid="equipment-select"]');
@@ -138,8 +142,9 @@ test.describe('Work Order Management', () => {
   test('can filter work orders', async ({ page }) => {
     await page.goto('/work-orders');
 
-    // Filter by status
-    await page.selectOption('[data-testid="status-filter"]', 'new');
+  // Filter by status (Radix UI combobox)
+  await page.click('[data-testid="status-filter"]');
+  await page.click('text=New');
 
     // Verify filtering
     const workOrderCards = page.locator('[data-testid="work-order-card"]');
@@ -325,7 +330,8 @@ test.describe('Offline Functionality', () => {
 
     // Complete work order
     await page.click('[data-testid="work-order-card"]');
-    await page.selectOption('[data-testid="status-select"]', 'completed');
+  await page.click('[data-testid="status-select"]');
+  await page.click('text=Completed');
     await page.click('[data-testid="complete-button"]');
 
     // Verify queued for sync

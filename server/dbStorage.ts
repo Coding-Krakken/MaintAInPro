@@ -87,9 +87,18 @@ export class DatabaseStorage implements IStorage {
       },
       {
         id: this.generateId(),
-        email: 'technician@example.com',
+        email: 'technician@maintainpro.com',
         firstName: 'Jane',
         lastName: 'Doe',
+        role: 'technician' as const,
+        warehouseId: warehouse.id,
+        active: true,
+      },
+      {
+        id: this.generateId(),
+        email: 'test@example.com',
+        firstName: 'Test',
+        lastName: 'User',
         role: 'technician' as const,
         warehouseId: warehouse.id,
         active: true,
@@ -107,6 +116,30 @@ export class DatabaseStorage implements IStorage {
 
     const insertedUsers = await db.insert(profiles).values(users).returning();
 
+    // Seed user credentials with password hashes
+    {
+      const passwordServiceImport = await import('./services/auth/password.service');
+      const schemaImport = await import('../shared/schema');
+      const PasswordService = passwordServiceImport.PasswordService;
+      const userCredentials = schemaImport.userCredentials;
+      const defaultPassword = 'PlaywrightTest123!';
+      const credentialsList = [];
+      for (const user of insertedUsers) {
+        const { hash, salt } = await PasswordService.hashPassword(defaultPassword);
+        credentialsList.push({
+          id: this.generateId(),
+          userId: user.id,
+          passwordHash: hash,
+          passwordSalt: salt,
+          mustChangePassword: false,
+          passwordExpiresAt: null,
+          previousPasswords: [],
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        });
+      }
+      await db.insert(userCredentials).values(credentialsList).returning();
+    }
     // Create sample equipment
     const equipmentList = [
       {
@@ -391,7 +424,6 @@ export class DatabaseStorage implements IStorage {
   ): Promise<WorkOrder[]> {
     return await db.select().from(workOrders).where(eq(workOrders.warehouseId, warehouseId));
   }
-
   async getWorkOrder(id: string): Promise<WorkOrder | undefined> {
     const result = await db.select().from(workOrders).where(eq(workOrders.id, id)).limit(1);
     return result[0];

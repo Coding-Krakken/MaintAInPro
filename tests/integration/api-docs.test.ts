@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import request from 'supertest';
 import { app, initializeApp } from '../../server/index';

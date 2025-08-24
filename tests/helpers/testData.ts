@@ -25,6 +25,6 @@ export const testCredentials = {
   },
   valid: {
     email: 'test@example.com',
-    password: 'password',
+    password: 'PlaywrightTest123!',
   },
 };

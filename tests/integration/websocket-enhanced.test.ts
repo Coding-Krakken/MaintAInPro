@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { webSocketService } from '../../../client/src/services/websocket.service';
 

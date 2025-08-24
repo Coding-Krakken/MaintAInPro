@@ -1,3 +1,5 @@
+
+// @vitest-environment node
 /**
  * Integration tests for backup API endpoints
  */
@@ -36,34 +38,29 @@ describe('Backup API Endpoints', () => {
     it('should return backup status', async () => {
       const response = await request(app).get('/api/backup/status').expect('Content-Type', /json/);
 
-      // In development mode, it should work without authentication
-      if (process.env.NODE_ENV === 'development') {
+      if (process.env.NODE_ENV === 'production') {
+        // In production, should require authentication
+        expect(response.status).toBe(401);
+      } else {
+        // In development or test, should allow unauthenticated access
         expect(response.status).toBe(200);
-
         expect(response.body).toHaveProperty('timestamp');
         expect(response.body).toHaveProperty('backup');
-
         const backup = response.body.backup;
         expect(backup).toHaveProperty('enabled');
         expect(backup).toHaveProperty('totalBackups');
         expect(typeof backup.enabled).toBe('boolean');
         expect(typeof backup.totalBackups).toBe('number');
-
         // Optional properties that may be present
         if (backup.lastBackup) {
           expect(typeof backup.lastBackup).toBe('string'); // ISO date string
         }
-
         if (backup.nextBackup) {
           expect(typeof backup.nextBackup).toBe('string'); // ISO date string
         }
-
         if (backup.lastBackupSuccess !== undefined) {
           expect(typeof backup.lastBackupSuccess).toBe('boolean');
         }
-      } else {
-        // In production, should require authentication
-        expect(response.status).toBe(401);
       }
     });
 

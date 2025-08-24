@@ -13,7 +13,7 @@ export default defineConfig({
     ['junit', { outputFile: '../../reports/e2e/results.xml' }],
   ],
   use: {
-    baseURL: process.env.BASE_URL || 'http://localhost:4173/',
+  baseURL: process.env.BASE_URL || 'http://localhost:5000/',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
@@ -42,9 +42,6 @@ export default defineConfig({
       use: { ...devices['iPhone 12'] },
     },
   ],
-  webServer: {
-    command: 'npm run dev',
-    port: 5000,
-    reuseExistingServer: !process.env.CI,
-  },
+  // Startup of frontend/backend is handled by scripts/testing/playwright-e2e-start.sh
+  // Extensive error handling is integrated in the shell script.
 });

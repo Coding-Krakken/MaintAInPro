@@ -1,4 +1,4 @@
-import { DatabaseStorage } from '../server/dbStorage';
+import { DatabaseStorage } from '../../server/dbStorage';
 
 (async () => {
   try {
