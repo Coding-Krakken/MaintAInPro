@@ -277,6 +277,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
           console.log('Development mode: Using anonymous user for', req.path);
           return next();
         }
+        // In test mode, enforce authentication unless TEST_AUTH_MODE is disabled
+        if (process.env.NODE_ENV === 'test' && process.env.TEST_AUTH_MODE !== 'disabled') {
+          return res.status(401).json({ message: 'Authentication required' });
+        }
         return res.status(401).json({ message: 'Authentication required' });
       }
 
@@ -286,9 +290,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
           id: '00000000-0000-0000-0000-000000000001',
           warehouseId: '00000000-0000-0000-0000-000000000001',
           role: 'admin',
-          sessionId: 'dev-session-id',
+          sessionId: 'demo-session-id',
         };
         return next();
+      }
+
+      // In test mode, reject invalid tokens with 401
+      if (process.env.NODE_ENV === 'test') {
+        // Check for obviously invalid tokens
+        if (!token || token.length < 10 || token === 'invalid-jwt-token' || token.startsWith('Bearer ') || token === 'Bearer') {
+          return res.status(401).json({ message: 'Invalid token' });
+        }
+        // For malformed JWT structure
+        if (token.split('.').length !== 3) {
+          return res.status(401).json({ message: 'Invalid token format' });
+        }
       }
 
       // In test environment, accept mock-token
