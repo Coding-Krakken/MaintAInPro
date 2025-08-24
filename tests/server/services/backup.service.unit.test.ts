@@ -45,9 +45,13 @@ vi.mock('fs/promises', () => ({
 }));
 
 // Mock child_process
-vi.mock('child_process', () => ({
-  exec: vi.fn(),
-}));
+vi.mock('child_process', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    exec: vi.fn(),
+  };
+});
 
 vi.mock('util', () => ({
   promisify: vi.fn((fn) => fn),

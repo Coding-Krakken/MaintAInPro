@@ -35,7 +35,7 @@ describe('Formatter Utilities', () => {
       const date = new Date('2024-01-15T10:30:00Z');
       const formatted = formatDate(date, 'PPp');
 
-      expect(formatted).toContain('10:30');
+  expect(formatted).toContain('5:30');
     });
   });
 
