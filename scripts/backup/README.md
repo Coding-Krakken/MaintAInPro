@@ -1,13 +1,16 @@
 # Database Backup and Recovery Scripts
 
-This directory contains automated database backup and recovery scripts for MaintAInPro CMMS.
+This directory contains automated database backup and recovery scripts for
+MaintAInPro CMMS.
 
 ## Scripts Overview
 
 ### `backup.sh`
+
 Automated PostgreSQL database backup script with validation and cleanup.
 
 **Features:**
+
 - Automated pg_dump execution
 - Backup file validation
 - Checksum calculation (SHA256/MD5)
@@ -16,6 +19,7 @@ Automated PostgreSQL database backup script with validation and cleanup.
 - Error handling and recovery
 
 **Usage:**
+
 ```bash
 # Run manual backup
 ./scripts/backup/backup.sh
@@ -25,15 +29,19 @@ npm run backup:create
 ```
 
 **Environment Variables:**
+
 - `DATABASE_URL` or `POSTGRES_URL` - Database connection string (required)
 - `BACKUP_DIR` - Backup directory (default: `/var/backups/maintainpro`)
 - `BACKUP_RETENTION_DAYS` - Days to keep backups (default: 30)
 - `BACKUP_CHECKSUM_ALGORITHM` - Checksum algorithm (default: `sha256`)
 
 ### `recovery.sh`
-Database recovery script with interactive backup selection and rollback protection.
+
+Database recovery script with interactive backup selection and rollback
+protection.
 
 **Features:**
+
 - Interactive backup file selection
 - Backup verification before restoration
 - Pre-restoration backup creation
@@ -42,6 +50,7 @@ Database recovery script with interactive backup selection and rollback protecti
 - Confirmation prompts for safety
 
 **Usage:**
+
 ```bash
 # List available backups
 ./scripts/backup/recovery.sh --list
@@ -60,6 +69,7 @@ npm run backup:restore
 ```
 
 **Options:**
+
 - `-l, --list` - List available backup files
 - `-f, --file FILE` - Restore from specific backup file
 - `-c, --confirm` - Skip confirmation prompt
@@ -67,9 +77,11 @@ npm run backup:restore
 - `-h, --help` - Show help message
 
 ### `validate.sh`
+
 Comprehensive backup system validation script.
 
 **Features:**
+
 - System prerequisites validation
 - Database connection testing
 - Existing backup file verification
@@ -78,6 +90,7 @@ Comprehensive backup system validation script.
 - Comprehensive reporting
 
 **Usage:**
+
 ```bash
 # Validate backup system
 ./scripts/backup/validate.sh
@@ -87,6 +100,7 @@ npm run backup:validate
 ```
 
 **Validation Checks:**
+
 1. **Prerequisites:**
    - PostgreSQL client tools (`pg_dump`, `psql`)
    - Database URL configuration
@@ -142,13 +156,13 @@ The backup system uses TypeScript configuration in `config/backup.ts`:
 export interface BackupConfig {
   enabled: boolean;
   schedule: {
-    interval: number;  // milliseconds
-    cron?: string;     // cron expression
+    interval: number; // milliseconds
+    cron?: string; // cron expression
   };
   retention: {
-    daily: number;     // days
-    weekly: number;    // weeks
-    monthly: number;   // months
+    daily: number; // days
+    weekly: number; // weeks
+    monthly: number; // months
   };
   storage: {
     directory: string;
@@ -170,12 +184,14 @@ export interface BackupConfig {
 ## Backup File Naming
 
 Backup files follow the naming convention:
+
 ```
 maintainpro_YYYYMMDD_HHMMSS.sql
 maintainpro_YYYYMMDD_HHMMSS.sql.sha256  # Checksum file
 ```
 
 Example:
+
 - `maintainpro_20240825_143022.sql`
 - `maintainpro_20240825_143022.sql.sha256`
 
@@ -203,6 +219,7 @@ GET /api/backup/status
 ```
 
 Response:
+
 ```json
 {
   "timestamp": "2024-08-25T14:30:00Z",
@@ -256,16 +273,19 @@ npm run backup:restore    # Interactive restore
 ### Troubleshooting
 
 1. **Run validation script:**
+
    ```bash
    npm run backup:validate
    ```
 
 2. **Check logs:**
+
    ```bash
    tail -f /var/backups/maintainpro/backup.log
    ```
 
 3. **Test database connection:**
+
    ```bash
    psql $DATABASE_URL -c "SELECT version();"
    ```
@@ -336,11 +356,13 @@ Key metrics to monitor:
 ### Full Database Recovery
 
 1. **Identify backup file:**
+
    ```bash
    npm run backup:restore -- --list
    ```
 
 2. **Verify backup:**
+
    ```bash
    npm run backup:restore -- --verify --file backup.sql
    ```
@@ -364,7 +386,7 @@ For point-in-time recovery, use the backup file closest to the desired time:
 Regularly test recovery procedures:
 
 1. **Automated tests:** Use CI/CD pipelines
-2. **Manual tests:** Quarterly recovery drills  
+2. **Manual tests:** Quarterly recovery drills
 3. **Documentation:** Keep runbooks updated
 4. **Training:** Ensure team familiarity
 
@@ -373,16 +395,19 @@ Regularly test recovery procedures:
 ### Regular Tasks
 
 **Daily:**
+
 - Monitor backup job execution
 - Check backup file creation
 - Verify disk space availability
 
 **Weekly:**
+
 - Review backup logs
 - Test random backup file
 - Validate configuration
 
 **Monthly:**
+
 - Full recovery test
 - Update documentation
 - Review retention policies
@@ -399,4 +424,5 @@ Monitor and plan for:
 
 ---
 
-For additional support, see the main project documentation or contact the development team.
+For additional support, see the main project documentation or contact the
+development team.
