@@ -131,7 +131,7 @@ export class CacheService {
         if (memoryEntry && !this.isExpired(memoryEntry)) {
           memoryEntry.hits++;
           this.cacheStats.hits++;
-          return memoryEntry.data;
+          return memoryEntry.data as T;
         } else if (memoryEntry) {
           this.memoryCache.delete(key);
         }
@@ -269,7 +269,7 @@ export class CacheService {
       for (const key of keys) {
         const memoryEntry = this.memoryCache.get(key);
         if (memoryEntry && !this.isExpired(memoryEntry)) {
-          results.set(key, memoryEntry.data);
+          results.set(key, memoryEntry.data as T);
           memoryEntry.hits++;
         } else {
           missingKeys.push(key);
