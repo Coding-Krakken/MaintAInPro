@@ -26,7 +26,7 @@ import {
   errorTrackingMiddleware,
 } from './middleware/performance.middleware';
 import {
-  securityHeaders,
+  advancedSecurityHeaders,
   pwaHeaders,
   serviceWorkerHandler,
   sanitizeInput,
@@ -34,6 +34,8 @@ import {
 } from './middleware/security.middleware';
 import performanceMonitoringRoutes from './routes/monitoring';
 import path from 'path';
+import swaggerUi from 'swagger-ui-express';
+import { specs } from './config/openapi';
 
 // Import PM services with error handling
 let pmEngine: any = null;
@@ -89,7 +91,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     if (req.path === '/sw.js' || req.path === '/manifest.json') {
       return next();
     }
-    securityHeaders(req, res, next);
+    advancedSecurityHeaders(req, res, next);
   });
 
   app.use((req, res, next) => {
@@ -143,7 +145,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.use(performanceMiddleware);
   console.log('Performance monitoring middleware enabled');
 
-  // Enhanced health check endpoint
+  /**
+   * @swagger
+   * /health:
+   *   get:
+   *     summary: Enhanced health check
+   *     description: Returns comprehensive health status of the API including database, WebSocket connections, and system metrics
+   *     tags: [Health]
+   *     responses:
+   *       200:
+   *         description: System is healthy
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 status:
+   *                   type: string
+   *                   enum: [healthy, degraded, unhealthy]
+   *                 timestamp:
+   *                   type: string
+   *                   format: date-time
+   *                 env:
+   *                   type: string
+   *                 port:
+   *                   type: number
+   *                 websocket:
+   *                   type: object
+   *                 version:
+   *                   type: string
+   *       207:
+   *         description: System is degraded
+   *       503:
+   *         description: System is unhealthy
+   */
   app.get('/api/health', async (req, res) => {
     try {
       console.log('Enhanced health check endpoint called');
@@ -179,12 +214,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Basic health check for load balancers (simple OK response)
+  /**
+   * @swagger
+   * /health/basic:
+   *   get:
+   *     summary: Basic health check
+   *     description: Simple health check endpoint for load balancers (returns just "OK")
+   *     tags: [Health]
+   *     responses:
+   *       200:
+   *         description: Service is up
+   *         content:
+   *           text/plain:
+   *             schema:
+   *               type: string
+   *               example: OK
+   */
   app.get('/api/health/basic', (req, res) => {
     res.status(200).send('OK');
   });
 
+  // OpenAPI 3.0 Documentation with Swagger UI
+  app.use('/api/api-docs', swaggerUi.serve, swaggerUi.setup(specs, {
+    customCss: '.swagger-ui .topbar { display: none }',
+    customSiteTitle: 'MaintAInPro CMMS API Documentation',
+    swaggerOptions: {
+      persistAuthorization: true,
+    },
+  }));
+
   console.log('Health check endpoint registered');
+  console.log('API documentation available at /api/api-docs');
 
   // Register performance monitoring routes
   app.use('/api/monitoring', performanceMonitoringRoutes);
@@ -366,7 +426,58 @@ export async function registerRoutes(app: Express): Promise<Server> {
     );
   };
 
-  // Authentication routes
+  /**
+   * @swagger
+   * /auth/login:
+   *   post:
+   *     summary: User authentication
+   *     description: Authenticate a user with email and password
+   *     tags: [Authentication]
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             properties:
+   *               email:
+   *                 type: string
+   *                 format: email
+   *                 description: User email address
+   *               password:
+   *                 type: string
+   *                 description: User password
+   *             required:
+   *               - email
+   *               - password
+   *     responses:
+   *       200:
+   *         description: Login successful
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 user:
+   *                   $ref: '#/components/schemas/Profile'
+   *                 token:
+   *                   type: string
+   *                   description: JWT access token
+   *                 refreshToken:
+   *                   type: string
+   *                   description: JWT refresh token
+   *                 sessionId:
+   *                   type: string
+   *                   description: Session identifier
+   *       401:
+   *         $ref: '#/components/responses/UnauthorizedError'
+   *       429:
+   *         description: Too many login attempts
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/Error'
+   */
   app.post('/api/auth/login', authRateLimit, async (req, res) => {
     try {
       // TEST_AUTH_MODE bypass: allow direct login for E2E tests
@@ -429,6 +540,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  /**
+   * @swagger
+   * /auth/logout:
+   *   post:
+   *     summary: User logout
+   *     description: Logout the current user and invalidate their session
+   *     tags: [Authentication]
+   *     security:
+   *       - bearerAuth: []
+   *     responses:
+   *       200:
+   *         description: Logout successful
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 message:
+   *                   type: string
+   *                   example: Logout successful
+   *       401:
+   *         $ref: '#/components/responses/UnauthorizedError'
+   */
   app.post('/api/auth/logout', authenticateRequest, async (req, res) => {
     try {
       const { AuthService } = await import('./services/auth');
@@ -684,7 +818,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Profiles
+  /**
+   * @swagger
+   * /profiles/me:
+   *   get:
+   *     summary: Get current user profile
+   *     description: Retrieve the profile information for the currently authenticated user
+   *     tags: [User Profile]
+   *     security:
+   *       - bearerAuth: []
+   *     responses:
+   *       200:
+   *         description: User profile information
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/Profile'
+   *       401:
+   *         $ref: '#/components/responses/UnauthorizedError'
+   */
   app.get('/api/profiles/me', async (req, res) => {
     try {
       const token = req.headers.authorization?.replace('Bearer ', '');
@@ -763,7 +915,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Equipment (no authentication required for basic read access in development)
+  /**
+   * @swagger
+   * /equipment:
+   *   get:
+   *     summary: Get equipment list
+   *     description: Retrieve a list of all equipment in the organization
+   *     tags: [Equipment]
+   *     responses:
+   *       200:
+   *         description: List of equipment
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: array
+   *               items:
+   *                 $ref: '#/components/schemas/Equipment'
+   *       503:
+   *         description: Service temporarily unavailable
+   */
   app.get('/api/equipment', async (req, res) => {
     try {
       console.log('GET /api/equipment called');
@@ -873,7 +1043,48 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Work Orders
+  /**
+   * @swagger
+   * /work-orders:
+   *   get:
+   *     summary: Get work orders
+   *     description: Retrieve a list of work orders with optional filtering
+   *     tags: [Work Orders]
+   *     security:
+   *       - bearerAuth: []
+   *     parameters:
+   *       - in: query
+   *         name: status
+   *         schema:
+   *           type: string
+   *         description: Filter by status (comma-separated for multiple values)
+   *         example: new,assigned,in_progress
+   *       - in: query
+   *         name: assignedTo
+   *         schema:
+   *           type: string
+   *           format: uuid
+   *         description: Filter by assigned user ID
+   *       - in: query
+   *         name: priority
+   *         schema:
+   *           type: string
+   *         description: Filter by priority (comma-separated for multiple values)
+   *         example: high,critical
+   *     responses:
+   *       200:
+   *         description: List of work orders
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: array
+   *               items:
+   *                 $ref: '#/components/schemas/WorkOrder'
+   *       401:
+   *         $ref: '#/components/responses/UnauthorizedError'
+   *       503:
+   *         description: Service temporarily unavailable
+   */
   app.get('/api/work-orders', authenticateRequest, async (req, res) => {
     try {
       console.log('GET /api/work-orders called');
@@ -916,6 +1127,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  /**
+   * @swagger
+   * /work-orders/{id}:
+   *   get:
+   *     summary: Get work order by ID
+   *     description: Retrieve a specific work order by its ID
+   *     tags: [Work Orders]
+   *     security:
+   *       - bearerAuth: []
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema:
+   *           type: string
+   *           format: uuid
+   *         description: Work order unique identifier
+   *     responses:
+   *       200:
+   *         description: Work order details
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/WorkOrder'
+   *       404:
+   *         $ref: '#/components/responses/NotFoundError'
+   *       401:
+   *         $ref: '#/components/responses/UnauthorizedError'
+   */
   app.get('/api/work-orders/:id', authenticateRequest, async (req, res) => {
     try {
       const workOrder = await storage.getWorkOrder(req.params.id);
@@ -928,6 +1168,67 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  /**
+   * @swagger
+   * /work-orders:
+   *   post:
+   *     summary: Create work order
+   *     description: Create a new work order
+   *     tags: [Work Orders]
+   *     security:
+   *       - bearerAuth: []
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             properties:
+   *               title:
+   *                 type: string
+   *                 description: Work order title
+   *                 maxLength: 255
+   *               description:
+   *                 type: string
+   *                 description: Detailed description
+   *               priority:
+   *                 type: string
+   *                 enum: [low, medium, high, critical]
+   *                 description: Priority level
+   *               type:
+   *                 type: string
+   *                 enum: [corrective, preventive, emergency]
+   *                 description: Work order type (defaults to 'corrective')
+   *               equipmentId:
+   *                 type: string
+   *                 format: uuid
+   *                 description: Associated equipment ID
+   *               assignedTo:
+   *                 type: string
+   *                 format: uuid
+   *                 description: Assigned technician user ID
+   *               estimatedHours:
+   *                 type: number
+   *                 description: Estimated completion time in hours
+   *               dueDate:
+   *                 type: string
+   *                 format: date-time
+   *                 description: Due date for completion
+   *             required:
+   *               - title
+   *               - priority
+   *     responses:
+   *       201:
+   *         description: Work order created successfully
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/WorkOrder'
+   *       400:
+   *         $ref: '#/components/responses/ValidationError'
+   *       401:
+   *         $ref: '#/components/responses/UnauthorizedError'
+   */
   app.post('/api/work-orders', authenticateRequest, async (req, res) => {
     try {
       // Auto-populate required fields
@@ -1134,7 +1435,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Parts
+  /**
+   * @swagger
+   * /parts:
+   *   get:
+   *     summary: Get parts inventory
+   *     description: Retrieve a list of all parts in the inventory
+   *     tags: [Parts & Inventory]
+   *     responses:
+   *       200:
+   *         description: List of parts
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: array
+   *               items:
+   *                 $ref: '#/components/schemas/Part'
+   *       500:
+   *         description: Internal server error
+   */
   app.get('/api/parts', async (req, res) => {
     try {
       const warehouseId = getCurrentWarehouse(req);

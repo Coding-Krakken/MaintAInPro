@@ -4,6 +4,7 @@
  */
 
 import { promises as fs } from 'fs';
+import { randomUUID } from 'crypto';
 
 // Add runtime check to ensure we can access fs module
 console.log('Storage module loading - fs module available:', typeof fs);
@@ -107,6 +108,11 @@ const STORAGE_FILE = '/tmp/equipment-data.json';
 let cachedData: StorageData | null = null;
 let lastLoadTime: number = 0;
 const CACHE_TTL = 5000; // 5 seconds cache TTL
+
+// Helper function to generate unique IDs
+function generateId(): string {
+  return randomUUID();
+}
 
 async function loadData(): Promise<StorageData> {
   const now = Date.now();
@@ -353,6 +359,78 @@ export async function getAllNotifications(userId: string): Promise<Notification[
   return data.notifications
     .filter(n => n.userId === userId)
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+}
+
+export async function createNotification(notification: any): Promise<Notification> {
+  const data = await loadData();
+  const newNotification: Notification = {
+    id: generateId(),
+    ...notification,
+    createdAt: new Date(),
+  };
+  data.notifications.push(newNotification);
+  await saveData(data);
+  return newNotification;
+}
+
+export async function markNotificationRead(id: string): Promise<void> {
+  const data = await loadData();
+  const notification = data.notifications.find(n => n.id === id);
+  if (notification) {
+    notification.read = true;
+    await saveData(data);
+  }
+}
+
+export async function deleteNotification(id: string): Promise<void> {
+  const data = await loadData();
+  data.notifications = data.notifications.filter(n => n.id !== id);
+  await saveData(data);
+}
+
+// Notification preferences (placeholder - these would normally be in a separate table)
+export async function getNotificationPreferences(_userId: string): Promise<any[]> {
+  // For now, return empty array. In production, this would query the preferences table
+  return [];
+}
+
+export async function createNotificationPreference(preference: any): Promise<any> {
+  // Placeholder implementation
+  return {
+    id: generateId(),
+    ...preference,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
+}
+
+export async function updateNotificationPreference(_userId: string, _notificationType: string, _updates: any): Promise<any> {
+  // Placeholder implementation
+  return null;
+}
+
+export async function deleteNotificationPreference(_userId: string, _notificationType: string): Promise<void> {
+  // Placeholder implementation
+}
+
+// Push subscriptions (placeholder)
+export async function getPushSubscriptions(_userId: string): Promise<any[]> {
+  // For now, return empty array. In production, this would query the subscriptions table
+  return [];
+}
+
+export async function createPushSubscription(subscription: any): Promise<any> {
+  // Placeholder implementation
+  return {
+    id: generateId(),
+    ...subscription,
+    createdAt: new Date(),
+    lastUsed: new Date(),
+  };
+}
+
+export async function deletePushSubscription(_id: string): Promise<void> {
+  // Placeholder implementation
 }
 
 // Dashboard stats

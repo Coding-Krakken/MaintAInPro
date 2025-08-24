@@ -1,5 +1,4 @@
-import { randomUUID } from 'crypto';
-
+import { randomUUID } from 'node:crypto';
 export interface AuditLogEntry {
   id: string;
   userId?: string;
@@ -47,7 +46,7 @@ export class AuditService {
   static async logEvent(
     action: string,
     resource: string,
-  details: Record<string, unknown>,
+    details: Record<string, unknown>,
     context: {
       userId?: string;
       sessionId?: string;
@@ -92,7 +91,7 @@ export class AuditService {
     ipAddress: string,
     userAgent: string,
     success: boolean,
-  details: Record<string, unknown> = {}
+    details: Record<string, unknown> = {}
   ): Promise<string> {
     return this.logEvent(
       'login',
@@ -159,7 +158,8 @@ export class AuditService {
     ipAddress: string,
     userAgent: string,
     success: boolean,
-  details: Record<string, unknown> = {}
+
+    details: Record<string, unknown> = {}
   ): Promise<string> {
     return this.logEvent(`mfa_${action}`, 'authentication', details, {
       userId,
@@ -203,7 +203,7 @@ export class AuditService {
     resourceId: string,
     ipAddress: string,
     userAgent: string,
-  details: Record<string, unknown> = {},
+    details: Record<string, unknown> = {},
     success: boolean = true
   ): Promise<string> {
     return this.logEvent(
@@ -223,7 +223,7 @@ export class AuditService {
 
   static async logSecurityEvent(
     action: string,
-  details: Record<string, unknown>,
+    details: Record<string, unknown>,
     context: {
       userId?: string;
       sessionId?: string;
@@ -270,25 +270,19 @@ export class AuditService {
     if (query.startDate) {
       filteredLogs = filteredLogs.filter(log => log.timestamp >= query.startDate);
     }
-
     if (query.endDate) {
       filteredLogs = filteredLogs.filter(log => log.timestamp <= query.endDate);
     }
-
     if (query.ipAddress) {
       filteredLogs = filteredLogs.filter(log => log.ipAddress === query.ipAddress);
     }
-
     // Sort by timestamp (newest first)
     filteredLogs.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
-
     const total = filteredLogs.length;
     const offset = query.offset || 0;
     const limit = query.limit || 50;
-
     const paginatedLogs = filteredLogs.slice(offset, offset + limit);
     const hasMore = offset + limit < total;
-
     return {
       logs: paginatedLogs,
       total,
@@ -391,7 +385,7 @@ export class AuditService {
   private static determineRiskLevel(
     action: string,
     resource: string,
-  details: Record<string, unknown>
+    details: Record<string, unknown>
   ): 'low' | 'medium' | 'high' | 'critical' {
     // Admin actions
     if (details.adminAction) {

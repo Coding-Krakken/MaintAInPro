@@ -146,27 +146,157 @@ export class PWAService {
   private async setupPushNotifications(): Promise<void> {
     if ('Notification' in window && 'PushManager' in window) {
       // Check current permission status
-      const permission = await Notification.permission;
+      const permission = Notification.permission;
       console.log('Notification permission:', permission);
 
       if (permission === 'granted' && this.registration) {
         // Subscribe to push notifications
         try {
-          const subscription = await this.registration.pushManager.subscribe({
-            userVisibleOnly: true,
-            applicationServerKey: this.urlBase64ToUint8Array(
-              // VAPID public key would go here in production
-              'YOUR_VAPID_PUBLIC_KEY'
-            ),
-          });
+          // Try to get existing subscription first
+          let subscription = await this.registration.pushManager.getSubscription();
+          
+          if (!subscription) {
+            // Create new subscription with VAPID key (for demo purposes)
+            const vapidPublicKey = this.getVapidPublicKey();
+            subscription = await this.registration.pushManager.subscribe({
+              userVisibleOnly: true,
+              applicationServerKey: this.urlBase64ToUint8Array(vapidPublicKey).buffer as ArrayBuffer,
+            });
+          }
 
           // Send subscription to server
           await this.sendSubscriptionToServer(subscription);
-        } catch (_error) {
-          console.log('Push subscription failed:', _error);
+          
+          // Update status
+          this.status.serviceWorkerReady = true;
+          this.notifyListeners('statusUpdate', this.status);
+          
+        } catch (error) {
+          console.error('Push subscription failed:', error);
         }
       }
     }
+  }
+
+  /**
+   * Get VAPID public key (in production this would come from config)
+   */
+  private getVapidPublicKey(): string {
+    // For development/demo purposes. In production, this should be from environment variables
+    return process.env.VITE_VAPID_PUBLIC_KEY || 
+           'BEl62iUYgUivxIkv69yViEuiBIa40HI80NM2eCFBXk2X8TZAEj9DsRPt7t8EG8ZhFZyOkS_Km7HBQZ_KNFxvq7s';
+  }
+
+  /**
+   * Send subscription to server
+   */
+  private async sendSubscriptionToServer(subscription: PushSubscription): Promise<void> {
+    try {
+      const userId = localStorage.getItem('userId') || 'anonymous';
+      
+      const response = await fetch('/api/push-subscriptions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-user-id': userId,
+        },
+        body: JSON.stringify({
+          endpoint: subscription.endpoint,
+          p256dhKey: subscription.getKey('p256dh') ? 
+            btoa(String.fromCharCode(...new Uint8Array(subscription.getKey('p256dh')!))) : '',
+          authKey: subscription.getKey('auth') ? 
+            btoa(String.fromCharCode(...new Uint8Array(subscription.getKey('auth')!))) : '',
+          userAgent: navigator.userAgent,
+        }),
+      });
+
+      if (response.ok) {
+        console.log('Push subscription sent to server successfully');
+      } else {
+        console.error('Failed to send push subscription to server');
+      }
+    } catch (error) {
+      console.error('Error sending subscription to server:', error);
+    }
+  }
+
+  /**
+   * Unsubscribe from push notifications
+   */
+  async unsubscribeFromPushNotifications(): Promise<boolean> {
+    if (!this.registration) {
+      return false;
+    }
+
+    try {
+      const subscription = await this.registration.pushManager.getSubscription();
+      if (subscription) {
+        const success = await subscription.unsubscribe();
+        
+        if (success) {
+          // Notify server about unsubscription
+          await this.removeSubscriptionFromServer(subscription);
+          console.log('Successfully unsubscribed from push notifications');
+        }
+        
+        return success;
+      }
+    } catch (error) {
+      console.error('Error unsubscribing from push notifications:', error);
+    }
+    
+    return false;
+  }
+
+  /**
+   * Remove subscription from server
+   */
+  private async removeSubscriptionFromServer(subscription: PushSubscription): Promise<void> {
+    try {
+      await fetch('/api/push-subscriptions', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          endpoint: subscription.endpoint,
+        }),
+      });
+    } catch (error) {
+      console.error('Error removing subscription from server:', error);
+    }
+  }
+
+  /**
+   * Get current push subscription status
+   */
+  async getPushSubscriptionStatus(): Promise<{
+    supported: boolean;
+    granted: boolean;
+    subscribed: boolean;
+    subscription?: PushSubscription;
+  }> {
+    if (!('Notification' in window) || !('PushManager' in window)) {
+      return { supported: false, granted: false, subscribed: false };
+    }
+
+    const permission = Notification.permission;
+    const granted = permission === 'granted';
+    
+    let subscribed = false;
+    let subscription: PushSubscription | undefined;
+    
+    if (granted && this.registration) {
+      subscription = await this.registration.pushManager.getSubscription();
+      subscribed = !!subscription;
+    }
+
+    return {
+      supported: true,
+      granted,
+      subscribed,
+      subscription,
+    };
   }
 
   /**
@@ -369,34 +499,18 @@ export class PWAService {
   /**
    * Convert VAPID key to Uint8Array
    */
-  private urlBase64ToUint8Array(base64String: string): Uint8Array<ArrayBuffer> {
+  private urlBase64ToUint8Array(base64String: string): Uint8Array {
     const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
     const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
 
     const rawData = window.atob(base64);
-    const outputArray = new Uint8Array(rawData.length) as Uint8Array<ArrayBuffer>;
+    const outputArray = new Uint8Array(rawData.length);
 
     for (let i = 0; i < rawData.length; ++i) {
       outputArray[i] = rawData.charCodeAt(i);
     }
 
     return outputArray;
-  }
-
-  /**
-   * Send push subscription to server
-   */
-  private async sendSubscriptionToServer(subscription: PushSubscription): Promise<void> {
-    try {
-      await fetch('/api/push/subscribe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(subscription),
-      });
-      console.log('Push subscription sent to server');
-    } catch (_error) {
-      console.error('Failed to send subscription to server:', _error);
-    }
   }
 
   /**
