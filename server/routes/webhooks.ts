@@ -1,4 +1,4 @@
-import type { Express } from 'express';
+import type { Request, Response, NextFunction, Express } from 'express';
 import { z } from 'zod';
 import crypto from 'crypto';
 import { webhookService } from '../services/webhook.service';
@@ -15,13 +15,13 @@ const webhookUpdateSchema = webhookEndpointSchema.partial();
 
 export function registerWebhookRoutes(
   app: Express,
-  authenticateRequest: any,
-  requireRole: any
+  authenticateRequest: (_req: Request, _res: Response, _next: NextFunction) => void,
+  requireRole: (_role: string) => (_req: Request, _res: Response, _next: NextFunction) => void
 ): void {
   // List all webhooks for the current warehouse
   app.get('/api/webhooks', authenticateRequest, async (req, res) => {
     try {
-      const user = (req as any).user;
+  const user = (req as Express.Request).user;
       const webhooks = await webhookService.getWebhooks(user.warehouseId);
       res.json(webhooks);
     } catch (_error) {
@@ -41,7 +41,7 @@ export function registerWebhookRoutes(
       }
 
       // Check warehouse access
-      const user = (req as any).user;
+  const user = (req as Request & { user?: Record<string, unknown> }).user;
       if (webhook.warehouseId && webhook.warehouseId !== user.warehouseId) {
         return res.status(403).json({ message: 'Access denied' });
       }
@@ -68,7 +68,7 @@ export function registerWebhookRoutes(
           });
         }
 
-        const user = (req as any).user;
+  const user = (req as Request & { user?: Record<string, unknown> }).user;
         const webhookData = {
           url: validation.data.url,
           events: validation.data.events,
@@ -139,7 +139,7 @@ export function registerWebhookRoutes(
           return res.status(404).json({ message: 'Webhook not found' });
         }
 
-        const user = (req as any).user;
+  const user = (req as Request & { user?: Record<string, unknown> }).user;
         if (existing.warehouseId && existing.warehouseId !== user.warehouseId) {
           return res.status(403).json({ message: 'Access denied' });
         }
@@ -168,7 +168,7 @@ export function registerWebhookRoutes(
         return res.status(404).json({ message: 'Webhook not found' });
       }
 
-      const user = (req as any).user;
+  const user = (req as Request & { user?: Record<string, unknown> }).user;
       if (webhook.warehouseId && webhook.warehouseId !== user.warehouseId) {
         return res.status(403).json({ message: 'Access denied' });
       }
@@ -193,7 +193,7 @@ export function registerWebhookRoutes(
         return res.status(404).json({ message: 'Webhook not found' });
       }
 
-      const user = (req as any).user;
+  const user = (req as Request & { user?: Record<string, unknown> }).user;
       if (webhook.warehouseId && webhook.warehouseId !== user.warehouseId) {
         return res.status(403).json({ message: 'Access denied' });
       }
@@ -221,7 +221,7 @@ export function registerWebhookRoutes(
           return res.status(404).json({ message: 'Webhook not found' });
         }
 
-        const user = (req as any).user;
+  const user = (req as Request & { user?: Record<string, unknown> }).user;
         if (webhook.warehouseId && webhook.warehouseId !== user.warehouseId) {
           return res.status(403).json({ message: 'Access denied' });
         }

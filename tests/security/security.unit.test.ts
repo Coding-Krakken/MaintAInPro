@@ -328,15 +328,13 @@ describe.skip('Security Tests - Quarantined due to server dependency issues', ()
 
       for (const endpoint of adminEndpoints) {
         // Technician should be denied
-        const techResponse = await request(app)
-          [endpoint.method](endpoint.path)
+        const techResponse = await request(app)[endpoint.method](endpoint.path)
           .set('Authorization', `Bearer ${tokens.technician}`);
 
         expect([403, 404]).toContain(techResponse.status);
 
         // Admin should be allowed
-        const adminResponse = await request(app)
-          [endpoint.method](endpoint.path)
+        const adminResponse = await request(app)[endpoint.method](endpoint.path)
           .set('Authorization', `Bearer ${tokens.admin}`);
 
         expect(adminResponse.status).not.toBe(403);

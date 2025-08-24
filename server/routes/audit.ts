@@ -1,10 +1,10 @@
-import type { Express } from 'express';
+import type { Request, Response, NextFunction, Express } from 'express';
 import { auditTrailService } from '../services/audit-trail.service';
 
 export function registerAuditRoutes(
   app: Express,
-  authenticateRequest: any,
-  requireRole: any
+  authenticateRequest: (_req: Request, _res: Response, _next: NextFunction) => void,
+  requireRole: (_role: string) => (_req: Request, _res: Response, _next: NextFunction) => void
 ): void {
   // Query audit events
   app.get(
@@ -30,7 +30,7 @@ export function registerAuditRoutes(
           startDate: startDate ? new Date(startDate as string) : undefined,
           endDate: endDate ? new Date(endDate as string) : undefined,
           userId: userId as string,
-          warehouseId: (req as any).user?.warehouseId,
+          warehouseId: (req as Request & { user?: Record<string, unknown> }).user?.warehouseId,
           action: action as string,
           entityType: entityType as string,
           category: category as string,
@@ -57,7 +57,7 @@ export function registerAuditRoutes(
     async (req, res) => {
       try {
         const { startDate, endDate } = req.query;
-        const user = (req as any).user;
+  const user = (req as Request & { user?: Record<string, unknown> }).user;
 
         const stats = await auditTrailService.getAuditStatistics(
           startDate ? new Date(startDate as string) : undefined,
@@ -81,7 +81,7 @@ export function registerAuditRoutes(
     async (req, res) => {
       try {
         const { reportType, startDate, endDate } = req.body;
-        const user = (req as any).user;
+  const user = (req as Request & { user?: Record<string, unknown> }).user;
 
         if (!reportType || !startDate || !endDate) {
           return res.status(400).json({
@@ -138,7 +138,7 @@ export function registerAuditRoutes(
   app.get('/api/audit/export', authenticateRequest, requireRole('admin'), async (req, res) => {
     try {
       const { startDate, endDate, format = 'json' } = req.query;
-      const user = (req as any).user;
+  const user = (req as Request & { user?: Record<string, unknown> }).user;
 
       const query = {
         startDate: startDate ? new Date(startDate as string) : undefined,
@@ -216,7 +216,7 @@ export function registerAuditRoutes(
     requireRole('admin', 'manager'),
     async (req, res) => {
       try {
-        const user = (req as any).user;
+  const user = (req as Request & { user?: Record<string, unknown> }).user;
         const last30Days = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
 
         const [stats, recentEvents] = await Promise.all([
@@ -281,7 +281,7 @@ export function registerAuditRoutes(
         success = true,
       } = req.body;
 
-      const user = (req as any).user;
+  const user = (req as Request & { user?: Record<string, unknown> }).user;
       const metadata = {
         ipAddress: req.ip || req.connection.remoteAddress || 'Unknown',
         userAgent: req.headers['user-agent'] || 'Unknown',

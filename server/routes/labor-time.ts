@@ -1,9 +1,9 @@
-import type { Express } from 'express';
+import type { Request, Response, NextFunction, Express } from 'express';
 import { z } from 'zod';
 import { storage } from '../storage';
 import { insertLaborTimeSchema } from '@shared/schema';
 
-const authenticateRequest = (req: any, res: any, next: any) => {
+const authenticateRequest = (req: Request, res: Response, next: NextFunction) => {
   // Basic authentication check - replace with actual auth logic
   const user = req.headers['x-user-id'];
   if (!user) {
@@ -13,7 +13,7 @@ const authenticateRequest = (req: any, res: any, next: any) => {
   next();
 };
 
-const getCurrentUser = (req: any): string => {
+const getCurrentUser = (req: Request): string => {
   return req.user?.id || req.headers['x-user-id'] || 'anonymous';
 };
 
@@ -68,7 +68,7 @@ export function registerLaborTimeRoutes(app: Express) {
         description: req.body.description || 'Work in progress',
         isActive: true,
         isManual: false,
-      } as any);
+  } as Record<string, unknown>);
 
       res.status(201).json(laborTime);
     } catch (_error) {
@@ -130,7 +130,7 @@ export function registerLaborTimeRoutes(app: Express) {
       // Validate the data
       const validatedData = insertLaborTimeSchema.parse(laborTimeData);
 
-      const laborTime = await storage.createLaborTime(validatedData as any);
+  const laborTime = await storage.createLaborTime(validatedData as Record<string, unknown>);
 
       res.status(201).json(laborTime);
     } catch (_error) {

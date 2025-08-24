@@ -297,17 +297,17 @@ class PMSchedulerEnhanced {
     equipmentId: string,
     scheduledDate: Date,
     rule: PMSchedulingRule,
-    existingWorkOrders: unknown[]
-  ): Promise<any[]> {
+    existingWorkOrders: Array<Record<string, unknown>>
+  ): Promise<Array<Record<string, unknown>>> {
     const conflicts: unknown[] = [];
 
     // Check for existing work orders on the same equipment
     const conflictingWOs = existingWorkOrders.filter(
       wo =>
-        (wo as any).equipmentId === equipmentId &&
-        (wo as any).status !== 'completed' &&
-        (wo as any).status !== 'closed' &&
-        Math.abs(new Date((wo as any).dueDate).getTime() - scheduledDate.getTime()) <
+        (wo.equipmentId === equipmentId) &&
+        (wo.status !== 'completed') &&
+        (wo.status !== 'closed') &&
+        Math.abs(new Date(wo.dueDate as string).getTime() - scheduledDate.getTime()) <
           24 * 60 * 60 * 1000
     );
 
@@ -324,10 +324,10 @@ class PMSchedulerEnhanced {
     if (rule.assignedTechnicians.length > 0) {
       const techWorkOrders = existingWorkOrders.filter(
         wo =>
-          rule.assignedTechnicians.includes((wo as any).assignedTo || '') &&
-          (wo as any).status !== 'completed' &&
-          (wo as any).status !== 'closed' &&
-          Math.abs(new Date((wo as any).dueDate).getTime() - scheduledDate.getTime()) <
+          rule.assignedTechnicians.includes((wo.assignedTo as string) || '') &&
+          (wo.status !== 'completed') &&
+          (wo.status !== 'closed') &&
+          Math.abs(new Date(wo.dueDate as string).getTime() - scheduledDate.getTime()) <
             4 * 60 * 60 * 1000
       );
 
@@ -347,9 +347,9 @@ class PMSchedulerEnhanced {
   /**
    * Calculate utilization rate
    */
-  private calculateUtilizationRate(scheduledPMs: unknown[], config: PMSchedulingConfig): number {
+  private calculateUtilizationRate(scheduledPMs: Array<Record<string, unknown>>, config: PMSchedulingConfig): number {
     const totalDuration = scheduledPMs.reduce(
-      (sum: number, pm) => sum + (pm as any).estimatedDuration,
+      (sum: number, pm) => sum + (pm.estimatedDuration as number),
       0
     );
     const workingHours = 8; // 8 hours per day
@@ -390,7 +390,7 @@ class PMSchedulerEnhanced {
   /**
    * Determine escalation level based on compliance
    */
-  private determineEscalationLevel(complianceStatus: any, _config: PMSchedulingConfig): number {
+  private determineEscalationLevel(complianceStatus: { missedPMCount: number }, _config: PMSchedulingConfig): number {
     if (complianceStatus.missedPMCount > 5) return 3;
     if (complianceStatus.missedPMCount > 2) return 2;
     if (complianceStatus.missedPMCount > 0) return 1;
@@ -404,7 +404,7 @@ class PMSchedulerEnhanced {
     equipmentId: string,
     level: number,
     config: PMSchedulingConfig,
-    complianceStatus: any
+    complianceStatus: { missedPMCount: number }
   ): Promise<void> {
     const escalationRule = config.escalationRules.escalationLevels.find(el => el.level === level);
 

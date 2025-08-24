@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import type { Request, Response } from 'express';
 import { z } from 'zod';
 import {
   validateSchema,
@@ -11,48 +12,57 @@ import { storage } from '../storage';
 
 const router = Router();
 
+// Define WorkOrder type for analytics helpers
+interface WorkOrder {
+  status: string;
+  completedAt?: string | Date;
+  createdAt: string | Date;
+  type?: string;
+  priority?: string;
+}
+
 // Helper functions for analytics
-function calculateAverageResolutionTime(workOrders: unknown[]): number {
+function calculateAverageResolutionTime(workOrders: WorkOrder[]): number {
   const completedOrders = workOrders.filter(
     wo =>
-      ['completed', 'verified', 'closed'].includes((wo as any).status) && (wo as any).completedAt
+      ['completed', 'verified', 'closed'].includes(wo.status) && wo.completedAt
   );
 
   if (completedOrders.length === 0) return 0;
 
   const totalResolutionTime = completedOrders.reduce((sum: number, wo) => {
-    const created = new Date((wo as any).createdAt);
-    const completed = new Date((wo as any).completedAt);
+    const created = new Date(wo.createdAt);
+  const completed = wo.completedAt ? new Date(wo.completedAt) : new Date(wo.createdAt);
     return sum + (completed.getTime() - created.getTime());
   }, 0);
 
   return Math.round(totalResolutionTime / completedOrders.length / (1000 * 60 * 60)); // in hours
 }
 
-function calculateMTTR(workOrders: unknown[]): number {
+function calculateMTTR(workOrders: WorkOrder[]): number {
   // Mean Time To Repair - similar to average resolution time but specific to corrective maintenance
   const correctiveOrders = workOrders.filter(
     wo =>
-      (wo as any).type === 'corrective' &&
-      ['completed', 'verified', 'closed'].includes((wo as any).status) &&
-      (wo as any).completedAt
+      wo.type === 'corrective' &&
+      ['completed', 'verified', 'closed'].includes(wo.status) &&
+      wo.completedAt
   );
 
   if (correctiveOrders.length === 0) return 0;
 
   const totalRepairTime = correctiveOrders.reduce((sum: number, wo) => {
-    const created = new Date((wo as any).createdAt);
-    const completed = new Date((wo as any).completedAt);
+    const created = new Date(wo.createdAt);
+  const completed = wo.completedAt ? new Date(wo.completedAt) : new Date(wo.createdAt);
     return sum + (completed.getTime() - created.getTime());
   }, 0);
 
   return Math.round(totalRepairTime / correctiveOrders.length / (1000 * 60 * 60)); // in hours
 }
 
-function generateTrendData(workOrders: unknown[], period: string, metric: string): unknown[] {
+function generateTrendData(workOrders: WorkOrder[], period: string, metric: string): { period: string; value: number }[] {
   // Simplified trend generation - in a real implementation, this would be more sophisticated
   const now = new Date();
-  const periodData: unknown[] = [];
+  const periodData: { period: string; value: number }[] = [];
 
   for (let i = 6; i >= 0; i--) {
     const date = new Date(now);
@@ -73,7 +83,7 @@ function generateTrendData(workOrders: unknown[], period: string, metric: string
     }
 
     const periodWorkOrders = workOrders.filter(wo => {
-      const woDate = new Date((wo as any).createdAt);
+      const woDate = new Date(wo.createdAt);
       const nextPeriod = new Date(date);
 
       switch (period) {
@@ -89,8 +99,6 @@ function generateTrendData(workOrders: unknown[], period: string, metric: string
         case 'year':
           nextPeriod.setFullYear(nextPeriod.getFullYear() + 1);
           break;
-      }
-
       return woDate >= date && woDate < nextPeriod;
     });
 
@@ -104,7 +112,7 @@ function generateTrendData(workOrders: unknown[], period: string, metric: string
         break;
       case 'priority_distribution':
         value = periodWorkOrders.filter(wo =>
-          ['high', 'critical'].includes((wo as any).priority)
+          ['high', 'critical'].includes(wo.priority ?? '')
         ).length;
         break;
     }
@@ -123,6 +131,27 @@ function generateTrendData(workOrders: unknown[], period: string, metric: string
  */
 
 // Get work orders with advanced filtering and pagination
+// Extend Request type to include validated property
+// Replace 'any' with unknown for validated property
+// Infer the type from the Zod schema for filters
+type FiltersType = {
+  page: number;
+  limit: number;
+  status?: string;
+  priority?: string;
+  type?: string;
+  equipmentId?: string;
+  assignedTo?: string;
+  dateRange?: {
+    start?: Date;
+    end?: Date;
+  };
+  search?: string;
+  sortBy: 'createdAt' | 'dueDate' | 'priority' | 'status';
+  sortOrder: 'asc' | 'desc';
+};
+type ValidatedRequest = Request & { validated?: FiltersType };
+
 router.get(
   '/work-orders',
   validateSchema(
@@ -148,12 +177,12 @@ router.get(
     }),
     { source: 'query' }
   ),
-  async (req: any, res) => {
+  async (req: Request, res: Response) => {
     try {
-      const filters = req.validated;
+  const filters = (req as ValidatedRequest).validated as FiltersType;
 
       // Build filter object for storage layer
-      const storageFilters: any = {
+  const storageFilters: Record<string, unknown> = {
         limit: filters.limit,
         offset: (filters.page - 1) * filters.limit,
         orderBy: { [filters.sortBy]: filters.sortOrder },
@@ -162,38 +191,53 @@ router.get(
       // Add status filter
       if (filters.status) {
         storageFilters.where = { status: filters.status };
-      }
+  }
 
       // Add priority filter
       if (filters.priority) {
-        storageFilters.where = { ...storageFilters.where, priority: filters.priority };
+        storageFilters.where = {
+          ...(typeof storageFilters.where === 'object' ? storageFilters.where : {}),
+          priority: filters.priority,
+        };
       }
 
       // Add type filter
       if (filters.type) {
-        storageFilters.where = { ...storageFilters.where, type: filters.type };
+        storageFilters.where = {
+          ...(typeof storageFilters.where === 'object' ? storageFilters.where : {}),
+          type: filters.type,
+        };
       }
 
       // Add equipment filter
       if (filters.equipmentId) {
-        storageFilters.where = { ...storageFilters.where, equipment_id: filters.equipmentId };
+        storageFilters.where = {
+          ...(typeof storageFilters.where === 'object' ? storageFilters.where : {}),
+          equipment_id: filters.equipmentId,
+        };
       }
 
       // Add assigned user filter
       if (filters.assignedTo) {
-        storageFilters.where = { ...storageFilters.where, assigned_to: filters.assignedTo };
+        storageFilters.where = {
+          ...(typeof storageFilters.where === 'object' ? storageFilters.where : {}),
+          assigned_to: filters.assignedTo,
+        };
       }
 
       // Add date range filter
       if (filters.dateRange?.start || filters.dateRange?.end) {
-        const dateFilter: any = {};
+  const dateFilter: Record<string, string> = {};
         if (filters.dateRange.start) {
-          dateFilter.gte = filters.dateRange.start;
+          dateFilter.gte = filters.dateRange.start.toISOString();
         }
         if (filters.dateRange.end) {
-          dateFilter.lte = filters.dateRange.end;
+          dateFilter.lte = filters.dateRange.end.toISOString();
         }
-        storageFilters.where = { ...storageFilters.where, created_at: dateFilter };
+        storageFilters.where = {
+          ...(typeof storageFilters.where === 'object' ? storageFilters.where : {}),
+          created_at: dateFilter,
+        };
       }
 
       // Perform search if provided
@@ -225,13 +269,15 @@ router.get(
         );
       }
 
-      if (filters.dateRange?.start || filters.dateRange?.end) {
+      if (filters.dateRange && typeof filters.dateRange === 'object' && ('start' in filters.dateRange || 'end' in filters.dateRange)) {
+        const dateRange = filters.dateRange as { start?: Date; end?: Date };
         filteredWorkOrders = filteredWorkOrders.filter(wo => {
           const createdAt = new Date(wo.createdAt);
-          if (filters.dateRange?.start && createdAt < filters.dateRange.start) return false;
-          if (filters.dateRange?.end && createdAt > filters.dateRange.end) return false;
+          if (dateRange.start && createdAt < dateRange.start) return false;
+          if (dateRange.end && createdAt > dateRange.end) return false;
           return true;
         });
+      }
       }
 
       if (filters.search) {
@@ -285,9 +331,9 @@ router.get(
 router.get(
   '/work-orders/:id',
   validateSchema(commonSchemas.uuidParam, { source: 'params' }),
-  async (req: any, res) => {
+  async (req: Request, res: Response) => {
     try {
-      const { id } = req.validated;
+  const { id } = ((req as ValidatedRequest).validated as unknown) as { id: string };
       const workOrder = await storage.getWorkOrder(id);
 
       if (!workOrder) {
@@ -314,9 +360,9 @@ router.get(
 );
 
 // Create new work order
-router.post('/work-orders', validateSchema(insertWorkOrderSchema), async (req: any, res) => {
+router.post('/work-orders', validateSchema(insertWorkOrderSchema), async (req: Request, res: Response) => {
   try {
-    const workOrderData = req.validated;
+  const workOrderData = ((req as ValidatedRequest).validated as unknown) as { [key: string]: unknown };
 
     // Add audit fields
     workOrderData.createdBy = req.user?.id;
@@ -412,10 +458,10 @@ router.put(
       notes: z.string().optional(),
     }),
   }),
-  async (req: any, res) => {
+  async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
-      const updateData = req.validated;
+  const updateData = ((req as ValidatedRequest).validated as unknown) as { [key: string]: unknown };
 
       // Add audit fields
       updateData.updatedBy = req.user?.id;
@@ -472,9 +518,9 @@ router.put(
 router.delete(
   '/work-orders/:id',
   validateSchema(commonSchemas.uuidParam, { source: 'params' }),
-  async (req: any, res) => {
+  async (req: Request, res: Response) => {
     try {
-      const { id } = req.validated;
+  const { id } = ((req as ValidatedRequest).validated as unknown) as { id: string };
 
       // Check if work order exists
       const existingWorkOrder = await storage.getWorkOrder(id);
@@ -524,9 +570,19 @@ router.get(
     }),
     { source: 'query' }
   ),
-  async (req: any, res) => {
+  async (req: Request, res: Response) => {
     try {
-      const filters = req.validated;
+  const filters = (req as ValidatedRequest).validated as {
+    page: number;
+    limit: number;
+    status?: string;
+    criticality?: string;
+    warehouseId?: string;
+    search?: string;
+    sortBy: string;
+    sortOrder: string;
+    dateRange?: { start?: Date; end?: Date };
+  };
 
       // Get all equipment for the warehouse first
       const warehouseId = filters.warehouseId || req.user?.warehouseId || 'default';
@@ -591,9 +647,13 @@ router.get(
 );
 
 // Create equipment
-router.post('/equipment', validateSchema(insertEquipmentSchema), async (req: any, res) => {
+router.post('/equipment', validateSchema(insertEquipmentSchema), async (req: Request, res: Response) => {
   try {
-    const equipmentData = req.validated;
+  const equipmentData = (req as ValidatedRequest).validated as {
+    createdBy?: string;
+    warehouseId?: string;
+    [key: string]: unknown;
+  };
     equipmentData.createdBy = req.user?.id;
     equipmentData.warehouseId = req.user?.warehouseId || equipmentData.warehouseId;
 
@@ -637,9 +697,9 @@ router.post('/equipment', validateSchema(insertEquipmentSchema), async (req: any
 router.get(
   '/equipment/:id',
   validateSchema(commonSchemas.uuidParam, { source: 'params' }),
-  async (req: any, res) => {
+  async (req: Request, res: Response) => {
     try {
-      const { id } = req.validated;
+  const { id } = ((req as ValidatedRequest).validated as unknown) as { id: string };
       const equipment = await storage.getEquipmentById(id);
 
       if (!equipment) {
@@ -684,10 +744,10 @@ router.put(
       specifications: z.any().optional(),
     }),
   }),
-  async (req: any, res) => {
+  async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
-      const updateData = req.validated;
+  const updateData = ((req as ValidatedRequest).validated as unknown) as { [key: string]: unknown };
 
       // Add audit fields
       updateData.updatedBy = req.user?.id;
@@ -741,13 +801,13 @@ router.get(
     }),
     { source: 'query' }
   ),
-  async (req: any, res) => {
+  async (req: Request, res: Response) => {
     try {
-      const filters = req.validated;
+  const filters = ((req as ValidatedRequest).validated as unknown) as { [key: string]: unknown };
 
       // Get all parts for the warehouse first
       const warehouseId = filters.warehouseId || req.user?.warehouseId || 'default';
-      const allParts = await storage.getParts(warehouseId);
+  const allParts = await storage.getParts(typeof warehouseId === 'string' ? warehouseId : 'default');
 
       // Apply client-side filtering
       let filteredParts = allParts;
@@ -761,7 +821,7 @@ router.get(
       }
 
       if (filters.search) {
-        const searchLower = filters.search.toLowerCase();
+  const searchLower = typeof filters.search === 'string' ? filters.search.toLowerCase() : '';
         filteredParts = filteredParts.filter(
           part =>
             part.name?.toLowerCase().includes(searchLower) ||
@@ -782,8 +842,8 @@ router.get(
       });
 
       // Apply pagination
-      const offset = (filters.page - 1) * filters.limit;
-      const paginatedParts = filteredParts.slice(offset, offset + filters.limit);
+  const offset = (typeof filters.page === 'number' ? filters.page : 1 - 1) * (typeof filters.limit === 'number' ? filters.limit : 20);
+  const paginatedParts = filteredParts.slice(offset, offset + (typeof filters.limit === 'number' ? filters.limit : 20));
 
       res.json({
         success: true,
@@ -792,7 +852,7 @@ router.get(
           page: filters.page,
           limit: filters.limit,
           total: filteredParts.length,
-          totalPages: Math.ceil(filteredParts.length / filters.limit),
+          totalPages: Math.ceil(filteredParts.length / (typeof filters.limit === 'number' ? filters.limit : 20)),
         },
       });
     } catch (_error) {
@@ -807,9 +867,14 @@ router.get(
 );
 
 // Create new part
-router.post('/parts', validateSchema(insertPartSchema), async (req: any, res) => {
+router.post('/parts', validateSchema(insertPartSchema), async (req: Request, res: Response) => {
   try {
-    const partData = req.validated;
+  const partData = (req as ValidatedRequest).validated as {
+    createdBy?: string;
+    warehouseId?: string;
+    stockLevel?: number;
+    [key: string]: unknown;
+  };
     partData.createdBy = req.user?.id;
     partData.warehouseId = req.user?.warehouseId || partData.warehouseId;
 
@@ -834,9 +899,9 @@ router.post('/parts', validateSchema(insertPartSchema), async (req: any, res) =>
 router.get(
   '/parts/:id',
   validateSchema(commonSchemas.uuidParam, { source: 'params' }),
-  async (req: any, res) => {
+  async (req: Request, res: Response) => {
     try {
-      const { id } = req.validated;
+  const { id } = ((req as ValidatedRequest).validated as unknown) as { id: string };
       const part = await storage.getPart(id);
 
       if (!part) {
@@ -881,10 +946,15 @@ router.put(
       vendor: z.string().optional(),
     }),
   }),
-  async (req: any, res) => {
+  async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
-      const updateData = req.validated;
+  const updateData = (req as ValidatedRequest).validated as {
+    updatedBy?: string;
+    updatedAt?: Date;
+    status?: string;
+    [key: string]: unknown;
+  };
 
       // Check if part exists
       const existingPart = await storage.getPart(id);
@@ -896,12 +966,12 @@ router.put(
         });
       }
 
-      const updatedPart = await storage.updatePart(id, updateData);
+  const updatedPart = await storage.updatePart(id, updateData as Partial<{ active?: boolean; description?: string; warehouseId?: string; category?: string; name?: string; partNumber?: string; stockLevel?: number; unitOfMeasure?: string; unitCost?: number; reorderPoint?: number; maxStock?: number; location?: string; vendor?: string; }>);
 
       // Check for low stock notifications
       if (
         updateData.stockLevel !== undefined &&
-        updateData.stockLevel <= (existingPart.reorderPoint || 0)
+  typeof updateData.stockLevel === 'number' && updateData.stockLevel <= (existingPart.reorderPoint || 0)
       ) {
         try {
           const { notificationService } = await import('../services/notification.service');
@@ -963,24 +1033,24 @@ router.get(
     }),
     { source: 'query' }
   ),
-  async (req: any, res) => {
+  async (req: Request, res: Response) => {
     try {
-      const filters = req.validated;
+  const filters = ((req as ValidatedRequest).validated as unknown) as { [key: string]: unknown };
       const warehouseId = filters.warehouseId || req.user?.warehouseId || 'default';
 
       // Get basic analytics data
-      const workOrders = await storage.getWorkOrders(warehouseId);
-      const equipment = await storage.getEquipment(warehouseId);
-      const parts = await storage.getParts(warehouseId);
+  const workOrders = await storage.getWorkOrders(typeof warehouseId === 'string' ? warehouseId : 'default');
+  const equipment = await storage.getEquipment(typeof warehouseId === 'string' ? warehouseId : 'default');
+  const parts = await storage.getParts(typeof warehouseId === 'string' ? warehouseId : 'default');
 
       // Apply date filtering for work orders if provided
       let filteredWorkOrders = workOrders;
-      if (filters.dateRange?.start || filters.dateRange?.end) {
+  if (filters.dateRange && (filters.dateRange.start || filters.dateRange.end)) {
         filteredWorkOrders = workOrders.filter(wo => {
           if (!wo.createdAt) return false;
           const createdAt = new Date(wo.createdAt);
-          if (filters.dateRange?.start && createdAt < filters.dateRange.start) return false;
-          if (filters.dateRange?.end && createdAt > filters.dateRange.end) return false;
+          if (filters.dateRange && filters.dateRange.start && createdAt < filters.dateRange.start) return false;
+          if (filters.dateRange && filters.dateRange.end && createdAt > filters.dateRange.end) return false;
           return true;
         });
       }
@@ -1078,15 +1148,15 @@ router.get(
     }),
     { source: 'query' }
   ),
-  async (req: any, res) => {
+  async (req: Request, res: Response) => {
     try {
-      const filters = req.validated;
+  const filters = ((req as ValidatedRequest).validated as unknown) as { [key: string]: unknown };
       const warehouseId = filters.warehouseId || req.user?.warehouseId || 'default';
 
-      const workOrders = await storage.getWorkOrders(warehouseId);
+  const workOrders = await storage.getWorkOrders(typeof warehouseId === 'string' ? warehouseId : 'default');
 
       // Generate trend data based on period and metric
-      const trendData = generateTrendData(workOrders, filters.period, filters.metric);
+  const trendData = generateTrendData(workOrders, typeof filters.period === 'string' ? filters.period : 'month', typeof filters.metric === 'string' ? filters.metric : 'count');
 
       res.json({
         success: true,
@@ -1123,11 +1193,11 @@ router.patch(
   ),
   async (req: any, res) => {
     try {
-      const { workOrderIds, status, reason } = req.validated;
+  const { workOrderIds, status, reason } = ((req as ValidatedRequest).validated as unknown) as { workOrderIds: string[]; status: string; reason?: string };
 
       const results = {
-        updated: [] as Array<{ id: any; status: string }>,
-        failed: [] as Array<{ id: any; error: string }>,
+  updated: [] as Array<{ id: string; status: string }>,
+  failed: [] as Array<{ id: string; error: string }>,
         total: workOrderIds.length,
       };
 
@@ -1178,7 +1248,7 @@ router.patch(
   ),
   async (req: any, res) => {
     try {
-      const { workOrderIds, assignedTo, priority } = req.validated;
+  const { workOrderIds, assignedTo, priority } = ((req as ValidatedRequest).validated as unknown) as { workOrderIds: string[]; assignedTo: string; priority?: string };
 
       const results = {
         assigned: [] as Array<{ id: any; assignedTo: string | null }>,

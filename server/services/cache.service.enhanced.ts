@@ -7,7 +7,7 @@ import { createClient, RedisClientType } from 'redis';
 export class EnhancedCacheService {
   private static instance: EnhancedCacheService;
   private redisClient: RedisClientType | null = null;
-  private memoryCache: Map<string, { data: any; expires: number; hits: number }> = new Map();
+  private memoryCache: Map<string, { data: unknown; expires: number; hits: number }> = new Map();
   private isRedisConnected = false;
   private memoryLimit = 1000; // Maximum items in memory cache
   private defaultTTL = 5 * 60; // 5 minutes default TTL

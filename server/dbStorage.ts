@@ -724,7 +724,7 @@ export class DatabaseStorage implements IStorage {
         ...insertPreference,
         createdAt: new Date(),
         updatedAt: new Date(),
-      } as any)
+      } as InsertNotificationPreference)
       .returning();
     return preference;
   }
@@ -739,11 +739,23 @@ export class DatabaseStorage implements IStorage {
       .set({
         ...updates,
         updatedAt: new Date(),
-      } as any)
+      } as Partial<InsertNotificationPreference>)
       .where(
         and(
           eq(notificationPreferences.userId, userId),
-          eq(notificationPreferences.notificationType, notificationType as any)
+          eq(
+            notificationPreferences.notificationType,
+            notificationType as (
+              | 'wo_assigned'
+              | 'wo_overdue'
+              | 'part_low_stock'
+              | 'pm_due'
+              | 'equipment_alert'
+              | 'pm_escalation'
+              | 'system_alert'
+              | 'real_time_update'
+            )
+          )
         )
       )
       .returning();
@@ -756,7 +768,19 @@ export class DatabaseStorage implements IStorage {
       .where(
         and(
           eq(notificationPreferences.userId, userId),
-          eq(notificationPreferences.notificationType, notificationType as any)
+          eq(
+            notificationPreferences.notificationType,
+            notificationType as (
+              | 'wo_assigned'
+              | 'wo_overdue'
+              | 'part_low_stock'
+              | 'pm_due'
+              | 'equipment_alert'
+              | 'pm_escalation'
+              | 'system_alert'
+              | 'real_time_update'
+            )
+          )
         )
       );
   }
@@ -776,7 +800,7 @@ export class DatabaseStorage implements IStorage {
         ...insertSubscription,
         createdAt: new Date(),
         lastUsed: new Date(),
-      } as any)
+  } as InsertPushSubscription)
       .returning();
     return subscription;
   }
@@ -790,7 +814,7 @@ export class DatabaseStorage implements IStorage {
       .set({
         ...updates,
         lastUsed: new Date(),
-      } as any)
+  } as Partial<InsertPushSubscription>)
       .where(eq(pushSubscriptions.id, id))
       .returning();
     return subscription || null;
