@@ -29,6 +29,14 @@
       "dest": "/api/health"
     },
     {
+      "src": "/api-docs",
+      "dest": "/api/api-docs"
+    },
+    {
+      "src": "/api-docs/(.*)",
+      "dest": "/api/api-docs/$1"
+    },
+    {
       "src": "/api/profiles/([^/]+)",
       "dest": "/api/profiles/$1"
     },
