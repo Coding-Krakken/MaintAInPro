@@ -1,3 +1,75 @@
+export interface PmTemplate {
+  id: string;
+  model: string;
+  component: string;
+  action: string;
+  description: string;
+  estimatedDuration: number;
+  frequency: 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'annually';
+  customFields: Record<string, unknown> | {};
+  active: boolean;
+  warehouseId: string;
+  createdAt: Date;
+  enabled: boolean;
+}
+export interface InsertVendor {
+  name: string;
+  type?: 'supplier' | 'contractor';
+  email?: string;
+  phone?: string;
+  address?: string;
+  contactPerson?: string;
+  active?: boolean;
+  warehouseId?: string;
+}
+
+export interface InsertPmTemplate {
+  model: string;
+  component: string;
+  action: string;
+  description?: string;
+  estimatedDuration?: number;
+  frequency?: 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'annually';
+  customFields?: Record<string, unknown>;
+  active?: boolean;
+  warehouseId?: string;
+  enabled?: boolean;
+}
+export interface InsertLaborTime {
+  workOrderId: string;
+  userId: string;
+  startTime?: Date;
+  endTime?: Date;
+  duration?: number;
+  description: string;
+  isActive?: boolean;
+  isManual?: boolean;
+}
+
+export interface InsertAttachment {
+  fileName: string;
+  fileType?: string;
+  fileSize?: number;
+  fileUrl?: string;
+  mimeType?: string;
+  filePath?: string;
+  thumbnailPath?: string;
+  workOrderId?: string;
+  equipmentId?: string;
+  pmTemplateId?: string;
+  vendorId?: string;
+  uploadedBy?: string;
+}
+// Manual interface for InsertWarehouse to resolve TypeScript property access errors
+export interface InsertWarehouse {
+  name: string;
+  address?: string;
+  timezone?: string;
+  operatingHoursStart?: string;
+  operatingHoursEnd?: string;
+  emergencyContact?: string;
+  active?: boolean;
+}
 import { randomUUID } from 'crypto';
 import {
   profiles as _profiles,
@@ -16,7 +88,6 @@ import {
   type Profile,
   type InsertProfile,
   type Warehouse,
-  type InsertWarehouse,
   type Equipment,
   type InsertEquipment,
   type WorkOrder,
@@ -26,15 +97,10 @@ import {
   type InsertPart,
   type PartsUsage,
   type LaborTime,
-  type InsertLaborTime,
   type Vendor,
-  type InsertVendor,
-  type PmTemplate,
-  type InsertPmTemplate,
   type Notification,
   type InsertNotification,
   type Attachment,
-  type InsertAttachment,
   type SystemLog,
 } from '@shared/schema';
 
@@ -749,16 +815,17 @@ export class MemStorage implements IStorage {
   }
 
   async createWarehouse(insertWarehouse: InsertWarehouse): Promise<Warehouse> {
+    // Validate and type input using Zod schema
     const id = this.generateId();
     const warehouse: Warehouse = {
       id,
-      name: (insertWarehouse as any).name ?? '',
-      address: (insertWarehouse as any).address ?? '',
-      timezone: (insertWarehouse as any).timezone ?? 'UTC',
-      operatingHoursStart: (insertWarehouse as any).operatingHoursStart ?? '08:00',
-      operatingHoursEnd: (insertWarehouse as any).operatingHoursEnd ?? '17:00',
-      emergencyContact: (insertWarehouse as any).emergencyContact ?? '',
-      active: (insertWarehouse as any).active ?? true,
+      name: insertWarehouse.name ?? '',
+      address: insertWarehouse.address ?? '',
+      timezone: insertWarehouse.timezone ?? 'UTC',
+      operatingHoursStart: insertWarehouse.operatingHoursStart ?? '08:00',
+      operatingHoursEnd: insertWarehouse.operatingHoursEnd ?? '17:00',
+      emergencyContact: insertWarehouse.emergencyContact ?? '',
+      active: insertWarehouse.active ?? true,
       createdAt: new Date(),
     };
     this.warehouses.set(id, warehouse);
@@ -947,7 +1014,7 @@ export class MemStorage implements IStorage {
     if (!existing) throw new Error('Work order not found');
 
     // Convert dueDate string to Date if needed
-    const processedUpdates: any = { ...updateWorkOrder };
+  const processedUpdates: Partial<InsertWorkOrder> = { ...updateWorkOrder };
     if (processedUpdates.dueDate && typeof processedUpdates.dueDate === 'string') {
       processedUpdates.dueDate = new Date(processedUpdates.dueDate);
     }
@@ -955,6 +1022,11 @@ export class MemStorage implements IStorage {
     const updated: WorkOrder = {
       ...existing,
       ...processedUpdates,
+      type: (processedUpdates.type as 'corrective' | 'preventive' | 'emergency') ?? existing.type,
+      status: (processedUpdates.status as 'new' | 'assigned' | 'in_progress' | 'completed' | 'verified' | 'closed') ?? existing.status,
+      priority: (processedUpdates.priority as 'low' | 'medium' | 'high' | 'critical') ?? existing.priority,
+  estimatedHours: processedUpdates.estimatedHours !== undefined ? String(processedUpdates.estimatedHours) : existing.estimatedHours,
+  actualHours: processedUpdates.actualHours !== undefined ? String(processedUpdates.actualHours) : existing.actualHours,
       updatedAt: new Date(),
     };
     this.workOrders.set(id, updated);
@@ -1059,10 +1131,12 @@ export class MemStorage implements IStorage {
     if (!existing) throw new Error('Part not found');
 
     // Convert InsertPart types to Part types for compatibility
-    const partUpdates: Partial<Part> = { ...updatePart } as any;
-    if (updatePart.unitCost !== undefined && typeof updatePart.unitCost === 'number') {
-      partUpdates.unitCost = updatePart.unitCost.toString();
-    }
+    // Omit unitCost from spread and assign explicitly
+    const { unitCost, ...rest } = updatePart;
+    const partUpdates: Partial<Part> = {
+      ...rest,
+      unitCost: unitCost !== undefined ? String(unitCost) : undefined,
+    };
 
     const updated: Part = {
       ...existing,
@@ -1113,7 +1187,7 @@ export class MemStorage implements IStorage {
     // Filter by date
     if (filters.startDate) {
       usageList = usageList.filter(
-        usage => usage.createdAt && new Date(usage.createdAt) >= filters.startDate!
+        usage => usage.createdAt && filters.startDate && new Date(usage.createdAt) >= filters.startDate
       );
     }
 
@@ -1145,7 +1219,14 @@ export class MemStorage implements IStorage {
     const id = this.generateId();
     const vendor: Vendor = {
       id,
-      ...(insertVendor as any),
+      name: insertVendor.name,
+      type: insertVendor.type ?? 'supplier',
+      email: insertVendor.email ?? '',
+      phone: insertVendor.phone ?? '',
+      address: insertVendor.address ?? '',
+      contactPerson: insertVendor.contactPerson ?? '',
+      active: insertVendor.active ?? true,
+      warehouseId: insertVendor.warehouseId ?? '',
       createdAt: new Date(),
     };
     this.vendors.set(id, vendor);
@@ -1186,8 +1267,17 @@ export class MemStorage implements IStorage {
     const id = this.generateId();
     const template: PmTemplate = {
       id,
-      ...(insertTemplate as any),
+      model: insertTemplate.model,
+      component: insertTemplate.component,
+      action: insertTemplate.action,
+      description: insertTemplate.description ?? '',
+      estimatedDuration: insertTemplate.estimatedDuration ?? 60,
+      frequency: insertTemplate.frequency ?? 'monthly',
+      customFields: insertTemplate.customFields ?? {},
+      active: insertTemplate.active ?? true,
+      warehouseId: insertTemplate.warehouseId ?? '',
       createdAt: new Date(),
+      enabled: insertTemplate.enabled ?? true,
     };
     this.pmTemplates.set(id, template);
     return template;
@@ -1201,17 +1291,11 @@ export class MemStorage implements IStorage {
     if (!existing) return null;
 
     // Type-safe frequency update
-    let frequencyUpdate: 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'annually' | undefined =
-      undefined;
-    if ((updates as any).frequency) {
+    let frequencyUpdate: 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'annually' | undefined = undefined;
+    if (updates.frequency) {
       const validFrequencies = ['daily', 'weekly', 'monthly', 'quarterly', 'annually'] as const;
-      if (validFrequencies.includes((updates as any).frequency as any)) {
-        frequencyUpdate = (updates as any).frequency as
-          | 'daily'
-          | 'weekly'
-          | 'monthly'
-          | 'quarterly'
-          | 'annually';
+      if (validFrequencies.includes(updates.frequency)) {
+        frequencyUpdate = updates.frequency;
       }
     }
 
@@ -1276,8 +1360,8 @@ export class MemStorage implements IStorage {
       a =>
         (workOrderId && a.workOrderId === workOrderId) ||
         (equipmentId && a.equipmentId === equipmentId) ||
-        (pmTemplateId && (a as any).pmTemplateId === pmTemplateId) ||
-        (vendorId && (a as any).vendorId === vendorId)
+        (pmTemplateId && a.pmTemplateId === pmTemplateId) ||
+        (vendorId && a.vendorId === vendorId)
     );
   }
 
@@ -1324,7 +1408,7 @@ export class MemStorage implements IStorage {
 
     const fileTypes: Record<string, number> = {};
     attachments.forEach(att => {
-      const type = (att as any).mimeType?.split('/')[0] || 'unknown';
+      const type = att.mimeType?.split('/')[0] || 'unknown';
       fileTypes[type] = (fileTypes[type] || 0) + 1;
     });
 
@@ -1341,14 +1425,20 @@ export class MemStorage implements IStorage {
   }
 
   async createLaborTime(laborTime: InsertLaborTime): Promise<LaborTime> {
+  const validLaborTime = laborTime as InsertLaborTime;
     const id = this.generateId();
+    const now = new Date();
     const newLaborTime: LaborTime = {
       id,
-      description: laborTime.description,
-      duration: laborTime.duration ?? 0,
-      workOrderId: laborTime.workOrderId ?? '',
-      userId: laborTime.userId ?? '',
-      createdAt: new Date(),
+      description: validLaborTime.description,
+      duration: validLaborTime.duration ?? 0,
+      workOrderId: validLaborTime.workOrderId ?? '',
+      userId: validLaborTime.userId ?? '',
+      startTime: validLaborTime.startTime ?? now,
+      endTime: validLaborTime.endTime ?? now,
+      isActive: validLaborTime.isActive ?? false,
+      isManual: validLaborTime.isManual ?? false,
+      createdAt: now,
     };
     this.laborTime.set(id, newLaborTime);
     return newLaborTime;
