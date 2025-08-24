@@ -84,6 +84,7 @@ export default [
         ServiceWorkerRegistration: 'readonly',
         PushSubscription: 'readonly',
         crypto: 'readonly',
+        btoa: 'readonly',
         AbortSignal: 'readonly',
         AbortController: 'readonly',
       },

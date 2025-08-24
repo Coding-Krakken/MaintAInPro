@@ -376,6 +376,8 @@ export const notifications = pgTable('notifications', {
       | 'pm_due'
       | 'equipment_alert'
       | 'pm_escalation'
+      | 'system_alert'
+      | 'real_time_update'
     >(),
   title: text('title').notNull(),
   message: text('message').notNull(),
@@ -383,7 +385,53 @@ export const notifications = pgTable('notifications', {
   workOrderId: uuid('work_order_id').references(() => workOrders.id),
   equipmentId: uuid('equipment_id').references(() => equipment.id),
   partId: uuid('part_id').references(() => parts.id),
+  metadata: jsonb('metadata'), // Store additional notification data
+  priority: text('priority').$type<'low' | 'medium' | 'high' | 'critical'>().default('medium'),
+  expiresAt: timestamp('expires_at'), // Optional expiration for notifications
   createdAt: timestamp('created_at').defaultNow(),
+});
+
+// User Notification Preferences  
+export const notificationPreferences = pgTable('notification_preferences', {
+  id: uuid('id').primaryKey(),
+  userId: uuid('user_id')
+    .references(() => profiles.id)
+    .notNull(),
+  notificationType: text('notification_type')
+    .notNull()
+    .$type<
+      | 'wo_assigned'
+      | 'wo_overdue' 
+      | 'part_low_stock'
+      | 'pm_due'
+      | 'equipment_alert'
+      | 'pm_escalation'
+      | 'system_alert'
+      | 'real_time_update'
+    >(),
+  enabled: boolean('enabled').default(true),
+  emailEnabled: boolean('email_enabled').default(true),
+  pushEnabled: boolean('push_enabled').default(true),
+  smsEnabled: boolean('sms_enabled').default(false), // Future feature
+  quietHoursStart: text('quiet_hours_start'), // Format: "HH:MM"
+  quietHoursEnd: text('quiet_hours_end'), // Format: "HH:MM"
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
+});
+
+// Push Notification Subscriptions
+export const pushSubscriptions = pgTable('push_subscriptions', {
+  id: uuid('id').primaryKey(),
+  userId: uuid('user_id')
+    .references(() => profiles.id)
+    .notNull(),
+  endpoint: text('endpoint').notNull(),
+  p256dhKey: text('p256dh_key').notNull(), // Public key for encryption
+  authKey: text('auth_key').notNull(), // Authentication secret
+  userAgent: text('user_agent'),
+  active: boolean('active').default(true),
+  createdAt: timestamp('created_at').defaultNow(),
+  lastUsed: timestamp('last_used').defaultNow(),
 });
 
 // File Attachments
@@ -721,6 +769,8 @@ export const insertNotificationSchema = createFlexibleSchema({
     'pm_due',
     'equipment_alert',
     'pm_escalation',
+    'system_alert',
+    'real_time_update',
   ]),
   title: fieldValidators.nonEmptyString('Title'),
   message: fieldValidators.nonEmptyString('Message'),
@@ -728,6 +778,38 @@ export const insertNotificationSchema = createFlexibleSchema({
   workOrderId: fieldValidators.optionalUuid('Work Order ID'),
   equipmentId: fieldValidators.optionalUuid('Equipment ID'),
   partId: fieldValidators.optionalUuid('Part ID'),
+  metadata: z.record(z.any()).optional(),
+  priority: z.enum(['low', 'medium', 'high', 'critical']).optional().default('medium'),
+  expiresAt: flexibleDateSchema.optional(),
+});
+
+export const insertNotificationPreferenceSchema = createFlexibleSchema({
+  userId: fieldValidators.requiredUuid('User ID'),
+  notificationType: z.enum([
+    'wo_assigned',
+    'wo_overdue',
+    'part_low_stock',
+    'pm_due',
+    'equipment_alert',
+    'pm_escalation',
+    'system_alert',
+    'real_time_update',
+  ]),
+  enabled: z.boolean().optional().default(true),
+  emailEnabled: z.boolean().optional().default(true),
+  pushEnabled: z.boolean().optional().default(true),
+  smsEnabled: z.boolean().optional().default(false),
+  quietHoursStart: z.string().regex(/^\d{2}:\d{2}$/, 'Invalid time format (HH:MM)').optional(),
+  quietHoursEnd: z.string().regex(/^\d{2}:\d{2}$/, 'Invalid time format (HH:MM)').optional(),
+});
+
+export const insertPushSubscriptionSchema = createFlexibleSchema({
+  userId: fieldValidators.requiredUuid('User ID'),
+  endpoint: fieldValidators.nonEmptyString('Endpoint'),
+  p256dhKey: fieldValidators.nonEmptyString('P256DH Key'),
+  authKey: fieldValidators.nonEmptyString('Auth Key'),
+  userAgent: z.string().optional(),
+  active: z.boolean().optional().default(true),
 });
 
 // Enhanced vendor schema with proper validation
@@ -807,6 +889,12 @@ export type InsertPmTemplate = z.infer<typeof insertPmTemplateSchema>;
 
 export type Notification = typeof notifications.$inferSelect;
 export type InsertNotification = z.infer<typeof insertNotificationSchema>;
+
+export type NotificationPreference = typeof notificationPreferences.$inferSelect;
+export type InsertNotificationPreference = z.infer<typeof insertNotificationPreferenceSchema>;
+
+export type PushSubscription = typeof pushSubscriptions.$inferSelect;
+export type InsertPushSubscription = z.infer<typeof insertPushSubscriptionSchema>;
 
 export type Attachment = typeof attachments.$inferSelect;
 export type InsertAttachment = z.infer<typeof insertAttachmentSchema>;
