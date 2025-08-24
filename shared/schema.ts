@@ -796,13 +796,6 @@ export const insertNotificationPreferenceSchema = createFlexibleSchema({
     'system_alert',
     'real_time_update',
   ]),
-    'part_low_stock',
-    'pm_due',
-    'equipment_alert',
-    'pm_escalation',
-    'system_alert',
-    'real_time_update',
-  ]),
   enabled: z.boolean().optional().default(true),
   emailEnabled: z.boolean().optional().default(true),
   pushEnabled: z.boolean().optional().default(true),
@@ -818,7 +811,6 @@ export const insertPushSubscriptionSchema = createFlexibleSchema({
   authKey: fieldValidators.nonEmptyString('Auth Key'),
   userAgent: z.string().optional(),
   active: z.boolean().optional().default(true),
->>>>>>> main
 });
 
 // Enhanced vendor schema with proper validation

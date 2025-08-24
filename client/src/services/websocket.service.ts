@@ -18,6 +18,7 @@ export interface NotificationData {
   read: boolean;
   createdAt: Date;
   data?: unknown;
+  metadata?: unknown;
   priority?: 'low' | 'medium' | 'high' | 'critical';
   expiresAt?: Date;
   workOrderId?: string;

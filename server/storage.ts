@@ -1369,9 +1369,12 @@ export class MemStorage implements IStorage {
       title: insertNotification.title,
       message: insertNotification.message,
       read: insertNotification.read ?? false,
-      workOrderId: insertNotification.workOrderId ?? '',
-      equipmentId: insertNotification.equipmentId ?? '',
-      partId: insertNotification.partId ?? '',
+      workOrderId: insertNotification.workOrderId ?? null,
+      equipmentId: insertNotification.equipmentId ?? null,
+      partId: insertNotification.partId ?? null,
+      metadata: insertNotification.metadata ?? null,
+      priority: insertNotification.priority ?? 'medium',
+      expiresAt: insertNotification.expiresAt ?? null,
       createdAt: new Date(),
     };
     this.notifications.set(id, notification);

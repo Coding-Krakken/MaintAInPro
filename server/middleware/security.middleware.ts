@@ -279,13 +279,8 @@ export function serviceWorkerHandler(req: Request, res: Response, next: NextFunc
  * @deprecated Use advancedSanitizationMiddleware from advanced-sanitization.ts instead
  */
 export function sanitizeInput(req: Request, res: Response, next: NextFunction): void {
-<<<<<<< HEAD
   // Delegate to advanced sanitization middleware
   return advancedSanitizationMiddleware(req, res, next);
-=======
-  // Delegate to advanced sanitization middleware
-  return advancedSanitizationMiddleware(req, res, next);
->>>>>>> main
 }
 
 /**
@@ -293,14 +288,9 @@ export function sanitizeInput(req: Request, res: Response, next: NextFunction): 
  * @deprecated Functionality moved to advancedSanitizationMiddleware
  */
 export function sqlInjectionProtection(req: Request, res: Response, next: NextFunction): void {
-<<<<<<< HEAD
   // This is now handled by advancedSanitizationMiddleware
   // Keep this for backward compatibility but it's essentially a no-op
 
-=======
-  // This is now handled by advancedSanitizationMiddleware
-  // Keep this for backward compatibility but it's essentially a no-op
->>>>>>> main
   next();
 }
 
@@ -456,11 +446,7 @@ export function validateRequestSchema(schema: z.ZodSchema) {
 /**
  * Enhanced security monitoring and logging middleware
  */
-<<<<<<< HEAD
 export function securityAuditLogger(req: any, res: Response, next: NextFunction): void {
-=======
-export function securityAuditLogger(req: any, res: Response, next: NextFunction): void {
->>>>>>> main
   const startTime = Date.now();
   const originalJson = res.json;
 
