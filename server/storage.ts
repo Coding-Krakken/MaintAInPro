@@ -739,17 +739,27 @@ export class MemStorage implements IStorage {
     const role = validRoles.includes(insertProfile.role as typeof validRoles[number])
       ? (insertProfile.role as typeof validRoles[number])
       : 'technician';
-    const name = insertProfile.firstName && insertProfile.lastName
-      ? `${insertProfile.firstName} ${insertProfile.lastName}`
-      : insertProfile.firstName || insertProfile.lastName || '';
     const profile: Profile = {
       id,
       email: insertProfile.email,
-      name,
+      firstName: insertProfile.firstName || '',
+      lastName: insertProfile.lastName || '',
       role,
       organizationId: insertProfile.organizationId,
       warehouseId: insertProfile.warehouseId ?? '',
+      active: true,
+      emailVerified: false,
+      emailVerificationToken: null,
+      lastLoginAt: null,
+      loginAttempts: 0,
+      lockedUntil: null,
+      phoneNumber: null,
+      preferences: null,
       createdAt: new Date(),
+      updatedAt: new Date(),
+      deletedAt: null,
+      createdBy: null,
+      updatedBy: null,
     };
     this.profiles.set(id, profile);
     return profile;
