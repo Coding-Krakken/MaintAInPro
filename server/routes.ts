@@ -235,7 +235,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // OpenAPI 3.0 Documentation with Swagger UI
-  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, {
+  app.use('/api/api-docs', swaggerUi.serve, swaggerUi.setup(specs, {
     customCss: '.swagger-ui .topbar { display: none }',
     customSiteTitle: 'MaintAInPro CMMS API Documentation',
     swaggerOptions: {
@@ -244,7 +244,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   }));
 
   console.log('Health check endpoint registered');
-  console.log('API documentation available at /api-docs');
+  console.log('API documentation available at /api/api-docs');
 
   // Register performance monitoring routes
   app.use('/api/monitoring', performanceMonitoringRoutes);
