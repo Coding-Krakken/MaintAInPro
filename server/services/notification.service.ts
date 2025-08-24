@@ -6,9 +6,9 @@ import { storage } from '../storage';
 export interface NotificationService {
   initialize(_httpServer: HTTPServer): void;
   sendNotification(_notification: InsertNotification): Promise<void>;
-  sendRealTimeUpdate(_userId: string, _data: any): Promise<void>;
-  broadcastToWarehouse(_warehouseId: string, _data: any): Promise<void>;
-  broadcastSystemAlert(_data: any): Promise<void>;
+  sendRealTimeUpdate(_userId: string, _data: unknown): Promise<void>;
+  broadcastToWarehouse(_warehouseId: string, _data: unknown): Promise<void>;
+  broadcastSystemAlert(_data: unknown): Promise<void>;
 }
 
 class NotificationServiceImpl implements NotificationService {
@@ -62,13 +62,13 @@ class NotificationServiceImpl implements NotificationService {
           if (!this.userSockets.has(userId)) {
             this.userSockets.set(userId, new Set());
           }
-          this.userSockets.get(userId)!.add(socket.id);
+          (this.userSockets.get(userId) ?? new Set()).add(socket.id);
 
           // Store warehouse mapping
           if (!this.warehouseSockets.has(warehouseId)) {
             this.warehouseSockets.set(warehouseId, new Set());
           }
-          this.warehouseSockets.get(warehouseId)!.add(socket.id);
+          (this.warehouseSockets.get(warehouseId) ?? new Set()).add(socket.id);
 
           // Join user and warehouse rooms
           socket.join(`user:${userId}`);
@@ -133,10 +133,13 @@ class NotificationServiceImpl implements NotificationService {
     }
   }
 
-  async sendNotification(notificationData: any): Promise<void> {
+  async sendNotification(notificationData: unknown): Promise<void> {
     try {
+      if (!isInsertNotification(notificationData)) {
+        throw new Error('Invalid notification data');
+      }
       // Store notification in database
-      const notification = await storage.createNotification(notificationData as InsertNotification);
+      const notification = await storage.createNotification(notificationData);
 
       // Send real-time notification if WebSocket is available
       if (this.io && notificationData.userId) {
@@ -144,14 +147,6 @@ class NotificationServiceImpl implements NotificationService {
           type: 'notification',
           data: notification,
         });
-
-        // Send to warehouse if applicable (notifications are user-scoped, so get user's warehouse)
-        if (notificationData.warehouseId) {
-          this.io.to(`warehouse:${notificationData.warehouseId}`).emit('notification', {
-            type: 'warehouse_notification',
-            data: notification,
-          });
-        }
 
         console.log(`Notification sent to user ${notificationData.userId} via WebSocket`);
       } else if (!this.io) {
@@ -163,8 +158,19 @@ class NotificationServiceImpl implements NotificationService {
       console.error('Error sending notification:', error);
       throw error;
     }
+// Type guard for InsertNotification
+function isInsertNotification(data: unknown): data is InsertNotification {
+  if (typeof data !== 'object' || data === null) return false;
+  const obj = data as Record<string, unknown>;
+  return (
+    typeof obj.userId === 'string' &&
+    typeof obj.type === 'string' &&
+    typeof obj.title === 'string' &&
+    typeof obj.message === 'string'
+  );
+}
   }
-  async sendRealTimeUpdate(userId: string, data: any): Promise<void> {
+  async sendRealTimeUpdate(userId: string, data: unknown): Promise<void> {
     if (!this.io) {
       console.log(`Real-time update skipped for user ${userId} (WebSocket unavailable)`);
       return;
@@ -177,7 +183,7 @@ class NotificationServiceImpl implements NotificationService {
     });
   }
 
-  async broadcastToWarehouse(warehouseId: string, data: any): Promise<void> {
+  async broadcastToWarehouse(warehouseId: string, data: unknown): Promise<void> {
     if (!this.io) {
       console.log(`Warehouse broadcast skipped for ${warehouseId} (WebSocket unavailable)`);
       return;
@@ -191,7 +197,7 @@ class NotificationServiceImpl implements NotificationService {
     });
   }
 
-  async broadcastSystemAlert(data: any): Promise<void> {
+  async broadcastSystemAlert(data: unknown): Promise<void> {
     if (!this.io) {
       console.log('System alert broadcast skipped (WebSocket unavailable)');
       return;

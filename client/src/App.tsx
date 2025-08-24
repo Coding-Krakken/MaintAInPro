@@ -5,7 +5,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 // import { SpeedInsights } from "@vercel/speed-insights/react"; // Removed for now
 import { AuthProvider, useAuth } from './hooks/useAuth';
-import { ErrorBoundary, GenericErrorFallback, createErrorBoundary } from './components/ErrorBoundary';
+import { ErrorBoundary, GenericErrorFallback } from './components/ErrorBoundary';
 import { reportError } from './utils/error-reporting';
 import {
   PWAInstallPrompt,
