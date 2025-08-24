@@ -15,6 +15,8 @@ export default [
       'dist/**',
       'coverage/**',
       'build/**',
+      'reports/**',
+      'test-results/**',
       '.vercel/**',
       '.next/**',
       '*.min.js',
