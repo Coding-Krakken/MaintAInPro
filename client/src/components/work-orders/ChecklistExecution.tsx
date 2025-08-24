@@ -95,7 +95,18 @@ const ChecklistExecution: React.FC<ChecklistExecutionProps> = ({
       const SpeechRecognition =
         (window as unknown as WindowWithSpeechRecognition).speechRecognition || 
         (window as unknown as WindowWithSpeechRecognition).webkitSpeechRecognition;
-      const recognition = new (SpeechRecognition as unknown as new() => any)();
+      type SpeechRecognitionType = {
+        continuous: boolean;
+        interimResults: boolean;
+        lang: string;
+        onstart: (() => void) | null;
+  onresult: ((_event: Event) => void) | null;
+        onerror: ((_event: Event) => void) | null;
+        onend: (() => void) | null;
+        start: () => void;
+        stop: () => void;
+      };
+      const recognition = new (SpeechRecognition as unknown as new () => SpeechRecognitionType)();
 
       recognition.continuous = true;
       recognition.interimResults = true;
@@ -107,7 +118,8 @@ const ChecklistExecution: React.FC<ChecklistExecutionProps> = ({
       };
 
       recognition.onresult = event => {
-        const transcript = Array.from(event.results)
+        const speechEvent = event as unknown as { results: ArrayLike<{ 0: { transcript: string } }> };
+        const transcript = Array.from(speechEvent.results)
           .map(result => result[0])
           .map(result => result.transcript)
           .join('');

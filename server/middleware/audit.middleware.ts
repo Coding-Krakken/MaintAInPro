@@ -19,15 +19,15 @@ export function auditMiddleware() {
 
     const originalSend = res.send;
     const originalJson = res.json;
-    let responseBody: any;
+  let responseBody: unknown;
 
     // Capture response data
-    res.send = function (body: any) {
+    res.send = function (body: unknown) {
       responseBody = body;
       return originalSend.call(this, body);
     };
 
-    res.json = function (body: any) {
+    res.json = function (body: unknown) {
       responseBody = body;
       return originalJson.call(this, body);
     };
@@ -79,12 +79,12 @@ function extractAuditDetails(
   req: AuditRequest,
   res: Response,
   success: boolean,
-  responseBody: any
+  responseBody: unknown
 ): {
   action: string;
   entityType: string;
   entityId?: string;
-  details: Record<string, any>;
+  details: Record<string, unknown>;
   severity: 'low' | 'medium' | 'high' | 'critical';
   category:
     | 'authentication'
@@ -382,21 +382,24 @@ function extractAuditDetails(
   return null;
 }
 
-function extractIdFromResponse(responseBody: any): string | undefined {
+function extractIdFromResponse(responseBody: unknown): string | undefined {
   if (typeof responseBody === 'object' && responseBody !== null) {
-    return responseBody.id || responseBody.entityId;
+    const obj = responseBody as Record<string, unknown>;
+    return (obj.id as string) || (obj.entityId as string);
   }
   return undefined;
 }
 
-function extractErrorMessage(responseBody: any): string | undefined {
+function extractErrorMessage(responseBody: unknown): string | undefined {
   if (typeof responseBody === 'object' && responseBody !== null) {
-    return responseBody.message || responseBody.error;
+    const obj = responseBody as Record<string, unknown>;
+    return (obj.message as string) || (obj.error as string);
   }
   if (typeof responseBody === 'string') {
     try {
       const parsed = JSON.parse(responseBody);
-      return parsed.message || parsed.error;
+      const obj = parsed as Record<string, unknown>;
+      return (obj.message as string) || (obj.error as string);
     } catch {
       return responseBody;
     }

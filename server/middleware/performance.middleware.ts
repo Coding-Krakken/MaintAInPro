@@ -23,7 +23,7 @@ export function performanceMiddleware(
 
   // Override res.json to capture response time
   const originalJson = res.json;
-  res.json = function (body?: any) {
+  res.json = function (body?: unknown) {
     if (req.startTime) {
       const responseTime = Math.round(performance.now() - req.startTime);
       monitoringService.recordResponseTime(responseTime);
@@ -37,7 +37,7 @@ export function performanceMiddleware(
 
   // Override res.send to capture response time for non-JSON responses
   const originalSend = res.send;
-  res.send = function (body?: any) {
+  res.send = function (body?: unknown) {
     if (req.startTime) {
       const responseTime = Math.round(performance.now() - req.startTime);
       monitoringService.recordResponseTime(responseTime);
@@ -57,7 +57,7 @@ export function performanceMiddleware(
  * Records error occurrences for monitoring
  */
 export function errorTrackingMiddleware(
-  err: any,
+  err: unknown,
   req: Request,
   res: Response,
   _next: NextFunction
@@ -66,22 +66,39 @@ export function errorTrackingMiddleware(
   monitoringService.incrementErrorCount();
 
   // Log error details
+  let errorMessage = 'Unknown error';
+  let errorStack = undefined;
+  let status = 500;
+  type ErrorLike = { message?: string; stack?: string; status?: number; statusCode?: number };
+  if (typeof err === 'object' && err !== null) {
+    const e = err as ErrorLike;
+    if (typeof e.message === 'string') {
+      errorMessage = e.message;
+    }
+    if (typeof e.stack === 'string') {
+      errorStack = e.stack;
+    }
+    if (typeof e.status === 'number') {
+      status = e.status;
+    } else if (typeof e.statusCode === 'number') {
+      status = e.statusCode;
+    }
+  }
+
   console.error(`Error on ${req.method} ${req.path}:`, {
-    error: err.message,
-    stack: err.stack,
+    error: errorMessage,
+    stack: errorStack,
     userAgent: req.get('User-Agent'),
     ip: req.ip,
     timestamp: new Date().toISOString(),
   });
 
-  // Send error response
-  const status = err.status || err.statusCode || 500;
-  const message = process.env.NODE_ENV === 'production' ? 'Internal Server Error' : err.message;
+  const message = process.env.NODE_ENV === 'production' ? 'Internal Server Error' : errorMessage;
 
   res.status(status).json({
     error: true,
     message,
     timestamp: new Date().toISOString(),
-    ...(process.env.NODE_ENV !== 'production' && { stack: err.stack }),
+    ...(process.env.NODE_ENV !== 'production' && errorStack ? { stack: errorStack } : {}),
   });
 }

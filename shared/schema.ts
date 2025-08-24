@@ -728,6 +728,7 @@ export const insertNotificationSchema = createFlexibleSchema({
   workOrderId: fieldValidators.optionalUuid('Work Order ID'),
   equipmentId: fieldValidators.optionalUuid('Equipment ID'),
   partId: fieldValidators.optionalUuid('Part ID'),
+  warehouseId: fieldValidators.optionalUuid('Warehouse ID'),
 });
 
 // Enhanced vendor schema with proper validation

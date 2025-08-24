@@ -1,5 +1,4 @@
-import { randomUUID } from 'crypto';
-
+import { randomUUID } from 'node:crypto';
 export interface AuditLogEntry {
   id: string;
   userId?: string;
@@ -7,7 +6,7 @@ export interface AuditLogEntry {
   action: string;
   resource: string;
   resourceId?: string;
-  details: Record<string, any>;
+  details: Record<string, unknown>;
   ipAddress: string;
   userAgent: string;
   success: boolean;
@@ -47,7 +46,7 @@ export class AuditService {
   static async logEvent(
     action: string,
     resource: string,
-    details: Record<string, any>,
+    details: Record<string, unknown>,
     context: {
       userId?: string;
       sessionId?: string;
@@ -92,7 +91,7 @@ export class AuditService {
     ipAddress: string,
     userAgent: string,
     success: boolean,
-    details: Record<string, any> = {}
+    details: Record<string, unknown> = {}
   ): Promise<string> {
     return this.logEvent(
       'login',
@@ -159,7 +158,7 @@ export class AuditService {
     ipAddress: string,
     userAgent: string,
     success: boolean,
-    details: Record<string, any> = {}
+  details: Record<string, unknown> = {}
   ): Promise<string> {
     return this.logEvent(`mfa_${action}`, 'authentication', details, {
       userId,
@@ -203,7 +202,7 @@ export class AuditService {
     resourceId: string,
     ipAddress: string,
     userAgent: string,
-    details: Record<string, any> = {},
+  details: Record<string, unknown> = {},
     success: boolean = true
   ): Promise<string> {
     return this.logEvent(
@@ -223,7 +222,7 @@ export class AuditService {
 
   static async logSecurityEvent(
     action: string,
-    details: Record<string, any>,
+  details: Record<string, unknown>,
     context: {
       userId?: string;
       sessionId?: string;
@@ -268,11 +267,15 @@ export class AuditService {
     }
 
     if (query.startDate) {
-      filteredLogs = filteredLogs.filter(log => log.timestamp >= query.startDate!);
+      if (query.startDate) {
+        filteredLogs = filteredLogs.filter(log => log.timestamp >= query.startDate);
+      }
     }
 
     if (query.endDate) {
-      filteredLogs = filteredLogs.filter(log => log.timestamp <= query.endDate!);
+      if (query.endDate) {
+        filteredLogs = filteredLogs.filter(log => log.timestamp <= query.endDate);
+      }
     }
 
     if (query.ipAddress) {
@@ -373,7 +376,7 @@ export class AuditService {
     }).then(result => result.logs);
   }
 
-  private static sanitizeDetails(details: Record<string, any>): Record<string, any> {
+  private static sanitizeDetails(details: Record<string, unknown>): Record<string, unknown> {
     const sanitized = { ...details };
 
     // Remove sensitive information
@@ -391,7 +394,7 @@ export class AuditService {
   private static determineRiskLevel(
     action: string,
     resource: string,
-    details: Record<string, any>
+    details: Record<string, unknown>
   ): 'low' | 'medium' | 'high' | 'critical' {
     // Admin actions
     if (details.adminAction) {

@@ -70,9 +70,9 @@ export function hasCompleteUser(user: unknown): user is AuthenticatedUser {
     user &&
     typeof user === 'object' &&
     user !== null &&
-    typeof (user as any).id === 'string' &&
-    typeof (user as any).email === 'string' &&
-    typeof (user as any).role === 'string' &&
-    typeof (user as any).organizationId === 'string'
+    typeof (user as AuthenticatedUser).id === 'string' &&
+    typeof (user as AuthenticatedUser).email === 'string' &&
+    typeof (user as AuthenticatedUser).role === 'string' &&
+    typeof (user as AuthenticatedUser).organizationId === 'string'
   );
 }

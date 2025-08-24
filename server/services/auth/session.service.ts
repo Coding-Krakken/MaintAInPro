@@ -80,7 +80,10 @@ export class SessionService {
     if (!this.userSessions.has(options.userId)) {
       this.userSessions.set(options.userId, new Set());
     }
-    this.userSessions.get(options.userId)!.add(sessionId);
+    const userSessionsSet = this.userSessions.get(options.userId);
+    if (userSessionsSet) {
+      userSessionsSet.add(sessionId);
+    }
 
     // Generate JWT tokens
     const tokens = JWTService.generateTokenPair({
@@ -239,7 +242,10 @@ export class SessionService {
     const sessionsToRemove = sessions.length - this.MAX_SESSIONS_PER_USER + 1;
 
     for (let i = 0; i < sessionsToRemove; i++) {
-      await this.endSession(sessions[i]!.id);
+      const session = sessions[i];
+      if (session) {
+        await this.endSession(session.id);
+      }
     }
   }
 

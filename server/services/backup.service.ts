@@ -6,7 +6,7 @@
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import { createHash } from 'crypto';
-import { readFile, writeFile, mkdir, readdir, stat, unlink } from 'fs/promises';
+import { readFile, mkdir, readdir, stat, unlink } from 'fs/promises';
 import { existsSync } from 'fs';
 import path from 'path';
 import { BackupConfig, getBackupConfig, validateBackupConfig } from '../../config/backup';
@@ -98,8 +98,8 @@ export class BackupService {
 
       console.log(`Starting database backup to ${backupPath}`);
 
-      // Create database backup using pg_dump
-      const backupResult = await this.executePgDump(backupPath);
+  // Create database backup using pg_dump
+  await this.executePgDump(backupPath);
       
       // Validate the backup file
       const validation = await this.validateBackup(backupPath);

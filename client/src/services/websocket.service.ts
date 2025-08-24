@@ -4,7 +4,7 @@ import { toast } from '@/hooks/use-toast';
 
 export interface WebSocketNotification {
   type: string;
-  data: any;
+  data: unknown;
   timestamp: string;
 }
 
@@ -17,7 +17,7 @@ export interface NotificationData {
   type: 'info' | 'warning' | 'error' | 'success';
   read: boolean;
   createdAt: Date;
-  data?: any;
+  data?: unknown;
 }
 
 export class WebSocketService {
@@ -212,14 +212,14 @@ export class WebSocketService {
     // Show important system alerts as persistent toasts
     toast({
       title: 'System Alert',
-      description: data.data?.message || 'System notification received',
+  description: typeof data.data === 'object' && data.data !== null && 'message' in data.data ? (data.data as { message?: string }).message || 'System notification received' : 'System notification received',
       variant: 'destructive',
     });
 
     this.notifySubscribers('system_alert', data);
   }
 
-  private notifySubscribers(event: string, data: any): void {
+  private notifySubscribers(event: string, data: unknown): void {
     const callback = this.subscriptions.get(event);
     if (callback) {
       callback(data);

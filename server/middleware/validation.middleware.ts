@@ -1,3 +1,5 @@
+import type { ParamsDictionary } from 'express-serve-static-core';
+import type { ParsedQs } from 'qs';
 /**
  * Production-Grade API Validation Middleware
  *
@@ -23,10 +25,10 @@ import { snakeToCamel, fieldValidators, createFlexibleSchema } from '../../share
 declare global {
   namespace Express {
     interface Request {
-      validatedBody?: any;
-      originalBody?: any;
-      validatedQuery?: any;
-      validatedParams?: any;
+  validatedBody?: Record<string, unknown>;
+  originalBody?: Record<string, unknown>;
+  validatedQuery?: Record<string, unknown>;
+  validatedParams?: Record<string, unknown>;
       user?: {
         id: string;
         email: string;
@@ -62,7 +64,7 @@ export class ValidationMiddleware {
             field: err.path.join('.'),
             message: err.message,
             code: err.code,
-            received: err.path.reduce((obj: any, key) => obj?.[key], req.body),
+            received: err.path.reduce((obj: unknown, key) => (typeof obj === 'object' && obj !== null ? (obj as Record<string, unknown>)[key] : undefined), req.body),
           }));
 
           return res.status(400).json({
@@ -107,7 +109,7 @@ export class ValidationMiddleware {
             field: err.path.join('.'),
             message: err.message,
             code: err.code,
-            received: err.path.reduce((obj: any, key) => obj?.[key], req.query),
+            received: err.path.reduce((obj: unknown, key) => (typeof obj === 'object' && obj !== null ? (obj as Record<string, unknown>)[key] : undefined), req.query),
           }));
 
           return res.status(400).json({
@@ -148,7 +150,7 @@ export class ValidationMiddleware {
             field: err.path.join('.'),
             message: err.message,
             code: err.code,
-            received: err.path.reduce((obj: any, key) => obj?.[key], req.params),
+            received: err.path.reduce((obj: unknown, key) => (typeof obj === 'object' && obj !== null ? (obj as Record<string, unknown>)[key] : undefined), req.params),
           }));
 
           return res.status(400).json({
@@ -240,31 +242,45 @@ export class ValidationMiddleware {
     return (req: Request, res: Response, next: NextFunction) => {
       const originalJson = res.json.bind(res);
 
-      res.json = function (data: any) {
+  res.json = function (data: unknown) {
         try {
           // Transform database field names to API field names for successful responses
-          if (data && typeof data === 'object' && !data.type && !data.message) {
-            if (Array.isArray(data)) {
-              data = data.map(item => snakeToCamel(item));
-            } else if (data.data && Array.isArray(data.data)) {
-              data.data = data.data.map(item => snakeToCamel(item));
-            } else {
-              data = snakeToCamel(data);
+          if (data && typeof data === 'object') {
+            const d = data as Record<string, unknown>;
+            if (!('type' in d) && !('message' in d)) {
+              if (Array.isArray(data)) {
+                data = (data as Array<Record<string, unknown>>).map(item => snakeToCamel(item));
+              } else if ('data' in d && Array.isArray(d.data)) {
+                d.data = (d.data as Array<Record<string, unknown>>).map(item => snakeToCamel(item));
+              } else {
+                data = snakeToCamel(d);
+              }
             }
           }
 
           // Add metadata to successful responses
           if (res.statusCode >= 200 && res.statusCode < 300) {
-            const responseData = {
-              ...data,
-              _metadata: {
-                timestamp: new Date().toISOString(),
-                requestId: req.headers['x-request-id'] || 'unknown',
-                statusCode: res.statusCode,
-                organizationId: req.organizationId,
-              },
-            };
-
+            let responseData: Record<string, unknown>;
+            if (typeof data === 'object' && data !== null && !Array.isArray(data)) {
+              responseData = {
+                ...(data as Record<string, unknown>),
+                _metadata: {
+                  timestamp: new Date().toISOString(),
+                  requestId: req.headers['x-request-id'] || 'unknown',
+                  statusCode: res.statusCode,
+                  organizationId: req.organizationId,
+                },
+              };
+            } else {
+              responseData = {
+                _metadata: {
+                  timestamp: new Date().toISOString(),
+                  requestId: req.headers['x-request-id'] || 'unknown',
+                  statusCode: res.statusCode,
+                  organizationId: req.organizationId,
+                },
+              };
+            }
             return originalJson(responseData);
           }
 
@@ -497,7 +513,7 @@ export const securityMiddleware = [
 
     // Sanitize query parameters
     if (req.query && typeof req.query === 'object') {
-      req.query = sanitizeObject(req.query);
+  req.query = sanitizeObject(req.query) as ParsedQs;
     }
 
     next();
@@ -507,10 +523,10 @@ export const securityMiddleware = [
 /**
  * Sanitize object by removing potentially dangerous properties
  */
-function sanitizeObject(obj: any): any {
+function sanitizeObject(obj: unknown): unknown {
   if (!obj || typeof obj !== 'object') return obj;
 
-  const sanitized = { ...obj };
+  const sanitized = { ...(obj as Record<string, unknown>) };
 
   // Remove potentially dangerous properties
   const dangerousKeys = ['__proto__', 'constructor', 'prototype'];
@@ -536,7 +552,7 @@ function sanitizeObject(obj: any): any {
  * Enhanced error handling middleware with detailed error responses
  */
 export const handleValidationError = (
-  error: any,
+  error: unknown,
   req: Request,
   res: Response,
   next: NextFunction
@@ -557,10 +573,10 @@ export const handleValidationError = (
   }
 
   // Handle other validation errors
-  if (error.name === 'ValidationError') {
+  if ((error as Error).name === 'ValidationError') {
     return res.status(400).json({
       success: false,
-      message: error.message,
+  message: (error as Error).message,
       statusCode: 400,
     });
   }
@@ -575,7 +591,7 @@ export const handleValidationError = (
 export const transformResponse = (req: Request, res: Response, next: NextFunction) => {
   const originalJson = res.json;
 
-  res.json = function (body: any) {
+  res.json = function (body: unknown) {
     // Transform response to camelCase for frontend consistency
     if (body && typeof body === 'object') {
       if (Array.isArray(body)) {
@@ -583,7 +599,9 @@ export const transformResponse = (req: Request, res: Response, next: NextFunctio
           typeof item === 'object' && item !== null ? snakeToCamel(item) : item
         );
       } else {
-        body = snakeToCamel(body);
+        if (typeof body === 'object' && body !== null) {
+          body = snakeToCamel(body as Record<string, unknown>);
+        }
       }
     }
 
@@ -597,7 +615,7 @@ export const transformResponse = (req: Request, res: Response, next: NextFunctio
  * Enhanced request sanitization
  */
 export const sanitizeRequest = (req: Request, res: Response, next: NextFunction) => {
-  const sanitizeValue = (value: any): any => {
+  const sanitizeValue = (value: unknown): unknown => {
     if (typeof value === 'string') {
       // Basic XSS prevention
       return value
@@ -613,7 +631,7 @@ export const sanitizeRequest = (req: Request, res: Response, next: NextFunction)
     }
 
     if (value && typeof value === 'object') {
-      const sanitized: Record<string, any> = {};
+  const sanitized: Record<string, unknown> = {};
       for (const [key, val] of Object.entries(value)) {
         sanitized[key] = sanitizeValue(val);
       }
@@ -628,11 +646,11 @@ export const sanitizeRequest = (req: Request, res: Response, next: NextFunction)
   }
 
   if (req.query) {
-    req.query = sanitizeValue(req.query);
+  req.query = sanitizeValue(req.query) as ParsedQs;
   }
 
   if (req.params) {
-    req.params = sanitizeValue(req.params);
+  req.params = sanitizeValue(req.params) as ParamsDictionary;
   }
 
   next();
@@ -641,14 +659,15 @@ export const sanitizeRequest = (req: Request, res: Response, next: NextFunction)
 /**
  * Enhanced error handling middleware
  */
-export const errorHandler = (error: any, req: Request, res: Response, _next: NextFunction) => {
+export const errorHandler = (error: unknown, req: Request, res: Response, _next: NextFunction) => {
+  const errObj = error as { message?: string; stack?: string; type?: string; errors?: unknown[]; code?: string };
   console.error('API Error:', {
     path: req.path,
     method: req.method,
-    error: error.message,
-    stack: error.stack,
+    error: errObj.message,
+    stack: errObj.stack,
     timestamp: new Date().toISOString(),
-    userId: (req as any).user?.id,
+    userId: ((req as unknown) as Record<string, unknown>).user && typeof ((req as unknown) as Record<string, unknown>).user === 'object' ? (((req as unknown) as Record<string, unknown>).user as { id?: string }).id : undefined,
     requestId: req.headers['x-request-id'],
   });
 
@@ -657,68 +676,47 @@ export const errorHandler = (error: any, req: Request, res: Response, _next: Nex
     return res.status(400).json({
       success: false,
       message: 'Validation failed',
-      errors: error.errors.map(err => ({
-        field: err.path.join('.'),
-        message: err.message,
-        code: err.code,
-      })),
+      errors: error.errors.map((err: unknown) => {
+        if (typeof err === 'object' && err !== null) {
+          const e = err as { path: string[]; message: string; code: string };
+          return {
+            field: e.path.join('.'),
+            message: e.message,
+            code: e.code,
+          };
+        }
+        return err;
+      }),
     });
   }
 
   // Handle known application errors
-  if (error.type === 'VALIDATION_ERROR') {
+  if (errObj.type === 'VALIDATION_ERROR') {
     return res.status(400).json({
       success: false,
-      message: error.message,
-      errors: error.errors,
+      message: errObj.message || 'Validation error',
+      errors: errObj.errors || [],
     });
   }
-
-  if (error.type === 'NOT_FOUND') {
+  if (errObj.type === 'NOT_FOUND') {
     return res.status(404).json({
       success: false,
-      message: error.message,
+      message: errObj.message,
     });
   }
-
-  if (error.type === 'UNAUTHORIZED') {
+  if (errObj.type === 'UNAUTHORIZED') {
     return res.status(401).json({
       success: false,
-      message: error.message,
+      message: errObj.message,
     });
   }
-
-  if (error.type === 'FORBIDDEN') {
-    return res.status(403).json({
-      success: false,
-      message: error.message,
-    });
-  }
-
-  // Database constraint errors
-  if (error.code === '23505') {
-    // Unique constraint violation
-    return res.status(409).json({
-      success: false,
-      message: 'Resource already exists',
-      error: 'Duplicate entry',
-    });
-  }
-
-  if (error.code === '23503') {
-    // Foreign key constraint violation
-    return res.status(400).json({
-      success: false,
-      message: 'Invalid reference',
-      error: 'Referenced resource does not exist',
-    });
-  }
+// ...existing code...
 
   // Generic server error
   res.status(500).json({
     success: false,
-    message: process.env.NODE_ENV === 'production' ? 'Internal server error' : error.message,
-    ...(process.env.NODE_ENV !== 'production' && { stack: error.stack }),
+    message: process.env.NODE_ENV === 'production' ? 'Internal server error' : errObj.message,
+    ...(process.env.NODE_ENV !== 'production' && { stack: errObj.stack }),
   });
 };
 
@@ -739,14 +737,14 @@ export const requestLogger = (req: Request, res: Response, next: NextFunction) =
     method: req.method,
     path: req.path,
     query: Object.keys(req.query).length > 0 ? req.query : undefined,
-    userId: (req as any).user?.id,
+  userId: ((req as unknown) as Record<string, unknown>).user && typeof ((req as unknown) as Record<string, unknown>).user === 'object' ? (((req as unknown) as Record<string, unknown>).user as { id?: string }).id : undefined,
     userAgent: req.headers['user-agent'],
     ip: req.ip,
   });
 
   // Log response
   const originalJson = res.json;
-  res.json = function (body: any) {
+  res.json = function (body: unknown) {
     const duration = Date.now() - start;
 
     console.log(`[${requestId}] Response ${res.statusCode}`, {
@@ -771,7 +769,7 @@ export const paginationMiddleware = (req: Request, res: Response, next: NextFunc
   const offset = (page - 1) * limit;
 
   // Add pagination info to request
-  (req as any).pagination = {
+  ((req as unknown) as Record<string, unknown>).pagination = {
     page,
     limit,
     offset,
@@ -788,7 +786,7 @@ export const fieldSelectionMiddleware = (req: Request, res: Response, next: Next
 
   if (fields) {
     const selectedFields = fields.split(',').map(field => field.trim());
-    (req as any).selectedFields = selectedFields;
+  ((req as unknown) as Record<string, unknown>).selectedFields = selectedFields;
   }
 
   next();
