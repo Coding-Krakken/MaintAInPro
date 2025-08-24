@@ -127,7 +127,7 @@ export function truncateText(text: string, maxLength: number = 50, suffix: strin
   return `${text.slice(0, maxLength - suffix.length)}${suffix}`;
 }
 
-export function formatEquipmentSpecifications(specs: Record<string, any>): string {
+export function formatEquipmentSpecifications(specs: Record<string, unknown>): string {
   if (!specs || typeof specs !== 'object') return '';
 
   return Object.entries(specs)
@@ -136,7 +136,7 @@ export function formatEquipmentSpecifications(specs: Record<string, any>): strin
 }
 
 export function formatCustomFields(
-  fields: Record<string, any>
+  fields: Record<string, unknown>
 ): Array<{ label: string; value: string }> {
   if (!fields || typeof fields !== 'object') return [];
 

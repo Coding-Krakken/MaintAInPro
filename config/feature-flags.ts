@@ -32,7 +32,7 @@ export interface FeatureFlag {
   /** Environment restrictions */
   environments?: ('development' | 'staging' | 'production')[];
   /** Additional metadata */
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -302,7 +302,7 @@ export function isFeatureEnabled(
   }
 
   // Check environment restrictions
-  if (feature.environments && !feature.environments.includes(environment as any)) {
+  if (feature.environments && !feature.environments.includes(environment as string)) {
     return false;
   }
 
@@ -327,7 +327,7 @@ export function getEnabledFeatures(
     .filter(
       ([_, feature]) =>
         feature.enabled &&
-        (!feature.environments || feature.environments.includes(environment as any))
+  (!feature.environments || feature.environments.includes(environment as string))
     )
     .map(([name]) => name);
 }

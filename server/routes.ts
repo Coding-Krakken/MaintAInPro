@@ -36,8 +36,8 @@ import performanceMonitoringRoutes from './routes/monitoring';
 import path from 'path';
 
 // Import PM services with error handling
-let pmEngine: any = null;
-let pmScheduler: any = null;
+let pmEngine: unknown = null;
+let pmScheduler: unknown = null;
 
 // Initialize PM services asynchronously
 async function initializePMServices() {
@@ -113,8 +113,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   console.log('Security middleware enabled');
 
   // Rate limiting middleware (skip in test mode)
-  let authRateLimit: any = null;
-  let apiRateLimit: any = null;
+  let authRateLimit: unknown = null;
+  let apiRateLimit: unknown = null;
 
   const createRateLimiter = (windowMs: number, max: number) => {
     return SecurityService.createRateLimiter({
@@ -134,8 +134,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     console.log('Rate limiting enabled');
   } else {
     // Create no-op middleware for tests
-    authRateLimit = (req: any, res: any, next: any) => next();
-    apiRateLimit = (req: any, res: any, next: any) => next();
+  authRateLimit = (req: unknown, res: unknown, next: unknown) => next();
+  apiRateLimit = (req: unknown, res: unknown, next: unknown) => next();
     console.log('Rate limiting disabled for tests');
   }
 
@@ -214,7 +214,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.use(auditMiddleware());
 
   // Authentication middleware
-  const authenticateRequest = async (req: any, res: any, next: any) => {
+  const authenticateRequest = async (req: unknown, res: unknown, next: unknown) => {
     try {
       // Skip authentication for public endpoints
       const publicEndpoints = ['/api/health', '/api/health/basic', '/api/monitoring'];
@@ -301,7 +301,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // RBAC middleware for role-based access control
   const requireRole = (..._allowedRoles: string[]) => {
-    return async (req: any, res: any, next: any) => {
+  return async (req: unknown, res: unknown, next: unknown) => {
       try {
         const { AuthService } = await import('./services/auth');
 
@@ -372,16 +372,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   const getCurrentUser = (req: unknown) => {
     return (
-      (req as any).user?.id ||
-      (req as any).headers['x-user-id'] ||
+  (req as Record<string, unknown>).user?.id ||
+  (req as Record<string, unknown>).headers['x-user-id'] ||
       '00000000-0000-0000-0000-000000000001'
     );
   };
 
   const getCurrentWarehouse = (req: unknown) => {
     return (
-      (req as any).user?.warehouseId ||
-      (req as any).headers['x-warehouse-id'] ||
+  (req as Record<string, unknown>).user?.warehouseId ||
+  (req as Record<string, unknown>).headers['x-warehouse-id'] ||
       '00000000-0000-0000-0000-000000000001'
     );
   };
@@ -453,7 +453,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { AuthService } = await import('./services/auth');
 
-      const sessionId = (req as any).user?.sessionId;
+  const sessionId = (req as Record<string, unknown>).user?.sessionId;
       if (sessionId) {
         const context = {
           ipAddress: req.ip || req.connection.remoteAddress || 'Unknown',
@@ -692,7 +692,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Get user from request (set by authenticateRequest middleware)
-      const user = (req as any).user;
+  const user = (req as Record<string, unknown>).user;
       if (!user) {
         return res.status(401).json({ message: 'Not authenticated' });
       }

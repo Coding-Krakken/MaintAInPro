@@ -5,7 +5,7 @@ export interface WebhookEvent {
   event: string;
   entity: string;
   entityId: string;
-  data: any;
+  data: Record<string, unknown> | string | number | boolean | null;
   timestamp: Date;
   warehouseId?: string;
 }
@@ -190,7 +190,7 @@ class WebhookService {
     }, delaySeconds * 1000);
   }
 
-  private createPayload(event: WebhookEvent): any {
+  private createPayload(event: WebhookEvent): Record<string, unknown> {
     return {
       id: event.id,
       event: event.event,
@@ -204,7 +204,7 @@ class WebhookService {
     };
   }
 
-  private signPayload(payload: any, secret: string): string {
+  private signPayload(payload: Record<string, unknown>, secret: string): string {
     const body = JSON.stringify(payload);
     return crypto.createHmac('sha256', secret).update(body, 'utf8').digest('hex');
   }

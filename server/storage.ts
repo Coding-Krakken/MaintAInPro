@@ -62,7 +62,11 @@ export interface IStorage {
   updateEquipment(_id: string, _equipment: Partial<InsertEquipment>): Promise<Equipment>;
 
   // Work Orders
-  getWorkOrders(_warehouseId: string, _filters?: any): Promise<WorkOrder[]>;
+  getWorkOrders(_warehouseId: string, _filters?: {
+    status?: string[];
+    assignedTo?: string;
+    priority?: string[];
+  }): Promise<WorkOrder[]>;
   getWorkOrder(_id: string): Promise<WorkOrder | undefined>;
   createWorkOrder(_workOrder: InsertWorkOrder): Promise<WorkOrder>;
   updateWorkOrder(_id: string, _workOrder: Partial<InsertWorkOrder>): Promise<WorkOrder>;
@@ -657,9 +661,28 @@ export class MemStorage implements IStorage {
 
   async createProfile(insertProfile: InsertProfile): Promise<Profile> {
     const id = this.generateId();
+    const validRoles = [
+      'technician',
+      'supervisor',
+      'manager',
+      'admin',
+      'inventory_clerk',
+      'contractor',
+      'requester',
+    ] as const;
+    const role = validRoles.includes(insertProfile.role as typeof validRoles[number])
+      ? (insertProfile.role as typeof validRoles[number])
+      : 'technician';
+    const name = insertProfile.firstName && insertProfile.lastName
+      ? `${insertProfile.firstName} ${insertProfile.lastName}`
+      : insertProfile.firstName || insertProfile.lastName || '';
     const profile: Profile = {
       id,
-      ...(insertProfile as any),
+      email: insertProfile.email,
+      name,
+      role,
+      organizationId: insertProfile.organizationId,
+      warehouseId: insertProfile.warehouseId ?? '',
       createdAt: new Date(),
     };
     this.profiles.set(id, profile);
@@ -691,7 +714,7 @@ export class MemStorage implements IStorage {
         'contractor',
         'requester',
       ] as const;
-      if (validRoles.includes(processedUpdate.role as any)) {
+  if (validRoles.includes(processedUpdate.role as typeof validRoles[number])) {
         roleUpdate = processedUpdate.role as
           | 'technician'
           | 'supervisor'
@@ -725,12 +748,17 @@ export class MemStorage implements IStorage {
     return this.warehouses.get(id);
   }
 
-  async createWarehouse(insertWarehouse: any): Promise<Warehouse> {
+  async createWarehouse(insertWarehouse: InsertWarehouse): Promise<Warehouse> {
     const id = this.generateId();
     const warehouse: Warehouse = {
       id,
-      ...insertWarehouse,
-      active: insertWarehouse.active ?? true,
+      name: (insertWarehouse as any).name ?? '',
+      address: (insertWarehouse as any).address ?? '',
+      timezone: (insertWarehouse as any).timezone ?? 'UTC',
+      operatingHoursStart: (insertWarehouse as any).operatingHoursStart ?? '08:00',
+      operatingHoursEnd: (insertWarehouse as any).operatingHoursEnd ?? '17:00',
+      emergencyContact: (insertWarehouse as any).emergencyContact ?? '',
+      active: (insertWarehouse as any).active ?? true,
       createdAt: new Date(),
     };
     this.warehouses.set(id, warehouse);
@@ -750,13 +778,32 @@ export class MemStorage implements IStorage {
     return Array.from(this.equipment.values()).find(e => e.assetTag === assetTag);
   }
 
-  async createEquipment(insertEquipment: any): Promise<Equipment> {
+  async createEquipment(insertEquipment: InsertEquipment): Promise<Equipment> {
     const id = this.generateId();
+    const now = new Date();
     const equipment: Equipment = {
       id,
-      ...insertEquipment,
-      createdAt: new Date(),
-    };
+      assetTag: insertEquipment.assetTag ?? '',
+      model: insertEquipment.model ?? '',
+      description: insertEquipment.description ?? '',
+      area: insertEquipment.area ?? '',
+      status: (insertEquipment.status as 'active' | 'inactive' | 'maintenance' | 'retired') ?? 'active',
+      criticality: (insertEquipment.criticality as 'low' | 'medium' | 'high' | 'critical') ?? 'medium',
+      installDate: insertEquipment.installDate ?? null,
+      warrantyExpiry: insertEquipment.warrantyExpiry ?? null,
+      manufacturer: insertEquipment.manufacturer ?? '',
+      serialNumber: insertEquipment.serialNumber ?? '',
+      specifications: insertEquipment.specifications ?? {},
+      organizationId: insertEquipment.organizationId ?? '',
+      warehouseId: insertEquipment.warehouseId ?? '',
+      tsv: '',
+      createdAt: now,
+      updatedAt: now,
+      deletedAt: null,
+      createdBy: '',
+      updatedBy: '',
+      qrCode: '',
+    } as Equipment;
     this.equipment.set(id, equipment);
     return equipment;
   }
@@ -778,8 +825,8 @@ export class MemStorage implements IStorage {
     let statusUpdate: 'active' | 'inactive' | 'maintenance' | 'retired' | undefined = undefined;
     if (updates.status) {
       const validStatuses = ['active', 'inactive', 'maintenance', 'retired'] as const;
-      if (validStatuses.includes(updates.status as any)) {
-        statusUpdate = updates.status as 'active' | 'inactive' | 'maintenance' | 'retired';
+      if (validStatuses.includes(updates.status as typeof validStatuses[number])) {
+        statusUpdate = updates.status as typeof validStatuses[number];
       } else {
         statusUpdate = 'active'; // Default to active if invalid
       }
@@ -789,8 +836,8 @@ export class MemStorage implements IStorage {
     let criticalityUpdate: 'low' | 'medium' | 'high' | 'critical' | undefined = undefined;
     if (updates.criticality) {
       const validCriticalities = ['low', 'medium', 'high', 'critical'] as const;
-      if (validCriticalities.includes(updates.criticality as any)) {
-        criticalityUpdate = updates.criticality as 'low' | 'medium' | 'high' | 'critical';
+      if (validCriticalities.includes(updates.criticality as typeof validCriticalities[number])) {
+        criticalityUpdate = updates.criticality as typeof validCriticalities[number];
       } else {
         criticalityUpdate = 'medium'; // Default to medium if invalid
       }
@@ -810,7 +857,11 @@ export class MemStorage implements IStorage {
   }
 
   // Work Order methods
-  async getWorkOrders(warehouseId: string, filters?: any): Promise<WorkOrder[]> {
+  async getWorkOrders(warehouseId: string, filters?: {
+    status?: string[];
+    assignedTo?: string;
+    priority?: string[];
+  }): Promise<WorkOrder[]> {
     let workOrders = Array.from(this.workOrders.values()).filter(
       wo => wo.warehouseId === warehouseId
     );
@@ -839,12 +890,53 @@ export class MemStorage implements IStorage {
   async createWorkOrder(insertWorkOrder: InsertWorkOrder): Promise<WorkOrder> {
     const id = this.generateId();
     const foNumber = `WO-${String(this.workOrders.size + 1).padStart(3, '0')}`;
+    const validTypes = ['corrective', 'preventive', 'emergency'] as const;
+    const validStatuses = ['new', 'assigned', 'in_progress', 'completed', 'verified', 'closed'] as const;
+    const validPriorities = ['low', 'medium', 'high', 'critical'] as const;
+    const type = validTypes.includes(insertWorkOrder.type as typeof validTypes[number])
+      ? (insertWorkOrder.type as typeof validTypes[number])
+      : 'corrective';
+    const status = validStatuses.includes(insertWorkOrder.status as typeof validStatuses[number])
+      ? (insertWorkOrder.status as typeof validStatuses[number])
+      : 'new';
+    const priority = validPriorities.includes(insertWorkOrder.priority as typeof validPriorities[number])
+      ? (insertWorkOrder.priority as typeof validPriorities[number])
+      : 'medium';
+    const estimatedHours = typeof insertWorkOrder.estimatedHours === 'string'
+      ? insertWorkOrder.estimatedHours
+      : String(insertWorkOrder.estimatedHours ?? '0');
+    const actualHours = typeof insertWorkOrder.actualHours === 'string'
+      ? insertWorkOrder.actualHours
+      : String(insertWorkOrder.actualHours ?? '0');
     const workOrder: WorkOrder = {
       id,
       foNumber,
-      ...(insertWorkOrder as any),
+      type,
+      description: insertWorkOrder.description,
+      area: insertWorkOrder.area ?? '',
+      assetModel: insertWorkOrder.assetModel ?? '',
+      status,
+      priority,
+      requestedBy: insertWorkOrder.requestedBy,
+      assignedTo: insertWorkOrder.assignedTo ?? '',
+      equipmentId: insertWorkOrder.equipmentId ?? '',
+      dueDate: insertWorkOrder.dueDate ?? null,
+      completedAt: insertWorkOrder.completedAt ?? null,
+      verifiedBy: insertWorkOrder.verifiedBy ?? '',
+      estimatedHours,
+      actualHours,
+      notes: insertWorkOrder.notes ?? '',
+      followUp: insertWorkOrder.followUp ?? false,
+      escalated: insertWorkOrder.escalated ?? false,
+      escalationLevel: insertWorkOrder.escalationLevel ?? 0,
+      organizationId: insertWorkOrder.organizationId ?? '',
+      warehouseId: insertWorkOrder.warehouseId ?? '',
       createdAt: new Date(),
       updatedAt: new Date(),
+      deletedAt: null,
+      createdBy: '',
+      updatedBy: '',
+      tsv: '',
     };
     this.workOrders.set(id, workOrder);
     return workOrder;
@@ -938,9 +1030,24 @@ export class MemStorage implements IStorage {
 
   async createPart(insertPart: InsertPart): Promise<Part> {
     const id = this.generateId();
+    const unitCost = typeof insertPart.unitCost === 'string'
+      ? insertPart.unitCost
+      : String(insertPart.unitCost ?? '0');
     const part: Part = {
       id,
-      ...(insertPart as any),
+      partNumber: insertPart.partNumber,
+      name: insertPart.name,
+      description: insertPart.description,
+      category: insertPart.category ?? '',
+      unitOfMeasure: insertPart.unitOfMeasure,
+      unitCost,
+      stockLevel: insertPart.stockLevel ?? 0,
+      reorderPoint: insertPart.reorderPoint ?? 0,
+      maxStock: insertPart.maxStock ?? 0,
+      location: insertPart.location ?? '',
+      vendor: insertPart.vendor ?? '',
+      active: insertPart.active ?? true,
+      warehouseId: insertPart.warehouseId,
       createdAt: new Date(),
     };
     this.parts.set(id, part);
@@ -1136,7 +1243,14 @@ export class MemStorage implements IStorage {
     const id = this.generateId();
     const notification: Notification = {
       id,
-      ...(insertNotification as any),
+      userId: insertNotification.userId,
+      type: insertNotification.type,
+      title: insertNotification.title,
+      message: insertNotification.message,
+      read: insertNotification.read ?? false,
+      workOrderId: insertNotification.workOrderId ?? '',
+      equipmentId: insertNotification.equipmentId ?? '',
+      partId: insertNotification.partId ?? '',
       createdAt: new Date(),
     };
     this.notifications.set(id, notification);
@@ -1175,7 +1289,18 @@ export class MemStorage implements IStorage {
     const id = this.generateId();
     const attachment: Attachment = {
       id,
-      ...(insertAttachment as any),
+      fileName: insertAttachment.fileName ?? '',
+      fileType: insertAttachment.fileType ?? '',
+      fileSize: insertAttachment.fileSize ?? 0,
+      fileUrl: insertAttachment.fileUrl ?? '',
+      mimeType: insertAttachment.mimeType ?? '',
+      filePath: insertAttachment.filePath ?? '',
+      thumbnailPath: insertAttachment.thumbnailPath ?? '',
+      workOrderId: insertAttachment.workOrderId ?? '',
+      equipmentId: insertAttachment.equipmentId ?? '',
+      pmTemplateId: insertAttachment.pmTemplateId ?? '',
+      vendorId: insertAttachment.vendorId ?? '',
+      uploadedBy: insertAttachment.uploadedBy ?? '',
       createdAt: new Date(),
     };
     this.attachments.set(id, attachment);
@@ -1219,7 +1344,10 @@ export class MemStorage implements IStorage {
     const id = this.generateId();
     const newLaborTime: LaborTime = {
       id,
-      ...(laborTime as any),
+      description: laborTime.description,
+      duration: laborTime.duration ?? 0,
+      workOrderId: laborTime.workOrderId ?? '',
+      userId: laborTime.userId ?? '',
       createdAt: new Date(),
     };
     this.laborTime.set(id, newLaborTime);
@@ -1231,7 +1359,13 @@ export class MemStorage implements IStorage {
     if (!existing) {
       throw new Error('Labor time entry not found');
     }
-    const updated: LaborTime = { ...existing, ...(laborTime as any) };
+    const updated: LaborTime = {
+      ...existing,
+      description: laborTime.description ?? existing.description,
+      duration: laborTime.duration ?? existing.duration,
+      workOrderId: laborTime.workOrderId ?? existing.workOrderId,
+      userId: laborTime.userId ?? existing.userId,
+    };
     this.laborTime.set(id, updated);
     return updated;
   }
