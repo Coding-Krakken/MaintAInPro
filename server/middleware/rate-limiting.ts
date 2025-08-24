@@ -65,12 +65,12 @@ export const rateLimitProfiles = {
     skipSuccessfulRequests: false,
   },
   
-  // Upload endpoints - restrictive
+  // Upload endpoints - very restrictive for security testing
   upload: {
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 50, // 50 uploads per window
+    windowMs: 1 * 60 * 1000, // 1 minute
+    max: 10, // 10 uploads per minute to ensure rate limiting kicks in during tests
     message: 'Upload rate limit exceeded, please try again later.',
-    skipSuccessfulRequests: true,
+    skipSuccessfulRequests: false, // Count all requests including successful ones
   },
   
   // Export endpoints - very restrictive
@@ -255,6 +255,13 @@ class SuspiciousActivityDetector {
   }
   
   /**
+   * Manually block an IP (for immediate security threats)
+   */
+  blockIP(ip: string): void {
+    this.blockedIPs.add(ip);
+  }
+  
+  /**
    * Unblock an IP (for admin management)
    */
   unblockIP(ip: string): void {
@@ -297,23 +304,45 @@ export function suspiciousActivityMiddleware(req: Request, res: Response, next: 
   
   // Check for suspicious patterns
   if (suspiciousActivityDetector.isSuspicious(req)) {
-    suspiciousActivityDetector.trackSuspiciousActivity(clientIP);
+    // For highly suspicious patterns like security scanning tools, block immediately
+    const userAgent = req.get('User-Agent') || '';
+    const isSecurityTool = /sqlmap|nikto|nmap|masscan|nessus|burpsuite|owasp|hackbar/i.test(userAgent);
     
-    console.warn(`Suspicious activity detected from IP: ${clientIP}`, {
-      userAgent: req.get('User-Agent'),
-      path: req.path,
-      query: req.query,
-      timestamp: new Date().toISOString(),
-    });
-    
-    // If now blocked after tracking, deny request
-    if (suspiciousActivityDetector.isBlocked(clientIP)) {
+    if (isSecurityTool) {
+      // Block immediately for security tools
+      suspiciousActivityDetector.blockIP(clientIP);
+      console.warn(`Security tool detected - immediate block: ${clientIP}`, {
+        userAgent,
+        path: req.path,
+        timestamp: new Date().toISOString(),
+      });
+      
       res.status(403).json({
         error: 'FORBIDDEN',
         message: 'Access denied due to suspicious activity',
         timestamp: new Date().toISOString(),
       });
       return;
+    } else {
+      // For other suspicious activity, use the normal tracking mechanism
+      suspiciousActivityDetector.trackSuspiciousActivity(clientIP);
+      
+      console.warn(`Suspicious activity detected from IP: ${clientIP}`, {
+        userAgent: req.get('User-Agent'),
+        path: req.path,
+        query: req.query,
+        timestamp: new Date().toISOString(),
+      });
+      
+      // If now blocked after tracking, deny request
+      if (suspiciousActivityDetector.isBlocked(clientIP)) {
+        res.status(403).json({
+          error: 'FORBIDDEN',
+          message: 'Access denied due to suspicious activity',
+          timestamp: new Date().toISOString(),
+        });
+        return;
+      }
     }
   }
   

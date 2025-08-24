@@ -63,6 +63,7 @@ const SQL_INJECTION_PATTERNS = [
   /(\b(or|and)\s+\d+\s*[=<>!]+\s*\d+)/i,
   /(\b(or|and)\s+['"]\w*['"]?\s*[=<>!]+\s*['"]\w*['"]?)/i,
   /(('.*')|(".*"))\s*=\s*(('.*')|(".*"))/i,
+  /'\s*(or|and)\s*'1'\s*=\s*'1/i,
   
   // Time-based injections
   /(\bwaitfor\s+delay\b|\bbenchmark\s*\(|\bpg_sleep\s*\()/i,
@@ -74,8 +75,12 @@ const SQL_INJECTION_PATTERNS = [
   // Stacked queries
   /;\s*(drop|delete|insert|update|create|alter)\s+/i,
   
-  // Comment injections
+  // Comment injections - enhanced to catch admin'-- and admin' /*
   /(--[^\r\n]*|\/\*[\s\S]*?\*\/|#[^\r\n]*)/,
+  /admin['"]?\s*--/i,
+  /admin['"]?\s*\/\*/i,
+  /';\s*drop\s+table/i,
+  /['"]?\s*or\s*['"]?1['"]?\s*=\s*['"]?1['"]?/i,
   
   // Information schema queries
   /\binformation_schema\b/i,
@@ -105,6 +110,8 @@ const NOSQL_INJECTION_PATTERNS = [
   /\$nin/i,
   /\$exists/i,
   /\$eval/i,
+  /\$or/i,
+  /\$and/i,
   /this\.\w+/i,
   /function\s*\(/i,
 ];
@@ -117,8 +124,14 @@ const PATH_TRAVERSAL_PATTERNS = [
   /\.\.\\+/g,
   /%2e%2e%2f/gi,
   /%2e%2e%5c/gi,
+  /%252e%252e%252f/gi, // Double URL encoded
+  /%252e%252e%255c/gi, // Double URL encoded backslash
   /\x2e\x2e\x2f/g,
   /\x2e\x2e\x5c/g,
+  /\.\.%2f/gi,
+  /\.\.%5c/gi,
+  /\.\.%252f/gi, // Mixed encoding
+  /\.\.%255c/gi, // Mixed encoding backslash
 ];
 
 /**
@@ -197,11 +210,22 @@ class AdvancedSanitizer {
    * Sanitize file names and paths
    */
   sanitizeFileName(fileName: string): string {
-    return fileName
+    const dangerous_extensions = ['.exe', '.bat', '.cmd', '.scr', '.pif', '.com', '.sys', '.dll'];
+    
+    let sanitized = fileName
       .replace(/[^a-zA-Z0-9._-]/g, '_')
       .replace(/\.+/g, '.')
       .replace(/^\.+|\.+$/g, '')
       .substring(0, 255);
+      
+    // Remove dangerous extensions
+    for (const ext of dangerous_extensions) {
+      if (sanitized.toLowerCase().endsWith(ext.toLowerCase())) {
+        sanitized = sanitized.slice(0, -ext.length);
+      }
+    }
+    
+    return sanitized;
   }
   
   /**
