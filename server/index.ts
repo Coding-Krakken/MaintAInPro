@@ -25,6 +25,8 @@ import {
 } from './middleware/security.middleware';
 
 const app = express();
+// Trust first proxy (needed for correct client IP detection behind proxies/dev tunnels)
+app.set('trust proxy', 1);
 
 // Configure MIME types for PWA files
 express.static.mime.define({
@@ -76,16 +78,17 @@ app.use(
   helmet({
     contentSecurityPolicy: {
       directives: {
-        defaultSrc: ["'self'"],
-        scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
-        styleSrc: ["'self'", "'unsafe-inline'"],
-        imgSrc: ["'self'", 'data:', 'blob:'],
-        fontSrc: ["'self'"],
-        connectSrc: ["'self'", 'ws:', 'wss:'],
-        frameSrc: ["'none'"],
-        frameAncestors: ["'none'"],
-        baseUri: ["'self'"],
-        formAction: ["'self'"],
+  defaultSrc: ["'self'"],
+  scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+  styleSrc: ["'self'", "'unsafe-inline'"],
+  imgSrc: ["'self'", 'data:', 'blob:'],
+  fontSrc: ["'self'"],
+  connectSrc: ["'self'", 'ws:', 'wss:'],
+  frameSrc: ["'none'"],
+  frameAncestors: ["'none'"],
+  baseUri: ["'self'"],
+  formAction: ["'self'"],
+  workerSrc: ["'self'"],
       },
     },
     crossOriginEmbedderPolicy: false, // Allow for development
