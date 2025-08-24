@@ -1,14 +1,44 @@
 import { Request, Response, NextFunction } from 'express';
 import rateLimit, { RateLimitRequestHandler } from 'express-rate-limit';
+import helmet from 'helmet';
 import { z } from 'zod';
 import crypto from 'crypto';
 import { db } from '../db';
 import { eq } from 'drizzle-orm';
+import { 
+  rateLimiters, 
+  suspiciousActivityMiddleware, 
+  initializeRateLimitRedis,
+  suspiciousActivityDetector 
+} from './rate-limiting';
+import { 
+  advancedSanitizationMiddleware, 
+  contentTypeValidationMiddleware,
+  requestSizeValidationMiddleware,
+  inputSanitizationUtils 
+} from './advanced-sanitization';
 
 /**
  * Enhanced Security Middleware Suite
- * Production-hardened security layer for CMMS application
+ * Production-hardened security layer with advanced rate limiting, input sanitization, and monitoring
+ * 
+ * Features:
+ * - Redis-backed distributed rate limiting with endpoint-specific profiles
+ * - Advanced input sanitization with XSS, SQL injection, and NoSQL injection prevention
+ * - IP-based suspicious activity detection and blocking
+ * - Comprehensive security headers with Helmet.js
+ * - Multi-tenant aware security policies
+ * - Security event logging and monitoring
  */
+
+// Initialize Redis for rate limiting on startup
+let redisInitialized = false;
+export async function initializeSecurity(): Promise<void> {
+  if (!redisInitialized) {
+    await initializeRateLimitRedis();
+    redisInitialized = true;
+  }
+}
 
 /**
  * Rate limiting configuration for different API endpoints
@@ -88,56 +118,101 @@ export const requestValidationSchemas = {
 };
 
 /**
- * Enhanced security headers middleware
+ * Enhanced security headers middleware with comprehensive protection
  */
-export function securityHeaders(req: Request, res: Response, next: NextFunction): void {
+export function advancedSecurityHeaders(req: Request, res: Response, next: NextFunction): void {
   // Generate nonce for CSP
   const nonce = crypto.randomBytes(16).toString('base64');
   res.locals.nonce = nonce;
 
-  // Enhanced security headers
-  res.set({
-    'X-Content-Type-Options': 'nosniff',
-    'X-Frame-Options': 'DENY',
-    'X-XSS-Protection': '1; mode=block',
-    'Referrer-Policy': 'strict-origin-when-cross-origin',
-    'Permissions-Policy':
-      'geolocation=(), microphone=(), camera=(), payment=(), usb=(), magnetometer=(), gyroscope=(), speaker=()',
-    'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
-    Pragma: 'no-cache',
-    Expires: '0',
-    'Surrogate-Control': 'no-store',
-    'X-API-Version': '1.0.0',
-    'X-Powered-By': 'MaintAInPro-CMMS',
-    'Strict-Transport-Security': 'max-age=31536000; includeSubDomains; preload',
-  });
+  // Use Helmet.js for comprehensive security headers
+  helmet({
+    // Content Security Policy
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'", 'fonts.googleapis.com'],
+        scriptSrc: ["'self'", `'nonce-${nonce}'`, 'vercel.live'],
+        imgSrc: ["'self'", 'data:', 'https:', '*.vercel-insights.com'],
+        connectSrc: ["'self'", 'vercel.live', '*.vercel-insights.com'],
+        fontSrc: ["'self'", 'fonts.gstatic.com'],
+        objectSrc: ["'none'"],
+        mediaSrc: ["'self'"],
+        frameSrc: ["'none'"],
+        childSrc: ["'none'"],
+        formAction: ["'self'"],
+        upgradeInsecureRequests: process.env.NODE_ENV === 'production' ? [] : null,
+      },
+      reportOnly: false,
+    },
+    
+    // Strict Transport Security
+    hsts: {
+      maxAge: 31536000, // 1 year
+      includeSubDomains: true,
+      preload: true,
+    },
+    
+    // X-Frame-Options
+    frameguard: { action: 'deny' },
+    
+    // X-Content-Type-Options
+    noSniff: true,
+    
+    // X-XSS-Protection (legacy but still useful)
+    xssFilter: true,
+    
+    // Referrer Policy
+    referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
+    
+    // Cross-Origin Embedder Policy
+    crossOriginEmbedderPolicy: false,
+    
+    // Cross-Origin Resource Policy
+    crossOriginResourcePolicy: { policy: 'cross-origin' },
+    
+    // DNS Prefetch Control
+    dnsPrefetchControl: { allow: false },
+  })(req, res, () => {
+    // Additional custom headers
+    res.set({
+      'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0',
+      'Surrogate-Control': 'no-store',
+      'X-API-Version': '1.0.0',
+      'X-Powered-By': 'MaintAInPro-CMMS',
+      'X-Request-ID': req.headers['x-request-id'] || crypto.randomUUID(),
+      'Permissions-Policy': 'geolocation=(), microphone=(), camera=(), payment=(), usb=(), magnetometer=(), gyroscope=(), speaker=()',
+    });
 
-  // Enhanced CORS headers for API endpoints
-  if (req.path.startsWith('/api')) {
-    const allowedOrigins = [
-      'http://localhost:3000',
-      'http://localhost:5173',
-      'https://localhost:3000',
-      'https://localhost:5173',
-      process.env.FRONTEND_URL,
-      process.env.PRODUCTION_URL,
-    ].filter(Boolean);
+    // Enhanced CORS headers for API endpoints
+    if (req.path.startsWith('/api')) {
+      const allowedOrigins = [
+        'http://localhost:3000',
+        'http://localhost:5173',
+        'https://localhost:3000',
+        'https://localhost:5173',
+        process.env.FRONTEND_URL,
+        process.env.PRODUCTION_URL,
+      ].filter(Boolean);
 
-    const origin = req.get('Origin');
-    if (origin && allowedOrigins.includes(origin)) {
-      res.set({
-        'Access-Control-Allow-Origin': origin,
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
-        'Access-Control-Allow-Headers':
-          'Content-Type, Authorization, X-Requested-With, X-API-Key, X-Client-Version',
-        'Access-Control-Allow-Credentials': 'true',
-        'Access-Control-Max-Age': '86400',
-        'Access-Control-Expose-Headers': 'X-Total-Count, X-Page-Count',
-      });
+      const origin = req.get('Origin');
+      if (origin && allowedOrigins.includes(origin)) {
+        res.set({
+          'Access-Control-Allow-Origin': origin,
+          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
+          'Access-Control-Allow-Headers':
+            'Content-Type, Authorization, X-Requested-With, X-API-Key, X-Client-Version, X-Request-ID',
+          'Access-Control-Allow-Credentials': 'true',
+          'Access-Control-Max-Age': '86400',
+          'Access-Control-Expose-Headers': 'X-Total-Count, X-Page-Count, X-Request-ID',
+        });
+      }
     }
-  }
 
-  next();
+    next();
+  });
 }
 
 /**
@@ -200,93 +275,21 @@ export function serviceWorkerHandler(req: Request, res: Response, next: NextFunc
 }
 
 /**
- * Enhanced input sanitization middleware
+ * Enhanced input sanitization middleware (legacy compatibility)
+ * @deprecated Use advancedSanitizationMiddleware from advanced-sanitization.ts instead
  */
 export function sanitizeInput(req: Request, res: Response, next: NextFunction): void {
-  // Comprehensive sanitization function
-  const sanitize = (obj: any): any => {
-    if (typeof obj === 'string') {
-      // Remove potentially dangerous patterns
-      return obj
-        .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
-        .replace(/javascript:/gi, '')
-        .replace(/on\w+\s*=/gi, '')
-        .replace(/['"`;]/g, '') // Remove SQL injection characters
-        .replace(/\0/g, '') // Remove null bytes
-        .trim();
-    }
-
-    if (Array.isArray(obj)) {
-      return obj.map(sanitize);
-    }
-
-    if (obj && typeof obj === 'object') {
-      const sanitized: any = {};
-      for (const [key, value] of Object.entries(obj)) {
-        // Sanitize keys as well
-        const cleanKey = key.replace(/[^a-zA-Z0-9_-]/g, '');
-        sanitized[cleanKey] = sanitize(value);
-      }
-      return sanitized;
-    }
-
-    return obj;
-  };
-
-  // Sanitize all input types
-  if (req.body) {
-    req.body = sanitize(req.body);
-  }
-  if (req.query) {
-    req.query = sanitize(req.query);
-  }
-  if (req.params) {
-    req.params = sanitize(req.params);
-  }
-
-  next();
+  // Delegate to advanced sanitization middleware
+  return advancedSanitizationMiddleware(req, res, next);
 }
 
 /**
- * SQL injection protection middleware
+ * Enhanced SQL injection protection middleware
+ * @deprecated Functionality moved to advancedSanitizationMiddleware
  */
 export function sqlInjectionProtection(req: Request, res: Response, next: NextFunction): void {
-  const checkForSqlInjection = (value: string): boolean => {
-    const sqlPatterns = [
-      /(\b(SELECT|INSERT|UPDATE|DELETE|DROP|CREATE|ALTER|EXEC|UNION)\b)/i,
-      /(--|#|\/\*|\*\/)/,
-      /(\b(OR|AND)\s+\d+\s*=\s*\d+)/i,
-      /('|(\\')|(;)|(\s(or|and)\s))/i,
-      /(\bunion\s+select)/i,
-      /(\bdrop\s+table)/i,
-      /(\bexec\s*\()/i,
-      /(script\s*>)/i,
-    ];
-
-    return sqlPatterns.some(pattern => pattern.test(value));
-  };
-
-  const checkObject = (obj: any): boolean => {
-    if (typeof obj === 'string') {
-      return checkForSqlInjection(obj);
-    }
-    if (typeof obj === 'object' && obj !== null) {
-      for (const value of Object.values(obj)) {
-        if (checkObject(value)) return true;
-      }
-    }
-    return false;
-  };
-
-  if (checkObject(req.body) || checkObject(req.query) || checkObject(req.params)) {
-    console.warn(`SQL injection attempt detected from IP: ${req.ip}`);
-    res.status(400).json({
-      error: 'Invalid input detected',
-      code: 'INVALID_INPUT',
-    });
-    return;
-  }
-
+  // This is now handled by advancedSanitizationMiddleware
+  // Keep this for backward compatibility but it's essentially a no-op
   next();
 }
 
@@ -436,38 +439,51 @@ export function validateRequestSchema(schema: z.ZodSchema) {
 }
 
 /**
- * Audit logging middleware
+ * Enhanced security monitoring and logging middleware
  */
-export function auditLogger(req: any, res: Response, next: NextFunction): void {
+export function securityAuditLogger(req: any, res: Response, next: NextFunction): void {
   const startTime = Date.now();
-
-  // Capture original res.json to log responses
   const originalJson = res.json;
+
   res.json = function (body) {
     const duration = Date.now() - startTime;
 
-    // Log audit trail
+    // Enhanced audit data
     const auditData = {
       method: req.method,
       url: req.url,
       ip: req.ip,
       userAgent: req.get('User-Agent'),
       userId: req.user?.id || null,
+      organizationId: req.user?.organizationId || null,
+      role: req.user?.role || null,
       statusCode: res.statusCode,
       duration,
       timestamp: new Date().toISOString(),
       body: req.method !== 'GET' ? req.body : undefined,
+      requestId: req.headers['x-request-id'] || res.get('X-Request-ID'),
+      
+      // Security-specific fields
+      blocked: res.statusCode === 403 || res.statusCode === 429,
+      suspicious: suspiciousActivityDetector.isBlocked(req.ip),
+      rateLimited: res.statusCode === 429,
     };
 
-    // Log to system_logs table if available
+    // Log security events with higher priority
+    if (auditData.blocked || auditData.suspicious || auditData.rateLimited) {
+      console.warn('Security Event:', JSON.stringify(auditData));
+    } else {
+      console.log('API Request:', JSON.stringify(auditData));
+    }
+
+    // Enhanced database logging with security context
     if (db && req.user?.id) {
       (async () => {
         try {
-          const { systemLogs } = await import('../../shared/schema');
+          const { systemLogs, profiles } = await import('../../shared/schema');
           const { randomUUID } = await import('crypto');
 
-          // Check if the user exists first to avoid foreign key constraint violations
-          const { profiles } = await import('../../shared/schema');
+          // Check if the user exists
           const userExists = await db
             .select({ id: profiles.id })
             .from(profiles)
@@ -479,23 +495,19 @@ export function auditLogger(req: any, res: Response, next: NextFunction): void {
               id: randomUUID(),
               userId: req.user.id,
               action: `${req.method} ${req.url}`,
-              tableName: 'api_request',
+              tableName: auditData.blocked ? 'security_event' : 'api_request',
               recordId: null,
               oldValues: null,
               newValues: auditData,
               ipAddress: req.ip,
               userAgent: req.get('User-Agent'),
             });
-          } else {
-            console.warn('Skipping audit log - user not found in profiles table:', req.user.id);
           }
         } catch (err) {
-          console.error('Audit logging error:', err);
+          console.error('Enhanced audit logging error:', err);
         }
       })();
     }
-
-    console.log('API Request:', JSON.stringify(auditData));
 
     return originalJson.call(this, body);
   };
@@ -624,13 +636,71 @@ export async function validateSession(req: any, res: Response, next: NextFunctio
 }
 
 /**
- * Complete security middleware stack
- * Apply all security measures in the correct order
+ * Enhanced complete security middleware stack
+ * Apply all security measures in the correct order for maximum protection
+ */
+export const enhancedSecurityStack = [
+  // 1. Initialize security context and headers
+  advancedSecurityHeaders,
+  
+  // 2. PWA-specific headers for static assets
+  pwaHeaders,
+  
+  // 3. Content type and size validation
+  contentTypeValidationMiddleware(),
+  requestSizeValidationMiddleware(),
+  
+  // 4. Suspicious activity detection and IP blocking
+  suspiciousActivityMiddleware,
+  
+  // 5. Advanced input sanitization and injection prevention
+  advancedSanitizationMiddleware,
+  
+  // 6. Enhanced audit logging with security context
+  securityAuditLogger,
+];
+
+/**
+ * Legacy security middleware stack (backward compatibility)
+ * @deprecated Use enhancedSecurityStack instead
  */
 export const securityStack = [
-  securityHeaders,
+  advancedSecurityHeaders, // Updated to use enhanced version
   pwaHeaders,
-  sanitizeInput,
-  sqlInjectionProtection,
-  auditLogger,
+  sanitizeInput, // This now delegates to advancedSanitizationMiddleware
+  sqlInjectionProtection, // This is now a no-op as functionality moved to advanced sanitization
+  securityAuditLogger, // Updated to use enhanced version
 ];
+
+/**
+ * Get security statistics and monitoring data
+ */
+export function getSecurityStats() {
+  return {
+    suspiciousActivity: suspiciousActivityDetector.getStats(),
+    timestamp: new Date().toISOString(),
+  };
+}
+
+/**
+ * Admin function to unblock an IP address
+ */
+export function unblockIP(ip: string): boolean {
+  try {
+    suspiciousActivityDetector.unblockIP(ip);
+    console.log(`IP ${ip} has been unblocked by admin`);
+    return true;
+  } catch (error) {
+    console.error(`Failed to unblock IP ${ip}:`, error);
+    return false;
+  }
+}
+
+// Export all rate limiters for use in routes
+export { rateLimiters };
+
+// Export sanitization utilities
+export { inputSanitizationUtils };
+
+// Export initialization function
+// Note: initializeSecurity is defined at the top of the file

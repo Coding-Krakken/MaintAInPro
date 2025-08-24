@@ -26,7 +26,7 @@ import {
   errorTrackingMiddleware,
 } from './middleware/performance.middleware';
 import {
-  securityHeaders,
+  advancedSecurityHeaders,
   pwaHeaders,
   serviceWorkerHandler,
   sanitizeInput,
@@ -89,7 +89,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     if (req.path === '/sw.js' || req.path === '/manifest.json') {
       return next();
     }
-    securityHeaders(req, res, next);
+    advancedSecurityHeaders(req, res, next);
   });
 
   app.use((req, res, next) => {
