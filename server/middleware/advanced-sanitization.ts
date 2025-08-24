@@ -1,4 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
+import { ParsedQs } from 'qs';
+import { ParamsDictionary } from 'express-serve-static-core';
 import { z } from 'zod';
 
 /**
@@ -242,6 +244,64 @@ class AdvancedSanitizer {
     
     return input;
   }
+
+  /**
+   * Sanitize query parameters (ParsedQs type-safe)
+   */
+  sanitizeQueryParams(query: ParsedQs): ParsedQs {
+    const sanitized: ParsedQs = {};
+    
+    for (const [key, value] of Object.entries(query)) {
+      const cleanKey = this.sanitizeXSS(key);
+      
+      if (typeof value === 'string') {
+        // Check for injection patterns
+        if (this.detectSQLInjection(value) || this.detectNoSQLInjection(value) || this.detectPathTraversal(value)) {
+          throw new Error('Malicious pattern detected in query parameter');
+        }
+        sanitized[cleanKey] = this.sanitizeXSS(value);
+      } else if (Array.isArray(value)) {
+        sanitized[cleanKey] = value.map(item => {
+          if (typeof item === 'string') {
+            if (this.detectSQLInjection(item) || this.detectNoSQLInjection(item) || this.detectPathTraversal(item)) {
+              throw new Error('Malicious pattern detected in query parameter array');
+            }
+            return this.sanitizeXSS(item);
+          }
+          return item;
+        });
+      } else if (value && typeof value === 'object') {
+        sanitized[cleanKey] = this.sanitizeQueryParams(value as ParsedQs);
+      } else {
+        sanitized[cleanKey] = value;
+      }
+    }
+    
+    return sanitized;
+  }
+
+  /**
+   * Sanitize URL parameters (ParamsDictionary type-safe)
+   */
+  sanitizeUrlParams(params: ParamsDictionary): ParamsDictionary {
+    const sanitized: ParamsDictionary = {};
+    
+    for (const [key, value] of Object.entries(params)) {
+      const cleanKey = this.sanitizeXSS(key);
+      
+      if (typeof value === 'string') {
+        // Check for injection patterns
+        if (this.detectSQLInjection(value) || this.detectNoSQLInjection(value) || this.detectPathTraversal(value)) {
+          throw new Error('Malicious pattern detected in URL parameter');
+        }
+        sanitized[cleanKey] = this.sanitizeXSS(value);
+      } else {
+        sanitized[cleanKey] = value;
+      }
+    }
+    
+    return sanitized;
+  }
 }
 
 // Global sanitizer instance
@@ -259,12 +319,12 @@ export function advancedSanitizationMiddleware(req: Request, res: Response, next
     
     // Sanitize query parameters
     if (req.query) {
-      req.query = advancedSanitizer.sanitizeInput(req.query);
+      req.query = advancedSanitizer.sanitizeQueryParams(req.query);
     }
     
     // Sanitize URL parameters
     if (req.params) {
-      req.params = advancedSanitizer.sanitizeInput(req.params);
+      req.params = advancedSanitizer.sanitizeUrlParams(req.params);
     }
     
     // Check for suspicious file upload patterns
