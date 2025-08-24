@@ -136,7 +136,7 @@ export class SecurityService {
   const userId = (req as Record<string, unknown>).headers?.['x-user-id'] as string;
         if (userId) return `user:${userId}`;
         // Use express-rate-limit's ipKeyGenerator for IPv6 compatibility
-  return `ip:${ipKeyGenerator(req as Record<string, unknown>)}`;
+  return `ip:${ipKeyGenerator(req as any)}`;
       },
     });
   }

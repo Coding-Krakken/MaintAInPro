@@ -235,13 +235,13 @@ export function sanitizeInput(req: Request, res: Response, next: NextFunction): 
 
   // Sanitize all input types
   if (req.body) {
-    req.body = sanitize(req.body);
+    req.body = sanitize(req.body) as any;
   }
   if (req.query) {
-    req.query = sanitize(req.query);
+    req.query = sanitize(req.query) as any;
   }
   if (req.params) {
-    req.params = sanitize(req.params);
+    req.params = sanitize(req.params) as any;
   }
 
   next();
@@ -293,7 +293,7 @@ export function sqlInjectionProtection(req: Request, res: Response, next: NextFu
 /**
  * Enhanced authentication middleware with session validation
  */
-export async function enhancedAuth(req: Request & { user?: { id: string; sessionId: string } }, res: Response, next: NextFunction): Promise<void> {
+export async function enhancedAuth(req: Request & { user?: { id: string; sessionId?: string } }, res: Response, next: NextFunction): Promise<void> {
   try {
     const token = req.headers.authorization?.replace('Bearer ', '');
 
@@ -350,7 +350,7 @@ export async function enhancedAuth(req: Request & { user?: { id: string; session
  * Role-based authorization middleware
  */
 export function requireRole(allowedRoles: string[]) {
-  return async (req: Request & { user?: { id: string; sessionId: string; role?: string } }, res: Response, next: NextFunction): Promise<void> => {
+  return async (req: Request & { user?: { id: string; sessionId?: string; role?: string } }, res: Response, next: NextFunction): Promise<void> => {
     try {
       if (!req.user?.id) {
         res.status(401).json({
@@ -442,7 +442,7 @@ export function validateRequestSchema(schema: z.ZodSchema) {
 /**
  * Audit logging middleware
  */
-export function auditLogger(req: Request & { user?: { id: string; sessionId: string } }, res: Response, next: NextFunction): void {
+export function auditLogger(req: Request & { user?: { id: string; sessionId?: string } }, res: Response, next: NextFunction): void {
   const startTime = Date.now();
 
   // Capture original res.json to log responses
@@ -587,7 +587,7 @@ export function createIPWhitelist(allowedIPs: string[]) {
 /**
  * Session validation middleware
  */
-export async function validateSession(req: Request & { user?: { id: string; sessionId: string } }, res: Response, next: NextFunction): Promise<void> {
+export async function validateSession(req: Request & { user?: { id: string; sessionId?: string } }, res: Response, next: NextFunction): Promise<void> {
   try {
     // Skip session validation for health checks and public endpoints
     const publicPaths = ['/api/health', '/api/monitoring', '/login', '/register'];

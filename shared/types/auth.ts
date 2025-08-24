@@ -7,7 +7,7 @@ export interface AuthenticatedUser {
   id: string;
   email: string;
   role: string;
-  organizationId: string;
+  organizationId?: string; // Optional to match schema
   sessionId?: string;
   warehouseId?: string;
 }
@@ -71,7 +71,7 @@ export function hasCompleteUser(user: unknown): user is AuthenticatedUser {
     user !== null &&
     'id' in user && typeof (user as { id: unknown }).id === 'string' &&
     'email' in user && typeof (user as { email: unknown }).email === 'string' &&
-    'role' in user && typeof (user as { role: unknown }).role === 'string' &&
-    'organizationId' in user && typeof (user as { organizationId: unknown }).organizationId === 'string'
+    'role' in user && typeof (user as { role: unknown }).role === 'string'
+    // organizationId is optional, so not checking for it
   );
 }

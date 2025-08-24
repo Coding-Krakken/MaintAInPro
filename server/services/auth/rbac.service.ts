@@ -303,7 +303,7 @@ export class RBACService {
       switch (resource) {
         case 'work_orders': {
           // Check if user can access this specific work order
-          const workOrder = resourceData;
+          const workOrder = resourceData as any;
           if (context.role === 'technician' || context.role === 'contractor') {
             return workOrder.assignedTo === context.userId;
           }
@@ -315,7 +315,7 @@ export class RBACService {
 
         case 'users': {
           // Users can only access users in same warehouse (unless admin)
-          const user = resourceData;
+          const user = resourceData as any;
           if (context.role !== 'admin' && user.warehouseId !== context.warehouseId) {
             return false;
           }

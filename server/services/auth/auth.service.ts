@@ -60,10 +60,10 @@ export interface PasswordResetConfirm {
 
 export class AuthService {
   // Mock user storage - in a real implementation, this would use a database
-  private static users = new Map<string, AuthenticatedUser>();
-  private static userCredentials = new Map<string, AuthenticatedUser>();
-  private static userMFA = new Map<string, AuthenticatedUser>();
-  private static passwordResetTokens = new Map<string, AuthenticatedUser>();
+  private static users = new Map<string, any>();
+  private static userCredentials = new Map<string, any>();
+  private static userMFA = new Map<string, any>();
+  private static passwordResetTokens = new Map<string, any>();
 
   static async login(
     credentials: LoginCredentials,
@@ -753,7 +753,7 @@ export class AuthService {
         resourceId,
       };
 
-  const allowed = RBACService.hasPermission(context, resource as unknown, action as unknown);
+  const allowed = RBACService.hasPermission(context, resource as any, action as any);
 
       if (allowed) {
         // Log successful access

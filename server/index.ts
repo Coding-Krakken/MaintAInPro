@@ -46,7 +46,7 @@ app.use(performanceService.createExpressMiddleware());
 app.use('/api/debug', debugRouter);
 
 // Enhanced security middleware stack
-app.use(securityStack);
+app.use(...securityStack);
 
 // Rate limiting for different endpoint types
 app.use('/api/auth', authRateLimit);

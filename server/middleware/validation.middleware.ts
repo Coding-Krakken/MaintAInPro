@@ -33,7 +33,7 @@ declare global {
         id: string;
         email: string;
         role: string;
-        organizationId: string;
+        organizationId?: string; // Make optional to match AuthenticatedUser
         sessionId?: string;
         warehouseId?: string;
       };

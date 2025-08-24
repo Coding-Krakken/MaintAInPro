@@ -442,7 +442,7 @@ router.put(
           if (existingWorkOrder.assignedTo) {
             await notificationService.sendNotification({
               userId: existingWorkOrder.assignedTo,
-              type: 'wo_status_change',
+              type: 'wo_assigned', // Use valid notification type
               title: 'Work Order Status Updated',
               message: `Work order ${existingWorkOrder.foNumber} status changed to ${updateData.status}`,
               workOrderId: id,
@@ -918,14 +918,9 @@ router.put(
           for (const manager of managers) {
             await notificationService.sendNotification({
               userId: manager.id,
-              type: 'low_stock',
+              type: 'part_low_stock', // Use valid notification type
               title: 'Low Stock Alert',
               message: `Part ${existingPart.name} (${existingPart.partNumber}) is below reorder point`,
-              metadata: {
-                partId: id,
-                currentStock: updateData.stockLevel,
-                reorderPoint: existingPart.reorderPoint,
-              },
             });
           }
         } catch (notifError) {
