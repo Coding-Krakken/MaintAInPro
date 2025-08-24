@@ -243,7 +243,7 @@ our enterprise requirements for performance and scalability.
 
 - [Drizzle ORM Documentation](https://orm.drizzle.team/)
 - [MaintAInPro Database Implementation](../DatabaseImplementation.md)
-- [Developer Guide - Database Development](../../Wiki/Developer-Guide.md#database-development)
+- [Developer Guide - Database Development](MaintAInPro.wiki/Developer-Guide.md#database-development)
 - [Technical Stack Documentation](../../attached_assets/TechnicalStack_1752515902056.md)
 - [Database Service API Documentation](../API/05_DATABASE_SERVICE.md)
 

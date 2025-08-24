@@ -76,7 +76,7 @@ evidence:
   architecture: docs/architecture/README.md
   orm_choice: Documentation/Blueprint/adr-drizzle-orm.md
   optimization: artifacts/adr/adr-database-optimization.md
-  deployment: Wiki/Deployment-Guide.md
+  deployment: MaintAInPro.wiki/Deployment-Guide.md
 reconsider_if:
   - 'database_performance.p95 > 500ms for 30d'
   - 'concurrent_users > 10000 with degradation'
