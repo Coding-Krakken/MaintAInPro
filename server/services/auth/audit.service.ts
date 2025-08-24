@@ -1,5 +1,4 @@
-import { randomUUID } from 'crypto';
-
+import { randomUUID } from 'node:crypto';
 export interface AuditLogEntry {
   id: string;
   userId?: string;
@@ -7,7 +6,7 @@ export interface AuditLogEntry {
   action: string;
   resource: string;
   resourceId?: string;
-  details: Record<string, any>;
+  details: Record<string, unknown>;
   ipAddress: string;
   userAgent: string;
   success: boolean;
@@ -45,9 +44,9 @@ export class AuditService {
   private static readonly MAX_LOGS_IN_MEMORY = 10000;
 
   static async logEvent(
-    action: string,
-    resource: string,
-    details: Record<string, any>,
+  action: string,
+  resource: string,
+  details: Record<string, unknown>,
     context: {
       userId?: string;
       sessionId?: string;
@@ -88,11 +87,11 @@ export class AuditService {
   }
 
   static async logLogin(
-    userId: string,
-    ipAddress: string,
-    userAgent: string,
-    success: boolean,
-    details: Record<string, any> = {}
+  userId: string,
+  ipAddress: string,
+  userAgent: string,
+  success: boolean,
+  details: Record<string, unknown> = {}
   ): Promise<string> {
     return this.logEvent(
       'login',
@@ -154,12 +153,12 @@ export class AuditService {
   }
 
   static async logMFAEvent(
-    userId: string,
-    action: 'enable' | 'disable' | 'verify' | 'backup_used',
-    ipAddress: string,
-    userAgent: string,
-    success: boolean,
-    details: Record<string, any> = {}
+  userId: string,
+  action: 'enable' | 'disable' | 'verify' | 'backup_used',
+  ipAddress: string,
+  userAgent: string,
+  success: boolean,
+  details: Record<string, unknown> = {}
   ): Promise<string> {
     return this.logEvent(`mfa_${action}`, 'authentication', details, {
       userId,
@@ -197,14 +196,14 @@ export class AuditService {
   }
 
   static async logAdminAction(
-    userId: string,
-    action: string,
-    resource: string,
-    resourceId: string,
-    ipAddress: string,
-    userAgent: string,
-    details: Record<string, any> = {},
-    success: boolean = true
+  userId: string,
+  action: string,
+  resource: string,
+  resourceId: string,
+  ipAddress: string,
+  userAgent: string,
+  details: Record<string, unknown> = {},
+  success: boolean = true
   ): Promise<string> {
     return this.logEvent(
       action,
@@ -223,7 +222,7 @@ export class AuditService {
 
   static async logSecurityEvent(
     action: string,
-    details: Record<string, any>,
+    details: Record<string, unknown>,
     context: {
       userId?: string;
       sessionId?: string;
@@ -268,27 +267,21 @@ export class AuditService {
     }
 
     if (query.startDate) {
-      filteredLogs = filteredLogs.filter(log => log.timestamp >= query.startDate!);
+      filteredLogs = filteredLogs.filter(log => log.timestamp >= query.startDate);
     }
-
     if (query.endDate) {
-      filteredLogs = filteredLogs.filter(log => log.timestamp <= query.endDate!);
+      filteredLogs = filteredLogs.filter(log => log.timestamp <= query.endDate);
     }
-
     if (query.ipAddress) {
       filteredLogs = filteredLogs.filter(log => log.ipAddress === query.ipAddress);
     }
-
     // Sort by timestamp (newest first)
     filteredLogs.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
-
     const total = filteredLogs.length;
     const offset = query.offset || 0;
     const limit = query.limit || 50;
-
     const paginatedLogs = filteredLogs.slice(offset, offset + limit);
     const hasMore = offset + limit < total;
-
     return {
       logs: paginatedLogs,
       total,
@@ -373,7 +366,7 @@ export class AuditService {
     }).then(result => result.logs);
   }
 
-  private static sanitizeDetails(details: Record<string, any>): Record<string, any> {
+  private static sanitizeDetails(details: Record<string, unknown>): Record<string, unknown> {
     const sanitized = { ...details };
 
     // Remove sensitive information
@@ -389,9 +382,9 @@ export class AuditService {
   }
 
   private static determineRiskLevel(
-    action: string,
-    resource: string,
-    details: Record<string, any>
+  action: string,
+  resource: string,
+  details: Record<string, unknown>
   ): 'low' | 'medium' | 'high' | 'critical' {
     // Admin actions
     if (details.adminAction) {
