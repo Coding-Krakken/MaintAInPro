@@ -7,7 +7,7 @@ dotenv.config();
 const router = Router();
 
 // Safe environment variables to expose
-const SAFE_ENV = ['NODE_ENV', 'DATABASE_URL', 'VERCEL', 'VERCEL_ENV', 'RAILWAY_STATIC_URL', 'PORT'];
+const SAFE_ENV = ['NODE_ENV', 'TEST_AUTH_MODE', 'PLAYWRIGHT', 'DISABLE_RATE_LIMITING', 'DATABASE_URL', 'VERCEL', 'VERCEL_ENV', 'RAILWAY_STATIC_URL', 'PORT'];
 
 router.get('/env', (req: Request, res: Response) => {
   const env: Record<string, string | undefined> = {};
@@ -15,6 +15,16 @@ router.get('/env', (req: Request, res: Response) => {
     env[key] = process.env[key];
   });
   res.json(env);
+});
+
+router.get('/auth-mode', (req: Request, res: Response) => {
+  res.json({
+    TEST_AUTH_MODE: process.env.TEST_AUTH_MODE,
+    NODE_ENV: process.env.NODE_ENV,
+    PLAYWRIGHT: process.env.PLAYWRIGHT,
+    DISABLE_RATE_LIMITING: process.env.DISABLE_RATE_LIMITING,
+    authBypassActive: process.env.TEST_AUTH_MODE === 'true'
+  });
 });
 
 router.get('/test-summary', (req: Request, res: Response) => {

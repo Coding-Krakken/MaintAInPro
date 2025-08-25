@@ -23,14 +23,25 @@ export default function Auth() {
     setError('');
 
     try {
-      await login(email, password);
-      toast({
-        title: 'Success',
-        description: 'Successfully logged in',
-      });
-      setLocation('/dashboard');
-    } catch (_error) {
-      const errorMessage = 'Invalid credentials';
+      const result = await login(email, password);
+      
+      if (result.success) {
+        toast({
+          title: 'Success',
+          description: 'Successfully logged in',
+        });
+        setLocation('/dashboard');
+      } else {
+        const errorMessage = result.error || 'Invalid credentials';
+        setError(errorMessage);
+        toast({
+          title: 'Error',
+          description: errorMessage,
+          variant: 'destructive',
+        });
+      }
+    } catch (error) {
+      const errorMessage = 'Login failed. Please try again.';
       setError(errorMessage);
       toast({
         title: 'Error',
@@ -132,13 +143,13 @@ export default function Auth() {
               <h3 className='text-sm font-medium text-blue-900 mb-2'>Demo Credentials</h3>
               <div className='space-y-1 text-sm text-blue-700'>
                 <p>
-                  <strong>Supervisor:</strong> supervisor@maintainpro.com
+                  <strong>Supervisor:</strong> supervisor@warehouse.com
                 </p>
                 <p>
-                  <strong>Technician:</strong> technician@maintainpro.com
+                  <strong>Technician:</strong> technician@warehouse.com
                 </p>
                 <p>
-                  <strong>Manager:</strong> manager@maintainpro.com
+                  <strong>Manager:</strong> manager@warehouse.com
                 </p>
                 <p>
                   <strong>Password:</strong> demo123
@@ -150,7 +161,7 @@ export default function Auth() {
                   variant='outline'
                   size='sm'
                   onClick={() => {
-                    setEmail('supervisor@maintainpro.com');
+                    setEmail('supervisor@warehouse.com');
                     setPassword('demo123');
                   }}
                 >
@@ -161,7 +172,7 @@ export default function Auth() {
                   variant='outline'
                   size='sm'
                   onClick={() => {
-                    setEmail('technician@maintainpro.com');
+                    setEmail('technician@warehouse.com');
                     setPassword('demo123');
                   }}
                 >

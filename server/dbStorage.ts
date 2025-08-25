@@ -17,8 +17,10 @@ import {
   pushSubscriptions,
   attachments,
   systemLogs,
+  userCredentials,
   Profile,
   InsertProfile,
+  UserCredential,
   Warehouse,
   InsertWarehouse,
   Equipment,
@@ -122,7 +124,7 @@ export class DatabaseStorage implements IStorage {
       const schemaImport = await import('../shared/schema');
       const PasswordService = passwordServiceImport.PasswordService;
       const userCredentials = schemaImport.userCredentials;
-      const defaultPassword = 'PlaywrightTest123!';
+      const defaultPassword = 'demo123';
       const credentialsList = [];
       for (const user of insertedUsers) {
         const { hash, salt } = await PasswordService.hashPassword(defaultPassword);
@@ -357,6 +359,11 @@ export class DatabaseStorage implements IStorage {
 
   async getProfiles(): Promise<Profile[]> {
     return await db.select().from(profiles);
+  }
+
+  async getUserCredentials(userId: string): Promise<UserCredential | undefined> {
+    const result = await db.select().from(userCredentials).where(eq(userCredentials.userId, userId)).limit(1);
+    return result[0];
   }
 
   // Warehouses

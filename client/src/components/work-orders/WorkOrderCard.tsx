@@ -92,7 +92,7 @@ export default function WorkOrderCard({ workOrder, onClick }: WorkOrderCardProps
       </div>
 
       <div className='flex items-center space-x-3 flex-shrink-0'>
-        <Badge className={getStatusColor(workOrder.status)}>
+        <Badge className={getStatusColor(workOrder.status)} data-testid='status-badge'>
           {workOrder.status.replace('_', ' ')}
         </Badge>
         <Badge className={getPriorityColor(workOrder.priority)}>{workOrder.priority}</Badge>

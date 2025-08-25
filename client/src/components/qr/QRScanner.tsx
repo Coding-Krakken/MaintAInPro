@@ -93,7 +93,7 @@ export default function QRScanner({ isOpen, onClose, onScan }: QRScannerProps) {
               )}
 
               {hasPermission === true && (
-                <div className='relative'>
+                <div className='relative' data-testid='qr-scanner'>
                   <video
                     ref={videoRef}
                     className='w-full h-64 bg-black rounded-lg object-cover'

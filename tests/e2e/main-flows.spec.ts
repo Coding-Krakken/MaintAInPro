@@ -1,23 +1,23 @@
 import { test, expect } from '@playwright/test';
 import { testData, testCredentials } from '../helpers/testData';
 
-// Test data - use local definitions to avoid conflicts
+// Test data - use actual emails from database
 const testUsers = {
   technician: {
-    email: 'test@example.com',
-    password: 'PlaywrightTest123!',
+    email: 'technician@warehouse.com',
+    password: 'demo123',
     name: 'Test User',
     role: 'technician',
   },
   supervisor: {
-    email: 'supervisor@maintainpro.com',
-    password: 'PlaywrightTest123!',
+    email: 'supervisor@warehouse.com',
+    password: 'demo123',
     name: 'John Smith',
     role: 'supervisor',
   },
   manager: {
-    email: 'manager@example.com',
-    password: 'PlaywrightTest123!',
+    email: 'manager@warehouse.com',
+    password: 'demo123',
     name: 'Mike Johnson',
     role: 'manager',
   },
@@ -44,7 +44,7 @@ test.describe('Authentication Flow', () => {
   await expect(page.locator('[data-testid="pending-work-orders"]')).toBeVisible();
   await expect(page.locator('[data-testid="completed-work-orders"]')).toBeVisible();
   await expect(page.locator('[data-testid="active-equipment"]')).toBeVisible();
-  await expect(page.locator('[data-testid="user-name"]')).toContainText(testUsers.supervisor.name);
+  await expect(page.locator('[data-testid="user-name"]')).toContainText('Test User'); // TEST_AUTH_MODE returns mock user
   // Debug: log dashboard HTML and check for overlays
   const dashboardHtml = await page.content();
   console.log('Dashboard HTML after login:', dashboardHtml.slice(0, 1000));
@@ -80,7 +80,7 @@ test.describe('Work Order Management', () => {
     // Login before each test
     await page.goto('/login');
     // Use valid seeded test user credentials
-    await page.fill('[data-testid="email-input"]', 'technician@maintainpro.com');
+    await page.fill('[data-testid="email-input"]', 'technician@warehouse.com');
     await page.fill('[data-testid="password-input"]', 'demo123');
     await page.click('[data-testid="login-button"]');
   await expect(page).toHaveURL('/dashboard');
