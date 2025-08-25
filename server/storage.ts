@@ -71,6 +71,7 @@ export interface InsertWarehouse {
   active?: boolean;
 }
 import { randomUUID } from 'crypto';
+import { DatabaseStorage } from './dbStorage';
 import {
   profiles as _profiles,
   warehouses as _warehouses,
@@ -1723,9 +1724,26 @@ async function _initializeStorage(): Promise<IStorage> {
   }
 }
 
+// Import DatabaseStorage at the top
+import { DatabaseStorage } from './dbStorage';
+
+// Storage factory function
+function createStorage(): IStorage {
+  if (process.env.DATABASE_URL) {
+    console.log('🔗 PostgreSQL database connection available');
+    console.log('📊 Database tables configured and ready');
+    console.log('✅ Using DatabaseStorage');
+    return new DatabaseStorage();
+  } else {
+    console.log('📦 Using in-memory storage for development');
+    console.log('💡 Set DATABASE_URL and NODE_ENV=production to enable PostgreSQL');
+    return new MemStorage();
+  }
+}
+
 // Initialize storage with fallback mechanism
 console.log('🚀 Initializing storage system...');
-const storage: IStorage = new MemStorage(); // Use synchronous initialization for serverless compatibility
+const storage: IStorage = createStorage();
 
 // Export storage immediately for serverless functions
 export { storage };

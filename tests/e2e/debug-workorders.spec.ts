@@ -4,7 +4,7 @@ test('debug work order data', async ({ page }) => {
   await page.goto('/login');
 
   // Use valid credentials
-  await page.fill('[data-testid="email-input"]', 'technician@maintainpro.com');
+  await page.fill('[data-testid="email-input"]', 'technician@company.com');
   await page.fill('[data-testid="password-input"]', 'demo123');
 
   // Click login

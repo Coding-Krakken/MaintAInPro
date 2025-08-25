@@ -38,7 +38,7 @@ test('debug authentication status and environment', async ({ page }) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        email: 'supervisor@warehouse.com',
+        email: 'supervisor@maintainpro.com',
         password: 'demo123',
       }),
     });

@@ -7,7 +7,7 @@ test.beforeAll(async () => {
   const apiContext = await request.newContext();
   const response = await apiContext.post('/api/auth/login', {
     data: {
-      email: 'technician@maintainpro.com',
+      email: 'technician@company.com',
       password: 'demo123',
     },
   });

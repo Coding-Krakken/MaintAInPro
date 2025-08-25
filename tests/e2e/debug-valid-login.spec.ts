@@ -4,7 +4,7 @@ test('debug valid credentials login', async ({ page }) => {
   await page.goto('/login');
 
   // Fill in valid credentials
-  await page.fill('[data-testid="email-input"]', 'supervisor@maintainpro.com');
+  await page.fill('[data-testid="email-input"]', 'supervisor@company.com');
   await page.fill('[data-testid="password-input"]', 'demo123');
 
   // Listen for network requests to see what happens

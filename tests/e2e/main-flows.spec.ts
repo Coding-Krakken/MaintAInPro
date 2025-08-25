@@ -4,19 +4,19 @@ import { testData, testCredentials } from '../helpers/testData';
 // Test data - use actual emails from database
 const testUsers = {
   technician: {
-    email: 'technician@maintainpro.com',
+    email: 'technician@company.com',
     password: 'demo123',
-    name: 'Test User',
+    name: 'Jane Doe',
     role: 'technician',
   },
   supervisor: {
-    email: 'supervisor@maintainpro.com',
+    email: 'supervisor@company.com',
     password: 'demo123',
     name: 'John Smith',
     role: 'supervisor',
   },
   manager: {
-    email: 'manager@example.com',
+    email: 'manager@company.com',
     password: 'demo123',
     name: 'Mike Johnson',
     role: 'manager',
@@ -32,7 +32,7 @@ test.beforeAll(async () => {
   const apiContext = await request.newContext();
   const response = await apiContext.post('/api/auth/login', {
     data: {
-      email: 'supervisor@maintainpro.com',
+      email: 'supervisor@company.com',
       password: 'demo123',
     },
   });
@@ -100,7 +100,7 @@ test.describe('Work Order Management', () => {
     const apiContext = await request.newContext();
     const response = await apiContext.post('/api/auth/login', {
       data: {
-        email: 'technician@maintainpro.com',
+        email: 'technician@company.com',
         password: 'demo123',
       },
     });
@@ -232,7 +232,7 @@ test.describe('Equipment Management', () => {
   test.beforeEach(async ({ page }) => {
     // Login as supervisor (has equipment management permissions)
     await page.goto('/login');
-    await page.fill('[data-testid="email-input"]', 'supervisor@example.com');
+    await page.fill('[data-testid="email-input"]', 'supervisor@maintainpro.com');
     await page.fill('[data-testid="password-input"]', 'password');
     await page.click('[data-testid="login-button"]');
     await expect(page).toHaveURL('/dashboard');
@@ -287,7 +287,7 @@ test.describe('Equipment Management', () => {
 test.describe('Dashboard and Analytics', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/login');
-  await page.fill('[data-testid="email-input"]', 'manager@example.com');
+  await page.fill('[data-testid="email-input"]', 'manager@company.com');
     await page.fill('[data-testid="password-input"]', 'password');
     await page.click('[data-testid="login-button"]');
     await expect(page).toHaveURL('/dashboard');
