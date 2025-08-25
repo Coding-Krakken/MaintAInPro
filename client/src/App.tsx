@@ -44,7 +44,7 @@ function LoadingScreen() {
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   // In a real app, check authentication status here
   return (
-    <ErrorBoundary 
+    <ErrorBoundary
       fallback={GenericErrorFallback}
       onError={async (error, errorInfo) => {
         await reportError(error, errorInfo, { context: 'Protected Route' });
@@ -149,7 +149,7 @@ function AppRoutes() {
 
 function App() {
   return (
-    <ErrorBoundary 
+    <ErrorBoundary
       fallback={GenericErrorFallback}
       onError={async (error, errorInfo) => {
         await reportError(error, errorInfo, { context: 'App Root' });

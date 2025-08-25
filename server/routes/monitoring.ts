@@ -63,8 +63,8 @@ router.post('/alerts/:id/resolve', (req, res) => {
  */
 router.get('/health', async (req, res) => {
   try {
-  const metrics = await monitoringService.getSystemMetrics();
-  const _alerts = monitoringService.getPerformanceAlerts().filter(a => !a.resolved); // prefixed with _ to avoid unused var lint error
+    const metrics = await monitoringService.getSystemMetrics();
+    const _alerts = monitoringService.getPerformanceAlerts().filter(a => !a.resolved); // prefixed with _ to avoid unused var lint error
 
     // Calculate health scores based on system metrics
     const memoryUsage = metrics.memory.usage;

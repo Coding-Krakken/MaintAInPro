@@ -6,7 +6,7 @@ import { Equipment, WorkOrder } from '../../types';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { formatDistanceToNow } from 'date-fns';
 import { Settings, Calendar, MapPin, Hash, FileText } from 'lucide-react';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import WorkOrderModal from '../work-orders/WorkOrderModal';
 import FileUpload from '../FileUpload';
 import DocumentPreview from '../DocumentPreview';
@@ -28,6 +28,11 @@ export default function EquipmentDetailModal({
 }: EquipmentDetailModalProps) {
   const [showWorkOrderModal, setShowWorkOrderModal] = useState(false);
   const [activeTab, setActiveTab] = useState('details');
+  // Reset modal state when equipmentId changes
+  useEffect(() => {
+    setActiveTab('details');
+    setShowWorkOrderModal(false);
+  }, [equipmentId]);
   const { toast } = useToast();
   const queryClient = useQueryClient();
 

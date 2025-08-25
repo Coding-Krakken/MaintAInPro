@@ -1,4 +1,3 @@
-
 /* global console, require, __dirname */
 // Test the vendor API directly by trying to import it and see what fails
 console.log('Testing vendor API imports...');

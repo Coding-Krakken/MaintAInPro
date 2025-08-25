@@ -87,9 +87,18 @@ export class DatabaseStorage implements IStorage {
       },
       {
         id: this.generateId(),
-        email: 'technician@example.com',
-        firstName: 'Jane',
-        lastName: 'Doe',
+        email: 'technician@maintainpro.com',
+        firstName: 'Test',
+        lastName: 'User',
+        role: 'technician' as const,
+        warehouseId: warehouse.id,
+        active: true,
+      },
+      {
+        id: this.generateId(),
+        email: 'test@example.com',
+        firstName: 'Test',
+        lastName: 'User',
         role: 'technician' as const,
         warehouseId: warehouse.id,
         active: true,
@@ -107,6 +116,30 @@ export class DatabaseStorage implements IStorage {
 
     const insertedUsers = await db.insert(profiles).values(users).returning();
 
+    // Seed user credentials with password hashes
+    {
+      const passwordServiceImport = await import('./services/auth/password.service');
+      const schemaImport = await import('../shared/schema');
+      const PasswordService = passwordServiceImport.PasswordService;
+      const userCredentials = schemaImport.userCredentials;
+      const defaultPassword = 'PlaywrightTest123!';
+      const credentialsList = [];
+      for (const user of insertedUsers) {
+        const { hash, salt } = await PasswordService.hashPassword(defaultPassword);
+        credentialsList.push({
+          id: this.generateId(),
+          userId: user.id,
+          passwordHash: hash,
+          passwordSalt: salt,
+          mustChangePassword: false,
+          passwordExpiresAt: null,
+          previousPasswords: [],
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        });
+      }
+      await db.insert(userCredentials).values(credentialsList).returning();
+    }
     // Create sample equipment
     const equipmentList = [
       {
@@ -290,7 +323,7 @@ export class DatabaseStorage implements IStorage {
 
     await db
       .insert(workOrders)
-  .values(workOrdersList as unknown)
+      .values(workOrdersList as unknown)
       .returning();
 
     console.log('Database initialized with sample data');
@@ -310,7 +343,7 @@ export class DatabaseStorage implements IStorage {
   async createProfile(profile: InsertProfile): Promise<Profile> {
     const newProfile = {
       id: this.generateId(),
-  ...(profile as Record<string, unknown>),
+      ...(profile as Record<string, unknown>),
       createdAt: new Date(),
     };
     const [created] = await db.insert(profiles).values(newProfile).returning();
@@ -339,7 +372,7 @@ export class DatabaseStorage implements IStorage {
   async createWarehouse(warehouse: InsertWarehouse): Promise<Warehouse> {
     const newWarehouse = {
       id: this.generateId(),
-  ...(warehouse as Record<string, unknown>),
+      ...(warehouse as Record<string, unknown>),
       createdAt: new Date(),
     };
     const [created] = await db.insert(warehouses).values(newWarehouse).returning();
@@ -368,7 +401,7 @@ export class DatabaseStorage implements IStorage {
   async createEquipment(equipmentData: InsertEquipment): Promise<Equipment> {
     const newEquipment = {
       id: this.generateId(),
-  ...(equipmentData as Record<string, unknown>),
+      ...(equipmentData as Record<string, unknown>),
       createdAt: new Date(),
     };
     const [created] = await db.insert(equipment).values(newEquipment).returning();
@@ -391,7 +424,6 @@ export class DatabaseStorage implements IStorage {
   ): Promise<WorkOrder[]> {
     return await db.select().from(workOrders).where(eq(workOrders.warehouseId, warehouseId));
   }
-
   async getWorkOrder(id: string): Promise<WorkOrder | undefined> {
     const result = await db.select().from(workOrders).where(eq(workOrders.id, id)).limit(1);
     return result[0];
@@ -400,7 +432,7 @@ export class DatabaseStorage implements IStorage {
   async createWorkOrder(workOrder: InsertWorkOrder): Promise<WorkOrder> {
     const newWorkOrder = {
       id: this.generateId(),
-  ...(workOrder as Record<string, unknown>),
+      ...(workOrder as Record<string, unknown>),
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -410,7 +442,7 @@ export class DatabaseStorage implements IStorage {
 
   async updateWorkOrder(id: string, workOrder: Partial<InsertWorkOrder>): Promise<WorkOrder> {
     const updateData = {
-  ...(workOrder as Record<string, unknown>),
+      ...(workOrder as Record<string, unknown>),
       updatedAt: new Date(),
     };
     const [updated] = await db
@@ -485,7 +517,7 @@ export class DatabaseStorage implements IStorage {
   async createPart(part: InsertPart): Promise<Part> {
     const newPart = {
       id: this.generateId(),
-  ...(part as Record<string, unknown>),
+      ...(part as Record<string, unknown>),
       createdAt: new Date(),
     };
     const [created] = await db.insert(parts).values(newPart).returning();
@@ -523,7 +555,7 @@ export class DatabaseStorage implements IStorage {
   async updatePartsUsage(id: string, usage: Partial<PartsUsage>): Promise<PartsUsage> {
     const [updated] = await db
       .update(partsUsage)
-  .set(usage as unknown)
+      .set(usage as unknown)
       .where(eq(partsUsage.id, id))
       .returning();
     return updated;
@@ -553,12 +585,12 @@ export class DatabaseStorage implements IStorage {
     }
     if (filters.equipmentId) {
       // Join with workOrders to filter by equipment
-  query = query.leftJoin(workOrders, eq(partsUsage.workOrderId, workOrders.id)) as unknown;
+      query = query.leftJoin(workOrders, eq(partsUsage.workOrderId, workOrders.id)) as unknown;
       conditions.push(eq(workOrders.equipmentId, filters.equipmentId));
     }
 
     if (conditions.length > 0) {
-  query = query.where(and(...conditions)) as unknown;
+      query = query.where(and(...conditions)) as unknown;
     }
 
     const results = await query;
@@ -592,7 +624,7 @@ export class DatabaseStorage implements IStorage {
   async createVendor(vendor: InsertVendor): Promise<Vendor> {
     const newVendor = {
       id: this.generateId(),
-  ...(vendor as Record<string, unknown>),
+      ...(vendor as Record<string, unknown>),
       createdAt: new Date(),
     };
     const [created] = await db.insert(vendors).values(newVendor).returning();
@@ -602,7 +634,7 @@ export class DatabaseStorage implements IStorage {
   async updateVendor(id: string, vendor: Partial<InsertVendor>): Promise<Vendor> {
     const [updated] = await db
       .update(vendors)
-  .set(vendor as unknown)
+      .set(vendor as unknown)
       .where(eq(vendors.id, id))
       .returning();
     return updated;
@@ -625,7 +657,7 @@ export class DatabaseStorage implements IStorage {
   async createPmTemplate(template: InsertPmTemplate): Promise<PmTemplate> {
     const newTemplate = {
       id: this.generateId(),
-  ...(template as Record<string, unknown>),
+      ...(template as Record<string, unknown>),
       createdAt: new Date(),
     };
     const [created] = await db.insert(pmTemplates).values(newTemplate).returning();
@@ -656,7 +688,7 @@ export class DatabaseStorage implements IStorage {
   async createNotification(notification: InsertNotification): Promise<Notification> {
     const newNotification = {
       id: this.generateId(),
-  ...(notification as Record<string, unknown>),
+      ...(notification as Record<string, unknown>),
       createdAt: new Date(),
     };
     const [created] = await db.insert(notifications).values(newNotification).returning();
@@ -666,7 +698,7 @@ export class DatabaseStorage implements IStorage {
   async markNotificationRead(id: string): Promise<void> {
     await db
       .update(notifications)
-  .set({ read: true } as unknown)
+      .set({ read: true } as unknown)
       .where(eq(notifications.id, id));
   }
 
@@ -682,7 +714,9 @@ export class DatabaseStorage implements IStorage {
       .where(eq(notificationPreferences.userId, userId));
   }
 
-  async createNotificationPreference(insertPreference: InsertNotificationPreference): Promise<NotificationPreference> {
+  async createNotificationPreference(
+    insertPreference: InsertNotificationPreference
+  ): Promise<NotificationPreference> {
     const [preference] = await db
       .insert(notificationPreferences)
       .values({
@@ -690,14 +724,14 @@ export class DatabaseStorage implements IStorage {
         ...insertPreference,
         createdAt: new Date(),
         updatedAt: new Date(),
-      } as any)
+      } as InsertNotificationPreference)
       .returning();
     return preference;
   }
 
   async updateNotificationPreference(
-    userId: string, 
-    notificationType: string, 
+    userId: string,
+    notificationType: string,
     updates: Partial<InsertNotificationPreference>
   ): Promise<NotificationPreference | null> {
     const [preference] = await db
@@ -705,11 +739,22 @@ export class DatabaseStorage implements IStorage {
       .set({
         ...updates,
         updatedAt: new Date(),
-      } as any)
+      } as Partial<InsertNotificationPreference>)
       .where(
         and(
           eq(notificationPreferences.userId, userId),
-          eq(notificationPreferences.notificationType, notificationType as any)
+          eq(
+            notificationPreferences.notificationType,
+            notificationType as
+              | 'wo_assigned'
+              | 'wo_overdue'
+              | 'part_low_stock'
+              | 'pm_due'
+              | 'equipment_alert'
+              | 'pm_escalation'
+              | 'system_alert'
+              | 'real_time_update'
+          )
         )
       )
       .returning();
@@ -722,20 +767,30 @@ export class DatabaseStorage implements IStorage {
       .where(
         and(
           eq(notificationPreferences.userId, userId),
-          eq(notificationPreferences.notificationType, notificationType as any)
+          eq(
+            notificationPreferences.notificationType,
+            notificationType as
+              | 'wo_assigned'
+              | 'wo_overdue'
+              | 'part_low_stock'
+              | 'pm_due'
+              | 'equipment_alert'
+              | 'pm_escalation'
+              | 'system_alert'
+              | 'real_time_update'
+          )
         )
       );
   }
 
   // Push Subscriptions
   async getPushSubscriptions(userId: string): Promise<PushSubscription[]> {
-    return await db
-      .select()
-      .from(pushSubscriptions)
-      .where(eq(pushSubscriptions.userId, userId));
+    return await db.select().from(pushSubscriptions).where(eq(pushSubscriptions.userId, userId));
   }
 
-  async createPushSubscription(insertSubscription: InsertPushSubscription): Promise<PushSubscription> {
+  async createPushSubscription(
+    insertSubscription: InsertPushSubscription
+  ): Promise<PushSubscription> {
     const [subscription] = await db
       .insert(pushSubscriptions)
       .values({
@@ -743,13 +798,13 @@ export class DatabaseStorage implements IStorage {
         ...insertSubscription,
         createdAt: new Date(),
         lastUsed: new Date(),
-      } as any)
+      } as InsertPushSubscription)
       .returning();
     return subscription;
   }
 
   async updatePushSubscription(
-    id: string, 
+    id: string,
     updates: Partial<InsertPushSubscription>
   ): Promise<PushSubscription | null> {
     const [subscription] = await db
@@ -757,7 +812,7 @@ export class DatabaseStorage implements IStorage {
       .set({
         ...updates,
         lastUsed: new Date(),
-      } as any)
+      } as Partial<InsertPushSubscription>)
       .where(eq(pushSubscriptions.id, id))
       .returning();
     return subscription || null;
@@ -771,12 +826,7 @@ export class DatabaseStorage implements IStorage {
     return await db
       .select()
       .from(pushSubscriptions)
-      .where(
-        and(
-          eq(pushSubscriptions.userId, userId),
-          eq(pushSubscriptions.active, true)
-        )
-      );
+      .where(and(eq(pushSubscriptions.userId, userId), eq(pushSubscriptions.active, true)));
   }
 
   // Attachments
@@ -803,7 +853,7 @@ export class DatabaseStorage implements IStorage {
     }
 
     if (conditions.length > 0) {
-  query = query.where(or(...conditions)) as unknown;
+      query = query.where(or(...conditions)) as unknown;
     }
 
     return await query;
@@ -853,7 +903,7 @@ export class DatabaseStorage implements IStorage {
   async createAttachment(attachment: InsertAttachment): Promise<Attachment> {
     const newAttachment = {
       id: this.generateId(),
-  ...(attachment as Record<string, unknown>),
+      ...(attachment as Record<string, unknown>),
       createdAt: new Date(),
     };
     const [created] = await db.insert(attachments).values(newAttachment).returning();
@@ -877,7 +927,7 @@ export class DatabaseStorage implements IStorage {
         id: this.generateId(),
         ...insertLaborTime,
         createdAt: new Date(),
-  } as unknown)
+      } as unknown)
       .returning();
     return laborTimeEntry;
   }
@@ -885,7 +935,7 @@ export class DatabaseStorage implements IStorage {
   async updateLaborTime(id: string, updateData: Partial<InsertLaborTime>): Promise<LaborTime> {
     const [updated] = await db
       .update(laborTime)
-  .set(updateData as unknown)
+      .set(updateData as unknown)
       .where(eq(laborTime.id, id))
       .returning();
     return updated;

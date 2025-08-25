@@ -1,3 +1,4 @@
+// @vitest-environment node
 /**
  * Integration tests for backup API endpoints
  */
@@ -23,7 +24,7 @@ describe('Backup API Endpoints', () => {
     // Import the app after setting up mocks
     const express = await import('express');
     const { registerRoutes } = await import('../../server/routes');
-    
+
     app = express.default();
     await registerRoutes(app);
   });
@@ -34,50 +35,42 @@ describe('Backup API Endpoints', () => {
 
   describe('GET /api/backup/status', () => {
     it('should return backup status', async () => {
-      const response = await request(app)
-        .get('/api/backup/status')
-        .expect('Content-Type', /json/);
+      const response = await request(app).get('/api/backup/status').expect('Content-Type', /json/);
 
-      // In development mode, it should work without authentication
-      if (process.env.NODE_ENV === 'development') {
+      if (process.env.NODE_ENV === 'production') {
+        // In production, should require authentication
+        expect(response.status).toBe(401);
+      } else {
+        // In development or test, should allow unauthenticated access
         expect(response.status).toBe(200);
-        
         expect(response.body).toHaveProperty('timestamp');
         expect(response.body).toHaveProperty('backup');
-        
         const backup = response.body.backup;
         expect(backup).toHaveProperty('enabled');
         expect(backup).toHaveProperty('totalBackups');
         expect(typeof backup.enabled).toBe('boolean');
         expect(typeof backup.totalBackups).toBe('number');
-        
         // Optional properties that may be present
         if (backup.lastBackup) {
           expect(typeof backup.lastBackup).toBe('string'); // ISO date string
         }
-        
         if (backup.nextBackup) {
           expect(typeof backup.nextBackup).toBe('string'); // ISO date string
         }
-        
         if (backup.lastBackupSuccess !== undefined) {
           expect(typeof backup.lastBackupSuccess).toBe('boolean');
         }
-      } else {
-        // In production, should require authentication
-        expect(response.status).toBe(401);
       }
     });
 
     it('should handle service errors gracefully', async () => {
       // This test assumes the backup service might not be fully configured
       // in a test environment, which is expected behavior
-      const response = await request(app)
-        .get('/api/backup/status');
-      
+      const response = await request(app).get('/api/backup/status');
+
       // Should not crash the server
       expect([200, 401, 500]).toContain(response.status);
-      
+
       if (response.status === 500) {
         expect(response.body).toHaveProperty('message');
         expect(typeof response.body.message).toBe('string');
@@ -88,7 +81,7 @@ describe('Backup API Endpoints', () => {
   describe('Backup system integration', () => {
     it('should have backup service available', async () => {
       const { backupService } = await import('../../server/services/backup.service');
-      
+
       expect(backupService).toBeDefined();
       expect(typeof backupService.getStatus).toBe('function');
       expect(typeof backupService.createBackup).toBe('function');
@@ -97,9 +90,9 @@ describe('Backup API Endpoints', () => {
 
     it('should have backup configuration available', async () => {
       const { getBackupConfig } = await import('../../config/backup');
-      
+
       const config = getBackupConfig();
-      
+
       expect(config).toHaveProperty('enabled');
       expect(config).toHaveProperty('schedule');
       expect(config).toHaveProperty('retention');
@@ -110,13 +103,13 @@ describe('Backup API Endpoints', () => {
 
     it('should have background job scheduler with backup job', async () => {
       const { backgroundJobScheduler } = await import('../../server/services/background-jobs');
-      
+
       const jobStatus = backgroundJobScheduler.getJobStatus();
-      
+
       // Should have the database backup job
       const backupJob = jobStatus.find(job => job.name === 'Database Backup');
       expect(backupJob).toBeDefined();
-      
+
       if (backupJob) {
         expect(backupJob).toHaveProperty('interval');
         expect(backupJob).toHaveProperty('running');

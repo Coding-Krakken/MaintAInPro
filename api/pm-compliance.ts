@@ -57,7 +57,8 @@ export default async function handler(req, res) {
       }
     }
 
-    const overallComplianceRate = totalPMsScheduled > 0 ? (totalPMsCompleted / totalPMsScheduled) * 100 : 100;
+    const overallComplianceRate =
+      totalPMsScheduled > 0 ? (totalPMsCompleted / totalPMsScheduled) * 100 : 100;
 
     const monthlyTrends: Array<{
       month: string;

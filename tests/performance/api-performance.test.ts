@@ -41,8 +41,8 @@ const createTestApp = (storage: MemStorage) => {
       }
 
       res.json(equipment);
-      } catch (_error) {
-        res.status(500).json({ error: 'Internal server error' });
+    } catch (_error) {
+      res.status(500).json({ error: 'Internal server error' });
     }
   });
 
@@ -53,8 +53,8 @@ const createTestApp = (storage: MemStorage) => {
         return res.status(404).json({ error: 'Equipment not found' });
       }
       res.json(equipment);
-      } catch (_error) {
-        res.status(500).json({ error: 'Internal server error' });
+    } catch (_error) {
+      res.status(500).json({ error: 'Internal server error' });
     }
   });
 
@@ -72,8 +72,8 @@ const createTestApp = (storage: MemStorage) => {
       }
 
       res.json(workOrders);
-      } catch (_error) {
-        res.status(500).json({ error: 'Internal server error' });
+    } catch (_error) {
+      res.status(500).json({ error: 'Internal server error' });
     }
   });
 
@@ -86,8 +86,8 @@ const createTestApp = (storage: MemStorage) => {
         updated_at: new Date(),
       });
       res.status(201).json(workOrder);
-      } catch (_error) {
-        res.status(500).json({ error: 'Internal server error' });
+    } catch (_error) {
+      res.status(500).json({ error: 'Internal server error' });
     }
   });
 
@@ -104,8 +104,8 @@ const createTestApp = (storage: MemStorage) => {
         completedWorkOrders: workOrders.filter(wo => wo.status === 'completed').length,
         inProgressWorkOrders: workOrders.filter(wo => wo.status === 'in-progress').length,
       });
-      } catch (_error) {
-        res.status(500).json({ error: 'Internal server error' });
+    } catch (_error) {
+      res.status(500).json({ error: 'Internal server error' });
     }
   });
 
@@ -115,8 +115,8 @@ const createTestApp = (storage: MemStorage) => {
       const workOrders = await storage.workOrders.getAll();
       const equipmentWorkOrders = workOrders.filter(wo => wo.equipment_id === req.params.id);
       res.json(equipmentWorkOrders);
-      } catch (_error) {
-        res.status(500).json({ error: 'Internal server error' });
+    } catch (_error) {
+      res.status(500).json({ error: 'Internal server error' });
     }
   });
 

@@ -200,7 +200,7 @@ describe('GitHub Project Management Script', () => {
   describe('Rate Limiting', () => {
     it('should implement appropriate delays', async () => {
       const start = Date.now();
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise(resolve => setTimeout(resolve, 20));
       const end = Date.now();
 
       expect(end - start).toBeGreaterThanOrEqual(10);

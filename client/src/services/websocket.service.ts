@@ -14,7 +14,19 @@ export interface NotificationData {
   warehouseId?: string;
   title: string;
   message: string;
-  type: 'wo_assigned' | 'wo_overdue' | 'part_low_stock' | 'pm_due' | 'equipment_alert' | 'pm_escalation' | 'system_alert' | 'real_time_update' | 'info' | 'warning' | 'error' | 'success';
+  type:
+    | 'wo_assigned'
+    | 'wo_overdue'
+    | 'part_low_stock'
+    | 'pm_due'
+    | 'equipment_alert'
+    | 'pm_escalation'
+    | 'system_alert'
+    | 'real_time_update'
+    | 'info'
+    | 'warning'
+    | 'error'
+    | 'success';
   read: boolean;
   createdAt: Date;
   data?: unknown;
@@ -226,7 +238,10 @@ export class WebSocketService {
     // Show important system alerts as persistent toasts
     toast({
       title: 'System Alert',
-  description: typeof data.data === 'object' && data.data !== null && 'message' in data.data ? (data.data as { message?: string }).message || 'System notification received' : 'System notification received',
+      description:
+        typeof data.data === 'object' && data.data !== null && 'message' in data.data
+          ? (data.data as { message?: string }).message || 'System notification received'
+          : 'System notification received',
       variant: 'destructive',
     });
 
@@ -350,7 +365,7 @@ export class WebSocketService {
   }
 
   public async updateNotificationPreference(
-    notificationType: string, 
+    notificationType: string,
     updates: Partial<NotificationPreference>
   ): Promise<boolean> {
     try {
@@ -406,7 +421,7 @@ export class WebSocketService {
     if (preference.quietHoursStart && preference.quietHoursEnd) {
       const now = new Date();
       const currentTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
-      
+
       if (currentTime >= preference.quietHoursStart && currentTime <= preference.quietHoursEnd) {
         return false; // Don't show during quiet hours
       }
@@ -428,7 +443,10 @@ export class WebSocketService {
     toast({
       title: notification.title,
       description: notification.message,
-      variant: notification.type === 'error' || notification.priority === 'critical' ? 'destructive' : 'default',
+      variant:
+        notification.type === 'error' || notification.priority === 'critical'
+          ? 'destructive'
+          : 'default',
     });
 
     // Notify subscribers

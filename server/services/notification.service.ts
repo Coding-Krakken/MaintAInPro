@@ -158,17 +158,17 @@ class NotificationServiceImpl implements NotificationService {
       console.error('Error sending notification:', error);
       throw error;
     }
-// Type guard for InsertNotification
-function isInsertNotification(data: unknown): data is InsertNotification {
-  if (typeof data !== 'object' || data === null) return false;
-  const obj = data as Record<string, unknown>;
-  return (
-    typeof obj.userId === 'string' &&
-    typeof obj.type === 'string' &&
-    typeof obj.title === 'string' &&
-    typeof obj.message === 'string'
-  );
-}
+    // Type guard for InsertNotification
+    function isInsertNotification(data: unknown): data is InsertNotification {
+      if (typeof data !== 'object' || data === null) return false;
+      const obj = data as Record<string, unknown>;
+      return (
+        typeof obj.userId === 'string' &&
+        typeof obj.type === 'string' &&
+        typeof obj.title === 'string' &&
+        typeof obj.message === 'string'
+      );
+    }
   }
   async sendRealTimeUpdate<T = unknown>(userId: string, data: T): Promise<void> {
     if (!this.io) {

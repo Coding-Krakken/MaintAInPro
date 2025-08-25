@@ -48,8 +48,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       }
     }
 
-  const warehouseId = getCurrentWarehouse(req);
-  const _userId = getCurrentUser(req); // prefixed with _ to avoid unused var lint error
+    const warehouseId = getCurrentWarehouse(req);
+    const _userId = getCurrentUser(req); // prefixed with _ to avoid unused var lint error
 
     switch (req.method) {
       case 'GET':

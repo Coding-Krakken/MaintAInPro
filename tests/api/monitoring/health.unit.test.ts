@@ -18,7 +18,10 @@ const createMockResponse = (): VercelResponse => {
 };
 
 // Mock VercelRequest
-const createMockRequest = (method: string = 'GET', query: Record<string, any> = {}): VercelRequest => {
+const createMockRequest = (
+  method: string = 'GET',
+  query: Record<string, any> = {}
+): VercelRequest => {
   return {
     method,
     query,
@@ -32,7 +35,7 @@ vi.spyOn(process, 'memoryUsage').mockReturnValue({
   heapTotal: 100 * 1024 * 1024, // 100MB
   rss: 0,
   external: 0,
-  arrayBuffers: 0
+  arrayBuffers: 0,
 });
 
 vi.spyOn(process, 'uptime').mockReturnValue(3600); // 1 hour
@@ -48,37 +51,43 @@ describe('Health API Handler', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockRes = createMockResponse();
-    
+
     // Set up process mocks
     vi.spyOn(process, 'memoryUsage').mockReturnValue({
       heapUsed: 50 * 1024 * 1024, // 50MB
       heapTotal: 100 * 1024 * 1024, // 100MB
       rss: 0,
       external: 0,
-      arrayBuffers: 0
+      arrayBuffers: 0,
     });
-    
+
     vi.spyOn(process, 'uptime').mockReturnValue(3600); // 1 hour
   });
 
   describe('CORS Headers', () => {
     it('should set CORS headers for all requests', async () => {
       mockReq = createMockRequest('GET');
-      
+
       await handler(mockReq, mockRes);
-      
+
       expect(mockRes.setHeader).toHaveBeenCalledWith('Access-Control-Allow-Origin', '*');
-      expect(mockRes.setHeader).toHaveBeenCalledWith('Access-Control-Allow-Methods', 'GET, OPTIONS');
-      expect(mockRes.setHeader).toHaveBeenCalledWith('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+      expect(mockRes.setHeader).toHaveBeenCalledWith(
+        'Access-Control-Allow-Methods',
+        'GET, OPTIONS'
+      );
+      expect(mockRes.setHeader).toHaveBeenCalledWith(
+        'Access-Control-Allow-Headers',
+        'Content-Type, Authorization'
+      );
     });
   });
 
   describe('OPTIONS Method', () => {
     it('should handle OPTIONS preflight requests', async () => {
       mockReq = createMockRequest('OPTIONS');
-      
+
       await handler(mockReq, mockRes);
-      
+
       expect(mockRes.status).toHaveBeenCalledWith(200);
       expect(mockRes.end).toHaveBeenCalled();
       expect(mockRes.json).not.toHaveBeenCalled();
@@ -88,9 +97,9 @@ describe('Health API Handler', () => {
   describe('GET Method', () => {
     it('should return performance health status with correct structure', async () => {
       mockReq = createMockRequest('GET');
-      
+
       await handler(mockReq, mockRes);
-      
+
       expect(mockRes.status).toHaveBeenCalledWith(200);
       expect(mockRes.json).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -110,9 +119,9 @@ describe('Health API Handler', () => {
 
     it('should return valid performance health values', async () => {
       mockReq = createMockRequest('GET');
-      
+
       await handler(mockReq, mockRes);
-      
+
       const callArgs = (mockRes.json as any).mock.calls[0][0];
       expect(callArgs.overall).toBeGreaterThanOrEqual(0);
       expect(callArgs.overall).toBeLessThanOrEqual(100);
@@ -126,9 +135,9 @@ describe('Health API Handler', () => {
 
     it('should return valid trend indicators', async () => {
       mockReq = createMockRequest('GET');
-      
+
       await handler(mockReq, mockRes);
-      
+
       const callArgs = (mockRes.json as any).mock.calls[0][0];
       const validTrends = ['improving', 'stable', 'declining'];
       expect(validTrends).toContain(callArgs.trends.overall);
@@ -149,11 +158,13 @@ describe('Health API Handler', () => {
       await handler(mockReq, mockRes);
 
       expect(mockRes.status).toHaveBeenCalledWith(500);
-      expect(mockRes.json).toHaveBeenCalledWith(expect.objectContaining({
-        status: 'error',
-        error: 'Memory access failed',
-        timestamp: expect.any(String),
-      }));
+      expect(mockRes.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          status: 'error',
+          error: 'Memory access failed',
+          timestamp: expect.any(String),
+        })
+      );
       memoryUsageSpy.mockRestore();
     });
 
@@ -167,22 +178,23 @@ describe('Health API Handler', () => {
       await handler(mockReq, mockRes);
 
       expect(mockRes.status).toHaveBeenCalledWith(500);
-      expect(mockRes.json).toHaveBeenCalledWith(expect.objectContaining({
-        status: 'error',
-        error: 'Unknown error',
-        timestamp: expect.any(String),
-      }));
+      expect(mockRes.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          status: 'error',
+          error: 'Unknown error',
+          timestamp: expect.any(String),
+        })
+      );
       memoryUsageSpy.mockRestore();
     });
   });
 
   describe('Unsupported Methods', () => {
-  it.each(['POST', 'PUT', 'DELETE', 'PATCH'])('should return 405 for %s method', async (method) => {
-        mockReq = createMockRequest(method);
-        await handler(mockReq, mockRes);
-        expect(mockRes.status).toHaveBeenCalledWith(405);
-        expect(mockRes.json).toHaveBeenCalledWith({ error: 'Method not allowed' });
-      }
-    );
+    it.each(['POST', 'PUT', 'DELETE', 'PATCH'])('should return 405 for %s method', async method => {
+      mockReq = createMockRequest(method);
+      await handler(mockReq, mockRes);
+      expect(mockRes.status).toHaveBeenCalledWith(405);
+      expect(mockRes.json).toHaveBeenCalledWith({ error: 'Method not allowed' });
+    });
   });
 });

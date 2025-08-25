@@ -58,7 +58,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     // Generate a unique event ID for tracking
     const eventId = `error-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
-    this.setState({ 
+    this.setState({
       errorInfo: enhancedErrorInfo,
       eventId,
     });
@@ -76,9 +76,9 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   }
 
   resetError = () => {
-    this.setState({ 
-      hasError: false, 
-      error: undefined, 
+    this.setState({
+      hasError: false,
+      error: undefined,
       errorInfo: undefined,
       eventId: undefined,
     });
@@ -93,7 +93,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   render() {
     if (this.state.hasError) {
       const FallbackComponent = this.props.fallback;
-      
+
       if (FallbackComponent) {
         return (
           <FallbackComponent
@@ -108,49 +108,45 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
       // Default fallback UI if no fallback component is provided
       return (
-        <div className="min-h-[200px] flex items-center justify-center p-6">
-          <div className="text-center max-w-md">
-            <div className="mb-4">
-              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-error-50">
+        <div className='min-h-[200px] flex items-center justify-center p-6'>
+          <div className='text-center max-w-md'>
+            <div className='mb-4'>
+              <div className='mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-error-50'>
                 <svg
-                  className="h-6 w-6 text-error-600"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="1.5"
-                  stroke="currentColor"
+                  className='h-6 w-6 text-error-600'
+                  fill='none'
+                  viewBox='0 0 24 24'
+                  strokeWidth='1.5'
+                  stroke='currentColor'
                 >
                   <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z'
                   />
                 </svg>
               </div>
             </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
-              Something went wrong
-            </h3>
-            <p className="text-sm text-gray-500 mb-4">
+            <h3 className='text-lg font-medium text-gray-900 mb-2'>Something went wrong</h3>
+            <p className='text-sm text-gray-500 mb-4'>
               An unexpected error occurred. Please try refreshing the page.
             </p>
-            <div className="flex justify-center space-x-3">
+            <div className='flex justify-center space-x-3'>
               <button
                 onClick={this.resetError}
-                className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+                className='inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500'
               >
                 Try Again
               </button>
               <button
                 onClick={() => window.location.reload()}
-                className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+                className='inline-flex items-center px-3 py-2 border border-gray-300 text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500'
               >
                 Refresh Page
               </button>
             </div>
             {this.state.eventId && (
-              <p className="mt-3 text-xs text-gray-400">
-                Error ID: {this.state.eventId}
-              </p>
+              <p className='mt-3 text-xs text-gray-400'>Error ID: {this.state.eventId}</p>
             )}
           </div>
         </div>

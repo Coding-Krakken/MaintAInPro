@@ -98,12 +98,12 @@ export class BackupService {
 
       console.log(`Starting database backup to ${backupPath}`);
 
-  // Create database backup using pg_dump
-  await this.executePgDump(backupPath);
-      
+      // Create database backup using pg_dump
+      await this.executePgDump(backupPath);
+
       // Validate the backup file
       const validation = await this.validateBackup(backupPath);
-      
+
       if (!validation.valid) {
         await this.cleanup(backupPath);
         throw new Error(`Backup validation failed: ${validation.error}`);
@@ -130,7 +130,6 @@ export class BackupService {
         duration,
         checksum,
       };
-
     } catch (error) {
       const duration = Date.now() - startTime;
       this.lastBackup = new Date();
@@ -164,7 +163,7 @@ export class BackupService {
    */
   private async executePgDump(backupPath: string): Promise<void> {
     const dbUrl = process.env.DATABASE_URL || process.env.POSTGRES_URL;
-    
+
     if (!dbUrl) {
       throw new Error('Database URL not configured');
     }
@@ -180,13 +179,18 @@ export class BackupService {
     // Build pg_dump command
     const command = [
       'pg_dump',
-      '--host', host,
-      '--port', port,
-      '--username', username,
-      '--dbname', database,
+      '--host',
+      host,
+      '--port',
+      port,
+      '--username',
+      username,
+      '--dbname',
+      database,
       '--no-password',
       '--verbose',
-      '--file', backupPath
+      '--file',
+      backupPath,
     ].join(' ');
 
     // Set environment variables for authentication
@@ -197,11 +201,11 @@ export class BackupService {
 
     try {
       const { stdout, stderr } = await execAsync(command, { env });
-      
+
       if (stderr && !stderr.includes('NOTICE:')) {
         console.warn('pg_dump warnings:', stderr);
       }
-      
+
       console.log('pg_dump completed:', stdout);
     } catch (error) {
       throw new Error(`pg_dump failed: ${error instanceof Error ? error.message : String(error)}`);
@@ -219,7 +223,7 @@ export class BackupService {
     try {
       // Check if file exists and has content
       const stats = await stat(backupPath);
-      
+
       if (stats.size === 0) {
         return { valid: false, error: 'Backup file is empty' };
       }
@@ -230,14 +234,13 @@ export class BackupService {
 
       // Check for SQL content
       const content = await readFile(backupPath, 'utf-8');
-      
+
       if (!content.includes('PostgreSQL database dump')) {
         return { valid: false, error: 'Invalid backup file format' };
       }
 
       console.log(`Backup validation passed: ${stats.size} bytes`);
       return { valid: true };
-
     } catch (error) {
       return {
         valid: false,
@@ -262,8 +265,10 @@ export class BackupService {
   private async cleanupOldBackups(): Promise<void> {
     try {
       const files = await readdir(this.config.storage.directory);
-      const backupFiles = files.filter(file => file.startsWith('maintainpro_') && file.endsWith('.sql'));
-      
+      const backupFiles = files.filter(
+        file => file.startsWith('maintainpro_') && file.endsWith('.sql')
+      );
+
       if (backupFiles.length <= this.config.retention.daily) {
         return; // Not enough files to warrant cleanup
       }
@@ -301,7 +306,6 @@ export class BackupService {
       if (filesToDelete.length > 0) {
         console.log(`Cleaned up ${filesToDelete.length} old backup files`);
       }
-
     } catch (error) {
       console.error('Error during backup cleanup:', error);
     }
@@ -326,7 +330,7 @@ export class BackupService {
    */
   public async getStatus(): Promise<BackupStatus> {
     const totalBackups = await this.countBackups();
-    
+
     return {
       enabled: this.config.enabled,
       lastBackup: this.lastBackup,
@@ -371,7 +375,7 @@ export class BackupService {
     try {
       // Test database connection
       const dbUrl = process.env.DATABASE_URL || process.env.POSTGRES_URL;
-      
+
       if (!dbUrl) {
         throw new Error('Database URL not configured');
       }

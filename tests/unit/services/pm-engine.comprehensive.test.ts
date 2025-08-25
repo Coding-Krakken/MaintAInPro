@@ -62,6 +62,8 @@ describe('PM Engine - Comprehensive Tests', () => {
         active: true,
         createdAt: new Date(),
         updatedAt: new Date(),
+        customFields: [],
+        enabled: true,
       };
 
       const existingWorkOrders: any[] = [];
@@ -131,6 +133,8 @@ describe('PM Engine - Comprehensive Tests', () => {
         active: true,
         createdAt: new Date(),
         updatedAt: new Date(),
+        customFields: [],
+        enabled: true,
       };
 
       mockStorage.getPmTemplates.mockResolvedValue([template]);
@@ -186,6 +190,8 @@ describe('PM Engine - Comprehensive Tests', () => {
         active: true,
         createdAt: new Date(),
         updatedAt: new Date(),
+        customFields: [],
+        enabled: true,
       };
 
       mockStorage.getPmTemplates.mockResolvedValue([template]);
@@ -425,6 +431,8 @@ describe('PM Engine - Comprehensive Tests', () => {
         active: true,
         createdAt: new Date(),
         updatedAt: new Date(),
+        customFields: [],
+        enabled: true,
       };
 
       mockStorage.getPmTemplates.mockResolvedValue([template]);
@@ -468,6 +476,8 @@ describe('PM Engine - Comprehensive Tests', () => {
         active: true,
         createdAt: new Date(),
         updatedAt: new Date(),
+        customFields: [],
+        enabled: true,
       };
 
       mockStorage.getPmTemplates.mockResolvedValue([template]);

@@ -50,13 +50,17 @@ export class ErrorReportingService {
   /**
    * Report an error with context information
    */
-  async reportError(error: Error, errorInfo?: ErrorInfo, options?: ErrorReportOptions): Promise<string> {
+  async reportError(
+    error: Error,
+    errorInfo?: ErrorInfo,
+    options?: ErrorReportOptions
+  ): Promise<string> {
     if (!this.isEnabled) {
       return '';
     }
 
     const eventId = this.generateEventId();
-    
+
     const errorData: ErrorReportData = {
       error,
       errorInfo,
@@ -92,7 +96,6 @@ export class ErrorReportingService {
 
       // In production, you would send to error reporting service like Sentry
       // await this.sendToErrorService(errorData);
-
     } catch (reportingError) {
       console.error('Failed to report error:', reportingError);
     }
@@ -117,7 +120,7 @@ export class ErrorReportingService {
 
       // Keep only last 50 errors to prevent storage overflow
       const recentErrors = storedErrors.slice(-50);
-      
+
       localStorage.setItem('maintainpro_error_log', JSON.stringify(recentErrors));
     } catch (storageError) {
       console.warn('Failed to store error locally:', storageError);
@@ -150,10 +153,15 @@ export class ErrorReportingService {
   /**
    * Report a network error
    */
-  async reportNetworkError(url: string, status?: number, statusText?: string, options?: ErrorReportOptions): Promise<string> {
+  async reportNetworkError(
+    url: string,
+    status?: number,
+    statusText?: string,
+    options?: ErrorReportOptions
+  ): Promise<string> {
     const error = new Error(`Network error: ${status || 'Unknown'} ${statusText || ''} at ${url}`);
     error.name = 'NetworkError';
-    
+
     return this.reportError(error, undefined, {
       ...options,
       context: 'network_request',
@@ -172,7 +180,7 @@ export class ErrorReportingService {
   async reportChunkError(chunkName?: string, options?: ErrorReportOptions): Promise<string> {
     const error = new Error(`Failed to load chunk: ${chunkName || 'unknown'}`);
     error.name = 'ChunkLoadError';
-    
+
     return this.reportError(error, undefined, {
       ...options,
       context: 'chunk_loading',
@@ -204,21 +212,33 @@ export const errorReportingService = ErrorReportingService.getInstance();
 /**
  * Convenience function to report errors
  */
-export const reportError = async (error: Error, errorInfo?: ErrorInfo, options?: ErrorReportOptions): Promise<string> => {
+export const reportError = async (
+  error: Error,
+  errorInfo?: ErrorInfo,
+  options?: ErrorReportOptions
+): Promise<string> => {
   return errorReportingService.reportError(error, errorInfo, options);
 };
 
 /**
  * Convenience function to report network errors
  */
-export const reportNetworkError = async (url: string, status?: number, statusText?: string, options?: ErrorReportOptions): Promise<string> => {
+export const reportNetworkError = async (
+  url: string,
+  status?: number,
+  statusText?: string,
+  options?: ErrorReportOptions
+): Promise<string> => {
   return errorReportingService.reportNetworkError(url, status, statusText, options);
 };
 
 /**
  * Convenience function to report chunk loading errors
  */
-export const reportChunkError = async (chunkName?: string, options?: ErrorReportOptions): Promise<string> => {
+export const reportChunkError = async (
+  chunkName?: string,
+  options?: ErrorReportOptions
+): Promise<string> => {
   return errorReportingService.reportChunkError(chunkName, options);
 };
 

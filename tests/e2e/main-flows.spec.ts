@@ -5,19 +5,19 @@ import { testData, testCredentials } from '../helpers/testData';
 const testUsers = {
   technician: {
     email: 'test@example.com',
-    password: 'password',
+    password: 'PlaywrightTest123!',
     name: 'Test User',
     role: 'technician',
   },
   supervisor: {
     email: 'supervisor@maintainpro.com',
-    password: 'password',
+    password: 'PlaywrightTest123!',
     name: 'John Smith',
     role: 'supervisor',
   },
   manager: {
     email: 'manager@example.com',
-    password: 'password',
+    password: 'PlaywrightTest123!',
     name: 'Mike Johnson',
     role: 'manager',
   },
@@ -38,10 +38,20 @@ test.describe('Authentication Flow', () => {
     await page.click('[data-testid="login-button"]');
 
     // Verify successful login
-    await expect(page).toHaveURL('/dashboard');
-    await expect(page.locator('[data-testid="user-name"]')).toContainText(
-      testUsers.supervisor.name
-    );
+  await expect(page).toHaveURL('/dashboard');
+  // Wait for dashboard stats to be visible
+  await expect(page.locator('[data-testid="total-work-orders"]')).toBeVisible();
+  await expect(page.locator('[data-testid="pending-work-orders"]')).toBeVisible();
+  await expect(page.locator('[data-testid="completed-work-orders"]')).toBeVisible();
+  await expect(page.locator('[data-testid="active-equipment"]')).toBeVisible();
+  await expect(page.locator('[data-testid="user-name"]')).toContainText(testUsers.supervisor.name);
+  // Debug: log dashboard HTML and check for overlays
+  const dashboardHtml = await page.content();
+  console.log('Dashboard HTML after login:', dashboardHtml.slice(0, 1000));
+  const overlays = await page.locator('[aria-hidden="true"], [aria-busy="true"], .modal, .overlay, .loader, .spinner').count();
+  console.log('Overlay/loader count after login:', overlays);
+  // Assert no overlays block interaction
+  expect(overlays).toBe(0);
 
     // Logout
     await page.click('[data-testid="user-menu-button"]');
@@ -69,10 +79,16 @@ test.describe('Work Order Management', () => {
   test.beforeEach(async ({ page }) => {
     // Login before each test
     await page.goto('/login');
-    await page.fill('[data-testid="email-input"]', testUsers.technician.email);
-    await page.fill('[data-testid="password-input"]', testUsers.technician.password);
+    // Use valid seeded test user credentials
+    await page.fill('[data-testid="email-input"]', 'technician@maintainpro.com');
+    await page.fill('[data-testid="password-input"]', 'demo123');
     await page.click('[data-testid="login-button"]');
-    await expect(page).toHaveURL('/dashboard');
+  await expect(page).toHaveURL('/dashboard');
+  // Wait for dashboard stats to be visible
+  await expect(page.locator('[data-testid="total-work-orders"]')).toBeVisible();
+  await expect(page.locator('[data-testid="pending-work-orders"]')).toBeVisible();
+  await expect(page.locator('[data-testid="completed-work-orders"]')).toBeVisible();
+  await expect(page.locator('[data-testid="active-equipment"]')).toBeVisible();
   });
 
   test('technician can complete work order flow @smoke', async ({ page }) => {
@@ -83,8 +99,9 @@ test.describe('Work Order Management', () => {
     // Select first work order
     await page.click('[data-testid="work-order-card"]:first-child');
 
-    // Update status to in progress
-    await page.selectOption('[data-testid="status-select"]', 'in_progress');
+    // Update status to in progress (Radix UI combobox)
+    await page.click('[data-testid="status-select"]');
+    await page.click('text=In Progress');
     await page.click('[data-testid="update-status-button"]');
 
     // Verify status update
@@ -119,7 +136,15 @@ test.describe('Work Order Management', () => {
     // Fill in work order details
     await page.fill('[data-testid="fo-number-input"]', testWorkOrder.foNumber);
     await page.fill('[data-testid="description-input"]', testWorkOrder.description);
-    await page.selectOption('[data-testid="priority-select"]', testWorkOrder.priority);
+    // Select priority (Radix UI combobox)
+    await page.click('[data-testid="priority-select"]');
+    // Wait for combobox overlay to be visible
+  const comboboxOverlay = page.locator('.fixed.inset-0.z-50.bg-black/80');
+    await comboboxOverlay.waitFor({ state: 'visible', timeout: 5000 });
+    // Select priority
+    await page.click(`text=${testWorkOrder.priority}`);
+    // Wait for overlay to disappear before next action
+    await comboboxOverlay.waitFor({ state: 'hidden', timeout: 5000 });
 
     // Select equipment
     await page.click('[data-testid="equipment-select"]');
@@ -138,8 +163,9 @@ test.describe('Work Order Management', () => {
   test('can filter work orders', async ({ page }) => {
     await page.goto('/work-orders');
 
-    // Filter by status
-    await page.selectOption('[data-testid="status-filter"]', 'new');
+    // Filter by status (Radix UI combobox)
+    await page.click('[data-testid="status-filter"]');
+    await page.click('text=New');
 
     // Verify filtering
     const workOrderCards = page.locator('[data-testid="work-order-card"]');
@@ -325,7 +351,8 @@ test.describe('Offline Functionality', () => {
 
     // Complete work order
     await page.click('[data-testid="work-order-card"]');
-    await page.selectOption('[data-testid="status-select"]', 'completed');
+    await page.click('[data-testid="status-select"]');
+    await page.click('text=Completed');
     await page.click('[data-testid="complete-button"]');
 
     // Verify queued for sync

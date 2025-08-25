@@ -1,5 +1,11 @@
 // Main Error Boundary Components
-export { ErrorBoundary, type ErrorBoundaryProps, type ErrorFallbackProps, type ErrorInfo, type ErrorBoundaryState } from './ErrorBoundary';
+export {
+  ErrorBoundary,
+  type ErrorBoundaryProps,
+  type ErrorFallbackProps,
+  type ErrorInfo,
+  type ErrorBoundaryState,
+} from './ErrorBoundary';
 
 // Fallback UI Components
 export { GenericErrorFallback, type GenericErrorFallbackProps } from './GenericErrorFallback';
@@ -7,14 +13,14 @@ export { NetworkErrorFallback, type NetworkErrorFallbackProps } from './NetworkE
 export { ChunkErrorFallback, type ChunkErrorFallbackProps } from './ChunkErrorFallback';
 
 // Higher-Order Components and Utilities
-export { 
-  withErrorBoundary, 
-  withNetworkErrorBoundary, 
+export {
+  withErrorBoundary,
+  withNetworkErrorBoundary,
   withChunkErrorBoundary,
   useErrorBoundaryWrapper,
   createErrorBoundary,
   type WithErrorBoundaryOptions,
-  type ErrorBoundaryType
+  type ErrorBoundaryType,
 } from './withErrorBoundary';
 
 // Default exports for convenience
