@@ -18,6 +18,10 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "🚀 Starting backend and serving built frontend..."
+# Set environment variables for proper E2E testing
+export TEST_AUTH_MODE=disabled
+export DISABLE_RATE_LIMITING=true
+export NODE_ENV=production
 PLAYWRIGHT=true $BACKEND_START_CMD &
 SERVER_PID=$!
 

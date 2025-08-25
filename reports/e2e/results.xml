@@ -1,96 +1,60 @@
-<testsuites id="" name="" tests="1" failures="1" skipped="0" errors="0" time="20.109551">
-<testsuite name="main-flows.spec.ts" timestamp="2025-08-25T10:43:09.625Z" hostname="chromium" tests="1" failures="1" skipped="0" time="17.688" errors="0">
-<testcase name="Authentication Flow › user can login and logout" classname="main-flows.spec.ts" time="17.688">
-<failure message="main-flows.spec.ts:29:3 user can login and logout" type="FAILURE">
-<![CDATA[  [chromium] › main-flows.spec.ts:29:3 › Authentication Flow › user can login and logout ───────────
-
-    Error: expect(locator).toContainText(expected) failed
-
-    Locator: locator('[data-testid="user-name"]')
-    Expected string: "Test User"
-    Received string: " "
-    Timeout: 5000ms
-
-    Call log:
-      - Expect "toContainText" with timeout 5000ms
-      - waiting for locator('[data-testid="user-name"]')
-        9 × locator resolved to <span data-testid="user-name" class="hidden sm:inline"> </span>
-          - unexpected value " "
-
-
-      45 |   await expect(page.locator('[data-testid="completed-work-orders"]')).toBeVisible();
-      46 |   await expect(page.locator('[data-testid="active-equipment"]')).toBeVisible();
-    > 47 |   await expect(page.locator('[data-testid="user-name"]')).toContainText('Test User'); // TEST_AUTH_MODE returns mock user
-         |                                                           ^
-      48 |   // Debug: log dashboard HTML and check for overlays
-      49 |   const dashboardHtml = await page.content();
-      50 |   console.log('Dashboard HTML after login:', dashboardHtml.slice(0, 1000));
-        at /home/runner/work/MaintAInPro/MaintAInPro/tests/e2e/main-flows.spec.ts:47:59
-
-    Error Context: ../../test-results/playwright-artifacts/main-flows-Authentication-Flow-user-can-login-and-logout-chromium/error-context.md
-
-    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
-
-    Error: expect(locator).toContainText(expected) failed
-
-    Locator: locator('[data-testid="user-name"]')
-    Expected string: "Test User"
-    Received string: " "
-    Timeout: 5000ms
-
-    Call log:
-      - Expect "toContainText" with timeout 5000ms
-      - waiting for locator('[data-testid="user-name"]')
-        9 × locator resolved to <span data-testid="user-name" class="hidden sm:inline"> </span>
-          - unexpected value " "
-
-
-      45 |   await expect(page.locator('[data-testid="completed-work-orders"]')).toBeVisible();
-      46 |   await expect(page.locator('[data-testid="active-equipment"]')).toBeVisible();
-    > 47 |   await expect(page.locator('[data-testid="user-name"]')).toContainText('Test User'); // TEST_AUTH_MODE returns mock user
-         |                                                           ^
-      48 |   // Debug: log dashboard HTML and check for overlays
-      49 |   const dashboardHtml = await page.content();
-      50 |   console.log('Dashboard HTML after login:', dashboardHtml.slice(0, 1000));
-        at /home/runner/work/MaintAInPro/MaintAInPro/tests/e2e/main-flows.spec.ts:47:59
-
-    Error Context: ../../test-results/playwright-artifacts/main-flows-Authentication-Flow-user-can-login-and-logout-chromium-retry1/error-context.md
-
-    Retry #2 ───────────────────────────────────────────────────────────────────────────────────────
-
-    Error: expect(locator).toContainText(expected) failed
-
-    Locator: locator('[data-testid="user-name"]')
-    Expected string: "Test User"
-    Received string: " "
-    Timeout: 5000ms
-
-    Call log:
-      - Expect "toContainText" with timeout 5000ms
-      - waiting for locator('[data-testid="user-name"]')
-        9 × locator resolved to <span data-testid="user-name" class="hidden sm:inline"> </span>
-          - unexpected value " "
-
-
-      45 |   await expect(page.locator('[data-testid="completed-work-orders"]')).toBeVisible();
-      46 |   await expect(page.locator('[data-testid="active-equipment"]')).toBeVisible();
-    > 47 |   await expect(page.locator('[data-testid="user-name"]')).toContainText('Test User'); // TEST_AUTH_MODE returns mock user
-         |                                                           ^
-      48 |   // Debug: log dashboard HTML and check for overlays
-      49 |   const dashboardHtml = await page.content();
-      50 |   console.log('Dashboard HTML after login:', dashboardHtml.slice(0, 1000));
-        at /home/runner/work/MaintAInPro/MaintAInPro/tests/e2e/main-flows.spec.ts:47:59
-
-    Error Context: ../../test-results/playwright-artifacts/main-flows-Authentication-Flow-user-can-login-and-logout-chromium-retry2/error-context.md
-]]>
-</failure>
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="1.4266769999999998">
+<testsuite name="debug-server-env.spec.ts" timestamp="2025-08-25T12:00:28.541Z" hostname="chromium" tests="1" failures="0" skipped="0" time="0.43" errors="0">
+<testcase name="check server environment during test" classname="debug-server-env.spec.ts" time="0.43">
 <system-out>
-<![CDATA[
-[[ATTACHMENT|../../test-results/playwright-artifacts/main-flows-Authentication-Flow-user-can-login-and-logout-chromium/error-context.md]]
+<![CDATA[Debug endpoint status: [33m200[39m
+Debug endpoint body: {"NODE_ENV":"production","DATABASE_URL":"postgres://neondb_owner:npg_9wIlAORgDS7L@ep-twilight-hill-adkx14x5-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require"}
+Auth mode endpoint status: [33m200[39m
+Auth mode endpoint body: <!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no"
+    />
+    <title>MaintainPro CMMS</title>
 
-[[ATTACHMENT|../../test-results/playwright-artifacts/main-flows-Authentication-Flow-user-can-login-and-logout-chromium-retry1/error-context.md]]
+    <!-- PWA Meta Tags -->
+    <meta
+      name="description"
+      content="Enterprise Maintenance Management System for industrial operations"
+    />
+    <meta name="theme-color" content="#2563eb" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="MaintainPro" />
+    <meta name="msapplication-TileColor" content="#2563eb" />
+    <meta name="msapplication-config" content="/browserconfig.xml" />
 
-[[ATTACHMENT|../../test-results/playwright-artifacts/main-flows-Authentication-Flow-user-can-login-and-logout-chromium-retry2/error-context.md]]
+    <!-- Manifest -->
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- Icons -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/icon-192.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="/api" />
+    <link rel="dns-prefetch" href="/api" />
+
+    <!-- Security Headers removed - handled by server middleware -->
+    <script type="module" crossorigin src="/assets/index-D_xFBHTZ.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/vendor-DuuEyLC3.js">
+    <link rel="modulepreload" crossorigin href="/assets/ui-C-R8E5Nd.js">
+    <link rel="modulepreload" crossorigin href="/assets/utils-CjxovF-h.js">
+    <link rel="modulepreload" crossorigin href="/assets/charts-DPm8Peiw.js">
+    <link rel="modulepreload" crossorigin href="/assets/forms-DxyTyAX4.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-BldUSceV.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
+
 ]]>
 </system-out>
 </testcase>
