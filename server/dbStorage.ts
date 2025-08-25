@@ -88,8 +88,8 @@ export class DatabaseStorage implements IStorage {
       {
         id: this.generateId(),
         email: 'technician@maintainpro.com',
-        firstName: 'Jane',
-        lastName: 'Doe',
+        firstName: 'Test',
+        lastName: 'User',
         role: 'technician' as const,
         warehouseId: warehouse.id,
         active: true,
