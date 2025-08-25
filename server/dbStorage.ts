@@ -122,7 +122,7 @@ export class DatabaseStorage implements IStorage {
       const schemaImport = await import('../shared/schema');
       const PasswordService = passwordServiceImport.PasswordService;
       const userCredentials = schemaImport.userCredentials;
-      const defaultPassword = 'PlaywrightTest123!';
+      const defaultPassword = 'demo123';
       const credentialsList = [];
       for (const user of insertedUsers) {
         const { hash, salt } = await PasswordService.hashPassword(defaultPassword);

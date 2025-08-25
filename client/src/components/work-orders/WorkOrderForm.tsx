@@ -146,12 +146,12 @@ export default function WorkOrderForm({ onSuccess, onCancel, initialData }: Work
                 <div className='flex space-x-2'>
                   <FormControl>
                     <Select value={field.value} onValueChange={field.onChange}>
-                      <SelectTrigger className='flex-1'>
+                      <SelectTrigger className='flex-1' data-testid='equipment-select'>
                         <SelectValue placeholder='Select equipment or scan QR code' />
                       </SelectTrigger>
                       <SelectContent>
                         {equipment?.map(item => (
-                          <SelectItem key={item.id} value={item.id}>
+                          <SelectItem key={item.id} value={item.id} data-testid='equipment-option'>
                             {item.assetTag} - {item.description}
                           </SelectItem>
                         ))}
@@ -333,7 +333,7 @@ export default function WorkOrderForm({ onSuccess, onCancel, initialData }: Work
                 Cancel
               </Button>
             )}
-            <Button type='submit' className='flex-1' disabled={createWorkOrder.isPending}>
+            <Button type='submit' className='flex-1' disabled={createWorkOrder.isPending} data-testid='submit-work-order-button'>
               {createWorkOrder.isPending ? 'Creating...' : 'Create Work Order'}
             </Button>
           </div>

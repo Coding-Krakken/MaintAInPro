@@ -4,20 +4,20 @@ import { testData, testCredentials } from '../helpers/testData';
 // Test data - use local definitions to avoid conflicts
 const testUsers = {
   technician: {
-    email: 'test@example.com',
-    password: 'PlaywrightTest123!',
+    email: 'technician@maintainpro.com',
+    password: 'demo123',
     name: 'Test User',
     role: 'technician',
   },
   supervisor: {
     email: 'supervisor@maintainpro.com',
-    password: 'PlaywrightTest123!',
+    password: 'demo123',
     name: 'John Smith',
     role: 'supervisor',
   },
   manager: {
     email: 'manager@example.com',
-    password: 'PlaywrightTest123!',
+    password: 'demo123',
     name: 'Mike Johnson',
     role: 'manager',
   },

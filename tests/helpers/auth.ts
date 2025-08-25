@@ -2,20 +2,20 @@ import { Page, expect } from '@playwright/test';
 
 export const testUsers = {
   technician: {
-    email: 'test@example.com',
-    password: 'password',
+    email: 'technician@maintainpro.com',
+    password: 'demo123',
     name: 'Test User',
     role: 'technician',
   },
   supervisor: {
     email: 'supervisor@maintainpro.com',
-    password: 'password',
+    password: 'demo123',
     name: 'John Smith',
     role: 'supervisor',
   },
   manager: {
     email: 'manager@example.com',
-    password: 'password',
+    password: 'demo123',
     name: 'Mike Johnson',
     role: 'manager',
   },
