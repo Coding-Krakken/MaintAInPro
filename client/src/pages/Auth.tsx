@@ -23,14 +23,25 @@ export default function Auth() {
     setError('');
 
     try {
-      await login(email, password);
-      toast({
-        title: 'Success',
-        description: 'Successfully logged in',
-      });
-      setLocation('/dashboard');
-    } catch (_error) {
-      const errorMessage = 'Invalid credentials';
+      const result = await login(email, password);
+      
+      if (result.success) {
+        toast({
+          title: 'Success',
+          description: 'Successfully logged in',
+        });
+        setLocation('/dashboard');
+      } else {
+        const errorMessage = result.error || 'Invalid credentials';
+        setError(errorMessage);
+        toast({
+          title: 'Error',
+          description: errorMessage,
+          variant: 'destructive',
+        });
+      }
+    } catch (error) {
+      const errorMessage = 'Login failed. Please try again.';
       setError(errorMessage);
       toast({
         title: 'Error',

@@ -1,60 +1,51 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="1.4266769999999998">
-<testsuite name="debug-server-env.spec.ts" timestamp="2025-08-25T12:00:28.541Z" hostname="chromium" tests="1" failures="0" skipped="0" time="0.43" errors="0">
-<testcase name="check server environment during test" classname="debug-server-env.spec.ts" time="0.43">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="3.310998">
+<testsuite name="debug-login.spec.ts" timestamp="2025-08-25T12:02:40.605Z" hostname="chromium" tests="1" failures="0" skipped="0" time="2.5" errors="0">
+<testcase name="debug login error handling" classname="debug-login.spec.ts" time="2.5">
 <system-out>
-<![CDATA[Debug endpoint status: [33m200[39m
-Debug endpoint body: {"NODE_ENV":"production","DATABASE_URL":"postgres://neondb_owner:npg_9wIlAORgDS7L@ep-twilight-hill-adkx14x5-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require"}
-Auth mode endpoint status: [33m200[39m
-Auth mode endpoint body: <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no"
-    />
+<![CDATA[Page content after login attempt: <!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
     <title>MaintainPro CMMS</title>
 
     <!-- PWA Meta Tags -->
-    <meta
-      name="description"
-      content="Enterprise Maintenance Management System for industrial operations"
-    />
-    <meta name="theme-color" content="#2563eb" />
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <meta name="apple-mobile-web-app-title" content="MaintainPro" />
-    <meta name="msapplication-TileColor" content="#2563eb" />
-    <meta name="msapplication-config" content="/browserconfig.xml" />
+    <meta name="description" content="Enterprise Maintenance Management System for industrial operations">
+    <meta name="theme-color" content="#2563eb">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="MaintainPro">
+    <meta name="msapplication-TileColor" content="#2563eb">
+    <meta name="msapplication-config" content="/browserconfig.xml">
 
     <!-- Manifest -->
-    <link rel="manifest" href="/manifest.json" />
+    <link rel="manifest" href="/manifest.json">
 
     <!-- Icons -->
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/icon-192.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/icon-192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 
     <!-- Preconnect for performance -->
-    <link rel="preconnect" href="/api" />
-    <link rel="dns-prefetch" href="/api" />
+    <link rel="preconnect" href="/api">
+    <link rel="dns-prefetch" href="/api">
 
     <!-- Security Headers removed - handled by server middleware -->
-    <script type="module" crossorigin src="/assets/index-D_xFBHTZ.js"></script>
-    <link rel="modulepreload" crossorigin href="/assets/vendor-DuuEyLC3.js">
-    <link rel="modulepreload" crossorigin href="/assets/ui-C-R8E5Nd.js">
-    <link rel="modulepreload" crossorigin href="/assets/utils-CjxovF-h.js">
-    <link rel="modulepreload" crossorigin href="/assets/charts-DPm8Peiw.js">
-    <link rel="modulepreload" crossorigin href="/assets/forms-DxyTyAX4.js">
-    <link rel="stylesheet" crossorigin href="/assets/index-BldUSceV.css">
+    <script type="module" crossorigin="" src="/assets/index-CR_057K8.js"></script>
+    <link rel="modulepreload" crossorigin="" href="/assets/vendor-DuuEyLC3.js">
+    <link rel="modulepreload" crossorigin="" href="/assets/ui-C-R8E5Nd.js">
+    <link rel="modulepreload" crossorigin="" href="/assets/utils-CjxovF-h.js">
+    <link rel="modulepreload" crossorigin="" href="/assets/charts-DPm8Peiw.js">
+    <link rel="modulepreload" crossorigin="" href="/assets/forms-DxyTyAX4.js">
+    <link rel="stylesheet" crossorigin="" href="/assets/index-BldUSceV.css">
   </head>
   <body>
-    <div id="root"></div>
-  </body>
-</html>
+    <div id="root"><div role="region" aria-label="Notifications (F8)" tabindex="-1" style=""><span tabindex="0" style="position: fixed; border: 0px; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; overflow-wrap: normal;"></span><ol tabindex="-1" class="fixed top-0 z-[100] flex max-h-screen w-full flex-col-reverse p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-[420px]"><li tabindex="0" data-state="open" data-swipe-direction="right" class="group pointer-events-auto relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-md border p-6 pr-8 shadow-lg transition-all data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-top-full data-[state=open]:sm:slide-in-from-bottom-full destructive group border-destructive bg-destructive text-destructive-foreground" data-radix-collection-item="" style="user-select: none; touch-action: none;"><div class="grid gap-1"><div class="text-sm font-semibold">Error</div><div class="text-sm opacity-90">Invalid credentials</div></div><button type="button" class="absolute right-2 top-2 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity hover:text-foreground focus:opacity-100 focus:outline-none focus:ring-2 group-hover:opacity-100 group-[.destructive]:text-red-300 group-[.destructive]:hover:text-red-50 group-[.destructive]:focus:ring-red-400 group-[.destructive]:focus:ring-offset-red-600" toast-close="" data-radix-toast-announce-exclude=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x h-4 w-4"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button></li></ol><span tabindex="0" style="position: fixed; border: 0px; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; overflow-wrap: normal;"></span></div><div class="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8"><div class="max-w-md w-full space-y-8"><div class="text-center"><div class="mx-auto h-16 w-16 bg-primary-500 rounded-xl flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wrench h-8 w-8 text-white"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg></div><h1 class="mt-6 text-3xl font-bold text-gray-900">MaintAInPro CMMS</h1><p class="mt-2 text-sm text-gray-600">Sign in to your maintenance management system</p></div><div class="rounded-lg border bg-card text-card-foreground shadow-sm"><div class="flex flex-col space-y-1.5 p-6"><div class="text-2xl font-semibold leading-none tracking-tight text-center">Sign In</div></div><div class="p-6 pt-0"><form class="space-y-6"><div><label for="email" class="block text-sm font-medium text-gray-700">Email Address</label><input class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-1" id="email" required="" placeholder="Enter your email" data-testid="email-input" type="email" value=""></div><div><label for="password" class="block text-sm font-medium text-gray-700">Password</label><div class="mt-1 relative"><input class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm pr-10" id="password" required="" placeholder="Enter your password" data-testid="password-input" type="password" value=""><button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye h-4 w-4 text-gray-400"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"></path><circle cx="12" cy="12" r="3"></circle></svg></button></div></div><button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full" type="submit" data-testid="login-button">Sign In</button></form><div class="mt-6 p-4 bg-blue-50 rounded-lg"><h3 class="text-sm font-medium text-blue-900 mb-2">Demo Credentials</h3><div class="space-y-1 text-sm text-blue-700"><p><strong>Supervisor:</strong> supervisor@maintainpro.com</p><p><strong>Technician:</strong> technician@maintainpro.com</p><p><strong>Manager:</strong> manager@maintainpro.com</p><p><strong>Password:</strong> demo123</p></div><div class="mt-3 flex space-x-2"><button class="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3" type="button">Use Supervisor</button><button class="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3" type="button">Use Technician</button></div></div></div></div><div class="text-center text-sm text-gray-500"><p>Enterprise Maintenance Management System</p><p class="mt-1">Secure • Reliable • Efficient</p></div></div></div></div>
+  
 
+</body></html>
+Error message visible: [33mfalse[39m
+Current URL: http://localhost:5000/login
 ]]>
 </system-out>
 </testcase>
