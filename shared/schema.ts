@@ -869,6 +869,8 @@ export type InsertOrganization = z.infer<typeof insertOrganizationSchema>;
 export type Profile = typeof profiles.$inferSelect;
 export type InsertProfile = z.infer<typeof insertProfileSchema>;
 
+export type UserCredential = typeof userCredentials.$inferSelect;
+
 export type Warehouse = typeof warehouses.$inferSelect;
 export type InsertWarehouse = z.infer<typeof insertWarehouseSchema>;
 

@@ -17,8 +17,10 @@ import {
   pushSubscriptions,
   attachments,
   systemLogs,
+  userCredentials,
   Profile,
   InsertProfile,
+  UserCredential,
   Warehouse,
   InsertWarehouse,
   Equipment,
@@ -357,6 +359,11 @@ export class DatabaseStorage implements IStorage {
 
   async getProfiles(): Promise<Profile[]> {
     return await db.select().from(profiles);
+  }
+
+  async getUserCredentials(userId: string): Promise<UserCredential | undefined> {
+    const result = await db.select().from(userCredentials).where(eq(userCredentials.userId, userId)).limit(1);
+    return result[0];
   }
 
   // Warehouses

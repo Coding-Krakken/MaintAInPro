@@ -1,22 +1,22 @@
 import { test, expect } from '@playwright/test';
 import { testData, testCredentials } from '../helpers/testData';
 
-// Test data - use local definitions to avoid conflicts
+// Test data - use actual emails from database
 const testUsers = {
   technician: {
-    email: 'technician@maintainpro.com',
+    email: 'technician@warehouse.com',
     password: 'demo123',
     name: 'Test User',
     role: 'technician',
   },
   supervisor: {
-    email: 'supervisor@maintainpro.com',
+    email: 'supervisor@warehouse.com',
     password: 'demo123',
     name: 'John Smith',
     role: 'supervisor',
   },
   manager: {
-    email: 'manager@example.com',
+    email: 'manager@warehouse.com',
     password: 'demo123',
     name: 'Mike Johnson',
     role: 'manager',
@@ -80,7 +80,7 @@ test.describe('Work Order Management', () => {
     // Login before each test
     await page.goto('/login');
     // Use valid seeded test user credentials
-    await page.fill('[data-testid="email-input"]', 'technician@maintainpro.com');
+    await page.fill('[data-testid="email-input"]', 'technician@warehouse.com');
     await page.fill('[data-testid="password-input"]', 'demo123');
     await page.click('[data-testid="login-button"]');
   await expect(page).toHaveURL('/dashboard');

@@ -24,7 +24,7 @@ export const testCredentials = {
     password: 'wrongpassword',
   },
   valid: {
-    email: 'technician@maintainpro.com',
+    email: 'technician@warehouse.com',
     password: 'demo123',
   },
 };

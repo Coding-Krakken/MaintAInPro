@@ -14,9 +14,9 @@ export default defineConfig({
   ],
   use: {
     baseURL: process.env.BASE_URL || 'http://localhost:5000/',
-    trace: 'on-first-retry',
-    screenshot: 'only-on-failure',
-    video: 'retain-on-failure',
+    trace: 'off',
+    screenshot: 'off',
+    video: 'off',
     // Force headless mode in CI or when no DISPLAY is available
     headless: !!process.env.CI || !process.env.DISPLAY,
   },
@@ -25,7 +25,20 @@ export default defineConfig({
       name: 'chromium',
       use: { 
         ...devices['Desktop Chrome'],
-        executablePath: '/usr/bin/chromium-browser',
+        channel: 'chromium',
+        launchOptions: {
+          executablePath: '/usr/bin/chromium-browser',
+          args: [
+            '--no-sandbox',
+            '--disable-dev-shm-usage',
+            '--disable-gpu',
+            '--disable-extensions',
+            '--no-first-run',
+            '--no-default-browser-check',
+            '--disable-default-apps',
+            '--disable-popup-blocking'
+          ]
+        }
       },
     },
     // Disable other browsers for now to focus on fixing core issues
