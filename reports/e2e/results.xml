@@ -1,13 +1,13 @@
-<testsuites id="" name="" tests="1" failures="1" skipped="0" errors="0" time="20.456631">
-<testsuite name="main-flows.spec.ts" timestamp="2025-08-25T10:39:29.963Z" hostname="chromium" tests="1" failures="1" skipped="0" time="17.62" errors="0">
-<testcase name="Authentication Flow › user can login and logout" classname="main-flows.spec.ts" time="17.62">
+<testsuites id="" name="" tests="1" failures="1" skipped="0" errors="0" time="20.109551">
+<testsuite name="main-flows.spec.ts" timestamp="2025-08-25T10:43:09.625Z" hostname="chromium" tests="1" failures="1" skipped="0" time="17.688" errors="0">
+<testcase name="Authentication Flow › user can login and logout" classname="main-flows.spec.ts" time="17.688">
 <failure message="main-flows.spec.ts:29:3 user can login and logout" type="FAILURE">
 <![CDATA[  [chromium] › main-flows.spec.ts:29:3 › Authentication Flow › user can login and logout ───────────
 
     Error: expect(locator).toContainText(expected) failed
 
     Locator: locator('[data-testid="user-name"]')
-    Expected string: "John Smith"
+    Expected string: "Test User"
     Received string: " "
     Timeout: 5000ms
 
@@ -20,7 +20,7 @@
 
       45 |   await expect(page.locator('[data-testid="completed-work-orders"]')).toBeVisible();
       46 |   await expect(page.locator('[data-testid="active-equipment"]')).toBeVisible();
-    > 47 |   await expect(page.locator('[data-testid="user-name"]')).toContainText(testUsers.supervisor.name);
+    > 47 |   await expect(page.locator('[data-testid="user-name"]')).toContainText('Test User'); // TEST_AUTH_MODE returns mock user
          |                                                           ^
       48 |   // Debug: log dashboard HTML and check for overlays
       49 |   const dashboardHtml = await page.content();
@@ -34,7 +34,7 @@
     Error: expect(locator).toContainText(expected) failed
 
     Locator: locator('[data-testid="user-name"]')
-    Expected string: "John Smith"
+    Expected string: "Test User"
     Received string: " "
     Timeout: 5000ms
 
@@ -47,7 +47,7 @@
 
       45 |   await expect(page.locator('[data-testid="completed-work-orders"]')).toBeVisible();
       46 |   await expect(page.locator('[data-testid="active-equipment"]')).toBeVisible();
-    > 47 |   await expect(page.locator('[data-testid="user-name"]')).toContainText(testUsers.supervisor.name);
+    > 47 |   await expect(page.locator('[data-testid="user-name"]')).toContainText('Test User'); // TEST_AUTH_MODE returns mock user
          |                                                           ^
       48 |   // Debug: log dashboard HTML and check for overlays
       49 |   const dashboardHtml = await page.content();
@@ -61,7 +61,7 @@
     Error: expect(locator).toContainText(expected) failed
 
     Locator: locator('[data-testid="user-name"]')
-    Expected string: "John Smith"
+    Expected string: "Test User"
     Received string: " "
     Timeout: 5000ms
 
@@ -74,7 +74,7 @@
 
       45 |   await expect(page.locator('[data-testid="completed-work-orders"]')).toBeVisible();
       46 |   await expect(page.locator('[data-testid="active-equipment"]')).toBeVisible();
-    > 47 |   await expect(page.locator('[data-testid="user-name"]')).toContainText(testUsers.supervisor.name);
+    > 47 |   await expect(page.locator('[data-testid="user-name"]')).toContainText('Test User'); // TEST_AUTH_MODE returns mock user
          |                                                           ^
       48 |   // Debug: log dashboard HTML and check for overlays
       49 |   const dashboardHtml = await page.content();

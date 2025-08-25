@@ -17,19 +17,19 @@
         "buildHref": "https://github.com/Coding-Krakken/MaintAInPro/actions/runs/17205989952"
       },
       "gitCommit": {
-        "shortHash": "d29d0b9",
-        "hash": "d29d0b99150149e9590d8819278f99f4350e9b41",
-        "subject": "Add work order status management and parts usage components with test data-testid attributes",
-        "body": "Add work order status management and parts usage components with test data-testid attributes\n\nCo-authored-by: Coding-Krakken <220203495+Coding-Krakken@users.noreply.github.com>\n",
+        "shortHash": "c69f5af",
+        "hash": "c69f5af99b4fc884811d99adcc6b1f411018d244",
+        "subject": "Fix Playwright e2e tests: authentication flow partially working",
+        "body": "Fix Playwright e2e tests: authentication flow partially working\n\nCo-authored-by: Coding-Krakken <220203495+Coding-Krakken@users.noreply.github.com>\n",
         "author": {
           "name": "copilot-swe-agent[bot]",
           "email": "198982749+Copilot@users.noreply.github.com",
-          "time": 1756100153000
+          "time": 1756118410000
         },
         "committer": {
           "name": "copilot-swe-agent[bot]",
           "email": "198982749+Copilot@users.noreply.github.com",
-          "time": 1756100153000
+          "time": 1756118410000
         },
         "branch": "copilot/fix-5b4695c5-4631-443a-b1c7-eac251747d17"
       },
@@ -73,19 +73,19 @@
             "buildHref": "https://github.com/Coding-Krakken/MaintAInPro/actions/runs/17205989952"
           },
           "gitCommit": {
-            "shortHash": "d29d0b9",
-            "hash": "d29d0b99150149e9590d8819278f99f4350e9b41",
-            "subject": "Add work order status management and parts usage components with test data-testid attributes",
-            "body": "Add work order status management and parts usage components with test data-testid attributes\n\nCo-authored-by: Coding-Krakken <220203495+Coding-Krakken@users.noreply.github.com>\n",
+            "shortHash": "c69f5af",
+            "hash": "c69f5af99b4fc884811d99adcc6b1f411018d244",
+            "subject": "Fix Playwright e2e tests: authentication flow partially working",
+            "body": "Fix Playwright e2e tests: authentication flow partially working\n\nCo-authored-by: Coding-Krakken <220203495+Coding-Krakken@users.noreply.github.com>\n",
             "author": {
               "name": "copilot-swe-agent[bot]",
               "email": "198982749+Copilot@users.noreply.github.com",
-              "time": 1756100153000
+              "time": 1756118410000
             },
             "committer": {
               "name": "copilot-swe-agent[bot]",
               "email": "198982749+Copilot@users.noreply.github.com",
-              "time": 1756100153000
+              "time": 1756118410000
             },
             "branch": "copilot/fix-5b4695c5-4631-443a-b1c7-eac251747d17"
           },
@@ -138,16 +138,16 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "failed",
-                      "duration": 5756,
+                      "duration": 5772,
                       "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('[data-testid=\"user-name\"]')\nExpected string: \u001b[32m\"John Smith\"\u001b[39m\nReceived string: \u001b[31m\" \"\u001b[39m\nTimeout: 5000ms\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\"user-name\"]')\u001b[22m\n\u001b[2m    9 × locator resolved to <span data-testid=\"user-name\" class=\"hidden sm:inline\"> </span>\u001b[22m\n\u001b[2m      - unexpected value \" \"\u001b[22m\n",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('[data-testid=\"user-name\"]')\nExpected string: \u001b[32m\"John Smith\"\u001b[39m\nReceived string: \u001b[31m\" \"\u001b[39m\nTimeout: 5000ms\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\"user-name\"]')\u001b[22m\n\u001b[2m    9 × locator resolved to <span data-testid=\"user-name\" class=\"hidden sm:inline\"> </span>\u001b[22m\n\u001b[2m      - unexpected value \" \"\u001b[22m\n\n    at /home/runner/work/MaintAInPro/MaintAInPro/tests/e2e/main-flows.spec.ts:47:59",
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('[data-testid=\"user-name\"]')\nExpected string: \u001b[32m\"Test User\"\u001b[39m\nReceived string: \u001b[31m\" \"\u001b[39m\nTimeout: 5000ms\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\"user-name\"]')\u001b[22m\n\u001b[2m    9 × locator resolved to <span data-testid=\"user-name\" class=\"hidden sm:inline\"> </span>\u001b[22m\n\u001b[2m      - unexpected value \" \"\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('[data-testid=\"user-name\"]')\nExpected string: \u001b[32m\"Test User\"\u001b[39m\nReceived string: \u001b[31m\" \"\u001b[39m\nTimeout: 5000ms\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\"user-name\"]')\u001b[22m\n\u001b[2m    9 × locator resolved to <span data-testid=\"user-name\" class=\"hidden sm:inline\"> </span>\u001b[22m\n\u001b[2m      - unexpected value \" \"\u001b[22m\n\n    at /home/runner/work/MaintAInPro/MaintAInPro/tests/e2e/main-flows.spec.ts:47:59",
                         "location": {
                           "file": "/home/runner/work/MaintAInPro/MaintAInPro/tests/e2e/main-flows.spec.ts",
                           "column": 59,
                           "line": 47
                         },
-                        "snippet": "\u001b[0m \u001b[90m 45 |\u001b[39m   \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'[data-testid=\"completed-work-orders\"]'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m 46 |\u001b[39m   \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'[data-testid=\"active-equipment\"]'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 47 |\u001b[39m   \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'[data-testid=\"user-name\"]'\u001b[39m))\u001b[33m.\u001b[39mtoContainText(testUsers\u001b[33m.\u001b[39msupervisor\u001b[33m.\u001b[39mname)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 48 |\u001b[39m   \u001b[90m// Debug: log dashboard HTML and check for overlays\u001b[39m\n \u001b[90m 49 |\u001b[39m   \u001b[36mconst\u001b[39m dashboardHtml \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mcontent()\u001b[33m;\u001b[39m\n \u001b[90m 50 |\u001b[39m   console\u001b[33m.\u001b[39mlog(\u001b[32m'Dashboard HTML after login:'\u001b[39m\u001b[33m,\u001b[39m dashboardHtml\u001b[33m.\u001b[39mslice(\u001b[35m0\u001b[39m\u001b[33m,\u001b[39m \u001b[35m1000\u001b[39m))\u001b[33m;\u001b[39m\u001b[0m"
+                        "snippet": "\u001b[0m \u001b[90m 45 |\u001b[39m   \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'[data-testid=\"completed-work-orders\"]'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m 46 |\u001b[39m   \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'[data-testid=\"active-equipment\"]'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 47 |\u001b[39m   \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'[data-testid=\"user-name\"]'\u001b[39m))\u001b[33m.\u001b[39mtoContainText(\u001b[32m'Test User'\u001b[39m)\u001b[33m;\u001b[39m \u001b[90m// TEST_AUTH_MODE returns mock user\u001b[39m\n \u001b[90m    |\u001b[39m                                                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 48 |\u001b[39m   \u001b[90m// Debug: log dashboard HTML and check for overlays\u001b[39m\n \u001b[90m 49 |\u001b[39m   \u001b[36mconst\u001b[39m dashboardHtml \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mcontent()\u001b[33m;\u001b[39m\n \u001b[90m 50 |\u001b[39m   console\u001b[33m.\u001b[39mlog(\u001b[32m'Dashboard HTML after login:'\u001b[39m\u001b[33m,\u001b[39m dashboardHtml\u001b[33m.\u001b[39mslice(\u001b[35m0\u001b[39m\u001b[33m,\u001b[39m \u001b[35m1000\u001b[39m))\u001b[33m;\u001b[39m\u001b[0m"
                       },
                       "errors": [
                         {
@@ -156,13 +156,13 @@
                             "column": 59,
                             "line": 47
                           },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('[data-testid=\"user-name\"]')\nExpected string: \u001b[32m\"John Smith\"\u001b[39m\nReceived string: \u001b[31m\" \"\u001b[39m\nTimeout: 5000ms\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\"user-name\"]')\u001b[22m\n\u001b[2m    9 × locator resolved to <span data-testid=\"user-name\" class=\"hidden sm:inline\"> </span>\u001b[22m\n\u001b[2m      - unexpected value \" \"\u001b[22m\n\n\n  45 |   await expect(page.locator('[data-testid=\"completed-work-orders\"]')).toBeVisible();\n  46 |   await expect(page.locator('[data-testid=\"active-equipment\"]')).toBeVisible();\n> 47 |   await expect(page.locator('[data-testid=\"user-name\"]')).toContainText(testUsers.supervisor.name);\n     |                                                           ^\n  48 |   // Debug: log dashboard HTML and check for overlays\n  49 |   const dashboardHtml = await page.content();\n  50 |   console.log('Dashboard HTML after login:', dashboardHtml.slice(0, 1000));\n    at /home/runner/work/MaintAInPro/MaintAInPro/tests/e2e/main-flows.spec.ts:47:59"
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('[data-testid=\"user-name\"]')\nExpected string: \u001b[32m\"Test User\"\u001b[39m\nReceived string: \u001b[31m\" \"\u001b[39m\nTimeout: 5000ms\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\"user-name\"]')\u001b[22m\n\u001b[2m    9 × locator resolved to <span data-testid=\"user-name\" class=\"hidden sm:inline\"> </span>\u001b[22m\n\u001b[2m      - unexpected value \" \"\u001b[22m\n\n\n  45 |   await expect(page.locator('[data-testid=\"completed-work-orders\"]')).toBeVisible();\n  46 |   await expect(page.locator('[data-testid=\"active-equipment\"]')).toBeVisible();\n> 47 |   await expect(page.locator('[data-testid=\"user-name\"]')).toContainText('Test User'); // TEST_AUTH_MODE returns mock user\n     |                                                           ^\n  48 |   // Debug: log dashboard HTML and check for overlays\n  49 |   const dashboardHtml = await page.content();\n  50 |   console.log('Dashboard HTML after login:', dashboardHtml.slice(0, 1000));\n    at /home/runner/work/MaintAInPro/MaintAInPro/tests/e2e/main-flows.spec.ts:47:59"
                         }
                       ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-08-25T10:39:30.511Z",
+                      "startTime": "2025-08-25T10:43:10.165Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -181,16 +181,16 @@
                       "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "failed",
-                      "duration": 5799,
+                      "duration": 5793,
                       "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('[data-testid=\"user-name\"]')\nExpected string: \u001b[32m\"John Smith\"\u001b[39m\nReceived string: \u001b[31m\" \"\u001b[39m\nTimeout: 5000ms\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\"user-name\"]')\u001b[22m\n\u001b[2m    9 × locator resolved to <span data-testid=\"user-name\" class=\"hidden sm:inline\"> </span>\u001b[22m\n\u001b[2m      - unexpected value \" \"\u001b[22m\n",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('[data-testid=\"user-name\"]')\nExpected string: \u001b[32m\"John Smith\"\u001b[39m\nReceived string: \u001b[31m\" \"\u001b[39m\nTimeout: 5000ms\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\"user-name\"]')\u001b[22m\n\u001b[2m    9 × locator resolved to <span data-testid=\"user-name\" class=\"hidden sm:inline\"> </span>\u001b[22m\n\u001b[2m      - unexpected value \" \"\u001b[22m\n\n    at /home/runner/work/MaintAInPro/MaintAInPro/tests/e2e/main-flows.spec.ts:47:59",
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('[data-testid=\"user-name\"]')\nExpected string: \u001b[32m\"Test User\"\u001b[39m\nReceived string: \u001b[31m\" \"\u001b[39m\nTimeout: 5000ms\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\"user-name\"]')\u001b[22m\n\u001b[2m    9 × locator resolved to <span data-testid=\"user-name\" class=\"hidden sm:inline\"> </span>\u001b[22m\n\u001b[2m      - unexpected value \" \"\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('[data-testid=\"user-name\"]')\nExpected string: \u001b[32m\"Test User\"\u001b[39m\nReceived string: \u001b[31m\" \"\u001b[39m\nTimeout: 5000ms\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\"user-name\"]')\u001b[22m\n\u001b[2m    9 × locator resolved to <span data-testid=\"user-name\" class=\"hidden sm:inline\"> </span>\u001b[22m\n\u001b[2m      - unexpected value \" \"\u001b[22m\n\n    at /home/runner/work/MaintAInPro/MaintAInPro/tests/e2e/main-flows.spec.ts:47:59",
                         "location": {
                           "file": "/home/runner/work/MaintAInPro/MaintAInPro/tests/e2e/main-flows.spec.ts",
                           "column": 59,
                           "line": 47
                         },
-                        "snippet": "\u001b[0m \u001b[90m 45 |\u001b[39m   \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'[data-testid=\"completed-work-orders\"]'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m 46 |\u001b[39m   \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'[data-testid=\"active-equipment\"]'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 47 |\u001b[39m   \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'[data-testid=\"user-name\"]'\u001b[39m))\u001b[33m.\u001b[39mtoContainText(testUsers\u001b[33m.\u001b[39msupervisor\u001b[33m.\u001b[39mname)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 48 |\u001b[39m   \u001b[90m// Debug: log dashboard HTML and check for overlays\u001b[39m\n \u001b[90m 49 |\u001b[39m   \u001b[36mconst\u001b[39m dashboardHtml \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mcontent()\u001b[33m;\u001b[39m\n \u001b[90m 50 |\u001b[39m   console\u001b[33m.\u001b[39mlog(\u001b[32m'Dashboard HTML after login:'\u001b[39m\u001b[33m,\u001b[39m dashboardHtml\u001b[33m.\u001b[39mslice(\u001b[35m0\u001b[39m\u001b[33m,\u001b[39m \u001b[35m1000\u001b[39m))\u001b[33m;\u001b[39m\u001b[0m"
+                        "snippet": "\u001b[0m \u001b[90m 45 |\u001b[39m   \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'[data-testid=\"completed-work-orders\"]'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m 46 |\u001b[39m   \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'[data-testid=\"active-equipment\"]'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 47 |\u001b[39m   \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'[data-testid=\"user-name\"]'\u001b[39m))\u001b[33m.\u001b[39mtoContainText(\u001b[32m'Test User'\u001b[39m)\u001b[33m;\u001b[39m \u001b[90m// TEST_AUTH_MODE returns mock user\u001b[39m\n \u001b[90m    |\u001b[39m                                                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 48 |\u001b[39m   \u001b[90m// Debug: log dashboard HTML and check for overlays\u001b[39m\n \u001b[90m 49 |\u001b[39m   \u001b[36mconst\u001b[39m dashboardHtml \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mcontent()\u001b[33m;\u001b[39m\n \u001b[90m 50 |\u001b[39m   console\u001b[33m.\u001b[39mlog(\u001b[32m'Dashboard HTML after login:'\u001b[39m\u001b[33m,\u001b[39m dashboardHtml\u001b[33m.\u001b[39mslice(\u001b[35m0\u001b[39m\u001b[33m,\u001b[39m \u001b[35m1000\u001b[39m))\u001b[33m;\u001b[39m\u001b[0m"
                       },
                       "errors": [
                         {
@@ -199,13 +199,13 @@
                             "column": 59,
                             "line": 47
                           },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('[data-testid=\"user-name\"]')\nExpected string: \u001b[32m\"John Smith\"\u001b[39m\nReceived string: \u001b[31m\" \"\u001b[39m\nTimeout: 5000ms\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\"user-name\"]')\u001b[22m\n\u001b[2m    9 × locator resolved to <span data-testid=\"user-name\" class=\"hidden sm:inline\"> </span>\u001b[22m\n\u001b[2m      - unexpected value \" \"\u001b[22m\n\n\n  45 |   await expect(page.locator('[data-testid=\"completed-work-orders\"]')).toBeVisible();\n  46 |   await expect(page.locator('[data-testid=\"active-equipment\"]')).toBeVisible();\n> 47 |   await expect(page.locator('[data-testid=\"user-name\"]')).toContainText(testUsers.supervisor.name);\n     |                                                           ^\n  48 |   // Debug: log dashboard HTML and check for overlays\n  49 |   const dashboardHtml = await page.content();\n  50 |   console.log('Dashboard HTML after login:', dashboardHtml.slice(0, 1000));\n    at /home/runner/work/MaintAInPro/MaintAInPro/tests/e2e/main-flows.spec.ts:47:59"
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('[data-testid=\"user-name\"]')\nExpected string: \u001b[32m\"Test User\"\u001b[39m\nReceived string: \u001b[31m\" \"\u001b[39m\nTimeout: 5000ms\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\"user-name\"]')\u001b[22m\n\u001b[2m    9 × locator resolved to <span data-testid=\"user-name\" class=\"hidden sm:inline\"> </span>\u001b[22m\n\u001b[2m      - unexpected value \" \"\u001b[22m\n\n\n  45 |   await expect(page.locator('[data-testid=\"completed-work-orders\"]')).toBeVisible();\n  46 |   await expect(page.locator('[data-testid=\"active-equipment\"]')).toBeVisible();\n> 47 |   await expect(page.locator('[data-testid=\"user-name\"]')).toContainText('Test User'); // TEST_AUTH_MODE returns mock user\n     |                                                           ^\n  48 |   // Debug: log dashboard HTML and check for overlays\n  49 |   const dashboardHtml = await page.content();\n  50 |   console.log('Dashboard HTML after login:', dashboardHtml.slice(0, 1000));\n    at /home/runner/work/MaintAInPro/MaintAInPro/tests/e2e/main-flows.spec.ts:47:59"
                         }
                       ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 1,
-                      "startTime": "2025-08-25T10:39:37.043Z",
+                      "startTime": "2025-08-25T10:43:16.729Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -224,16 +224,16 @@
                       "workerIndex": 2,
                       "parallelIndex": 0,
                       "status": "failed",
-                      "duration": 6065,
+                      "duration": 6123,
                       "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('[data-testid=\"user-name\"]')\nExpected string: \u001b[32m\"John Smith\"\u001b[39m\nReceived string: \u001b[31m\" \"\u001b[39m\nTimeout: 5000ms\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\"user-name\"]')\u001b[22m\n\u001b[2m    9 × locator resolved to <span data-testid=\"user-name\" class=\"hidden sm:inline\"> </span>\u001b[22m\n\u001b[2m      - unexpected value \" \"\u001b[22m\n",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('[data-testid=\"user-name\"]')\nExpected string: \u001b[32m\"John Smith\"\u001b[39m\nReceived string: \u001b[31m\" \"\u001b[39m\nTimeout: 5000ms\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\"user-name\"]')\u001b[22m\n\u001b[2m    9 × locator resolved to <span data-testid=\"user-name\" class=\"hidden sm:inline\"> </span>\u001b[22m\n\u001b[2m      - unexpected value \" \"\u001b[22m\n\n    at /home/runner/work/MaintAInPro/MaintAInPro/tests/e2e/main-flows.spec.ts:47:59",
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('[data-testid=\"user-name\"]')\nExpected string: \u001b[32m\"Test User\"\u001b[39m\nReceived string: \u001b[31m\" \"\u001b[39m\nTimeout: 5000ms\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\"user-name\"]')\u001b[22m\n\u001b[2m    9 × locator resolved to <span data-testid=\"user-name\" class=\"hidden sm:inline\"> </span>\u001b[22m\n\u001b[2m      - unexpected value \" \"\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('[data-testid=\"user-name\"]')\nExpected string: \u001b[32m\"Test User\"\u001b[39m\nReceived string: \u001b[31m\" \"\u001b[39m\nTimeout: 5000ms\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\"user-name\"]')\u001b[22m\n\u001b[2m    9 × locator resolved to <span data-testid=\"user-name\" class=\"hidden sm:inline\"> </span>\u001b[22m\n\u001b[2m      - unexpected value \" \"\u001b[22m\n\n    at /home/runner/work/MaintAInPro/MaintAInPro/tests/e2e/main-flows.spec.ts:47:59",
                         "location": {
                           "file": "/home/runner/work/MaintAInPro/MaintAInPro/tests/e2e/main-flows.spec.ts",
                           "column": 59,
                           "line": 47
                         },
-                        "snippet": "\u001b[0m \u001b[90m 45 |\u001b[39m   \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'[data-testid=\"completed-work-orders\"]'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m 46 |\u001b[39m   \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'[data-testid=\"active-equipment\"]'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 47 |\u001b[39m   \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'[data-testid=\"user-name\"]'\u001b[39m))\u001b[33m.\u001b[39mtoContainText(testUsers\u001b[33m.\u001b[39msupervisor\u001b[33m.\u001b[39mname)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 48 |\u001b[39m   \u001b[90m// Debug: log dashboard HTML and check for overlays\u001b[39m\n \u001b[90m 49 |\u001b[39m   \u001b[36mconst\u001b[39m dashboardHtml \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mcontent()\u001b[33m;\u001b[39m\n \u001b[90m 50 |\u001b[39m   console\u001b[33m.\u001b[39mlog(\u001b[32m'Dashboard HTML after login:'\u001b[39m\u001b[33m,\u001b[39m dashboardHtml\u001b[33m.\u001b[39mslice(\u001b[35m0\u001b[39m\u001b[33m,\u001b[39m \u001b[35m1000\u001b[39m))\u001b[33m;\u001b[39m\u001b[0m"
+                        "snippet": "\u001b[0m \u001b[90m 45 |\u001b[39m   \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'[data-testid=\"completed-work-orders\"]'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m 46 |\u001b[39m   \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'[data-testid=\"active-equipment\"]'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 47 |\u001b[39m   \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'[data-testid=\"user-name\"]'\u001b[39m))\u001b[33m.\u001b[39mtoContainText(\u001b[32m'Test User'\u001b[39m)\u001b[33m;\u001b[39m \u001b[90m// TEST_AUTH_MODE returns mock user\u001b[39m\n \u001b[90m    |\u001b[39m                                                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 48 |\u001b[39m   \u001b[90m// Debug: log dashboard HTML and check for overlays\u001b[39m\n \u001b[90m 49 |\u001b[39m   \u001b[36mconst\u001b[39m dashboardHtml \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mcontent()\u001b[33m;\u001b[39m\n \u001b[90m 50 |\u001b[39m   console\u001b[33m.\u001b[39mlog(\u001b[32m'Dashboard HTML after login:'\u001b[39m\u001b[33m,\u001b[39m dashboardHtml\u001b[33m.\u001b[39mslice(\u001b[35m0\u001b[39m\u001b[33m,\u001b[39m \u001b[35m1000\u001b[39m))\u001b[33m;\u001b[39m\u001b[0m"
                       },
                       "errors": [
                         {
@@ -242,13 +242,13 @@
                             "column": 59,
                             "line": 47
                           },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('[data-testid=\"user-name\"]')\nExpected string: \u001b[32m\"John Smith\"\u001b[39m\nReceived string: \u001b[31m\" \"\u001b[39m\nTimeout: 5000ms\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\"user-name\"]')\u001b[22m\n\u001b[2m    9 × locator resolved to <span data-testid=\"user-name\" class=\"hidden sm:inline\"> </span>\u001b[22m\n\u001b[2m      - unexpected value \" \"\u001b[22m\n\n\n  45 |   await expect(page.locator('[data-testid=\"completed-work-orders\"]')).toBeVisible();\n  46 |   await expect(page.locator('[data-testid=\"active-equipment\"]')).toBeVisible();\n> 47 |   await expect(page.locator('[data-testid=\"user-name\"]')).toContainText(testUsers.supervisor.name);\n     |                                                           ^\n  48 |   // Debug: log dashboard HTML and check for overlays\n  49 |   const dashboardHtml = await page.content();\n  50 |   console.log('Dashboard HTML after login:', dashboardHtml.slice(0, 1000));\n    at /home/runner/work/MaintAInPro/MaintAInPro/tests/e2e/main-flows.spec.ts:47:59"
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('[data-testid=\"user-name\"]')\nExpected string: \u001b[32m\"Test User\"\u001b[39m\nReceived string: \u001b[31m\" \"\u001b[39m\nTimeout: 5000ms\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\"user-name\"]')\u001b[22m\n\u001b[2m    9 × locator resolved to <span data-testid=\"user-name\" class=\"hidden sm:inline\"> </span>\u001b[22m\n\u001b[2m      - unexpected value \" \"\u001b[22m\n\n\n  45 |   await expect(page.locator('[data-testid=\"completed-work-orders\"]')).toBeVisible();\n  46 |   await expect(page.locator('[data-testid=\"active-equipment\"]')).toBeVisible();\n> 47 |   await expect(page.locator('[data-testid=\"user-name\"]')).toContainText('Test User'); // TEST_AUTH_MODE returns mock user\n     |                                                           ^\n  48 |   // Debug: log dashboard HTML and check for overlays\n  49 |   const dashboardHtml = await page.content();\n  50 |   console.log('Dashboard HTML after login:', dashboardHtml.slice(0, 1000));\n    at /home/runner/work/MaintAInPro/MaintAInPro/tests/e2e/main-flows.spec.ts:47:59"
                         }
                       ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 2,
-                      "startTime": "2025-08-25T10:39:43.630Z",
+                      "startTime": "2025-08-25T10:43:23.309Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -279,8 +279,8 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2025-08-25T10:39:29.914Z",
-    "duration": 20456.631,
+    "startTime": "2025-08-25T10:43:09.573Z",
+    "duration": 20109.551,
     "expected": 0,
     "skipped": 0,
     "unexpected": 1,
