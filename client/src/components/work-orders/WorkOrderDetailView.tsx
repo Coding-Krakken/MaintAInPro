@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
   Calendar,
   Clock,
@@ -15,6 +16,7 @@ import {
   XCircle,
   QrCode,
   Timer,
+  Package,
 } from 'lucide-react';
 import { WorkOrder, Attachment, Equipment } from '@/types';
 import FileUpload from '@/components/FileUpload';
@@ -194,6 +196,96 @@ const WorkOrderDetailView: React.FC<WorkOrderDetailViewProps> = ({ workOrderId, 
 
         {/* Details Tab */}
         <TabsContent value='details' className='space-y-6'>
+          {/* Status Management Section */}
+          <Card>
+            <CardHeader>
+              <CardTitle className='flex items-center'>
+                <CheckCircle className='w-5 h-5 mr-2' />
+                Status Management
+              </CardTitle>
+            </CardHeader>
+            <CardContent className='space-y-4'>
+              <div className='flex items-center space-x-4'>
+                <div className='flex-1'>
+                  <label className='text-sm font-medium text-gray-700 mb-2 block'>Update Status</label>
+                  <Select defaultValue={workOrder.status}>
+                    <SelectTrigger data-testid='status-select'>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value='new'>New</SelectItem>
+                      <SelectItem value='assigned'>Assigned</SelectItem>
+                      <SelectItem value='in_progress'>In Progress</SelectItem>
+                      <SelectItem value='completed'>Completed</SelectItem>
+                      <SelectItem value='verified'>Verified</SelectItem>
+                      <SelectItem value='closed'>Closed</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <Button data-testid='update-status-button'>
+                  Update Status
+                </Button>
+              </div>
+              
+              <div className='space-y-2'>
+                <label className='text-sm font-medium text-gray-700'>Add Notes</label>
+                <textarea
+                  className='w-full p-2 border border-gray-300 rounded-md'
+                  placeholder='Add your notes here...'
+                  rows={3}
+                  data-testid='notes-input'
+                />
+                <Button size='sm' data-testid='add-note-button'>
+                  Add Note
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Parts Usage Section */}
+          <Card>
+            <CardHeader>
+              <CardTitle className='flex items-center'>
+                <Package className='w-5 h-5 mr-2' />
+                Parts & Materials
+              </CardTitle>
+            </CardHeader>
+            <CardContent className='space-y-4'>
+              <div className='flex space-x-4'>
+                <div className='flex-1'>
+                  <input
+                    type='text'
+                    placeholder='Search parts...'
+                    className='w-full p-2 border border-gray-300 rounded-md'
+                    data-testid='part-search'
+                  />
+                </div>
+                <Button data-testid='add-parts-button'>
+                  Add Parts
+                </Button>
+              </div>
+              
+              <div className='hidden' data-testid='part-select'>
+                <div className='p-2 border rounded cursor-pointer hover:bg-gray-50'>
+                  HYT106 - Test Part
+                </div>
+              </div>
+              
+              <div className='hidden'>
+                <label className='text-sm font-medium text-gray-700'>Quantity</label>
+                <input
+                  type='number'
+                  placeholder='1'
+                  className='w-20 p-1 border border-gray-300 rounded'
+                  data-testid='quantity-input'
+                />
+                <Button size='sm' className='ml-2' data-testid='confirm-parts-button'>
+                  Confirm
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
           <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
             {/* Basic Information */}
             <Card>
