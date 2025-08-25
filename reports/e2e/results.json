@@ -17,19 +17,19 @@
         "buildHref": "https://github.com/Coding-Krakken/MaintAInPro/actions/runs/17218717359"
       },
       "gitCommit": {
-        "shortHash": "91165cb",
-        "hash": "91165cb1e83e97bce5bdfb580a1a3f479ad029fc",
-        "subject": "Enhance E2E tests and rate limiting configuration",
-        "body": "Enhance E2E tests and rate limiting configuration\n\n- Added debug logging for rate limiting environment variables.\n- Updated rate limiting middleware to apply before route registration.\n- Modified E2E tests to use valid email addresses for login.\n- Implemented API token retrieval in E2E tests for authentication.\n- Improved error handling for API responses in tests.\n- Ensured localStorage is set with access tokens before page reloads in tests.\n",
+        "shortHash": "1097c72",
+        "hash": "1097c7234d6198b38ae3073dcd189e8abeeeb52b",
+        "subject": "Fix core Playwright e2e authentication issues: database storage, password verification, and test data",
+        "body": "Fix core Playwright e2e authentication issues: database storage, password verification, and test data\n\nCo-authored-by: Coding-Krakken <220203495+Coding-Krakken@users.noreply.github.com>\n",
         "author": {
-          "name": "Coding-Krakken",
-          "email": "davidtraversmailbox@gmail.com",
-          "time": 1756150176000
+          "name": "copilot-swe-agent[bot]",
+          "email": "198982749+Copilot@users.noreply.github.com",
+          "time": 1756151820000
         },
         "committer": {
-          "name": "GitHub",
-          "email": "noreply@github.com",
-          "time": 1756150176000
+          "name": "copilot-swe-agent[bot]",
+          "email": "198982749+Copilot@users.noreply.github.com",
+          "time": 1756151820000
         },
         "branch": "copilot/fix-5b4695c5-4631-443a-b1c7-eac251747d17"
       },
@@ -73,19 +73,19 @@
             "buildHref": "https://github.com/Coding-Krakken/MaintAInPro/actions/runs/17218717359"
           },
           "gitCommit": {
-            "shortHash": "91165cb",
-            "hash": "91165cb1e83e97bce5bdfb580a1a3f479ad029fc",
-            "subject": "Enhance E2E tests and rate limiting configuration",
-            "body": "Enhance E2E tests and rate limiting configuration\n\n- Added debug logging for rate limiting environment variables.\n- Updated rate limiting middleware to apply before route registration.\n- Modified E2E tests to use valid email addresses for login.\n- Implemented API token retrieval in E2E tests for authentication.\n- Improved error handling for API responses in tests.\n- Ensured localStorage is set with access tokens before page reloads in tests.\n",
+            "shortHash": "1097c72",
+            "hash": "1097c7234d6198b38ae3073dcd189e8abeeeb52b",
+            "subject": "Fix core Playwright e2e authentication issues: database storage, password verification, and test data",
+            "body": "Fix core Playwright e2e authentication issues: database storage, password verification, and test data\n\nCo-authored-by: Coding-Krakken <220203495+Coding-Krakken@users.noreply.github.com>\n",
             "author": {
-              "name": "Coding-Krakken",
-              "email": "davidtraversmailbox@gmail.com",
-              "time": 1756150176000
+              "name": "copilot-swe-agent[bot]",
+              "email": "198982749+Copilot@users.noreply.github.com",
+              "time": 1756151820000
             },
             "committer": {
-              "name": "GitHub",
-              "email": "noreply@github.com",
-              "time": 1756150176000
+              "name": "copilot-swe-agent[bot]",
+              "email": "198982749+Copilot@users.noreply.github.com",
+              "time": 1756151820000
             },
             "branch": "copilot/fix-5b4695c5-4631-443a-b1c7-eac251747d17"
           },
@@ -110,21 +110,64 @@
   },
   "suites": [
     {
-      "title": "main-flows.spec.ts",
-      "file": "main-flows.spec.ts",
+      "title": "basic.e2e.test.ts",
+      "file": "basic.e2e.test.ts",
       "column": 0,
       "line": 0,
       "specs": [],
       "suites": [
         {
-          "title": "Authentication Flow",
-          "file": "main-flows.spec.ts",
-          "line": 53,
+          "title": "Basic E2E Tests",
+          "file": "basic.e2e.test.ts",
+          "line": 3,
           "column": 6,
           "specs": [
             {
-              "title": "user can login and logout",
-              "ok": false,
+              "title": "should load the homepage",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "location": {
+                        "file": "/home/runner/work/MaintAInPro/MaintAInPro/tests/e2e/basic.e2e.test.ts",
+                        "line": 4,
+                        "column": 8
+                      }
+                    }
+                  ],
+                  "expectedStatus": "skipped",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": -1,
+                      "parallelIndex": -1,
+                      "status": "skipped",
+                      "duration": 0,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T19:58:48.861Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "5b9ef2734cb882eb5f5a-4b7943e89f3cfbadd5ca",
+              "file": "basic.e2e.test.ts",
+              "line": 4,
+              "column": 8
+            },
+            {
+              "title": "should verify test framework",
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -137,168 +180,207 @@
                     {
                       "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 0,
-                      "error": {
-                        "message": "SyntaxError: Unexpected token 'T', \"Too many a\"... is not valid JSON",
-                        "stack": "SyntaxError: Unexpected token 'T', \"Too many a\"... is not valid JSON\n    at /home/runner/work/MaintAInPro/MaintAInPro/tests/e2e/main-flows.spec.ts:44:19",
-                        "location": {
-                          "file": "/home/runner/work/MaintAInPro/MaintAInPro/tests/e2e/main-flows.spec.ts",
-                          "column": 19,
-                          "line": 44
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 42 |\u001b[39m     \u001b[36mlet\u001b[39m body\u001b[33m;\u001b[39m\n \u001b[90m 43 |\u001b[39m     \u001b[36mtry\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 44 |\u001b[39m       body \u001b[33m=\u001b[39m \u001b[33mJSON\u001b[39m\u001b[33m.\u001b[39mparse(textBody)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                   \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 45 |\u001b[39m     } \u001b[36mcatch\u001b[39m (err) {\n \u001b[90m 46 |\u001b[39m       console\u001b[33m.\u001b[39merror(\u001b[32m'Failed to parse login response as JSON:'\u001b[39m\u001b[33m,\u001b[39m err)\u001b[33m;\u001b[39m\n \u001b[90m 47 |\u001b[39m       \u001b[36mthrow\u001b[39m err\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/runner/work/MaintAInPro/MaintAInPro/tests/e2e/main-flows.spec.ts",
-                            "column": 19,
-                            "line": 44
-                          },
-                          "message": "SyntaxError: Unexpected token 'T', \"Too many a\"... is not valid JSON\n\n  42 |     let body;\n  43 |     try {\n> 44 |       body = JSON.parse(textBody);\n     |                   ^\n  45 |     } catch (err) {\n  46 |       console.error('Failed to parse login response as JSON:', err);\n  47 |       throw err;\n    at /home/runner/work/MaintAInPro/MaintAInPro/tests/e2e/main-flows.spec.ts:44:19"
-                        }
-                      ],
-                      "stdout": [
-                        {
-                          "text": "API login response status: \u001b[33m429\u001b[39m\n"
-                        },
-                        {
-                          "text": "API login response body: Too many authentication attempts from this IP, please try again after 15 minutes.\n"
-                        }
-                      ],
-                      "stderr": [
-                        {
-                          "text": "Failed to parse login response as JSON: SyntaxError: Unexpected token 'T', \"Too many a\"... is not valid JSON\n    at JSON.parse (<anonymous>)\n    at \u001b[90mfile:///home/runner/work/MaintAInPro/MaintAInPro/\u001b[39mtests/e2e/main-flows.spec.ts:44:19\n    at \u001b[90m/home/runner/work/MaintAInPro/MaintAInPro/\u001b[39mnode_modules/\u001b[4mplaywright\u001b[24m/lib/worker/testInfo.js:326:11\n    at TimeoutManager.withRunnable \u001b[90m(/home/runner/work/MaintAInPro/MaintAInPro/\u001b[39mnode_modules/\u001b[4mplaywright\u001b[24m/lib/worker/timeoutManager.js:67:14\u001b[90m)\u001b[39m\n    at TestInfoImpl._runWithTimeout \u001b[90m(/home/runner/work/MaintAInPro/MaintAInPro/\u001b[39mnode_modules/\u001b[4mplaywright\u001b[24m/lib/worker/testInfo.js:324:7\u001b[90m)\u001b[39m\n    at FixtureRunner.resolveParametersAndRunFunction \u001b[90m(/home/runner/work/MaintAInPro/MaintAInPro/\u001b[39mnode_modules/\u001b[4mplaywright\u001b[24m/lib/worker/fixtureRunner.js:220:5\u001b[90m)\u001b[39m\n    at \u001b[90m/home/runner/work/MaintAInPro/MaintAInPro/\u001b[39mnode_modules/\u001b[4mplaywright\u001b[24m/lib/worker/workerMain.js:428:13\n    at TestInfoImpl._runAsStep \u001b[90m(/home/runner/work/MaintAInPro/MaintAInPro/\u001b[39mnode_modules/\u001b[4mplaywright\u001b[24m/lib/worker/testInfo.js:315:7\u001b[90m)\u001b[39m\n    at WorkerMain._runAllHooksForSuite \u001b[90m(/home/runner/work/MaintAInPro/MaintAInPro/\u001b[39mnode_modules/\u001b[4mplaywright\u001b[24m/lib/worker/workerMain.js:423:9\u001b[90m)\u001b[39m\n    at WorkerMain._runBeforeAllHooksForSuite \u001b[90m(/home/runner/work/MaintAInPro/MaintAInPro/\u001b[39mnode_modules/\u001b[4mplaywright\u001b[24m/lib/worker/workerMain.js:417:5\u001b[90m)\u001b[39m\n    at \u001b[90m/home/runner/work/MaintAInPro/MaintAInPro/\u001b[39mnode_modules/\u001b[4mplaywright\u001b[24m/lib/worker/workerMain.js:299:11\n    at TestInfoImpl._runAsStep \u001b[90m(/home/runner/work/MaintAInPro/MaintAInPro/\u001b[39mnode_modules/\u001b[4mplaywright\u001b[24m/lib/worker/testInfo.js:315:7\u001b[90m)\u001b[39m\n    at \u001b[90m/home/runner/work/MaintAInPro/MaintAInPro/\u001b[39mnode_modules/\u001b[4mplaywright\u001b[24m/lib/worker/workerMain.js:297:7\n    at WorkerMain._runTest \u001b[90m(/home/runner/work/MaintAInPro/MaintAInPro/\u001b[39mnode_modules/\u001b[4mplaywright\u001b[24m/lib/worker/workerMain.js:282:5\u001b[90m)\u001b[39m\n    at WorkerMain.runTestGroup \u001b[90m(/home/runner/work/MaintAInPro/MaintAInPro/\u001b[39mnode_modules/\u001b[4mplaywright\u001b[24m/lib/worker/workerMain.js:194:11\u001b[90m)\u001b[39m\n    at process.<anonymous> \u001b[90m(/home/runner/work/MaintAInPro/MaintAInPro/\u001b[39mnode_modules/\u001b[4mplaywright\u001b[24m/lib/common/process.js:65:22\u001b[90m)\u001b[39m\n"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 193,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-08-25T19:56:02.055Z",
+                      "startTime": "2025-08-25T19:58:49.384Z",
                       "annotations": [],
-                      "attachments": [],
-                      "errorLocation": {
-                        "file": "/home/runner/work/MaintAInPro/MaintAInPro/tests/e2e/main-flows.spec.ts",
-                        "column": 19,
-                        "line": 44
-                      }
-                    },
-                    {
-                      "workerIndex": 1,
-                      "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 0,
-                      "error": {
-                        "message": "SyntaxError: Unexpected token 'T', \"Too many a\"... is not valid JSON",
-                        "stack": "SyntaxError: Unexpected token 'T', \"Too many a\"... is not valid JSON\n    at /home/runner/work/MaintAInPro/MaintAInPro/tests/e2e/main-flows.spec.ts:44:19",
-                        "location": {
-                          "file": "/home/runner/work/MaintAInPro/MaintAInPro/tests/e2e/main-flows.spec.ts",
-                          "column": 19,
-                          "line": 44
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 42 |\u001b[39m     \u001b[36mlet\u001b[39m body\u001b[33m;\u001b[39m\n \u001b[90m 43 |\u001b[39m     \u001b[36mtry\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 44 |\u001b[39m       body \u001b[33m=\u001b[39m \u001b[33mJSON\u001b[39m\u001b[33m.\u001b[39mparse(textBody)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                   \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 45 |\u001b[39m     } \u001b[36mcatch\u001b[39m (err) {\n \u001b[90m 46 |\u001b[39m       console\u001b[33m.\u001b[39merror(\u001b[32m'Failed to parse login response as JSON:'\u001b[39m\u001b[33m,\u001b[39m err)\u001b[33m;\u001b[39m\n \u001b[90m 47 |\u001b[39m       \u001b[36mthrow\u001b[39m err\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/runner/work/MaintAInPro/MaintAInPro/tests/e2e/main-flows.spec.ts",
-                            "column": 19,
-                            "line": 44
-                          },
-                          "message": "SyntaxError: Unexpected token 'T', \"Too many a\"... is not valid JSON\n\n  42 |     let body;\n  43 |     try {\n> 44 |       body = JSON.parse(textBody);\n     |                   ^\n  45 |     } catch (err) {\n  46 |       console.error('Failed to parse login response as JSON:', err);\n  47 |       throw err;\n    at /home/runner/work/MaintAInPro/MaintAInPro/tests/e2e/main-flows.spec.ts:44:19"
-                        }
-                      ],
-                      "stdout": [
-                        {
-                          "text": "API login response status: \u001b[33m429\u001b[39m\n"
-                        },
-                        {
-                          "text": "API login response body: Too many authentication attempts from this IP, please try again after 15 minutes.\n"
-                        }
-                      ],
-                      "stderr": [
-                        {
-                          "text": "Failed to parse login response as JSON: SyntaxError: Unexpected token 'T', \"Too many a\"... is not valid JSON\n    at JSON.parse (<anonymous>)\n    at \u001b[90mfile:///home/runner/work/MaintAInPro/MaintAInPro/\u001b[39mtests/e2e/main-flows.spec.ts:44:19\n    at \u001b[90m/home/runner/work/MaintAInPro/MaintAInPro/\u001b[39mnode_modules/\u001b[4mplaywright\u001b[24m/lib/worker/testInfo.js:326:11\n    at TimeoutManager.withRunnable \u001b[90m(/home/runner/work/MaintAInPro/MaintAInPro/\u001b[39mnode_modules/\u001b[4mplaywright\u001b[24m/lib/worker/timeoutManager.js:67:14\u001b[90m)\u001b[39m\n    at TestInfoImpl._runWithTimeout \u001b[90m(/home/runner/work/MaintAInPro/MaintAInPro/\u001b[39mnode_modules/\u001b[4mplaywright\u001b[24m/lib/worker/testInfo.js:324:7\u001b[90m)\u001b[39m\n    at FixtureRunner.resolveParametersAndRunFunction \u001b[90m(/home/runner/work/MaintAInPro/MaintAInPro/\u001b[39mnode_modules/\u001b[4mplaywright\u001b[24m/lib/worker/fixtureRunner.js:220:5\u001b[90m)\u001b[39m\n    at \u001b[90m/home/runner/work/MaintAInPro/MaintAInPro/\u001b[39mnode_modules/\u001b[4mplaywright\u001b[24m/lib/worker/workerMain.js:428:13\n    at TestInfoImpl._runAsStep \u001b[90m(/home/runner/work/MaintAInPro/MaintAInPro/\u001b[39mnode_modules/\u001b[4mplaywright\u001b[24m/lib/worker/testInfo.js:315:7\u001b[90m)\u001b[39m\n    at WorkerMain._runAllHooksForSuite \u001b[90m(/home/runner/work/MaintAInPro/MaintAInPro/\u001b[39mnode_modules/\u001b[4mplaywright\u001b[24m/lib/worker/workerMain.js:423:9\u001b[90m)\u001b[39m\n    at WorkerMain._runBeforeAllHooksForSuite \u001b[90m(/home/runner/work/MaintAInPro/MaintAInPro/\u001b[39mnode_modules/\u001b[4mplaywright\u001b[24m/lib/worker/workerMain.js:417:5\u001b[90m)\u001b[39m\n    at \u001b[90m/home/runner/work/MaintAInPro/MaintAInPro/\u001b[39mnode_modules/\u001b[4mplaywright\u001b[24m/lib/worker/workerMain.js:299:11\n    at TestInfoImpl._runAsStep \u001b[90m(/home/runner/work/MaintAInPro/MaintAInPro/\u001b[39mnode_modules/\u001b[4mplaywright\u001b[24m/lib/worker/testInfo.js:315:7\u001b[90m)\u001b[39m\n    at \u001b[90m/home/runner/work/MaintAInPro/MaintAInPro/\u001b[39mnode_modules/\u001b[4mplaywright\u001b[24m/lib/worker/workerMain.js:297:7\n    at WorkerMain._runTest \u001b[90m(/home/runner/work/MaintAInPro/MaintAInPro/\u001b[39mnode_modules/\u001b[4mplaywright\u001b[24m/lib/worker/workerMain.js:282:5\u001b[90m)\u001b[39m\n    at WorkerMain.runTestGroup \u001b[90m(/home/runner/work/MaintAInPro/MaintAInPro/\u001b[39mnode_modules/\u001b[4mplaywright\u001b[24m/lib/worker/workerMain.js:194:11\u001b[90m)\u001b[39m\n    at process.<anonymous> \u001b[90m(/home/runner/work/MaintAInPro/MaintAInPro/\u001b[39mnode_modules/\u001b[4mplaywright\u001b[24m/lib/common/process.js:65:22\u001b[90m)\u001b[39m\n"
-                        }
-                      ],
-                      "retry": 1,
-                      "startTime": "2025-08-25T19:56:02.689Z",
-                      "annotations": [],
-                      "attachments": [],
-                      "errorLocation": {
-                        "file": "/home/runner/work/MaintAInPro/MaintAInPro/tests/e2e/main-flows.spec.ts",
-                        "column": 19,
-                        "line": 44
-                      }
-                    },
-                    {
-                      "workerIndex": 2,
-                      "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 0,
-                      "error": {
-                        "message": "SyntaxError: Unexpected token 'T', \"Too many a\"... is not valid JSON",
-                        "stack": "SyntaxError: Unexpected token 'T', \"Too many a\"... is not valid JSON\n    at /home/runner/work/MaintAInPro/MaintAInPro/tests/e2e/main-flows.spec.ts:44:19",
-                        "location": {
-                          "file": "/home/runner/work/MaintAInPro/MaintAInPro/tests/e2e/main-flows.spec.ts",
-                          "column": 19,
-                          "line": 44
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 42 |\u001b[39m     \u001b[36mlet\u001b[39m body\u001b[33m;\u001b[39m\n \u001b[90m 43 |\u001b[39m     \u001b[36mtry\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 44 |\u001b[39m       body \u001b[33m=\u001b[39m \u001b[33mJSON\u001b[39m\u001b[33m.\u001b[39mparse(textBody)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                   \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 45 |\u001b[39m     } \u001b[36mcatch\u001b[39m (err) {\n \u001b[90m 46 |\u001b[39m       console\u001b[33m.\u001b[39merror(\u001b[32m'Failed to parse login response as JSON:'\u001b[39m\u001b[33m,\u001b[39m err)\u001b[33m;\u001b[39m\n \u001b[90m 47 |\u001b[39m       \u001b[36mthrow\u001b[39m err\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/runner/work/MaintAInPro/MaintAInPro/tests/e2e/main-flows.spec.ts",
-                            "column": 19,
-                            "line": 44
-                          },
-                          "message": "SyntaxError: Unexpected token 'T', \"Too many a\"... is not valid JSON\n\n  42 |     let body;\n  43 |     try {\n> 44 |       body = JSON.parse(textBody);\n     |                   ^\n  45 |     } catch (err) {\n  46 |       console.error('Failed to parse login response as JSON:', err);\n  47 |       throw err;\n    at /home/runner/work/MaintAInPro/MaintAInPro/tests/e2e/main-flows.spec.ts:44:19"
-                        }
-                      ],
-                      "stdout": [
-                        {
-                          "text": "API login response status: \u001b[33m429\u001b[39m\n"
-                        },
-                        {
-                          "text": "API login response body: Too many authentication attempts from this IP, please try again after 15 minutes.\n"
-                        }
-                      ],
-                      "stderr": [
-                        {
-                          "text": "Failed to parse login response as JSON: SyntaxError: Unexpected token 'T', \"Too many a\"... is not valid JSON\n    at JSON.parse (<anonymous>)\n    at \u001b[90mfile:///home/runner/work/MaintAInPro/MaintAInPro/\u001b[39mtests/e2e/main-flows.spec.ts:44:19\n    at \u001b[90m/home/runner/work/MaintAInPro/MaintAInPro/\u001b[39mnode_modules/\u001b[4mplaywright\u001b[24m/lib/worker/testInfo.js:326:11\n    at TimeoutManager.withRunnable \u001b[90m(/home/runner/work/MaintAInPro/MaintAInPro/\u001b[39mnode_modules/\u001b[4mplaywright\u001b[24m/lib/worker/timeoutManager.js:67:14\u001b[90m)\u001b[39m\n    at TestInfoImpl._runWithTimeout \u001b[90m(/home/runner/work/MaintAInPro/MaintAInPro/\u001b[39mnode_modules/\u001b[4mplaywright\u001b[24m/lib/worker/testInfo.js:324:7\u001b[90m)\u001b[39m\n    at FixtureRunner.resolveParametersAndRunFunction \u001b[90m(/home/runner/work/MaintAInPro/MaintAInPro/\u001b[39mnode_modules/\u001b[4mplaywright\u001b[24m/lib/worker/fixtureRunner.js:220:5\u001b[90m)\u001b[39m\n    at \u001b[90m/home/runner/work/MaintAInPro/MaintAInPro/\u001b[39mnode_modules/\u001b[4mplaywright\u001b[24m/lib/worker/workerMain.js:428:13\n    at TestInfoImpl._runAsStep \u001b[90m(/home/runner/work/MaintAInPro/MaintAInPro/\u001b[39mnode_modules/\u001b[4mplaywright\u001b[24m/lib/worker/testInfo.js:315:7\u001b[90m)\u001b[39m\n    at WorkerMain._runAllHooksForSuite \u001b[90m(/home/runner/work/MaintAInPro/MaintAInPro/\u001b[39mnode_modules/\u001b[4mplaywright\u001b[24m/lib/worker/workerMain.js:423:9\u001b[90m)\u001b[39m\n    at WorkerMain._runBeforeAllHooksForSuite \u001b[90m(/home/runner/work/MaintAInPro/MaintAInPro/\u001b[39mnode_modules/\u001b[4mplaywright\u001b[24m/lib/worker/workerMain.js:417:5\u001b[90m)\u001b[39m\n    at \u001b[90m/home/runner/work/MaintAInPro/MaintAInPro/\u001b[39mnode_modules/\u001b[4mplaywright\u001b[24m/lib/worker/workerMain.js:299:11\n    at TestInfoImpl._runAsStep \u001b[90m(/home/runner/work/MaintAInPro/MaintAInPro/\u001b[39mnode_modules/\u001b[4mplaywright\u001b[24m/lib/worker/testInfo.js:315:7\u001b[90m)\u001b[39m\n    at \u001b[90m/home/runner/work/MaintAInPro/MaintAInPro/\u001b[39mnode_modules/\u001b[4mplaywright\u001b[24m/lib/worker/workerMain.js:297:7\n    at WorkerMain._runTest \u001b[90m(/home/runner/work/MaintAInPro/MaintAInPro/\u001b[39mnode_modules/\u001b[4mplaywright\u001b[24m/lib/worker/workerMain.js:282:5\u001b[90m)\u001b[39m\n    at WorkerMain.runTestGroup \u001b[90m(/home/runner/work/MaintAInPro/MaintAInPro/\u001b[39mnode_modules/\u001b[4mplaywright\u001b[24m/lib/worker/workerMain.js:194:11\u001b[90m)\u001b[39m\n    at process.<anonymous> \u001b[90m(/home/runner/work/MaintAInPro/MaintAInPro/\u001b[39mnode_modules/\u001b[4mplaywright\u001b[24m/lib/common/process.js:65:22\u001b[90m)\u001b[39m\n"
-                        }
-                      ],
-                      "retry": 2,
-                      "startTime": "2025-08-25T19:56:03.307Z",
-                      "annotations": [],
-                      "attachments": [],
-                      "errorLocation": {
-                        "file": "/home/runner/work/MaintAInPro/MaintAInPro/tests/e2e/main-flows.spec.ts",
-                        "column": 19,
-                        "line": 44
-                      }
+                      "attachments": []
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
-              "id": "e8b4ce0637035c87d0a9-80cbd646976e1e87920a",
-              "file": "main-flows.spec.ts",
-              "line": 54,
+              "id": "5b9ef2734cb882eb5f5a-ae3a766561ff74e1ad96",
+              "file": "basic.e2e.test.ts",
+              "line": 16,
               "column": 3
             }
           ]
+        },
+        {
+          "title": "Responsive Design Tests",
+          "file": "basic.e2e.test.ts",
+          "line": 23,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should work on mobile viewport",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 137,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T19:58:49.749Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "5b9ef2734cb882eb5f5a-db1ca3d45b76d089f1ae",
+              "file": "basic.e2e.test.ts",
+              "line": 24,
+              "column": 3
+            },
+            {
+              "title": "should work on desktop viewport",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 144,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T19:58:49.902Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "5b9ef2734cb882eb5f5a-ed5ba6972dcb25be5d0a",
+              "file": "basic.e2e.test.ts",
+              "line": 33,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "debug-valid-login.spec.ts",
+      "file": "debug-valid-login.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "debug valid credentials login",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3991,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "Login Requests: [\n  {\n    \"url\": \"http://localhost:5000/api/auth/login\",\n    \"method\": \"POST\",\n    \"postData\": \"{\\\"email\\\":\\\"supervisor@company.com\\\",\\\"password\\\":\\\"demo123\\\",\\\"deviceFingerprint\\\":\\\"eyJ1c2VyQWdlbnQiOiJNb3ppbGxhLzUuMCAoV2luZG93cyBOVCAxMC4wOyBXaW42NDsgeDY0KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvMTQwLjAuNzMzOS4xNiBTYWZhcmkvNTM3LjM2IiwibGFuZ3VhZ2UiOiJlbi1VUyIsInBsYXRmb3JtIjoiTGludXggeDg2XzY0Iiwic2NyZWVuUmVzb2x1dGlvbiI6IjEyODB4NzIwIiwidGltZXpvbmUiOiJVVEMiLCJjYW52YXMiOiJkYXRhOmltYWdlL3BuZztiYXNlNjQsaVZCT1J3MEtHZ29BQUFBTlNVaEVVZ0FBQVN3QUFBQ1dDQVlBQUFCa1c3WFNBQUFNVVVsRVFWUjRBZXlhZGNnMFhSbUh4KzVBL094dXhTNHN4TVF1c0F2RlFQM0RSQlFWQ3pGUjdFTEV4TzVBUmNYdXdzTHVMdXpXNy90ZHovZk93NzY3Nys3T3p1N3NuSm01WHM0OTU4eVpNeWV1KzkzZmMySk9XdmxQQWhLUXdFQUlLRmdEY1pUZGxJQUVxbXJmZ25YbVFEOCtkdW5ZcnNQOVUrRXZZcStPUFRQMnV0aFF3dWZTMFFmRURCS1F3QW9DODRMMTFaUkZVTEIvSlAydDJCdGpGNDd0SXZ3MWxWdzM5c1BZcnNQalUrRlRZbmVMdlNqMnBOaFFBbUwxam9hZHZVbktYU3kyY2ZBRkNReWR3THhnTVo2SDVYS1NHTE9oT3lmK2ZleHJzZXZGdGczL1RRVWZpZjB0dHN0dzhsUjJ0dGpuWTRUdjVmS04yRkRDRjlMUm44ZWFoSWVuMEVWakJnbE1qc0N4Qkt1RzhLOGt2aFJqcWNXTTVhVkpueXBHT0djdWI0cjlOdmFqMlBOanA0NFJQcDRMczUxRWgrRUpTWDAwaGdneWU2dVhoQmRJM3J0aWY0eDlObmJMV0IxV3RWR1hJVDU5THYrSkVUNmR5L3lTa0JuSk41Ti8xOWg3WXN3YVg1eTQ3dThwa241MjdEZXhEOGV1RTJQY2QwcE1ZTXpQU3VMN3NUL0UzaDQ3YjR4QTI0em5Qcm41YWV5QnNkdkVhT04raWI4VDR4MzRVVTl1cTZmbDhwTFlPMk1zWVJOVnMwdkNUeVNER2RjYkVuOG85cGxZL2NmaVkwa3pRMzEzNGlFdGVkTmRnd1MySjdCS3NHWnJmMFp1V0JaZUpqSGhiYm44TG5ibDJCMWpDTkJURXhQZW1zdk5ZN1BoVnJsNWMydzJNSXQ3U3pMNDBUSmplRzdTcjQ5ZFBVWlkxUWJQYTJPWmllaHd6N3NzQ1VuWDl2OGt6aCtqanpkTHpCaXVsZmllTWNLOWM3bGQ3TGF4TzhUdUVrT1FlQy9KaXFYbEZaSmduRmRLL09zWXl6ZjZ6NHd4dDlXTmM2SE8xeWJtdmZNbHZueU12QnNtdmxvTU1VdFU4UTRDaEhoZWtZdzU0LzBISmU4UnNldkhYaGg3VFl6MnJwMFk3dkN0QlRWWkJnbk1FUmpwYlZQQitsWEcvL2ZZeFdOWGpWMDI5dURZajJQTUFCNlgrRjR4QWlMRUQ1dlpFL2U4ZzBpd0Y4WjliVmRKZ2gvMW94SXpVK1BIZm8ray94UmIxMGFLYkJST205SlBqaEdZamJFRXV4UTNNY1QwbFltWnZkQ1BweWQ5MWhnQmtiaHZFaytNc2R4azc0MXhYeVQzaUdPaWc0RFF3b0xsTXhtbnllV3hNV1p0WDB6TWJJbDJrandJLzh5VldSWmNrMXdJQ0NJelZ4NThLaGRtbXl4NWt6UklZTG9FbWdvV2hCQ1NVeVp4d1JnL1NINTBMSWN3OXFWWUh2SHNKM25PajcvK2dkNDY5eCtNTVROSmRCZ3VsQlI1OVk4OHR4V2l4dktOZWxhMVFkbE5qTDcvZWVZRitrNzlaSjBuRi9hOEVoMkU3K1pLdnhKVlo4L2xqREdXaW93VFE3alBrTHpaalcrV2c4azZESXdKc2FvekVDWm1YZlY5TFViMS9YeE0rVHFQdnBLdSswdGFrOEFrQ1RRVkxIN1UvSGo1TVRQcllGbENQRy9NUUFBNXV5eThSVElRb2tTTkEvV3VhNk54WldzS3dnQWhtaTMydnlNMzlJTWtTMExTcy9ZS0hod3hsbmxIa2djUk03cUR4SkxMZlBrbHhjeVdnQVJtQ2ZCam5iMWZsbVlQNnl0NStNbllEMklzbVdabkRLZEwzcmxpZFdDL2l2Mld5eVdEcFIvTHhDU1BDdFNEQ0I0M2s4dGUwZzF5ejdOMWJhVFlUZ0o3YUN5NTZzcU9xNnFxSGdzekhmYklXTkxXejRrdmtRdmlsZWlZZ2RrUSsyYjF3M01ud1pJeGtVRUNFbWhMWUpWZ3NaRjl6VlQ4OGhpYnl1d3ZNUlBoUklzVFBUYkoyYWVpSFBzK2owbTVPbkJFajdoeElzYm1NcWVBOWJNNlprOElFZVJkaEF1eGVrRWVzdW5jcEkwVTNVbjRRR3JoSlBRYWlWbnljbmpBa2k2M0ZlUGxSUEdSdVdIakhKRmlVNThUdXZyVUw0OFdBdCt3TVhZMjc5bnI0c1NRMDlDRmdpMHlXSzZlSSsrNXB4VUlobWtST0paZzhaVTRQOVIvQndWSDdNeVNicG8wMzJJbE9nZ2MzZk1jWWZseWNsaENQVFR4Yk9DVTcwYkpPTmJzS3RrSFlzREpIRCs4YnllRFV6Rk8wdGd2eW0zVnBBM0tiV3ZQU3dYc3diMDNNZnRPYkhJanNBaG5zaXFFK0gxSmNGTDN5OFI4SnNHSlliMjNsS3lGd0tjTUNDR2ZKU0RZMkhNV1NyWEw0Qk1NeEpCTiszWTErSllFQmtwZ1hyQTQvV01XTVd1YytQRjkwK3dRK2VIZVBobUlEWjhMSURUelAyQ0VnSG80L1V2Umc0QVFrUGYxZzd1cVlzK0xUdzM0UG90UEpEaHRPL0tvYXRKR1haWTlJZXJseEpJOFBuNnRqLzNmbnd6cVQzUVltUEh3T1FNWnpJYVlOVkVHWXpuTEp4d3NCM25POTJqVXg4a2dNeHMrcGtWZ2VjYVlhWmRUUis1ck8xa1N6RXpabUQ5TDByUkhQVWxXajg0Rk1VNTBHRGdWNWZNRk1saEs4OTBYYWV4bnVkQkd2Vkgvc3R5elhKNnZJOW1HelFuNHhwQUl6QXZXa1BxK3E3N2VQUlZ4TXNuQkFvTEVKeHFJRmN2VlBESklRQUtsRUZDd3F1cFZjUWF6TUQ1TllPWjB5ZHl6bi9hWHhBWUpTS0FnQWdyV2ljNTRTQ0tXWFdkS3pCNFZlM2RKdGdwODlEbDc2dGlxRWwrU2dBUVdDV3dwV0lzVm1pTUJDVWlnS3dJS1ZsZGtyVmNDRXRnNUFRVnI1MGl0VUFJUzZJcUFndFVWMmZIVjY0Z2swRHNCQmF0M0Y5Z0JDVWlnS1FFRnF5a3B5MGxBQXIwVFVMQjZkNEVka0VCNUJFcnRrWUpWcW1mc2x3UWtzRUJBd1ZwQVlvWUVKRkFxQVFXclZNL1lMd2xJWUlHQWdyV0FaUHNNYTVDQUJMb2hvR0IxdzlWYUpTQ0JEZ2dvV0IxQXRVb0pTS0FiQWdwV04xeXRkU29FSE9kZUNTaFllOFZ0WXhLUXdEWUVGS3h0NlBtdUJDU3dWd0lLMWw1eDI1Z0VKTEFOZ1g0RmE1dWUrNjRFSkRBNUFnclc1Rnp1Z0NVd1hBSUsxbkI5Wjg4bE1Ea0NDdGJrWE43WGdHMVhBdHNUVUxDMloyZ05FcERBbmdnb1dIc0NiVE1Ta01EMkJCU3M3UmxhZ3dRa2NEU0J6dTRVck03UVdyRUVKTEJyQWdyV3JvbGFud1FrMEJrQkJhc3p0RllzQVFuc21vQ0N0V3VpMjlkbkRSS1F3QklDQ3RZU01HWkxRQUxsRVZDd3l2T0pQWktBQkpZUVVMQ1dnREZiQXZzZ1lCdWJFVkN3TnVObGFRbElvRWNDQ2xhUDhHMWFBaExZaklDQ3RSa3ZTMHRBQWowU0dMUmc5Y2pOcGlVZ2dSNElLRmc5UUxkSkNVaWdIUUVGcXgwMzM1S0FCSG9nb0dEMUFOMG1XeER3RlFtRWdJSVZDQVlKU0dBWUJCU3NZZmpKWGtwQUFpR2dZQVdDUVFJU0tJbkE4cjRvV012WitFUUNFaWlNZ0lKVm1FUHNqZ1Frc0p5QWdyV2NqVThrSUlIQ0NDaFloVGxrKys1WWd3VEdTMERCR3E5dkhaa0VSa2RBd1JxZFN4MlFCTVpMUU1FYXIyOGQyZmdKVEc2RUN0YmtYTzZBSlRCY0FncldjSDFuenlVd09RSUsxdVJjN29BbE1Gd0NVeGFzNFhyTm5rdGdvZ1FVcklrNjNtRkxZSWdFRkt3aGVzMCtTMkNpQkJTc2lUcCthc04ydk9NZ29HQ053NCtPUWdLVElLQmdUY0xORGxJQzR5Q2dZSTNEajQ1Q0FwTWcwRWl3SmtIQ1FVcEFBc1VUVUxDS2Q1RWRsSUFFYWdJS1ZrM0NXQUlTS0o2QWdsVzhpL2JjUVp1VFFNRUVGS3lDbldQWEpDQ0Jvd2tvV0VmejhFNENFaWlZZ0lKVnNIUHNtZ1M2SlRDODJoV3M0Zm5NSGt0Z3NnUVVyTW02M29GTFlIZ0VGS3poK2N3ZVMyQ3lCQlNzMXE3M1JRbElZTjhFRkt4OUU3YzlDVWlnTlFFRnF6VTZYNVNBQlBaTlFNSGFOM0hiR3lJQisxd0lBUVdyRUVmWURRbElZRDBCQldzOUkwdElRQUtGRUZDd0NuR0UzWkNBQk5ZVDJJZGdyZStGSlNRZ0FRazBJS0JnTllCa0VRbElvQXdDQ2xZWmZyQVhFcEJBQXdJS1ZnTklGbWxPd0pJUzZKS0FndFVsWGV1V2dBUjJTa0RCMmlsT0s1T0FCTG9rb0dCMVNkZTZKVEJtQWoyTVRjSHFBYnBOU2tBQzdRZ29XTzI0K1pZRUpOQURBUVdyQitnMktRRUp0Q09nWUxYanR2MWIxaUFCQ1d4TVFNSGFHSmt2U0VBQ2ZSRlFzUG9pYjdzU2tNREdCQlNzalpINWdnUTJKV0Q1WFJGUXNIWkYwbm9rSUlIT0NTaFluU08yQVFsSVlGY0VGS3hka2JRZUNVaWdjd0lERUt6T0dkaUFCQ1F3RUFJSzFrQWNaVGNsSUlHcVVyRDhYeUFCQ1F5R2dJSTFHRmROb3FNT1VnSXJDU2hZSy9INFVBSVNLSW1BZ2xXU04reUxCQ1N3a29DQ3RSS1BEeVVnZ2E0SXRLbFh3V3BEelhja0lJRmVDQ2hZdldDM1VRbElvQTBCQmFzTk5kK1JnQVI2SWFCZzlZSjkrMGF0UVFKVEpLQmdUZEhyamxrQ0F5V2dZQTNVY1haYkFsTWtvR0JOMGV1T2VWZ0U3TzBoQVFYckVJVUpDVWlnZEFJS1Z1a2VzbjhTa01BaEFRWHJFSVVKQ1VpZ2RBTGpGNnpTUFdEL0pDQ0J4Z1FVck1hb0xDZ0JDZlJOUU1IcTJ3TzJMd0VKTkNhZ1lEVkdaY0h5Q2RqRHNSTlFzTWJ1WWNjbmdSRVJVTEJHNUV5SElvR3hFMUN3eHU1aHh5ZUJFUkdZRWF3UmpjcWhTRUFDb3lTZ1lJM1NyUTVLQXVNa29HQ04wNitPU2dLakpLQmdqZEt0YXdkbEFRa01rb0NDTlVpMzJXa0pUSk9BZ2pWTnZ6dHFDUXlTZ0lJMVNMZlphUWswSnpDbWtncldtTHpwV0NRd2NnSUsxc2dkN1BBa01DWUNDdGFZdk9sWUpEQnlBZ3JXR2dmN1dBSVNLSWVBZ2xXT0wreUpCQ1N3aG9DQ3RRYVFqeVVnZ1hJSUtGamwrTUtlOUUzQTlvc25vR0FWN3lJN0tBRUoxQVFVckpxRXNRUWtVRHdCQmF0NEY5bEJDVWlnSm5BQ0FBQUEvLzgzVEtHTEFBQUFCa2xFUVZRREFGandNRHo5Tm5XSEFBQUFBRWxGVGtTdVFtQ0MifQ==\\\"}\"\n  }\n]\n"
+                    },
+                    {
+                      "text": "Login Responses: [\n  {\n    \"url\": \"http://localhost:5000/api/auth/login\",\n    \"status\": 200,\n    \"statusText\": \"OK\",\n    \"body\": \"{\\\"user\\\":{\\\"id\\\":\\\"6bb99169-32f9-4c11-922c-50762a3c4e73\\\",\\\"email\\\":\\\"supervisor@company.com\\\",\\\"firstName\\\":\\\"John\\\",\\\"lastName\\\":\\\"Smith\\\",\\\"role\\\":\\\"supervisor\\\",\\\"warehouseId\\\":\\\"177ecc24-bb5a-474d-b7b0-c2f0b470aa68\\\",\\\"emailVerified\\\":false,\\\"mfaEnabled\\\":false},\\\"token\\\":\\\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YmI5OTE2OS0zMmY5LTRjMTEtOTIyYy01MDc2MmEzYzRlNzMiLCJlbWFpbCI6IiIsInJvbGUiOiJzdXBlcnZpc29yIiwid2FyZWhvdXNlSWQiOiIxNzdlY2MyNC1iYjVhLTQ3NGQtYjdiMC1jMmYwYjQ3MGFhNjgiLCJzZXNzaW9uSWQiOiJmMjExZjA4Ny0wZTUwLTRjZTMtOWQyZi04MGQ3MDU0M2JjNmQiLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzU2MTUxOTMxLCJleHAiOjE3NTYxNTI4MzEsImF1ZCI6Im1haW50YWlucHJvLWFwcCIsImlzcyI6Im1haW50YWlucHJvLWNtbXMifQ.ezz5ZBIJZz94bqCntWezA8FlyTC03QiO8nqUNIpqQtE\\\",\\\"refreshToken\\\":\\\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YmI5OTE2OS0zMmY5LTRjMTEtOTIyYy01MDc2MmEzYzRlNzMiLCJzZXNzaW9uSWQiOiJmMjExZjA4Ny0wZTUwLTRjZTMtOWQyZi04MGQ3MDU0M2JjNmQiLCJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTc1NjE1MTkzMSwiZXhwIjoxNzU2NzU2NzMxLCJhdWQiOiJtYWludGFpbnByby1hcHAiLCJpc3MiOiJtYWludGFpbnByby1jbW1zIn0.zmNDZRtIy4iBWLb-creQi_uhV01RBeFA0WWzmM5z3vU\\\",\\\"sessionId\\\":\\\"f211f087-0e50-4ce3-9d2f-80d70543bc6d\\\"}\"\n  }\n]\n"
+                    },
+                    {
+                      "text": "Current URL: http://localhost:5000/dashboard\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2025-08-25T19:58:50.065Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "cda15a4525610ba58bd0-941e0605f113223723e8",
+          "file": "debug-valid-login.spec.ts",
+          "line": 3,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "sanity.spec.ts",
+      "file": "sanity.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "sanity: homepage loads and root element is visible",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1064,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2025-08-25T19:58:54.077Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c1bc3b82f35bec97f7ef-eb19f9b9a968c1e26b25",
+          "file": "sanity.spec.ts",
+          "line": 3,
+          "column": 1
         }
       ]
     }
   ],
   "errors": [],
   "stats": {
-    "startTime": "2025-08-25T19:56:01.193Z",
-    "duration": 2201.9849999999997,
-    "expected": 0,
-    "skipped": 0,
-    "unexpected": 1,
+    "startTime": "2025-08-25T19:58:48.817Z",
+    "duration": 6405.888000000001,
+    "expected": 5,
+    "skipped": 1,
+    "unexpected": 0,
     "flaky": 0
   }
 }
