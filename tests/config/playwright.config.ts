@@ -26,8 +26,8 @@ export default defineConfig({
       use: { 
         ...devices['Desktop Chrome'],
         channel: 'chromium',
+        // Use Playwright's managed browser binary (no executablePath)
         launchOptions: {
-          executablePath: '/usr/bin/chromium-browser',
           args: [
             '--no-sandbox',
             '--disable-dev-shm-usage',
