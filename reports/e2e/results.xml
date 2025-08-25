@@ -1,16 +1,91 @@
-<testsuites id="" name="" tests="42" failures="4" skipped="22" errors="0" time="68.873648">
-<testsuite name="admin/health-dashboard.spec.ts" timestamp="2025-08-25T18:47:03.717Z" hostname="chromium" tests="12" failures="3" skipped="0" time="63.917" errors="0">
-<testcase name="Health Dashboard E2E › should display health dashboard correctly" classname="admin/health-dashboard.spec.ts" time="4.935">
+<testsuites id="" name="" tests="42" failures="10" skipped="18" errors="0" time="83.820618">
+<testsuite name="admin/health-dashboard.spec.ts" timestamp="2025-08-25T19:26:23.605Z" hostname="chromium" tests="12" failures="7" skipped="0" time="87.203" errors="0">
+<testcase name="Health Dashboard E2E › should display health dashboard correctly" classname="admin/health-dashboard.spec.ts" time="5.872">
+<failure message="health-dashboard.spec.ts:51:3 should display health dashboard correctly" type="FAILURE">
+<![CDATA[  [chromium] › admin/health-dashboard.spec.ts:51:3 › Health Dashboard E2E › should display health dashboard correctly 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator:  locator('h2').filter({ hasText: 'System Health' })
+    Expected: visible
+    Received: <element(s) not found>
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for locator('h2').filter({ hasText: 'System Health' })
+
+
+      54 |
+      55 |     // Check if the System Health heading is visible
+    > 56 |     await expect(page.locator('h2').filter({ hasText: 'System Health' })).toBeVisible();
+         |                                                                           ^
+      57 |
+      58 |     // Check if the description is visible
+      59 |     await expect(page.locator('text=Monitor system status and performance metrics')).toBeVisible();
+        at /workspaces/MaintAInPro/tests/e2e/admin/health-dashboard.spec.ts:56:75
+]]>
+</failure>
 </testcase>
-<testcase name="Health Dashboard E2E › should display memory usage information" classname="admin/health-dashboard.spec.ts" time="4.859">
+<testcase name="Health Dashboard E2E › should display memory usage information" classname="admin/health-dashboard.spec.ts" time="0.37">
+<failure message="health-dashboard.spec.ts:69:3 should display memory usage information" type="FAILURE">
+<![CDATA[  [chromium] › admin/health-dashboard.spec.ts:69:3 › Health Dashboard E2E › should display memory usage information 
+
+    Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5000/admin
+    Call log:
+      - navigating to "http://localhost:5000/admin", waiting until "load"
+
+
+      46 |
+      47 |     // Navigate to the admin page
+    > 48 |     await page.goto('/admin');
+         |                ^
+      49 |   });
+      50 |
+      51 |   test('should display health dashboard correctly', async ({ page }) => {
+        at /workspaces/MaintAInPro/tests/e2e/admin/health-dashboard.spec.ts:48:16
+
+    Error Context: ../../test-results/playwright-artifacts/admin-health-dashboard-Hea-3eb66-ay-memory-usage-information-chromium/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../../test-results/playwright-artifacts/admin-health-dashboard-Hea-3eb66-ay-memory-usage-information-chromium/error-context.md]]
+]]>
+</system-out>
 </testcase>
-<testcase name="Health Dashboard E2E › should display feature status" classname="admin/health-dashboard.spec.ts" time="2.169">
+<testcase name="Health Dashboard E2E › should display feature status" classname="admin/health-dashboard.spec.ts" time="0.245">
+<failure message="health-dashboard.spec.ts:79:3 should display feature status" type="FAILURE">
+<![CDATA[  [chromium] › admin/health-dashboard.spec.ts:79:3 › Health Dashboard E2E › should display feature status 
+
+    Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5000/admin
+    Call log:
+      - navigating to "http://localhost:5000/admin", waiting until "load"
+
+
+      46 |
+      47 |     // Navigate to the admin page
+    > 48 |     await page.goto('/admin');
+         |                ^
+      49 |   });
+      50 |
+      51 |   test('should display health dashboard correctly', async ({ page }) => {
+        at /workspaces/MaintAInPro/tests/e2e/admin/health-dashboard.spec.ts:48:16
+
+    Error Context: ../../test-results/playwright-artifacts/admin-health-dashboard-Hea-0017e-ould-display-feature-status-chromium/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../../test-results/playwright-artifacts/admin-health-dashboard-Hea-0017e-ould-display-feature-status-chromium/error-context.md]]
+]]>
+</system-out>
 </testcase>
-<testcase name="Health Dashboard E2E › should display deployment information" classname="admin/health-dashboard.spec.ts" time="2.121">
+<testcase name="Health Dashboard E2E › should display deployment information" classname="admin/health-dashboard.spec.ts" time="3.923">
 </testcase>
-<testcase name="Health Dashboard E2E › should display websocket connections" classname="admin/health-dashboard.spec.ts" time="2.236">
+<testcase name="Health Dashboard E2E › should display websocket connections" classname="admin/health-dashboard.spec.ts" time="1.861">
 </testcase>
-<testcase name="Health Dashboard E2E › should refresh data when refresh button is clicked" classname="admin/health-dashboard.spec.ts" time="2.851">
+<testcase name="Health Dashboard E2E › should refresh data when refresh button is clicked" classname="admin/health-dashboard.spec.ts" time="2.684">
 <failure message="health-dashboard.spec.ts:118:3 should refresh data when refresh button is clicked" type="FAILURE">
 <![CDATA[  [chromium] › admin/health-dashboard.spec.ts:118:3 › Health Dashboard E2E › should refresh data when refresh button is clicked 
 
@@ -37,11 +112,35 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="Health Dashboard E2E › should handle error state correctly" classname="admin/health-dashboard.spec.ts" time="2.521">
+<testcase name="Health Dashboard E2E › should handle error state correctly" classname="admin/health-dashboard.spec.ts" time="30.106">
+<failure message="health-dashboard.spec.ts:141:3 should handle error state correctly" type="FAILURE">
+<![CDATA[  [chromium] › admin/health-dashboard.spec.ts:141:3 › Health Dashboard E2E › should handle error state correctly 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: page.waitForLoadState: Test timeout of 30000ms exceeded.
+
+      150 |
+      151 |     await page.goto('/admin');
+    > 152 |     await page.waitForLoadState('networkidle');
+          |                ^
+      153 |
+      154 |     // Check error state
+      155 |     await expect(page.locator('text=Failed to Load Health Data')).toBeVisible();
+        at /workspaces/MaintAInPro/tests/e2e/admin/health-dashboard.spec.ts:152:16
+
+    Error Context: ../../test-results/playwright-artifacts/admin-health-dashboard-Hea-0a19f-andle-error-state-correctly-chromium/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../../test-results/playwright-artifacts/admin-health-dashboard-Hea-0a19f-andle-error-state-correctly-chromium/error-context.md]]
+]]>
+</system-out>
 </testcase>
-<testcase name="Health Dashboard E2E › should handle unhealthy status" classname="admin/health-dashboard.spec.ts" time="2.75">
+<testcase name="Health Dashboard E2E › should handle unhealthy status" classname="admin/health-dashboard.spec.ts" time="2.172">
 </testcase>
-<testcase name="Health Dashboard E2E › should auto-refresh every 30 seconds" classname="admin/health-dashboard.spec.ts" time="30.077">
+<testcase name="Health Dashboard E2E › should auto-refresh every 30 seconds" classname="admin/health-dashboard.spec.ts" time="30.08">
 <failure message="health-dashboard.spec.ts:204:3 should auto-refresh every 30 seconds" type="FAILURE">
 <![CDATA[  [chromium] › admin/health-dashboard.spec.ts:204:3 › Health Dashboard E2E › should auto-refresh every 30 seconds 
 
@@ -67,34 +166,34 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="Health Dashboard E2E › should display loading state during refresh" classname="admin/health-dashboard.spec.ts" time="1.575">
+<testcase name="Health Dashboard E2E › should display loading state during refresh" classname="admin/health-dashboard.spec.ts" time="1.648">
 </testcase>
-<testcase name="Health Dashboard E2E › should be accessible" classname="admin/health-dashboard.spec.ts" time="1.376">
+<testcase name="Health Dashboard E2E › should be accessible" classname="admin/health-dashboard.spec.ts" time="1.45">
 </testcase>
-<testcase name="Health Dashboard E2E › should navigate between admin tabs" classname="admin/health-dashboard.spec.ts" time="6.447">
+<testcase name="Health Dashboard E2E › should navigate between admin tabs" classname="admin/health-dashboard.spec.ts" time="6.792">
 <failure message="health-dashboard.spec.ts:271:3 should navigate between admin tabs" type="FAILURE">
 <![CDATA[  [chromium] › admin/health-dashboard.spec.ts:271:3 › Health Dashboard E2E › should navigate between admin tabs 
 
     Error: expect(locator).toHaveAttribute(expected) failed
 
-    Locator: locator('button').filter({ hasText: 'System Health' })
-    Expected string: "false"
+    Locator: locator('button').filter({ hasText: 'Performance' })
+    Expected string: "true"
     Received: <element(s) not found>
     Timeout: 5000ms
 
     Call log:
       - Expect "toHaveAttribute" with timeout 5000ms
-      - waiting for locator('button').filter({ hasText: 'System Health' })
+      - waiting for locator('button').filter({ hasText: 'Performance' })
 
 
+      281 |
       282 |     // Check that Performance tab is now active
-      283 |     await expect(performanceTab).toHaveAttribute('aria-selected', 'true');
-    > 284 |     await expect(healthTab).toHaveAttribute('aria-selected', 'false');
-          |                             ^
+    > 283 |     await expect(performanceTab).toHaveAttribute('aria-selected', 'true');
+          |                                  ^
+      284 |     await expect(healthTab).toHaveAttribute('aria-selected', 'false');
       285 |
       286 |     // Navigate back to Health tab
-      287 |     await healthTab.click();
-        at /workspaces/MaintAInPro/tests/e2e/admin/health-dashboard.spec.ts:284:29
+        at /workspaces/MaintAInPro/tests/e2e/admin/health-dashboard.spec.ts:283:34
 
     Error Context: ../../test-results/playwright-artifacts/admin-health-dashboard-Hea-f283d-navigate-between-admin-tabs-chromium/error-context.md
 ]]>
@@ -106,7 +205,7 @@
 </system-out>
 </testcase>
 </testsuite>
-<testsuite name="basic.e2e.test.ts" timestamp="2025-08-25T18:47:03.717Z" hostname="chromium" tests="4" failures="0" skipped="1" time="0.452" errors="0">
+<testsuite name="basic.e2e.test.ts" timestamp="2025-08-25T19:26:23.605Z" hostname="chromium" tests="4" failures="0" skipped="1" time="0.507" errors="0">
 <testcase name="Basic E2E Tests › should load the homepage" classname="basic.e2e.test.ts" time="0">
 <properties>
 <property name="skip" value="">
@@ -115,15 +214,15 @@
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Basic E2E Tests › should verify test framework" classname="basic.e2e.test.ts" time="0.171">
+<testcase name="Basic E2E Tests › should verify test framework" classname="basic.e2e.test.ts" time="0.221">
 </testcase>
-<testcase name="Responsive Design Tests › should work on mobile viewport" classname="basic.e2e.test.ts" time="0.149">
+<testcase name="Responsive Design Tests › should work on mobile viewport" classname="basic.e2e.test.ts" time="0.145">
 </testcase>
-<testcase name="Responsive Design Tests › should work on desktop viewport" classname="basic.e2e.test.ts" time="0.132">
+<testcase name="Responsive Design Tests › should work on desktop viewport" classname="basic.e2e.test.ts" time="0.141">
 </testcase>
 </testsuite>
-<testsuite name="debug-auth-status.spec.ts" timestamp="2025-08-25T18:47:03.717Z" hostname="chromium" tests="1" failures="0" skipped="0" time="1.072" errors="0">
-<testcase name="debug authentication status and environment" classname="debug-auth-status.spec.ts" time="1.072">
+<testsuite name="debug-auth-status.spec.ts" timestamp="2025-08-25T19:26:23.605Z" hostname="chromium" tests="1" failures="0" skipped="0" time="1.016" errors="0">
+<testcase name="debug authentication status and environment" classname="debug-auth-status.spec.ts" time="1.016">
 <system-out>
 <![CDATA[API Response Status: [33m401[39m
 API Response Body: {"message":"Invalid credentials"}
@@ -134,8 +233,8 @@ Valid Credentials Body: {"message":"Invalid credentials"}
 </system-out>
 </testcase>
 </testsuite>
-<testsuite name="debug-login.spec.ts" timestamp="2025-08-25T18:47:03.717Z" hostname="chromium" tests="1" failures="0" skipped="0" time="2.912" errors="0">
-<testcase name="debug login error handling" classname="debug-login.spec.ts" time="2.912">
+<testsuite name="debug-login.spec.ts" timestamp="2025-08-25T19:26:23.605Z" hostname="chromium" tests="1" failures="0" skipped="0" time="2.978" errors="0">
+<testcase name="debug login error handling" classname="debug-login.spec.ts" time="2.978">
 <system-out>
 <![CDATA[Page content after login attempt: <!DOCTYPE html><html lang="en"><head>
     <script type="module">import { injectIntoGlobalHook } from "/@react-refresh";
@@ -4514,7 +4613,7 @@ video {
 </style></head>
   <body>
     <div id="root"><div role="region" aria-label="Notifications (F8)" tabindex="-1" style=""><span tabindex="0" style="position: fixed; border: 0px; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; overflow-wrap: normal;"></span><ol tabindex="-1" class="fixed top-0 z-[100] flex max-h-screen w-full flex-col-reverse p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-[420px]"><li tabindex="0" data-state="open" data-swipe-direction="right" class="group pointer-events-auto relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-md border p-6 pr-8 shadow-lg transition-all data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-top-full data-[state=open]:sm:slide-in-from-bottom-full destructive group border-destructive bg-destructive text-destructive-foreground" data-radix-collection-item="" style="user-select: none; touch-action: none;"><div class="grid gap-1"><div class="text-sm font-semibold">Error</div><div class="text-sm opacity-90">Invalid credentials</div></div><button type="button" class="absolute right-2 top-2 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity hover:text-foreground focus:opacity-100 focus:outline-none focus:ring-2 group-hover:opacity-100 group-[.destructive]:text-red-300 group-[.destructive]:hover:text-red-50 group-[.destructive]:focus:ring-red-400 group-[.destructive]:focus:ring-offset-red-600" toast-close="" data-radix-toast-announce-exclude=""><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x h-4 w-4"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button></li></ol><span tabindex="0" style="position: fixed; border: 0px; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; overflow-wrap: normal;"></span></div><div class="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8"><div class="max-w-md w-full space-y-8"><div class="text-center"><div class="mx-auto h-16 w-16 bg-primary-500 rounded-xl flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wrench h-8 w-8 text-white"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg></div><h1 class="mt-6 text-3xl font-bold text-gray-900">MaintAInPro CMMS</h1><p class="mt-2 text-sm text-gray-600">Sign in to your maintenance management system</p></div><div class="rounded-lg border bg-card text-card-foreground shadow-sm"><div class="flex flex-col space-y-1.5 p-6"><div class="text-2xl font-semibold leading-none tracking-tight text-center">Sign In</div></div><div class="p-6 pt-0"><form class="space-y-6"><div><label for="email" class="block text-sm font-medium text-gray-700">Email Address</label><input class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm mt-1" id="email" required="" placeholder="Enter your email" data-testid="email-input" type="email" value=""></div><div><label for="password" class="block text-sm font-medium text-gray-700">Password</label><div class="mt-1 relative"><input class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm pr-10" id="password" required="" placeholder="Enter your password" data-testid="password-input" type="password" value=""><button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye h-4 w-4 text-gray-400"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"></path><circle cx="12" cy="12" r="3"></circle></svg></button></div></div><button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full" type="submit" data-testid="login-button">Sign In</button></form><div class="mt-6 p-4 bg-blue-50 rounded-lg"><h3 class="text-sm font-medium text-blue-900 mb-2">Demo Credentials</h3><div class="space-y-1 text-sm text-blue-700"><p><strong>Supervisor:</strong> supervisor@warehouse.com</p><p><strong>Technician:</strong> technician@warehouse.com</p><p><strong>Manager:</strong> manager@warehouse.com</p><p><strong>Password:</strong> demo123</p></div><div class="mt-3 flex space-x-2"><button class="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3" type="button">Use Supervisor</button><button class="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3" type="button">Use Technician</button></div></div></div></div><div class="text-center text-sm text-gray-500"><p>Enterprise Maintenance Management System</p><p class="mt-1">Secure • Reliable • Efficient</p></div></div></div></div>
-    <script type="module" src="/src/main.tsx?v=MCpTW1-lWb7qDfg6GCacw"></script>
+    <script type="module" src="/src/main.tsx?v=GlZ02quYvipDh5OQkd0HX"></script>
   
 
 </body></html>
@@ -4524,8 +4623,8 @@ Current URL: http://localhost:5000/login
 </system-out>
 </testcase>
 </testsuite>
-<testsuite name="debug-server-env.spec.ts" timestamp="2025-08-25T18:47:03.717Z" hostname="chromium" tests="1" failures="0" skipped="0" time="0.737" errors="0">
-<testcase name="check server environment during test" classname="debug-server-env.spec.ts" time="0.737">
+<testsuite name="debug-server-env.spec.ts" timestamp="2025-08-25T19:26:23.605Z" hostname="chromium" tests="1" failures="0" skipped="0" time="0.841" errors="0">
+<testcase name="check server environment during test" classname="debug-server-env.spec.ts" time="0.841">
 <system-out>
 <![CDATA[Debug endpoint status: [33m200[39m
 Debug endpoint body: {"NODE_ENV":"development","TEST_AUTH_MODE":"disabled","PLAYWRIGHT":"true","DISABLE_RATE_LIMITING":"true","DATABASE_URL":"postgres://neondb_owner:npg_9wIlAORgDS7L@ep-twilight-hill-adkx14x5-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require"}
@@ -4535,14 +4634,14 @@ Auth mode endpoint body: {"TEST_AUTH_MODE":"disabled","NODE_ENV":"development","
 </system-out>
 </testcase>
 </testsuite>
-<testsuite name="debug-valid-login.spec.ts" timestamp="2025-08-25T18:47:03.717Z" hostname="chromium" tests="1" failures="0" skipped="0" time="3.93" errors="0">
-<testcase name="debug valid credentials login" classname="debug-valid-login.spec.ts" time="3.93">
+<testsuite name="debug-valid-login.spec.ts" timestamp="2025-08-25T19:26:23.605Z" hostname="chromium" tests="1" failures="0" skipped="0" time="4.115" errors="0">
+<testcase name="debug valid credentials login" classname="debug-valid-login.spec.ts" time="4.115">
 <system-out>
 <![CDATA[Login Requests: [
   {
     "url": "http://localhost:5000/api/auth/login",
     "method": "POST",
-    "postData": "{\"email\":\"supervisor@warehouse.com\",\"password\":\"demo123\",\"deviceFingerprint\":\"eyJ1c2VyQWdlbnQiOiJNb3ppbGxhLzUuMCAoV2luZG93cyBOVCAxMC4wOyBXaW42NDsgeDY0KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvMTQwLjAuNzMzOS4xNiBTYWZhcmkvNTM3LjM2IiwibGFuZ3VhZ2UiOiJlbi1VUyIsInBsYXRmb3JtIjoiTGludXggeDg2XzY0Iiwic2NyZWVuUmVzb2x1dGlvbiI6IjEyODB4NzIwIiwidGltZXpvbmUiOiJVVEMiLCJjYW52YXMiOiJkYXRhOmltYWdlL3BuZztiYXNlNjQsaVZCT1J3MEtHZ29BQUFBTlNVaEVVZ0FBQVN3QUFBQ1dDQVlBQUFCa1c3WFNBQUFNVVVsRVFWUjRBZXlhZGNnMFhSbUh4KzVBL094dXhTNHN4TVF1c0F2RlFQM0RSQlFWQ3pGUjdFTEV4TzVBUmNYdXdzTHVMdXpXNy90ZHovZk93NzY3Nys3T3p1N3NuSm01WHM0OTU4eVpNeWV1KzkzZmMySk9XdmxQQWhLUXdFQUlLRmdEY1pUZGxJQUVxbXJmZ25YbVFEOCtkdW5ZcnNQOVUrRXZZcStPUFRQMnV0aFF3dWZTMFFmRURCS1F3QW9DODRMMTFaUkZVTEIvSlAydDJCdGpGNDd0SXZ3MWxWdzM5c1BZcnNQalUrRlRZbmVMdlNqMnBOaFFBbUwxam9hZHZVbktYU3kyY2ZBRkNReWR3THhnTVo2SDVYS1NHTE9oT3lmK2ZleHJzZXZGdGczL1RRVWZpZjB0dHN0dzhsUjJ0dGpuWTRUdjVmS04yRkRDRjlMUm44ZWFoSWVuMEVWakJnbE1qc0N4Qkt1RzhLOGt2aFJqcWNXTTVhVkpueXBHT0djdWI0cjlOdmFqMlBOanA0NFJQcDRMczUxRWgrRUpTWDAwaGdneWU2dVhoQmRJM3J0aWY0eDlObmJMV0IxV3RWR1hJVDU5THYrSkVUNmR5L3lTa0JuSk41Ti8xOWg3WXN3YVg1eTQ3dThwa241MjdEZXhEOGV1RTJQY2QwcE1ZTXpQU3VMN3NUL0UzaDQ3YjR4QTI0em5Qcm41YWV5QnNkdkVhT04raWI4VDR4MzRVVTl1cTZmbDhwTFlPMk1zWVJOVnMwdkNUeVNER2RjYkVuOG85cGxZL2NmaVkwa3pRMzEzNGlFdGVkTmRnd1MySjdCS3NHWnJmMFp1V0JaZUpqSGhiYm44TG5ibDJCMWpDTkJURXhQZW1zdk5ZN1BoVnJsNWMydzJNSXQ3U3pMNDBUSmplRzdTcjQ5ZFBVWlkxUWJQYTJPWmllaHd6N3NzQ1VuWDl2OGt6aCtqanpkTHpCaXVsZmllTWNLOWM3bGQ3TGF4TzhUdUVrT1FlQy9KaXFYbEZaSmduRmRLL09zWXl6ZjZ6NHd4dDlXTmM2SE8xeWJtdmZNbHZueU12QnNtdmxvTU1VdFU4UTRDaEhoZWtZdzU0LzBISmU4UnNldkhYaGg3VFl6MnJwMFk3dkN0QlRWWkJnbk1FUmpwYlZQQitsWEcvL2ZZeFdOWGpWMDI5dURZajJQTUFCNlgrRjR4QWlMRUQ1dlpFL2U4ZzBpd0Y4WjliVmRKZ2gvMW94SXpVK1BIZm8ray94UmIxMGFLYkJST205SlBqaEdZamJFRXV4UTNNY1QwbFltWnZkQ1BweWQ5MWhnQmtiaHZFaytNc2R4azc0MXhYeVQzaUdPaWc0RFF3b0xsTXhtbnllV3hNV1p0WDB6TWJJbDJrandJLzh5VldSWmNrMXdJQ0NJelZ4NThLaGRtbXl4NWt6UklZTG9FbWdvV2hCQ1NVeVp4d1JnL1NINTBMSWN3OXFWWUh2SHNKM25PajcvK2dkNDY5eCtNTVROSmRCZ3VsQlI1OVk4OHR4V2l4dktOZWxhMVFkbE5qTDcvZWVZRitrNzlaSjBuRi9hOEVoMkU3K1pLdnhKVlo4L2xqREdXaW93VFE3alBrTHpaalcrV2c4azZESXdKc2FvekVDWm1YZlY5TFViMS9YeE0rVHFQdnBLdSswdGFrOEFrQ1RRVkxIN1UvSGo1TVRQcllGbENQRy9NUUFBNXV5eThSVElRb2tTTkEvV3VhNk54WldzS3dnQWhtaTMydnlNMzlJTWtTMExTcy9ZS0hod3hsbmxIa2djUk03cUR4SkxMZlBrbHhjeVdnQVJtQ2ZCam5iMWZsbVlQNnl0NStNbllEMklzbVdabkRLZEwzcmxpZFdDL2l2Mld5eVdEcFIvTHhDU1BDdFNEQ0I0M2s4dGUwZzF5ejdOMWJhVFlUZ0o3YUN5NTZzcU9xNnFxSGdzekhmYklXTkxXejRrdmtRdmlsZWlZZ2RrUSsyYjF3M01ud1pJeGtVRUNFbWhMWUpWZ3NaRjl6VlQ4OGhpYnl1d3ZNUlBoUklzVFBUYkoyYWVpSFBzK2owbTVPbkJFajdoeElzYm1NcWVBOWJNNlprOElFZVJkaEF1eGVrRWVzdW5jcEkwVTNVbjRRR3JoSlBRYWlWbnljbmpBa2k2M0ZlUGxSUEdSdVdIakhKRmlVNThUdXZyVUw0OFdBdCt3TVhZMjc5bnI0c1NRMDlDRmdpMHlXSzZlSSsrNXB4VUlobWtST0paZzhaVTRQOVIvQndWSDdNeVNicG8wMzJJbE9nZ2MzZk1jWWZseWNsaENQVFR4Yk9DVTcwYkpPTmJzS3RrSFlzREpIRCs4YnllRFV6Rk8wdGd2eW0zVnBBM0tiV3ZQU3dYc3diMDNNZnRPYkhJanNBaG5zaXFFK0gxSmNGTDN5OFI4SnNHSlliMjNsS3lGd0tjTUNDR2ZKU0RZMkhNV1NyWEw0Qk1NeEpCTiszWTErSllFQmtwZ1hyQTQvV01XTVd1YytQRjkwK3dRK2VIZVBobUlEWjhMSURUelAyQ0VnSG80L1V2Umc0QVFrUGYxZzd1cVlzK0xUdzM0UG90UEpEaHRPL0tvYXRKR1haWTlJZXJseEpJOFBuNnRqLzNmbnd6cVQzUVltUEh3T1FNWnpJYVlOVkVHWXpuTEp4d3NCM25POTJqVXg4a2dNeHMrcGtWZ2VjYVlhWmRUUis1ck8xa1N6RXpabUQ5TDByUkhQVWxXajg0Rk1VNTBHRGdWNWZNRk1saEs4OTBYYWV4bnVkQkd2Vkgvc3R5elhKNnZJOW1HelFuNHhwQUl6QXZXa1BxK3E3N2VQUlZ4TXNuQkFvTEVKeHFJRmN2VlBESklRQUtsRUZDd3F1cFZjUWF6TUQ1TllPWjB5ZHl6bi9hWHhBWUpTS0FnQWdyV2ljNTRTQ0tXWFdkS3pCNFZlM2RKdGdwODlEbDc2dGlxRWwrU2dBUVdDV3dwV0lzVm1pTUJDVWlnS3dJS1ZsZGtyVmNDRXRnNUFRVnI1MGl0VUFJUzZJcUFndFVWMmZIVjY0Z2swRHNCQmF0M0Y5Z0JDVWlnS1FFRnF5a3B5MGxBQXIwVFVMQjZkNEVka0VCNUJFcnRrWUpWcW1mc2x3UWtzRUJBd1ZwQVlvWUVKRkFxQVFXclZNL1lMd2xJWUlHQWdyV0FaUHNNYTVDQUJMb2hvR0IxdzlWYUpTQ0JEZ2dvV0IxQXRVb0pTS0FiQWdwV04xeXRkU29FSE9kZUNTaFllOFZ0WXhLUXdEWUVGS3h0NlBtdUJDU3dWd0lLMWw1eDI1Z0VKTEFOZ1g0RmE1dWUrNjRFSkRBNUFnclc1Rnp1Z0NVd1hBSUsxbkI5Wjg4bE1Ea0NDdGJrWE43WGdHMVhBdHNUVUxDMloyZ05FcERBbmdnb1dIc0NiVE1Ta01EMkJCU3M3UmxhZ3dRa2NEU0J6dTRVck03UVdyRUVKTEJyQWdyV3JvbGFud1FrMEJrQkJhc3p0RllzQVFuc21vQ0N0V3VpMjlkbkRSS1F3QklDQ3RZU01HWkxRQUxsRVZDd3l2T0pQWktBQkpZUVVMQ1dnREZiQXZzZ1lCdWJFVkN3TnVObGFRbElvRWNDQ2xhUDhHMWFBaExZaklDQ3RSa3ZTMHRBQWowU0dMUmc5Y2pOcGlVZ2dSNElLRmc5UUxkSkNVaWdIUUVGcXgwMzM1S0FCSG9nb0dEMUFOMG1XeER3RlFtRWdJSVZDQVlKU0dBWUJCU3NZZmpKWGtwQUFpR2dZQVdDUVFJU0tJbkE4cjRvV012WitFUUNFaWlNZ0lKVm1FUHNqZ1Frc0p5QWdyV2NqVThrSUlIQ0NDaFloVGxrKys1WWd3VEdTMERCR3E5dkhaa0VSa2RBd1JxZFN4MlFCTVpMUU1FYXIyOGQyZmdKVEc2RUN0YmtYTzZBSlRCY0FncldjSDFuenlVd09RSUsxdVJjN29BbE1Gd0NVeGFzNFhyTm5rdGdvZ1FVcklrNjNtRkxZSWdFRkt3aGVzMCtTMkNpQkJTc2lUcCthc04ydk9NZ29HQ053NCtPUWdLVElLQmdUY0xORGxJQzR5Q2dZSTNEajQ1Q0FwTWcwRWl3SmtIQ1FVcEFBc1VUVUxDS2Q1RWRsSUFFYWdJS1ZrM0NXQUlTS0o2QWdsVzhpL2JjUVp1VFFNRUVGS3lDbldQWEpDQ0Jvd2tvV0VmejhFNENFaWlZZ0lKVnNIUHNtZ1M2SlRDODJoV3M0Zm5NSGt0Z3NnUVVyTW02M29GTFlIZ0VGS3poK2N3ZVMyQ3lCQlNzMXE3M1JRbElZTjhFRkt4OUU3YzlDVWlnTlFFRnF6VTZYNVNBQlBaTlFNSGFOM0hiR3lJQisxd0lBUVdyRUVmWURRbElZRDBCQldzOUkwdElRQUtGRUZDd0NuR0UzWkNBQk5ZVDJJZGdyZStGSlNRZ0FRazBJS0JnTllCa0VRbElvQXdDQ2xZWmZyQVhFcEJBQXdJS1ZnTklGbWxPd0pJUzZKS0FndFVsWGV1V2dBUjJTa0RCMmlsT0s1T0FCTG9rb0dCMVNkZTZKVEJtQWoyTVRjSHFBYnBOU2tBQzdRZ29XTzI0K1pZRUpOQURBUVdyQitnMktRRUp0Q09nWUxYanR2MWIxaUFCQ1d4TVFNSGFHSmt2U0VBQ2ZSRlFzUG9pYjdzU2tNREdCQlNzalpINWdnUTJKV0Q1WFJGUXNIWkYwbm9rSUlIT0NTaFluU08yQVFsSVlGY0VGS3hka2JRZUNVaWdjd0lERUt6T0dkaUFCQ1F3RUFJSzFrQWNaVGNsSUlHcVVyRDhYeUFCQ1F5R2dJSTFHRmROb3FNT1VnSXJDU2hZSy9INFVBSVNLSW1BZ2xXU04reUxCQ1N3a29DQ3RSS1BEeVVnZ2E0SXRLbFh3V3BEelhja0lJRmVDQ2hZdldDM1VRbElvQTBCQmFzTk5kK1JnQVI2SWFCZzlZSjkrMGF0UVFKVEpLQmdUZEhyamxrQ0F5V2dZQTNVY1haYkFsTWtvR0JOMGV1T2VWZ0U3TzBoQVFYckVJVUpDVWlnZEFJS1Z1a2VzbjhTa01BaEFRWHJFSVVKQ1VpZ2RBTGpGNnpTUFdEL0pDQ0J4Z1FVck1hb0xDZ0JDZlJOUU1IcTJ3TzJMd0VKTkNhZ1lEVkdaY0h5Q2RqRHNSTlFzTWJ1WWNjbmdSRVJVTEJHNUV5SElvR3hFMUN3eHU1aHh5ZUJFUkdZRWF3UmpjcWhTRUFDb3lTZ1lJM1NyUTVLQXVNa29HQ04wNitPU2dLakpLQmdqZEt0YXdkbEFRa01rb0NDTlVpMzJXa0pUSk9BZ2pWTnZ6dHFDUXlTZ0lJMVNMZlphUWswSnpDbWtncldtTHpwV0NRd2NnSUsxc2dkN1BBa01DWUNDdGFZdk9sWUpEQnlBZ3JXR2dmN1dBSVNLSWVBZ2xXT0wreUpCQ1N3aG9DQ3RRYVFqeVVnZ1hJSUtGamwrTUtlOUUzQTlvc25vR0FWN3lJN0tBRUoxQVFVckpxRXNRUWtVRHdCQmF0NEY5bEJDVWlnSm5BQ0FBQUEvLzgzVEtHTEFBQUFCa2xFUVZRREFGandNRHo5Tm5XSEFBQUFBRWxGVGtTdVFtQ0MifQ==\"}"
+    "postData": "{\"email\":\"supervisor@maintainpro.com\",\"password\":\"demo123\",\"deviceFingerprint\":\"eyJ1c2VyQWdlbnQiOiJNb3ppbGxhLzUuMCAoV2luZG93cyBOVCAxMC4wOyBXaW42NDsgeDY0KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvMTQwLjAuNzMzOS4xNiBTYWZhcmkvNTM3LjM2IiwibGFuZ3VhZ2UiOiJlbi1VUyIsInBsYXRmb3JtIjoiTGludXggeDg2XzY0Iiwic2NyZWVuUmVzb2x1dGlvbiI6IjEyODB4NzIwIiwidGltZXpvbmUiOiJVVEMiLCJjYW52YXMiOiJkYXRhOmltYWdlL3BuZztiYXNlNjQsaVZCT1J3MEtHZ29BQUFBTlNVaEVVZ0FBQVN3QUFBQ1dDQVlBQUFCa1c3WFNBQUFNVVVsRVFWUjRBZXlhZGNnMFhSbUh4KzVBL094dXhTNHN4TVF1c0F2RlFQM0RSQlFWQ3pGUjdFTEV4TzVBUmNYdXdzTHVMdXpXNy90ZHovZk93NzY3Nys3T3p1N3NuSm01WHM0OTU4eVpNeWV1KzkzZmMySk9XdmxQQWhLUXdFQUlLRmdEY1pUZGxJQUVxbXJmZ25YbVFEOCtkdW5ZcnNQOVUrRXZZcStPUFRQMnV0aFF3dWZTMFFmRURCS1F3QW9DODRMMTFaUkZVTEIvSlAydDJCdGpGNDd0SXZ3MWxWdzM5c1BZcnNQalUrRlRZbmVMdlNqMnBOaFFBbUwxam9hZHZVbktYU3kyY2ZBRkNReWR3THhnTVo2SDVYS1NHTE9oT3lmK2ZleHJzZXZGdGczL1RRVWZpZjB0dHN0dzhsUjJ0dGpuWTRUdjVmS04yRkRDRjlMUm44ZWFoSWVuMEVWakJnbE1qc0N4Qkt1RzhLOGt2aFJqcWNXTTVhVkpueXBHT0djdWI0cjlOdmFqMlBOanA0NFJQcDRMczUxRWgrRUpTWDAwaGdneWU2dVhoQmRJM3J0aWY0eDlObmJMV0IxV3RWR1hJVDU5THYrSkVUNmR5L3lTa0JuSk41Ti8xOWg3WXN3YVg1eTQ3dThwa241MjdEZXhEOGV1RTJQY2QwcE1ZTXpQU3VMN3NUL0UzaDQ3YjR4QTI0em5Qcm41YWV5QnNkdkVhT04raWI4VDR4MzRVVTl1cTZmbDhwTFlPMk1zWVJOVnMwdkNUeVNER2RjYkVuOG85cGxZL2NmaVkwa3pRMzEzNGlFdGVkTmRnd1MySjdCS3NHWnJmMFp1V0JaZUpqSGhiYm44TG5ibDJCMWpDTkJURXhQZW1zdk5ZN1BoVnJsNWMydzJNSXQ3U3pMNDBUSmplRzdTcjQ5ZFBVWlkxUWJQYTJPWmllaHd6N3NzQ1VuWDl2OGt6aCtqanpkTHpCaXVsZmllTWNLOWM3bGQ3TGF4TzhUdUVrT1FlQy9KaXFYbEZaSmduRmRLL09zWXl6ZjZ6NHd4dDlXTmM2SE8xeWJtdmZNbHZueU12QnNtdmxvTU1VdFU4UTRDaEhoZWtZdzU0LzBISmU4UnNldkhYaGg3VFl6MnJwMFk3dkN0QlRWWkJnbk1FUmpwYlZQQitsWEcvL2ZZeFdOWGpWMDI5dURZajJQTUFCNlgrRjR4QWlMRUQ1dlpFL2U4ZzBpd0Y4WjliVmRKZ2gvMW94SXpVK1BIZm8ray94UmIxMGFLYkJST205SlBqaEdZamJFRXV4UTNNY1QwbFltWnZkQ1BweWQ5MWhnQmtiaHZFaytNc2R4azc0MXhYeVQzaUdPaWc0RFF3b0xsTXhtbnllV3hNV1p0WDB6TWJJbDJrandJLzh5VldSWmNrMXdJQ0NJelZ4NThLaGRtbXl4NWt6UklZTG9FbWdvV2hCQ1NVeVp4d1JnL1NINTBMSWN3OXFWWUh2SHNKM25PajcvK2dkNDY5eCtNTVROSmRCZ3VsQlI1OVk4OHR4V2l4dktOZWxhMVFkbE5qTDcvZWVZRitrNzlaSjBuRi9hOEVoMkU3K1pLdnhKVlo4L2xqREdXaW93VFE3alBrTHpaalcrV2c4azZESXdKc2FvekVDWm1YZlY5TFViMS9YeE0rVHFQdnBLdSswdGFrOEFrQ1RRVkxIN1UvSGo1TVRQcllGbENQRy9NUUFBNXV5eThSVElRb2tTTkEvV3VhNk54WldzS3dnQWhtaTMydnlNMzlJTWtTMExTcy9ZS0hod3hsbmxIa2djUk03cUR4SkxMZlBrbHhjeVdnQVJtQ2ZCam5iMWZsbVlQNnl0NStNbllEMklzbVdabkRLZEwzcmxpZFdDL2l2Mld5eVdEcFIvTHhDU1BDdFNEQ0I0M2s4dGUwZzF5ejdOMWJhVFlUZ0o3YUN5NTZzcU9xNnFxSGdzekhmYklXTkxXejRrdmtRdmlsZWlZZ2RrUSsyYjF3M01ud1pJeGtVRUNFbWhMWUpWZ3NaRjl6VlQ4OGhpYnl1d3ZNUlBoUklzVFBUYkoyYWVpSFBzK2owbTVPbkJFajdoeElzYm1NcWVBOWJNNlprOElFZVJkaEF1eGVrRWVzdW5jcEkwVTNVbjRRR3JoSlBRYWlWbnljbmpBa2k2M0ZlUGxSUEdSdVdIakhKRmlVNThUdXZyVUw0OFdBdCt3TVhZMjc5bnI0c1NRMDlDRmdpMHlXSzZlSSsrNXB4VUlobWtST0paZzhaVTRQOVIvQndWSDdNeVNicG8wMzJJbE9nZ2MzZk1jWWZseWNsaENQVFR4Yk9DVTcwYkpPTmJzS3RrSFlzREpIRCs4YnllRFV6Rk8wdGd2eW0zVnBBM0tiV3ZQU3dYc3diMDNNZnRPYkhJanNBaG5zaXFFK0gxSmNGTDN5OFI4SnNHSlliMjNsS3lGd0tjTUNDR2ZKU0RZMkhNV1NyWEw0Qk1NeEpCTiszWTErSllFQmtwZ1hyQTQvV01XTVd1YytQRjkwK3dRK2VIZVBobUlEWjhMSURUelAyQ0VnSG80L1V2Umc0QVFrUGYxZzd1cVlzK0xUdzM0UG90UEpEaHRPL0tvYXRKR1haWTlJZXJseEpJOFBuNnRqLzNmbnd6cVQzUVltUEh3T1FNWnpJYVlOVkVHWXpuTEp4d3NCM25POTJqVXg4a2dNeHMrcGtWZ2VjYVlhWmRUUis1ck8xa1N6RXpabUQ5TDByUkhQVWxXajg0Rk1VNTBHRGdWNWZNRk1saEs4OTBYYWV4bnVkQkd2Vkgvc3R5elhKNnZJOW1HelFuNHhwQUl6QXZXa1BxK3E3N2VQUlZ4TXNuQkFvTEVKeHFJRmN2VlBESklRQUtsRUZDd3F1cFZjUWF6TUQ1TllPWjB5ZHl6bi9hWHhBWUpTS0FnQWdyV2ljNTRTQ0tXWFdkS3pCNFZlM2RKdGdwODlEbDc2dGlxRWwrU2dBUVdDV3dwV0lzVm1pTUJDVWlnS3dJS1ZsZGtyVmNDRXRnNUFRVnI1MGl0VUFJUzZJcUFndFVWMmZIVjY0Z2swRHNCQmF0M0Y5Z0JDVWlnS1FFRnF5a3B5MGxBQXIwVFVMQjZkNEVka0VCNUJFcnRrWUpWcW1mc2x3UWtzRUJBd1ZwQVlvWUVKRkFxQVFXclZNL1lMd2xJWUlHQWdyV0FaUHNNYTVDQUJMb2hvR0IxdzlWYUpTQ0JEZ2dvV0IxQXRVb0pTS0FiQWdwV04xeXRkU29FSE9kZUNTaFllOFZ0WXhLUXdEWUVGS3h0NlBtdUJDU3dWd0lLMWw1eDI1Z0VKTEFOZ1g0RmE1dWUrNjRFSkRBNUFnclc1Rnp1Z0NVd1hBSUsxbkI5Wjg4bE1Ea0NDdGJrWE43WGdHMVhBdHNUVUxDMloyZ05FcERBbmdnb1dIc0NiVE1Ta01EMkJCU3M3UmxhZ3dRa2NEU0J6dTRVck03UVdyRUVKTEJyQWdyV3JvbGFud1FrMEJrQkJhc3p0RllzQVFuc21vQ0N0V3VpMjlkbkRSS1F3QklDQ3RZU01HWkxRQUxsRVZDd3l2T0pQWktBQkpZUVVMQ1dnREZiQXZzZ1lCdWJFVkN3TnVObGFRbElvRWNDQ2xhUDhHMWFBaExZaklDQ3RSa3ZTMHRBQWowU0dMUmc5Y2pOcGlVZ2dSNElLRmc5UUxkSkNVaWdIUUVGcXgwMzM1S0FCSG9nb0dEMUFOMG1XeER3RlFtRWdJSVZDQVlKU0dBWUJCU3NZZmpKWGtwQUFpR2dZQVdDUVFJU0tJbkE4cjRvV012WitFUUNFaWlNZ0lKVm1FUHNqZ1Frc0p5QWdyV2NqVThrSUlIQ0NDaFloVGxrKys1WWd3VEdTMERCR3E5dkhaa0VSa2RBd1JxZFN4MlFCTVpMUU1FYXIyOGQyZmdKVEc2RUN0YmtYTzZBSlRCY0FncldjSDFuenlVd09RSUsxdVJjN29BbE1Gd0NVeGFzNFhyTm5rdGdvZ1FVcklrNjNtRkxZSWdFRkt3aGVzMCtTMkNpQkJTc2lUcCthc04ydk9NZ29HQ053NCtPUWdLVElLQmdUY0xORGxJQzR5Q2dZSTNEajQ1Q0FwTWcwRWl3SmtIQ1FVcEFBc1VUVUxDS2Q1RWRsSUFFYWdJS1ZrM0NXQUlTS0o2QWdsVzhpL2JjUVp1VFFNRUVGS3lDbldQWEpDQ0Jvd2tvV0VmejhFNENFaWlZZ0lKVnNIUHNtZ1M2SlRDODJoV3M0Zm5NSGt0Z3NnUVVyTW02M29GTFlIZ0VGS3poK2N3ZVMyQ3lCQlNzMXE3M1JRbElZTjhFRkt4OUU3YzlDVWlnTlFFRnF6VTZYNVNBQlBaTlFNSGFOM0hiR3lJQisxd0lBUVdyRUVmWURRbElZRDBCQldzOUkwdElRQUtGRUZDd0NuR0UzWkNBQk5ZVDJJZGdyZStGSlNRZ0FRazBJS0JnTllCa0VRbElvQXdDQ2xZWmZyQVhFcEJBQXdJS1ZnTklGbWxPd0pJUzZKS0FndFVsWGV1V2dBUjJTa0RCMmlsT0s1T0FCTG9rb0dCMVNkZTZKVEJtQWoyTVRjSHFBYnBOU2tBQzdRZ29XTzI0K1pZRUpOQURBUVdyQitnMktRRUp0Q09nWUxYanR2MWIxaUFCQ1d4TVFNSGFHSmt2U0VBQ2ZSRlFzUG9pYjdzU2tNREdCQlNzalpINWdnUTJKV0Q1WFJGUXNIWkYwbm9rSUlIT0NTaFluU08yQVFsSVlGY0VGS3hka2JRZUNVaWdjd0lERUt6T0dkaUFCQ1F3RUFJSzFrQWNaVGNsSUlHcVVyRDhYeUFCQ1F5R2dJSTFHRmROb3FNT1VnSXJDU2hZSy9INFVBSVNLSW1BZ2xXU04reUxCQ1N3a29DQ3RSS1BEeVVnZ2E0SXRLbFh3V3BEelhja0lJRmVDQ2hZdldDM1VRbElvQTBCQmFzTk5kK1JnQVI2SWFCZzlZSjkrMGF0UVFKVEpLQmdUZEhyamxrQ0F5V2dZQTNVY1haYkFsTWtvR0JOMGV1T2VWZ0U3TzBoQVFYckVJVUpDVWlnZEFJS1Z1a2VzbjhTa01BaEFRWHJFSVVKQ1VpZ2RBTGpGNnpTUFdEL0pDQ0J4Z1FVck1hb0xDZ0JDZlJOUU1IcTJ3TzJMd0VKTkNhZ1lEVkdaY0h5Q2RqRHNSTlFzTWJ1WWNjbmdSRVJVTEJHNUV5SElvR3hFMUN3eHU1aHh5ZUJFUkdZRWF3UmpjcWhTRUFDb3lTZ1lJM1NyUTVLQXVNa29HQ04wNitPU2dLakpLQmdqZEt0YXdkbEFRa01rb0NDTlVpMzJXa0pUSk9BZ2pWTnZ6dHFDUXlTZ0lJMVNMZlphUWswSnpDbWtncldtTHpwV0NRd2NnSUsxc2dkN1BBa01DWUNDdGFZdk9sWUpEQnlBZ3JXR2dmN1dBSVNLSWVBZ2xXT0wreUpCQ1N3aG9DQ3RRYVFqeVVnZ1hJSUtGamwrTUtlOUUzQTlvc25vR0FWN3lJN0tBRUoxQVFVckpxRXNRUWtVRHdCQmF0NEY5bEJDVWlnSm5BQ0FBQUEvLzgzVEtHTEFBQUFCa2xFUVZRREFGandNRHo5Tm5XSEFBQUFBRWxGVGtTdVFtQ0MifQ==\"}"
   }
 ]
 Login Responses: [
@@ -4559,47 +4658,90 @@ Toast error text: ErrorInvalid credentials
 </system-out>
 </testcase>
 </testsuite>
-<testsuite name="debug-work-orders.spec.ts" timestamp="2025-08-25T18:47:03.717Z" hostname="chromium" tests="1" failures="1" skipped="0" time="30.03" errors="0">
-<testcase name="debug work order navigation" classname="debug-work-orders.spec.ts" time="30.03">
-<failure message="debug-work-orders.spec.ts:4:1 debug work order navigation" type="FAILURE">
-<![CDATA[  [chromium] › debug-work-orders.spec.ts:4:1 › debug work order navigation ─────────────────────────
+<testsuite name="debug-work-orders.spec.ts" timestamp="2025-08-25T19:26:23.605Z" hostname="chromium" tests="1" failures="0" skipped="0" time="1.194" errors="0">
+<testcase name="debug work order navigation" classname="debug-work-orders.spec.ts" time="1.194">
+<system-out>
+<![CDATA[Current URL: http://localhost:5000/login
+Nav work orders visible: [33mfalse[39m
+Navigation element not found
+Mobile menu button visible: [33mfalse[39m
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="debug-workorders.spec.ts" timestamp="2025-08-25T19:26:23.605Z" hostname="chromium" tests="1" failures="1" skipped="0" time="30.029" errors="0">
+<testcase name="debug work order data" classname="debug-workorders.spec.ts" time="30.029">
+<failure message="debug-workorders.spec.ts:3:1 debug work order data" type="FAILURE">
+<![CDATA[  [chromium] › debug-workorders.spec.ts:3:1 › debug work order data ────────────────────────────────
 
     Test timeout of 30000ms exceeded.
 
     Error: page.waitForURL: Test timeout of 30000ms exceeded.
     =========================== logs ===========================
-    waiting for navigation to "/" until "load"
+    waiting for navigation to "/dashboard" until "load"
     ============================================================
 
-      10 |
-      11 |   // Wait for redirect
-    > 12 |   await page.waitForURL('/');
+      12 |
+      13 |   // Wait for login to complete
+    > 14 |   await page.waitForURL('/dashboard');
          |              ^
-      13 |
-      14 |   // Navigate to work orders
-      15 |   console.log('Current URL:', page.url());
-        at /workspaces/MaintAInPro/tests/e2e/debug-work-orders.spec.ts:12:14
+      15 |
+      16 |   // Navigate to work orders
+      17 |   await page.click('[data-testid="nav-work-orders"]');
+        at /workspaces/MaintAInPro/tests/e2e/debug-workorders.spec.ts:14:14
 
-    Error Context: ../../test-results/playwright-artifacts/debug-work-orders-debug-work-order-navigation-chromium/error-context.md
+    Error Context: ../../test-results/playwright-artifacts/debug-workorders-debug-work-order-data-chromium/error-context.md
 ]]>
 </failure>
 <system-out>
 <![CDATA[
-[[ATTACHMENT|../../test-results/playwright-artifacts/debug-work-orders-debug-work-order-navigation-chromium/error-context.md]]
+[[ATTACHMENT|../../test-results/playwright-artifacts/debug-workorders-debug-work-order-data-chromium/error-context.md]]
 ]]>
 </system-out>
 </testcase>
 </testsuite>
-<testsuite name="debug-workorders.spec.ts" timestamp="2025-08-25T18:47:03.717Z" hostname="chromium" tests="1" failures="0" skipped="1" time="24.933" errors="0">
-<testcase name="debug work order data" classname="debug-workorders.spec.ts" time="24.933">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="main-flows.spec.ts" timestamp="2025-08-25T18:47:03.717Z" hostname="chromium" tests="19" failures="0" skipped="19" time="2.951" errors="0">
-<testcase name="Authentication Flow › user can login and logout" classname="main-flows.spec.ts" time="2.951">
-<skipped>
-</skipped>
+<testsuite name="main-flows.spec.ts" timestamp="2025-08-25T19:26:23.605Z" hostname="chromium" tests="19" failures="2" skipped="17" time="0" errors="0">
+<testcase name="Authentication Flow › user can login and logout" classname="main-flows.spec.ts" time="0">
+<failure message="main-flows.spec.ts:54:3 user can login and logout" type="FAILURE">
+<![CDATA[  [chromium] › main-flows.spec.ts:54:3 › Authentication Flow › user can login and logout ───────────
+
+    SyntaxError: Unexpected token 'T', "Too many a"... is not valid JSON
+
+      42 |     let body;
+      43 |     try {
+    > 44 |       body = JSON.parse(textBody);
+         |                   ^
+      45 |     } catch (err) {
+      46 |       console.error('Failed to parse login response as JSON:', err);
+      47 |       throw err;
+        at /workspaces/MaintAInPro/tests/e2e/main-flows.spec.ts:44:19
+]]>
+</failure>
+<system-out>
+<![CDATA[API login response status: [33m429[39m
+API login response body: Too many authentication attempts from this IP, please try again after 15 minutes.
+]]>
+</system-out>
+<system-err>
+<![CDATA[Failed to parse login response as JSON: SyntaxError: Unexpected token 'T', "Too many a"... is not valid JSON
+    at JSON.parse (<anonymous>)
+    at [90mfile:///workspaces/MaintAInPro/[39mtests/e2e/main-flows.spec.ts:44:19
+    at [90m/workspaces/MaintAInPro/[39mnode_modules/[4mplaywright[24m/lib/worker/testInfo.js:326:11
+    at TimeoutManager.withRunnable [90m(/workspaces/MaintAInPro/[39mnode_modules/[4mplaywright[24m/lib/worker/timeoutManager.js:67:14[90m)[39m
+    at TestInfoImpl._runWithTimeout [90m(/workspaces/MaintAInPro/[39mnode_modules/[4mplaywright[24m/lib/worker/testInfo.js:324:7[90m)[39m
+    at FixtureRunner.resolveParametersAndRunFunction [90m(/workspaces/MaintAInPro/[39mnode_modules/[4mplaywright[24m/lib/worker/fixtureRunner.js:220:5[90m)[39m
+    at [90m/workspaces/MaintAInPro/[39mnode_modules/[4mplaywright[24m/lib/worker/workerMain.js:428:13
+    at TestInfoImpl._runAsStep [90m(/workspaces/MaintAInPro/[39mnode_modules/[4mplaywright[24m/lib/worker/testInfo.js:315:7[90m)[39m
+    at WorkerMain._runAllHooksForSuite [90m(/workspaces/MaintAInPro/[39mnode_modules/[4mplaywright[24m/lib/worker/workerMain.js:423:9[90m)[39m
+    at WorkerMain._runBeforeAllHooksForSuite [90m(/workspaces/MaintAInPro/[39mnode_modules/[4mplaywright[24m/lib/worker/workerMain.js:417:5[90m)[39m
+    at [90m/workspaces/MaintAInPro/[39mnode_modules/[4mplaywright[24m/lib/worker/workerMain.js:299:11
+    at TestInfoImpl._runAsStep [90m(/workspaces/MaintAInPro/[39mnode_modules/[4mplaywright[24m/lib/worker/testInfo.js:315:7[90m)[39m
+    at [90m/workspaces/MaintAInPro/[39mnode_modules/[4mplaywright[24m/lib/worker/workerMain.js:297:7
+    at WorkerMain._runTest [90m(/workspaces/MaintAInPro/[39mnode_modules/[4mplaywright[24m/lib/worker/workerMain.js:282:5[90m)[39m
+    at WorkerMain.runTestGroup [90m(/workspaces/MaintAInPro/[39mnode_modules/[4mplaywright[24m/lib/worker/workerMain.js:194:11[90m)[39m
+    at process.<anonymous> [90m(/workspaces/MaintAInPro/[39mnode_modules/[4mplaywright[24m/lib/common/process.js:65:22[90m)[39m
+]]>
+</system-err>
 </testcase>
 <testcase name="Authentication Flow › shows error for invalid credentials" classname="main-flows.spec.ts" time="0">
 <skipped>
@@ -4638,8 +4780,46 @@ Toast error text: ErrorInvalid credentials
 </skipped>
 </testcase>
 <testcase name="Dashboard and Analytics › can filter dashboard by date range" classname="main-flows.spec.ts" time="0">
-<skipped>
-</skipped>
+<failure message="main-flows.spec.ts:308:3 can filter dashboard by date range" type="FAILURE">
+<![CDATA[  [chromium] › main-flows.spec.ts:308:3 › Dashboard and Analytics › can filter dashboard by date range 
+
+    SyntaxError: Unexpected token 'T', "Too many a"... is not valid JSON
+
+      42 |     let body;
+      43 |     try {
+    > 44 |       body = JSON.parse(textBody);
+         |                   ^
+      45 |     } catch (err) {
+      46 |       console.error('Failed to parse login response as JSON:', err);
+      47 |       throw err;
+        at /workspaces/MaintAInPro/tests/e2e/main-flows.spec.ts:44:19
+]]>
+</failure>
+<system-out>
+<![CDATA[API login response status: [33m429[39m
+API login response body: Too many authentication attempts from this IP, please try again after 15 minutes.
+]]>
+</system-out>
+<system-err>
+<![CDATA[Failed to parse login response as JSON: SyntaxError: Unexpected token 'T', "Too many a"... is not valid JSON
+    at JSON.parse (<anonymous>)
+    at [90mfile:///workspaces/MaintAInPro/[39mtests/e2e/main-flows.spec.ts:44:19
+    at [90m/workspaces/MaintAInPro/[39mnode_modules/[4mplaywright[24m/lib/worker/testInfo.js:326:11
+    at TimeoutManager.withRunnable [90m(/workspaces/MaintAInPro/[39mnode_modules/[4mplaywright[24m/lib/worker/timeoutManager.js:67:14[90m)[39m
+    at TestInfoImpl._runWithTimeout [90m(/workspaces/MaintAInPro/[39mnode_modules/[4mplaywright[24m/lib/worker/testInfo.js:324:7[90m)[39m
+    at FixtureRunner.resolveParametersAndRunFunction [90m(/workspaces/MaintAInPro/[39mnode_modules/[4mplaywright[24m/lib/worker/fixtureRunner.js:220:5[90m)[39m
+    at [90m/workspaces/MaintAInPro/[39mnode_modules/[4mplaywright[24m/lib/worker/workerMain.js:428:13
+    at TestInfoImpl._runAsStep [90m(/workspaces/MaintAInPro/[39mnode_modules/[4mplaywright[24m/lib/worker/testInfo.js:315:7[90m)[39m
+    at WorkerMain._runAllHooksForSuite [90m(/workspaces/MaintAInPro/[39mnode_modules/[4mplaywright[24m/lib/worker/workerMain.js:423:9[90m)[39m
+    at WorkerMain._runBeforeAllHooksForSuite [90m(/workspaces/MaintAInPro/[39mnode_modules/[4mplaywright[24m/lib/worker/workerMain.js:417:5[90m)[39m
+    at [90m/workspaces/MaintAInPro/[39mnode_modules/[4mplaywright[24m/lib/worker/workerMain.js:299:11
+    at TestInfoImpl._runAsStep [90m(/workspaces/MaintAInPro/[39mnode_modules/[4mplaywright[24m/lib/worker/testInfo.js:315:7[90m)[39m
+    at [90m/workspaces/MaintAInPro/[39mnode_modules/[4mplaywright[24m/lib/worker/workerMain.js:297:7
+    at WorkerMain._runTest [90m(/workspaces/MaintAInPro/[39mnode_modules/[4mplaywright[24m/lib/worker/workerMain.js:282:5[90m)[39m
+    at WorkerMain.runTestGroup [90m(/workspaces/MaintAInPro/[39mnode_modules/[4mplaywright[24m/lib/worker/workerMain.js:194:11[90m)[39m
+    at process.<anonymous> [90m(/workspaces/MaintAInPro/[39mnode_modules/[4mplaywright[24m/lib/common/process.js:65:22[90m)[39m
+]]>
+</system-err>
 </testcase>
 <testcase name="Mobile Responsiveness › mobile navigation works correctly" classname="main-flows.spec.ts" time="0">
 <skipped>
@@ -4674,10 +4854,8 @@ Toast error text: ErrorInvalid credentials
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="sanity.spec.ts" timestamp="2025-08-25T18:47:03.717Z" hostname="chromium" tests="1" failures="0" skipped="1" time="0" errors="0">
-<testcase name="sanity: homepage loads and root element is visible" classname="sanity.spec.ts" time="0">
-<skipped>
-</skipped>
+<testsuite name="sanity.spec.ts" timestamp="2025-08-25T19:26:23.605Z" hostname="chromium" tests="1" failures="0" skipped="0" time="1" errors="0">
+<testcase name="sanity: homepage loads and root element is visible" classname="sanity.spec.ts" time="1">
 </testcase>
 </testsuite>
 </testsuites>

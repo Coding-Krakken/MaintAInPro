@@ -1,15 +1,27 @@
 // Simple test script to check work orders
-import { test } from '@playwright/test';
+import { test, request } from '@playwright/test';
+
+let authToken = '';
+
+test.beforeAll(async () => {
+  const apiContext = await request.newContext();
+  const response = await apiContext.post('/api/auth/login', {
+    data: {
+      email: 'technician@maintainpro.com',
+      password: 'demo123',
+    },
+  });
+  const body = await response.json();
+  authToken = body.token;
+  await apiContext.dispose();
+});
 
 test('debug work order navigation', async ({ page }) => {
-  // Login first
   await page.goto('/login');
-  await page.fill('[data-testid="email-input"]', 'technician@maintainpro.com');
-  await page.fill('[data-testid="password-input"]', 'demo123');
-  await page.click('[data-testid="login-button"]');
-
-  // Wait for redirect
-  await page.waitForURL('/');
+  await page.evaluate((token) => {
+    window.localStorage.setItem('accessToken', token);
+  }, authToken);
+  await page.reload();
 
   // Navigate to work orders
   console.log('Current URL:', page.url());
@@ -38,7 +50,7 @@ test('debug work order navigation', async ({ page }) => {
       console.log('No work orders found');
       // Check page content
       const content = await page.textContent('body');
-      console.log('Page content includes:', content.includes('No work orders'));
+      console.log('Page content includes:', content?.includes('No work orders'));
     }
   } else {
     console.log('Navigation element not found');

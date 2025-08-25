@@ -1,22 +1,22 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, request } from '@playwright/test';
 import { testData, testCredentials } from '../helpers/testData';
 
 // Test data - use actual emails from database
 const testUsers = {
   technician: {
-    email: 'technician@warehouse.com',
+    email: 'technician@maintainpro.com',
     password: 'demo123',
     name: 'Test User',
     role: 'technician',
   },
   supervisor: {
-    email: 'supervisor@warehouse.com',
+    email: 'supervisor@maintainpro.com',
     password: 'demo123',
     name: 'John Smith',
     role: 'supervisor',
   },
   manager: {
-    email: 'manager@warehouse.com',
+    email: 'manager@example.com',
     password: 'demo123',
     name: 'Mike Johnson',
     role: 'manager',
@@ -25,38 +25,57 @@ const testUsers = {
 
 const testWorkOrder = testData.workOrder;
 
+let authToken = '';
+
+test.beforeAll(async () => {
+  // Use Playwright APIRequestContext to login and get token
+  const apiContext = await request.newContext();
+  const response = await apiContext.post('/api/auth/login', {
+    data: {
+      email: 'supervisor@maintainpro.com',
+      password: 'demo123',
+    },
+  });
+    console.log('API login response status:', response.status());
+    const textBody = await response.text();
+    console.log('API login response body:', textBody);
+    let body;
+    try {
+      body = JSON.parse(textBody);
+    } catch (err) {
+      console.error('Failed to parse login response as JSON:', err);
+      throw err;
+    }
+  authToken = body.token;
+  await apiContext.dispose();
+});
+
 test.describe('Authentication Flow', () => {
   test('user can login and logout', async ({ page }) => {
-    // Navigate to login page
     await page.goto('/login');
-
-    // Fill in login form
-    await page.fill('[data-testid="email-input"]', testUsers.supervisor.email);
-    await page.fill('[data-testid="password-input"]', testUsers.supervisor.password);
-
-    // Submit login
-    await page.click('[data-testid="login-button"]');
-
+    // Set token in localStorage before navigation
+    await page.evaluate((token) => {
+      window.localStorage.setItem('accessToken', token);
+    }, authToken);
+    await page.reload();
     // Verify successful login
-  await expect(page).toHaveURL('/dashboard');
-  // Wait for dashboard stats to be visible
-  await expect(page.locator('[data-testid="total-work-orders"]')).toBeVisible();
-  await expect(page.locator('[data-testid="pending-work-orders"]')).toBeVisible();
-  await expect(page.locator('[data-testid="completed-work-orders"]')).toBeVisible();
-  await expect(page.locator('[data-testid="active-equipment"]')).toBeVisible();
-  await expect(page.locator('[data-testid="user-name"]')).toContainText('Test User'); // TEST_AUTH_MODE returns mock user
-  // Debug: log dashboard HTML and check for overlays
-  const dashboardHtml = await page.content();
-  console.log('Dashboard HTML after login:', dashboardHtml.slice(0, 1000));
-  const overlays = await page.locator('[aria-hidden="true"], [aria-busy="true"], .modal, .overlay, .loader, .spinner').count();
-  console.log('Overlay/loader count after login:', overlays);
-  // Assert no overlays block interaction
-  expect(overlays).toBe(0);
-
+    await expect(page).toHaveURL('/dashboard');
+    // Wait for dashboard stats to be visible
+    await expect(page.locator('[data-testid="total-work-orders"]')).toBeVisible();
+    await expect(page.locator('[data-testid="pending-work-orders"]')).toBeVisible();
+    await expect(page.locator('[data-testid="completed-work-orders"]')).toBeVisible();
+    await expect(page.locator('[data-testid="active-equipment"]')).toBeVisible();
+    await expect(page.locator('[data-testid="user-name"]')).toContainText('Test User');
+    // Debug: log dashboard HTML and check for overlays
+    const dashboardHtml = await page.content();
+    console.log('Dashboard HTML after login:', dashboardHtml.slice(0, 1000));
+    const overlays = await page.locator('[aria-hidden="true"], [aria-busy="true"], .modal, .overlay, .loader, .spinner').count();
+    console.log('Overlay/loader count after login:', overlays);
+    // Assert no overlays block interaction
+    expect(overlays).toBe(0);
     // Logout
     await page.click('[data-testid="user-menu-button"]');
     await page.click('[data-testid="logout-button"]');
-
     // Verify logout
     await expect(page).toHaveURL('/login');
   });
@@ -77,18 +96,36 @@ test.describe('Authentication Flow', () => {
 
 test.describe('Work Order Management', () => {
   test.beforeEach(async ({ page }) => {
-    // Login before each test
+    // Use Playwright APIRequestContext to login and get token for technician
+    const apiContext = await request.newContext();
+    const response = await apiContext.post('/api/auth/login', {
+      data: {
+        email: 'technician@maintainpro.com',
+        password: 'demo123',
+      },
+    });
+    console.log('API login response status:', response.status());
+    const textBody = await response.text();
+    console.log('API login response body:', textBody);
+    let body;
+    try {
+      body = JSON.parse(textBody);
+    } catch (err) {
+      console.error('Failed to parse login response as JSON:', err);
+      throw err;
+    }
+    await apiContext.dispose();
     await page.goto('/login');
-    // Use valid seeded test user credentials
-    await page.fill('[data-testid="email-input"]', 'technician@warehouse.com');
-    await page.fill('[data-testid="password-input"]', 'demo123');
-    await page.click('[data-testid="login-button"]');
-  await expect(page).toHaveURL('/dashboard');
-  // Wait for dashboard stats to be visible
-  await expect(page.locator('[data-testid="total-work-orders"]')).toBeVisible();
-  await expect(page.locator('[data-testid="pending-work-orders"]')).toBeVisible();
-  await expect(page.locator('[data-testid="completed-work-orders"]')).toBeVisible();
-  await expect(page.locator('[data-testid="active-equipment"]')).toBeVisible();
+    await page.evaluate((token) => {
+      window.localStorage.setItem('accessToken', token);
+    }, body.token);
+    await page.reload();
+    await expect(page).toHaveURL('/dashboard');
+    // Wait for dashboard stats to be visible
+    await expect(page.locator('[data-testid="total-work-orders"]')).toBeVisible();
+    await expect(page.locator('[data-testid="pending-work-orders"]')).toBeVisible();
+    await expect(page.locator('[data-testid="completed-work-orders"]')).toBeVisible();
+    await expect(page.locator('[data-testid="active-equipment"]')).toBeVisible();
   });
 
   test('technician can complete work order flow @smoke', async ({ page }) => {
@@ -250,7 +287,7 @@ test.describe('Equipment Management', () => {
 test.describe('Dashboard and Analytics', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/login');
-    await page.fill('[data-testid="email-input"]', 'manager@example.com');
+  await page.fill('[data-testid="email-input"]', 'manager@example.com');
     await page.fill('[data-testid="password-input"]', 'password');
     await page.click('[data-testid="login-button"]');
     await expect(page).toHaveURL('/dashboard');

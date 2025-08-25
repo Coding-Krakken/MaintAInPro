@@ -179,6 +179,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
   };
 
+  // Debug: log env variables for rate limiting
+  console.log('[RateLimit] DISABLE_RATE_LIMITING:', process.env.DISABLE_RATE_LIMITING);
+  console.log('[RateLimit] PLAYWRIGHT:', process.env.PLAYWRIGHT);
   // Disable rate limiting for CI/E2E/Playwright environments
   const isTestEnv =
     process.env.NODE_ENV === 'test' ||
@@ -188,17 +191,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
     // Create rate limiters
     authRateLimit = createRateLimiter(15 * 60 * 1000, 5); // 5 attempts per 15 minutes
     apiRateLimit = createRateLimiter(60 * 1000, 100); // 100 requests per minute
-
-    // Apply rate limiting to API routes
-    app.use('/api/auth', authRateLimit);
-    app.use('/api', apiRateLimit);
     console.log('Rate limiting enabled');
   } else {
     // Create no-op middleware for tests
-    authRateLimit = (req, res, next) => next();
+    authRateLimit = (req, res, next) => {
+      console.log('[RateLimit] No-op middleware for /api/auth/login');
+      next();
+    };
     apiRateLimit = (req, res, next) => next();
     console.log('Rate limiting disabled for tests');
   }
+
+  // Apply rate limiting middleware BEFORE any /api/auth/* routes are registered
+  app.use('/api/auth', authRateLimit);
+  app.use('/api', apiRateLimit);
 
   // Add performance monitoring middleware
   app.use(performanceMiddleware);
