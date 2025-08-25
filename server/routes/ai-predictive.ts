@@ -10,7 +10,7 @@ export function registerAIPredictiveRoutes(
   app.get('/api/ai/equipment/:id/health-score', authenticateRequest, async (req, res) => {
     try {
       const { id } = req.params;
-        const user = (req as Request & { user?: Record<string, unknown> }).user;
+      const user = (req as Request & { user?: Record<string, unknown> }).user;
       const warehouseId = user.warehouseId;
 
       const healthScore = await aiPredictiveService.calculateHealthScore(id, warehouseId);
@@ -25,7 +25,7 @@ export function registerAIPredictiveRoutes(
   app.get('/api/ai/equipment/:id/failure-prediction', authenticateRequest, async (req, res) => {
     try {
       const { id } = req.params;
-        const user = (req as Request & { user?: Record<string, unknown> }).user;
+      const user = (req as Request & { user?: Record<string, unknown> }).user;
       const warehouseId = user.warehouseId;
 
       const prediction = await aiPredictiveService.predictFailure(id, warehouseId);
@@ -40,11 +40,11 @@ export function registerAIPredictiveRoutes(
   app.get(
     '/api/ai/equipment/:id/optimization',
     authenticateRequest,
-    requireRole('admin', 'manager'),
+    requireRole('admin'),
     async (req, res) => {
       try {
         const { id } = req.params;
-          const user = (req as Request & { user?: Record<string, unknown> }).user;
+        const user = (req as Request & { user?: Record<string, unknown> }).user;
         const warehouseId = user.warehouseId;
 
         const optimization = await aiPredictiveService.optimizeMaintenanceStrategy(id, warehouseId);
@@ -60,7 +60,7 @@ export function registerAIPredictiveRoutes(
   app.get('/api/ai/equipment/:id/trends', authenticateRequest, async (req, res) => {
     try {
       const { id } = req.params;
-        const user = (req as Request & { user?: Record<string, unknown> }).user;
+      const user = (req as Request & { user?: Record<string, unknown> }).user;
       const warehouseId = user.warehouseId;
       const months = parseInt(req.query.months as string) || 12;
 
@@ -76,7 +76,7 @@ export function registerAIPredictiveRoutes(
   app.post('/api/ai/equipment/bulk-health-analysis', authenticateRequest, async (req, res) => {
     try {
       const { equipmentIds } = req.body;
-        const user = (req as Request & { user?: Record<string, unknown> }).user;
+      const user = (req as Request & { user?: Record<string, unknown> }).user;
       const warehouseId = user.warehouseId;
 
       if (!Array.isArray(equipmentIds)) {
@@ -107,7 +107,7 @@ export function registerAIPredictiveRoutes(
   // Get predictive maintenance dashboard data
   app.get('/api/ai/dashboard', authenticateRequest, async (req, res) => {
     try {
-        const user = (req as Request & { user?: Record<string, unknown> }).user;
+      const user = (req as Request & { user?: Record<string, unknown> }).user;
       const warehouseId = user.warehouseId;
 
       // Get all equipment for the warehouse
@@ -205,7 +205,7 @@ export function registerAIPredictiveRoutes(
   app.get('/api/ai/equipment/:id/recommendations', authenticateRequest, async (req, res) => {
     try {
       const { id } = req.params;
-        const user = (req as Request & { user?: Record<string, unknown> }).user;
+      const user = (req as Request & { user?: Record<string, unknown> }).user;
       const warehouseId = user.warehouseId;
 
       // Get health score and failure prediction
@@ -235,10 +235,10 @@ export function registerAIPredictiveRoutes(
   app.get(
     '/api/ai/reports/predictive-maintenance',
     authenticateRequest,
-    requireRole('admin', 'manager'),
+    requireRole('admin'),
     async (req, res) => {
       try {
-          const user = (req as Request & { user?: Record<string, unknown> }).user;
+        const user = (req as Request & { user?: Record<string, unknown> }).user;
         const warehouseId = user.warehouseId;
         const reportType = (req.query.type as string) || 'summary';
 

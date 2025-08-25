@@ -9,8 +9,8 @@ const { Pool } = pkg;
 import * as schema from '../shared/schema';
 
 // Check if DATABASE_URL is set for production PostgreSQL usage
-import { Database } from 'some-db-lib';
-let db: Database | null = null;
+// TODO: Import correct Database type from actual DB library or define locally if needed
+let db: any = null; // TODO: Replace 'any' with actual database type
 
 if (!process.env.DATABASE_URL) {
   console.log('DATABASE_URL not set - using in-memory storage for development');
@@ -30,4 +30,5 @@ if (!process.env.DATABASE_URL) {
 }
 
 export { db };
+export type Database = typeof db;
 // ...existing code...

@@ -21,7 +21,7 @@ export function registerWebhookRoutes(
   // List all webhooks for the current warehouse
   app.get('/api/webhooks', authenticateRequest, async (req, res) => {
     try {
-  const user = (req as Express.Request).user;
+      const user = (req as Express.Request).user;
       const webhooks = await webhookService.getWebhooks(user.warehouseId);
       res.json(webhooks);
     } catch (_error) {
@@ -41,7 +41,7 @@ export function registerWebhookRoutes(
       }
 
       // Check warehouse access
-  const user = (req as Request & { user?: Record<string, unknown> }).user;
+      const user = (req as Request & { user?: Record<string, unknown> }).user;
       if (webhook.warehouseId && webhook.warehouseId !== user.warehouseId) {
         return res.status(403).json({ message: 'Access denied' });
       }
@@ -54,108 +54,93 @@ export function registerWebhookRoutes(
   });
 
   // Create a new webhook endpoint
-  app.post(
-    '/api/webhooks',
-    authenticateRequest,
-    requireRole('admin', 'manager'),
-    async (req, res) => {
-      try {
-        const validation = webhookEndpointSchema.safeParse(req.body);
-        if (!validation.success) {
-          return res.status(400).json({
-            message: 'Invalid webhook data',
-            errors: validation.error.errors,
-          });
-        }
-
-  const user = (req as Request & { user?: Record<string, unknown> }).user;
-        const webhookData = {
-          url: validation.data.url,
-          events: validation.data.events,
-          secret: validation.data.secret,
-          active: validation.data.active,
-          retryCount: validation.data.retryCount,
-          warehouseId: user.warehouseId,
-        };
-
-        const webhook = await webhookService.registerWebhook(webhookData);
-        res.status(201).json(webhook);
-      } catch (_error) {
-        console.error('Create webhook _error:', _error);
-        res.status(500).json({ message: 'Failed to create webhook' });
+  app.post('/api/webhooks', authenticateRequest, requireRole('admin'), async (req, res) => {
+    try {
+      const validation = webhookEndpointSchema.safeParse(req.body);
+      if (!validation.success) {
+        return res.status(400).json({
+          message: 'Invalid webhook data',
+          errors: validation.error.errors,
+        });
       }
+
+      const user = (req as Request & { user?: Record<string, unknown> }).user;
+      const webhookData = {
+        url: validation.data.url,
+        events: validation.data.events,
+        secret: validation.data.secret,
+        active: validation.data.active,
+        retryCount: validation.data.retryCount,
+        warehouseId: user.warehouseId,
+      };
+
+      const webhook = await webhookService.registerWebhook(webhookData);
+      res.status(201).json(webhook);
+    } catch (_error) {
+      console.error('Create webhook _error:', _error);
+      res.status(500).json({ message: 'Failed to create webhook' });
     }
-  );
+  });
 
   // Update an existing webhook
-  app.put(
-    '/api/webhooks/:id',
-    authenticateRequest,
-    requireRole('admin', 'manager'),
-    async (req, res) => {
-      try {
-        const { id } = req.params;
-        const validation = webhookUpdateSchema.safeParse(req.body);
+  app.put('/api/webhooks/:id', authenticateRequest, requireRole('admin'), async (req, res) => {
+    try {
+      const { id } = req.params;
+      const validation = webhookUpdateSchema.safeParse(req.body);
 
-        if (!validation.success) {
-          return res.status(400).json({
-            message: 'Invalid webhook data',
-            errors: validation.error.errors,
-          });
-        }
-
-        // Check if webhook exists and user has access
-        const existing = await webhookService.getWebhook(id);
-        if (!existing) {
-          return res.status(404).json({ message: 'Webhook not found' });
-        }
-
-        const user = (req as any).user;
-        if (existing.warehouseId && existing.warehouseId !== user.warehouseId) {
-          return res.status(403).json({ message: 'Access denied' });
-        }
-
-        const updated = await webhookService.updateWebhook(id, validation.data);
-        res.json(updated);
-      } catch (_error) {
-        console.error('Update webhook _error:', _error);
-        res.status(500).json({ message: 'Failed to update webhook' });
+      if (!validation.success) {
+        return res.status(400).json({
+          message: 'Invalid webhook data',
+          errors: validation.error.errors,
+        });
       }
+
+      // Check if webhook exists and user has access
+      const existing = await webhookService.getWebhook(id);
+      if (!existing) {
+        return res.status(404).json({ message: 'Webhook not found' });
+      }
+
+      const user = (req as any).user;
+      if (existing.warehouseId && existing.warehouseId !== user.warehouseId) {
+        return res.status(403).json({ message: 'Access denied' });
+      }
+
+      const updated = await webhookService.updateWebhook(id, validation.data);
+      res.json(updated);
+    } catch (_error) {
+      console.error('Update webhook _error:', _error);
+      res.status(500).json({ message: 'Failed to update webhook' });
     }
-  );
+  });
 
   // Delete a webhook
-  app.delete(
-    '/api/webhooks/:id',
-    authenticateRequest,
-    requireRole('admin', 'manager'),
-    async (req, res) => {
-      try {
-        const { id } = req.params;
+  app.delete('/api/webhooks/:id', authenticateRequest, requireRole('admin'), async (req, res) => {
+    try {
+      const { id } = req.params;
 
-        // Check if webhook exists and user has access
-        const existing = await webhookService.getWebhook(id);
-        if (!existing) {
-          return res.status(404).json({ message: 'Webhook not found' });
-        }
-
-  const user = (req as Request & { user?: Record<string, unknown> }).user;
-        if (existing.warehouseId && existing.warehouseId !== user.warehouseId) {
-          return res.status(403).json({ message: 'Access denied' });
-        }
-
-        const deleted = await webhookService.deleteWebhook(id);
-        if (!deleted) {
-          return res.status(404).json({ message: 'Webhook not found' });
-        }
-
-        res.json({ message: 'Webhook deleted successfully' });
-      } catch (_error) {
-        console.error('Delete webhook _error:', _error);
-        res.status(500).json({ message: 'Failed to delete webhook' });
+      // Check if webhook exists and user has access
+      const existing = await webhookService.getWebhook(id);
+      if (!existing) {
+        return res.status(404).json({ message: 'Webhook not found' });
       }
+
+      const user = (req as Request & { user?: Record<string, unknown> }).user;
+      if (existing.warehouseId && existing.warehouseId !== user.warehouseId) {
+        return res.status(403).json({ message: 'Access denied' });
+      }
+
+      const deleted = await webhookService.deleteWebhook(id);
+      if (!deleted) {
+        return res.status(404).json({ message: 'Webhook not found' });
+      }
+
+      res.json({ message: 'Webhook deleted successfully' });
+    } catch (_error) {
+      console.error('Delete webhook _error:', _error);
+      res.status(500).json({ message: 'Failed to delete webhook' });
     }
-  );
+  });
 
   // Get webhook delivery statistics
   app.get('/api/webhooks/:id/stats', authenticateRequest, async (req, res) => {
@@ -168,7 +153,7 @@ export function registerWebhookRoutes(
         return res.status(404).json({ message: 'Webhook not found' });
       }
 
-  const user = (req as Request & { user?: Record<string, unknown> }).user;
+      const user = (req as Request & { user?: Record<string, unknown> }).user;
       if (webhook.warehouseId && webhook.warehouseId !== user.warehouseId) {
         return res.status(403).json({ message: 'Access denied' });
       }
@@ -193,7 +178,7 @@ export function registerWebhookRoutes(
         return res.status(404).json({ message: 'Webhook not found' });
       }
 
-  const user = (req as Request & { user?: Record<string, unknown> }).user;
+      const user = (req as Request & { user?: Record<string, unknown> }).user;
       if (webhook.warehouseId && webhook.warehouseId !== user.warehouseId) {
         return res.status(403).json({ message: 'Access denied' });
       }
@@ -210,7 +195,7 @@ export function registerWebhookRoutes(
   app.post(
     '/api/webhooks/:id/test',
     authenticateRequest,
-    requireRole('admin', 'manager'),
+    requireRole('admin'),
     async (req, res) => {
       try {
         const { id } = req.params;
@@ -221,7 +206,7 @@ export function registerWebhookRoutes(
           return res.status(404).json({ message: 'Webhook not found' });
         }
 
-  const user = (req as Request & { user?: Record<string, unknown> }).user;
+        const user = (req as Request & { user?: Record<string, unknown> }).user;
         if (webhook.warehouseId && webhook.warehouseId !== user.warehouseId) {
           return res.status(403).json({ message: 'Access denied' });
         }

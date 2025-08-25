@@ -9,12 +9,27 @@ const authenticateRequest = (req: Request, res: Response, next: NextFunction) =>
   if (!user) {
     return res.status(401).json({ message: 'Authentication required' });
   }
-  req.user = { id: user };
+  req.user = {
+    id: Array.isArray(user) ? user[0] : user,
+    email: typeof req.headers['x-user-email'] === 'string' ? req.headers['x-user-email'] : '',
+    role: typeof req.headers['x-user-role'] === 'string' ? req.headers['x-user-role'] : '',
+    organizationId:
+      typeof req.headers['x-organization-id'] === 'string'
+        ? req.headers['x-organization-id']
+        : undefined,
+    sessionId:
+      typeof req.headers['x-session-id'] === 'string' ? req.headers['x-session-id'] : undefined,
+    warehouseId:
+      typeof req.headers['x-warehouse-id'] === 'string' ? req.headers['x-warehouse-id'] : undefined,
+  };
   next();
 };
 
 const getCurrentUser = (req: Request): string => {
-  return req.user?.id || req.headers['x-user-id'] || 'anonymous';
+  const headerId = Array.isArray(req.headers['x-user-id'])
+    ? req.headers['x-user-id'][0]
+    : req.headers['x-user-id'];
+  return req.user?.id || headerId || 'anonymous';
 };
 
 export function registerLaborTimeRoutes(app: Express) {
@@ -68,7 +83,7 @@ export function registerLaborTimeRoutes(app: Express) {
         description: req.body.description || 'Work in progress',
         isActive: true,
         isManual: false,
-  } as Record<string, unknown>);
+      });
 
       res.status(201).json(laborTime);
     } catch (_error) {
@@ -128,9 +143,17 @@ export function registerLaborTimeRoutes(app: Express) {
       };
 
       // Validate the data
-      const validatedData = insertLaborTimeSchema.parse(laborTimeData);
+      insertLaborTimeSchema.parse(laborTimeData);
 
-  const laborTime = await storage.createLaborTime(validatedData as Record<string, unknown>);
+      const laborTime = await storage.createLaborTime({
+        workOrderId: laborTimeData.workOrderId,
+        userId: laborTimeData.userId,
+        startTime: laborTimeData.startTime,
+        duration: laborTimeData.duration,
+        description: laborTimeData.description,
+        isActive: laborTimeData.isActive,
+        isManual: laborTimeData.isManual,
+      });
 
       res.status(201).json(laborTime);
     } catch (_error) {

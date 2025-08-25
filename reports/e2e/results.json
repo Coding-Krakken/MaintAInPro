@@ -51,9 +51,7 @@
         "name": "chromium",
         "testDir": "/workspaces/MaintAInPro/tests/e2e",
         "testIgnore": [],
-        "testMatch": [
-          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
-        ],
+        "testMatch": ["**/*.@(spec|test).?(c|m)[jt]s?(x)"],
         "timeout": 30000
       },
       {
@@ -67,9 +65,7 @@
         "name": "firefox",
         "testDir": "/workspaces/MaintAInPro/tests/e2e",
         "testIgnore": [],
-        "testMatch": [
-          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
-        ],
+        "testMatch": ["**/*.@(spec|test).?(c|m)[jt]s?(x)"],
         "timeout": 30000
       },
       {
@@ -83,9 +79,7 @@
         "name": "webkit",
         "testDir": "/workspaces/MaintAInPro/tests/e2e",
         "testIgnore": [],
-        "testMatch": [
-          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
-        ],
+        "testMatch": ["**/*.@(spec|test).?(c|m)[jt]s?(x)"],
         "timeout": 30000
       },
       {
@@ -99,9 +93,7 @@
         "name": "Mobile Chrome",
         "testDir": "/workspaces/MaintAInPro/tests/e2e",
         "testIgnore": [],
-        "testMatch": [
-          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
-        ],
+        "testMatch": ["**/*.@(spec|test).?(c|m)[jt]s?(x)"],
         "timeout": 30000
       },
       {
@@ -115,9 +107,7 @@
         "name": "Mobile Safari",
         "testDir": "/workspaces/MaintAInPro/tests/e2e",
         "testIgnore": [],
-        "testMatch": [
-          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
-        ],
+        "testMatch": ["**/*.@(spec|test).?(c|m)[jt]s?(x)"],
         "timeout": 30000
       }
     ],
@@ -2816,9 +2806,7 @@
             {
               "title": "technician can complete work order flow @smoke",
               "ok": true,
-              "tags": [
-                "smoke"
-              ],
+              "tags": ["smoke"],
               "tests": [
                 {
                   "timeout": 30000,
@@ -2898,9 +2886,7 @@
             {
               "title": "technician can complete work order flow @smoke",
               "ok": true,
-              "tags": [
-                "smoke"
-              ],
+              "tags": ["smoke"],
               "tests": [
                 {
                   "timeout": 30000,
@@ -2980,9 +2966,7 @@
             {
               "title": "technician can complete work order flow @smoke",
               "ok": true,
-              "tags": [
-                "smoke"
-              ],
+              "tags": ["smoke"],
               "tests": [
                 {
                   "timeout": 30000,
@@ -3062,9 +3046,7 @@
             {
               "title": "technician can complete work order flow @smoke",
               "ok": true,
-              "tags": [
-                "smoke"
-              ],
+              "tags": ["smoke"],
               "tests": [
                 {
                   "timeout": 30000,
@@ -3144,9 +3126,7 @@
             {
               "title": "technician can complete work order flow @smoke",
               "ok": true,
-              "tags": [
-                "smoke"
-              ],
+              "tags": ["smoke"],
               "tests": [
                 {
                   "timeout": 30000,
