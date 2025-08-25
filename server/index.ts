@@ -103,7 +103,11 @@ app.use(
 // HTTPS redirect in production
 // HTTPS redirect ONLY in true production (never in local, CI, test, or Playwright)
 app.use((req, res, next) => {
-  const isTrueProd = process.env.NODE_ENV === 'production' && process.env.CI !== 'true' && process.env.PLAYWRIGHT_E2E !== 'true' && process.env.PLAYWRIGHT !== 'true';
+  const isTrueProd =
+    process.env.NODE_ENV === 'production' &&
+    process.env.CI !== 'true' &&
+    process.env.PLAYWRIGHT_E2E !== 'true' &&
+    process.env.PLAYWRIGHT !== 'true';
   if (isTrueProd && req.headers['x-forwarded-proto'] !== 'https') {
     return res.redirect(301, `https://${req.headers.host}${req.url}`);
   }

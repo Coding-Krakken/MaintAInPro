@@ -745,7 +745,7 @@ export class DatabaseStorage implements IStorage {
           eq(notificationPreferences.userId, userId),
           eq(
             notificationPreferences.notificationType,
-            notificationType as (
+            notificationType as
               | 'wo_assigned'
               | 'wo_overdue'
               | 'part_low_stock'
@@ -754,7 +754,6 @@ export class DatabaseStorage implements IStorage {
               | 'pm_escalation'
               | 'system_alert'
               | 'real_time_update'
-            )
           )
         )
       )
@@ -770,7 +769,7 @@ export class DatabaseStorage implements IStorage {
           eq(notificationPreferences.userId, userId),
           eq(
             notificationPreferences.notificationType,
-            notificationType as (
+            notificationType as
               | 'wo_assigned'
               | 'wo_overdue'
               | 'part_low_stock'
@@ -779,7 +778,6 @@ export class DatabaseStorage implements IStorage {
               | 'pm_escalation'
               | 'system_alert'
               | 'real_time_update'
-            )
           )
         )
       );
@@ -800,7 +798,7 @@ export class DatabaseStorage implements IStorage {
         ...insertSubscription,
         createdAt: new Date(),
         lastUsed: new Date(),
-  } as InsertPushSubscription)
+      } as InsertPushSubscription)
       .returning();
     return subscription;
   }
@@ -814,7 +812,7 @@ export class DatabaseStorage implements IStorage {
       .set({
         ...updates,
         lastUsed: new Date(),
-  } as Partial<InsertPushSubscription>)
+      } as Partial<InsertPushSubscription>)
       .where(eq(pushSubscriptions.id, id))
       .returning();
     return subscription || null;

@@ -1,4 +1,3 @@
-
 // @vitest-environment node
 /**
  * Integration tests for backup API endpoints

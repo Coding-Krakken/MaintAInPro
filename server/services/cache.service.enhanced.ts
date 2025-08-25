@@ -301,7 +301,7 @@ export class EnhancedCacheService {
     // Update access statistics
     entry.hits++;
 
-    return entry.data;
+    return entry.data as T;
   }
 
   private setInMemory(key: string, data: any, ttlSeconds: number): void {
