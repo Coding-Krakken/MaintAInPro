@@ -143,13 +143,13 @@ export default function Auth() {
               <h3 className='text-sm font-medium text-blue-900 mb-2'>Demo Credentials</h3>
               <div className='space-y-1 text-sm text-blue-700'>
                 <p>
-                  <strong>Supervisor:</strong> supervisor@maintainpro.com
+                  <strong>Supervisor:</strong> supervisor@warehouse.com
                 </p>
                 <p>
-                  <strong>Technician:</strong> technician@maintainpro.com
+                  <strong>Technician:</strong> technician@warehouse.com
                 </p>
                 <p>
-                  <strong>Manager:</strong> manager@maintainpro.com
+                  <strong>Manager:</strong> manager@warehouse.com
                 </p>
                 <p>
                   <strong>Password:</strong> demo123
@@ -161,7 +161,7 @@ export default function Auth() {
                   variant='outline'
                   size='sm'
                   onClick={() => {
-                    setEmail('supervisor@maintainpro.com');
+                    setEmail('supervisor@warehouse.com');
                     setPassword('demo123');
                   }}
                 >
@@ -172,7 +172,7 @@ export default function Auth() {
                   variant='outline'
                   size='sm'
                   onClick={() => {
-                    setEmail('technician@maintainpro.com');
+                    setEmail('technician@warehouse.com');
                     setPassword('demo123');
                   }}
                 >
