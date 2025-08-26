@@ -1,4 +1,4 @@
-let testUserId: string;
+let _testUserId: string;
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { afterAll } from 'vitest';
 import { profiles, notifications, notificationPreferences, pushSubscriptions } from '../../../shared/schema';

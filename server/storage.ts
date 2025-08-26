@@ -1725,7 +1725,6 @@ async function _initializeStorage(): Promise<IStorage> {
 }
 
 // Import DatabaseStorage at the top
-import { DatabaseStorage } from './dbStorage';
 
 // Storage factory function
 function createStorage(): IStorage {

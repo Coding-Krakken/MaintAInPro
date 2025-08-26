@@ -1,4 +1,4 @@
-import { test, expect, request } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 import { testData, testCredentials } from '../helpers/testData';
 
 // Test data - use actual emails from database

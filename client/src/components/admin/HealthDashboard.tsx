@@ -187,7 +187,7 @@ export function HealthDashboard() {
       {/* Detailed Information */}
       <div className='grid gap-6 md:grid-cols-2'>
         {/* Memory Usage */}
-        <MemoryUsageCard memory={health.memory} />
+        {health.memory && <MemoryUsageCard memory={health.memory} />}
 
         {/* Features Status */}
         <Card>

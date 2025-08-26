@@ -47,7 +47,7 @@ export default function Auth() {
           variant: 'destructive',
         });
       }
-    } catch (error) {
+    } catch (_error) {
       const errorMessage = 'Login failed. Please try again.';
       setError(errorMessage);
       toast({
