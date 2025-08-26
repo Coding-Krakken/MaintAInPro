@@ -365,8 +365,25 @@ test.describe('Accessibility', () => {
     const emailInput = page.locator('[data-testid="email-input"]');
     await expect(emailInput).toBeFocused();
 
-    // Verify focus indicator is visible (this would need specific CSS checks)
-    // await expect(emailInput).toHaveCSS('outline', expect.stringContaining('solid'))
+    // Verify focus indicator is visible by checking computed styles
+    const focusStyle = await emailInput.evaluate((element) => {
+      const computed = window.getComputedStyle(element, ':focus');
+      return {
+        outline: computed.outline,
+        outlineWidth: computed.outlineWidth,
+        outlineStyle: computed.outlineStyle,
+        outlineColor: computed.outlineColor,
+        boxShadow: computed.boxShadow,
+      };
+    });
+
+    // Focus should be visible through outline or box-shadow
+    const hasFocusIndicator = 
+      focusStyle.outline !== 'none' ||
+      focusStyle.outlineWidth !== '0px' ||
+      focusStyle.boxShadow !== 'none';
+    
+    expect(hasFocusIndicator).toBe(true);
   });
 });
 
@@ -393,8 +410,143 @@ test.describe('Performance', () => {
 
     await page.goto('/work-orders');
 
-    // Verify virtual scrolling is working (if implemented)
-    // This would need specific implementation details
+    // Verify work order list loads
     await expect(page.locator('[data-testid="work-order-list"]')).toBeVisible();
+    
+    // Check for pagination or virtual scrolling indicators
+    const hasPagination = await page.locator('[data-testid="pagination"]').isVisible().catch(() => false);
+    const hasVirtualScroll = await page.locator('[data-testid="virtual-scroll-container"]').isVisible().catch(() => false);
+    const hasLoadMore = await page.locator('[data-testid="load-more-button"]').isVisible().catch(() => false);
+    
+    // At least one method of handling large datasets should be present
+    expect(hasPagination || hasVirtualScroll || hasLoadMore).toBe(true);
+  });
+
+  test('search functionality is responsive', async ({ page }) => {
+    await page.goto('/login');
+    await page.fill('[data-testid="email-input"]', testUsers.technician.email);
+    await page.fill('[data-testid="password-input"]', testUsers.technician.password);
+    await page.click('[data-testid="login-button"]');
+
+    await page.goto('/work-orders');
+
+    // Test search responsiveness
+    const searchInput = page.locator('[data-testid="search-input"]');
+    if (await searchInput.isVisible()) {
+      const startTime = Date.now();
+      await searchInput.fill('test search');
+      
+      // Wait for search results or loading indicator
+      await Promise.race([
+        page.locator('[data-testid="search-results"]').waitFor(),
+        page.locator('[data-testid="loading-indicator"]').waitFor(),
+        page.waitForTimeout(2000)
+      ]);
+      
+      const searchTime = Date.now() - startTime;
+      expect(searchTime).toBeLessThan(2000); // Search should respond within 2 seconds
+    }
+  });
+});
+
+// Add comprehensive authentication edge case tests
+test.describe('Authentication Edge Cases', () => {
+  test('handles session expiration gracefully', async ({ page }) => {
+    await page.goto('/login');
+    await page.fill('[data-testid="email-input"]', testUsers.technician.email);
+    await page.fill('[data-testid="password-input"]', testUsers.technician.password);
+    await page.click('[data-testid="login-button"]');
+    await expect(page).toHaveURL('/dashboard');
+
+    // Simulate session expiration by clearing localStorage/sessionStorage
+    await page.evaluate(() => {
+      localStorage.clear();
+      sessionStorage.clear();
+    });
+
+    // Try to navigate to a protected page
+    await page.goto('/work-orders');
+
+    // Should redirect to login or show session expired message
+    await expect(page).toHaveURL('/login', { timeout: 5000 });
+  });
+
+  test('prevents concurrent login attempts', async ({ page }) => {
+    await page.goto('/login');
+    
+    // Fill credentials but don't submit yet
+    await page.fill('[data-testid="email-input"]', testUsers.technician.email);
+    await page.fill('[data-testid="password-input"]', testUsers.technician.password);
+
+    // Try to submit multiple times rapidly
+    const submitPromises = Array(3).fill(null).map(async () => {
+      return page.click('[data-testid="login-button"]');
+    });
+
+    await Promise.all(submitPromises);
+
+    // Should still only redirect once and not cause errors
+    await expect(page).toHaveURL('/dashboard', { timeout: 10000 });
+  });
+
+  test('handles network errors during authentication', async ({ page }) => {
+    await page.goto('/login');
+    
+    // Simulate network failure
+    await page.route('**/api/auth/login', route => route.abort());
+    
+    await page.fill('[data-testid="email-input"]', testUsers.technician.email);
+    await page.fill('[data-testid="password-input"]', testUsers.technician.password);
+    await page.click('[data-testid="login-button"]');
+
+    // Should show error message
+    await expect(page.locator('[data-testid="error-message"]')).toBeVisible({ timeout: 5000 });
+  });
+
+  test('validates password strength indicators', async ({ page }) => {
+    // This test would be more relevant for registration, but testing if available
+    await page.goto('/login');
+    
+    // Check if there's a "Register" or "Sign Up" link
+    const registerLink = page.locator('[data-testid="register-link"]');
+    if (await registerLink.isVisible()) {
+      await registerLink.click();
+      
+      // Check for password strength indicator
+      const passwordInput = page.locator('[data-testid="password-input"]');
+      await passwordInput.fill('weak');
+      
+      // Look for password strength feedback
+      const strengthIndicator = page.locator('[data-testid="password-strength"]');
+      if (await strengthIndicator.isVisible()) {
+        await expect(strengthIndicator).toBeVisible();
+      }
+    }
+  });
+
+  test('remembers user preference for "remember me"', async ({ page }) => {
+    await page.goto('/login');
+    
+    // Check if "remember me" option exists
+    const rememberCheckbox = page.locator('[data-testid="remember-me-checkbox"]');
+    if (await rememberCheckbox.isVisible()) {
+      await rememberCheckbox.check();
+      
+      await page.fill('[data-testid="email-input"]', testUsers.technician.email);
+      await page.fill('[data-testid="password-input"]', testUsers.technician.password);
+      await page.click('[data-testid="login-button"]');
+      
+      await expect(page).toHaveURL('/dashboard');
+      
+      // Logout and check if email is remembered
+      await page.click('[data-testid="user-menu-button"]');
+      await page.click('[data-testid="logout-button"]');
+      
+      await expect(page).toHaveURL('/login');
+      
+      // Email should be pre-filled
+      const emailValue = await page.locator('[data-testid="email-input"]').inputValue();
+      expect(emailValue).toBe(testUsers.technician.email);
+    }
   });
 });

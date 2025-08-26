@@ -102,12 +102,21 @@ export class AuthTestServer {
    * Stop the server
    */
   async stop(): Promise<void> {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       if (this.server) {
-        this.server.close(err => {
-          if (err) reject(err);
-          else resolve();
-        });
+        try {
+          this.server.close(err => {
+            if (err) {
+              console.warn('Error stopping server:', err.message);
+            }
+            this.server = null;
+            resolve();
+          });
+        } catch (error) {
+          console.warn('Error in server.close():', error);
+          this.server = null;
+          resolve();
+        }
       } else {
         resolve();
       }
