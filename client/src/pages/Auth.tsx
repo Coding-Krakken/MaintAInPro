@@ -4,18 +4,51 @@ import { useLocation } from 'wouter';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
-import { Wrench, Eye, EyeOff } from 'lucide-react';
+import { Checkbox } from '../components/ui/checkbox';
+import { Wrench, Eye, EyeOff, AlertCircle, CheckCircle } from 'lucide-react';
 import { useToast } from '../hooks/use-toast';
 
 export default function Auth() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const { login } = useAuth();
   const [, setLocation] = useLocation();
   const { toast } = useToast();
+
+  // Password strength calculation
+  const calculatePasswordStrength = (pwd: string): { score: number; feedback: string; color: string } => {
+    if (!pwd) return { score: 0, feedback: '', color: 'bg-gray-200' };
+    
+    let score = 0;
+    let feedback = 'Weak';
+    
+    if (pwd.length >= 8) score += 25;
+    if (pwd.length >= 12) score += 25;
+    if (/[A-Z]/.test(pwd)) score += 15;
+    if (/[a-z]/.test(pwd)) score += 15;
+    if (/[0-9]/.test(pwd)) score += 10;
+    if (/[^A-Za-z0-9]/.test(pwd)) score += 10;
+    
+    if (score >= 80) {
+      feedback = 'Strong';
+      return { score, feedback, color: 'bg-green-500' };
+    } else if (score >= 60) {
+      feedback = 'Good';
+      return { score, feedback, color: 'bg-yellow-500' };
+    } else if (score >= 30) {
+      feedback = 'Fair';
+      return { score, feedback, color: 'bg-orange-500' };
+    } else {
+      feedback = 'Weak';
+      return { score, feedback, color: 'bg-red-500' };
+    }
+  };
+
+  const passwordStrength = calculatePasswordStrength(password);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -115,6 +148,53 @@ export default function Auth() {
                     )}
                   </button>
                 </div>
+                {password && (
+                  <div className='mt-2' data-testid='password-strength-meter'>
+                    <div className='flex items-center justify-between mb-1'>
+                      <span className='text-xs text-gray-600'>Password Strength</span>
+                      <span className={`text-xs font-medium ${passwordStrength.score >= 60 ? 'text-green-600' : passwordStrength.score >= 30 ? 'text-yellow-600' : 'text-red-600'}`}>
+                        {passwordStrength.feedback}
+                      </span>
+                    </div>
+                    <div className='w-full bg-gray-200 rounded-full h-2'>
+                      <div 
+                        className={`h-2 rounded-full transition-all duration-300 ${passwordStrength.color}`}
+                        style={{ width: `${passwordStrength.score}%` }}
+                        data-testid='password-strength-bar'
+                      />
+                    </div>
+                    {passwordStrength.score < 60 && (
+                      <div className='flex items-center mt-1 text-xs text-gray-600'>
+                        <AlertCircle className='h-3 w-3 mr-1' />
+                        <span data-testid='password-strength-tip'>
+                          Use 8+ characters with uppercase, lowercase, numbers, and symbols
+                        </span>
+                      </div>
+                    )}
+                    {passwordStrength.score >= 80 && (
+                      <div className='flex items-center mt-1 text-xs text-green-600'>
+                        <CheckCircle className='h-3 w-3 mr-1' />
+                        <span data-testid='password-strength-success'>Strong password!</span>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              <div className='flex items-center space-x-2'>
+                <Checkbox 
+                  id='remember-me'
+                  checked={rememberMe}
+                  onCheckedChange={(checked) => setRememberMe(checked as boolean)}
+                  data-testid='remember-me-checkbox'
+                />
+                <label 
+                  htmlFor='remember-me' 
+                  className='text-sm text-gray-700 cursor-pointer'
+                  data-testid='remember-me-label'
+                >
+                  Remember me for 30 days
+                </label>
               </div>
 
               <Button

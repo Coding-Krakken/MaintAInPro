@@ -6,6 +6,7 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
+  outputDir: '../../test-results/e2e',
   reporter: [
     ['html', { outputFolder: '../../test-results/reports/playwright-report' }],
     ['json', { outputFile: '../../test-results/e2e/results.json' }],
@@ -44,6 +45,7 @@ export default defineConfig({
   webServer: {
     command: 'npm run dev',
     port: 5000,
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: true, // Allow reusing existing server
+    timeout: 120000, // 2 minutes timeout for server startup
   },
 });
