@@ -26,6 +26,7 @@ export default defineConfig({
       use: { 
         ...devices['Desktop Chrome'],
         launchOptions: {
+          executablePath: '/usr/bin/google-chrome',
           args: ['--no-sandbox', '--disable-dev-shm-usage', '--disable-web-security']
         }
       },
