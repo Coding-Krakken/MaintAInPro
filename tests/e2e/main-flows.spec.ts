@@ -63,7 +63,7 @@ test.describe('Authentication Flow', () => {
 
     // Check for toast notification with error message
     await expect(page.locator('.destructive')).toBeVisible();
-    await expect(page.locator('.destructive')).toContainText('Invalid credentials');
+    await expect(page.locator('.destructive')).toContainText('Login failed');
   });
 });
 
