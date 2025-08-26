@@ -1,27 +1,10 @@
 // Simple test script to check work orders
-import { test, request } from '@playwright/test';
-
-let authToken = '';
-
-test.beforeAll(async () => {
-  const apiContext = await request.newContext();
-  const response = await apiContext.post('http://localhost:5000/api/auth/login', {
-    data: {
-      email: 'technician@company.com',
-      password: 'demo123',
-    },
-  });
-  const body = await response.json();
-  authToken = body.token;
-  await apiContext.dispose();
-});
+import { test } from '@playwright/test';
+import { loginAs, TEST_USERS } from './helpers/auth';
 
 test('debug work order navigation', async ({ page }) => {
-  await page.goto('http://localhost:5000/login');
-  await page.evaluate((token) => {
-    window.localStorage.setItem('accessToken', token);
-  }, authToken);
-  await page.reload();
+  // Use proper authentication helper
+  await loginAs(page, TEST_USERS.technician);
 
   // Navigate to work orders
   console.log('Current URL:', page.url());

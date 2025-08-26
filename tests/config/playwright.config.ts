@@ -26,6 +26,7 @@ export default defineConfig({
       use: { 
         ...devices['Desktop Chrome'],
         launchOptions: {
+          // Temporarily using system Chrome due to Playwright download issues in CI
           executablePath: '/usr/bin/google-chrome',
           args: ['--no-sandbox', '--disable-dev-shm-usage', '--disable-web-security']
         }

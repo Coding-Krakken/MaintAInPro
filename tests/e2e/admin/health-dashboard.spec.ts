@@ -1,25 +1,13 @@
 import { test, expect } from '@playwright/test';
-
-// Static auth token for testing - corresponds to supervisor@company.com
-const authToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YmI5OTE2OS0zMmY5LTRjMTEtOTIyYy01MDc2MmEzYzRlNzMiLCJlbWFpbCI6InN1cGVydmlzb3JAY29tcGFueS5jb20iLCJyb2xlIjoic3VwZXJ2aXNvciIsIndhcmVob3VzZUlkIjoiMTc3ZWNjMjQtYmI1YS00NzRkLWI3YjAtYzJmMGI0NzBhYTY4IiwidHlwZSI6ImFjY2VzcyIsImlhdCI6MTc1NjE3NDI4OSwiZXhwIjo5OTk5OTk5OTk5LCJhdWQiOiJtYWludGFpbnByby1hcHAiLCJpc3MiOiJtYWludGFpbnByby1jbW1zIn0.test-token';
+import { loginAs, TEST_USERS } from '../helpers/auth';
 
 test.describe('Health Dashboard E2E', () => {
   test.beforeEach(async ({ page }) => {
-    // Navigate to the admin page
+    // Use proper authentication flow instead of hardcoded tokens
+    await loginAs(page, TEST_USERS.supervisor);
+    
+    // Navigate to the admin page after authentication
     await page.goto('http://localhost:5000/admin');
-    
-    // Set authentication token in localStorage
-    await page.evaluate((tokenData) => {
-      if (tokenData) {
-        window.localStorage.setItem('authToken', tokenData);
-        // Set the user data from the API response (extracted from JWT or API response)
-        window.localStorage.setItem('userId', '6bb99169-32f9-4c11-922c-50762a3c4e73');
-        window.localStorage.setItem('warehouseId', '177ecc24-bb5a-474d-b7b0-c2f0b470aa68');
-      }
-    }, authToken);
-    
-    // Reload to apply authentication
-    await page.reload();
   });
 
   test('should display health dashboard correctly', async ({ page }) => {
@@ -131,6 +119,8 @@ test.describe('Health Dashboard E2E', () => {
       });
     });
 
+    // Use proper authentication first, then the mock will take effect
+    await loginAs(page, TEST_USERS.supervisor);
     await page.goto('http://localhost:5000/admin');
     await page.waitForLoadState('networkidle');
 
@@ -177,6 +167,8 @@ test.describe('Health Dashboard E2E', () => {
       });
     });
 
+    // Use proper authentication first, then the mock will take effect
+    await loginAs(page, TEST_USERS.supervisor);
     await page.goto('http://localhost:5000/admin');
     await page.waitForLoadState('networkidle');
 

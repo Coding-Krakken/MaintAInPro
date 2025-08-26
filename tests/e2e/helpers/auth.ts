@@ -34,6 +34,9 @@ export const TEST_USERS = {
 export async function loginAs(page: Page, user: TestUser): Promise<void> {
   await page.goto('http://localhost:5000/login');
   
+  // Wait for login form to be visible
+  await page.waitForLoadState('networkidle');
+  
   // Fill in credentials
   await page.fill('[data-testid="email-input"]', user.email);
   await page.fill('[data-testid="password-input"]', user.password);

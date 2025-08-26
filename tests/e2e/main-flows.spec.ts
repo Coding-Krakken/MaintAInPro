@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { testData, testCredentials } from '../helpers/testData';
-import { loginAs, logout, TEST_USERS } from './helpers/auth';
+import { loginAs, TEST_USERS } from './helpers/auth';
 
 // Test data - use actual emails from database
 const testUsers = {
@@ -26,28 +26,12 @@ const testUsers = {
 
 const testWorkOrder = testData.workOrder;
 
-let authToken = '';
-
-test.beforeAll(async () => {
-  // Use a static token for testing to avoid rate limiting
-  // This token corresponds to supervisor@company.com from the seeded database
-  authToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YmI5OTE2OS0zMmY5LTRjMTEtOTIyYy01MDc2MmEzYzRlNzMiLCJlbWFpbCI6InN1cGVydmlzb3JAY29tcGFueS5jb20iLCJyb2xlIjoic3VwZXJ2aXNvciIsIndhcmVob3VzZUlkIjoiMTc3ZWNjMjQtYmI1YS00NzRkLWI3YjAtYzJmMGI0NzBhYTY4IiwidHlwZSI6ImFjY2VzcyIsImlhdCI6MTc1NjE3NDI4OSwiZXhwIjo5OTk5OTk5OTk5LCJhdWQiOiJtYWludGFpbnByby1hcHAiLCJpc3MiOiJtYWludGFpbnByby1jbW1zIn0.test-token';
-});
-
 test.describe('Authentication Flow', () => {
   test('user can login and logout', async ({ page }) => {
-    await page.goto('http://localhost:5000/login');
-    // Set token in localStorage before navigation
-    await page.evaluate((tokenData) => {
-      if (tokenData) {
-        window.localStorage.setItem('authToken', tokenData);
-        // Set the user data from the API response (extracted from JWT or API response)
-        window.localStorage.setItem('userId', '6bb99169-32f9-4c11-922c-50762a3c4e73');
-        window.localStorage.setItem('warehouseId', '177ecc24-bb5a-474d-b7b0-c2f0b470aa68');
-      }
-    }, authToken);
-    await page.reload();
-    // Verify successful login
+    // Use proper authentication helper instead of hardcoded tokens
+    await loginAs(page, TEST_USERS.supervisor);
+    
+    // Verify successful login - we should be on dashboard after loginAs
     await expect(page).toHaveURL('/dashboard');
     // Wait for dashboard stats to be visible
     await expect(page.locator('[data-testid="total-work-orders"]')).toBeVisible();
