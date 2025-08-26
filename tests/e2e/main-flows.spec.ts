@@ -83,20 +83,20 @@ test.describe('Work Order Management', () => {
 
     // Check if there are work orders
     const workOrderCards = await page.locator('[data-testid="work-order-card"]').count();
-    
+
     if (workOrderCards === 0) {
       console.log('No work orders found. Skipping detailed work order flow test.');
       // Instead, verify the empty state UI is working correctly
       await expect(page.locator('text=No work orders found')).toBeVisible();
       await expect(page.locator('text=New Work Order')).toBeVisible();
-      
+
       // Verify we can click the new work order button (but don't fill the form)
       await page.click('text=New Work Order');
       await page.waitForLoadState('networkidle');
-      
+
       // Just verify the form loads
       await expect(page.locator('h2', { hasText: 'Create Work Order' })).toBeVisible();
-      
+
       console.log('✅ Empty state UI working correctly');
       return; // Skip the detailed workflow test
     }

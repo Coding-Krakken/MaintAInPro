@@ -81,7 +81,7 @@ test.describe('Health Dashboard E2E', () => {
     // Check websocket connections card exists (looking for what actually exists)
     await expect(page.locator('text=WebSocket')).toBeVisible();
     await expect(page.locator('text=Active connections')).toBeVisible();
-    
+
     // Just verify the structure exists - the exact number may vary
     const websocketSection = page.locator('.card', { has: page.locator('text=WebSocket') });
     await expect(websocketSection).toBeVisible();
@@ -132,9 +132,12 @@ test.describe('Health Dashboard E2E', () => {
     const errorVisible = await page.locator('text=Failed to Load Health Data').isVisible();
     if (!errorVisible) {
       // If exact text not found, check for any error indicators
-      const hasError = await page.locator('text=error', { timeout: 2000 }).isVisible().catch(() => false);
+      const hasError = await page
+        .locator('text=error', { timeout: 2000 })
+        .isVisible()
+        .catch(() => false);
       const hasRetry = await page.locator('button').filter({ hasText: 'Retry' }).isVisible();
-      
+
       // At minimum, the health component should show some error indication or retry button
       expect(hasError || hasRetry).toBe(true);
     } else {
@@ -211,9 +214,12 @@ test.describe('Health Dashboard E2E', () => {
 
     // Check if the refresh mechanism is set up (don't require actual refresh in short test)
     // Instead, verify that the query is configured for auto-refresh by checking if it's enabled
-    const hasRefreshButton = await page.locator('button').filter({ hasText: 'Refresh' }).isVisible();
+    const hasRefreshButton = await page
+      .locator('button')
+      .filter({ hasText: 'Refresh' })
+      .isVisible();
     expect(hasRefreshButton).toBe(true);
-    
+
     // This test mainly verifies the infrastructure is in place rather than waiting for actual refresh
     expect(apiCallCount).toBeGreaterThanOrEqual(initialCallCount);
   });
@@ -234,7 +240,13 @@ test.describe('Health Dashboard E2E', () => {
           port: 5000,
           version: '1.0.0',
           uptime: 3600,
-          memory: { rss: 104857600, heapTotal: 67108864, heapUsed: 33554432, external: 1048576, arrayBuffers: 524288 },
+          memory: {
+            rss: 104857600,
+            heapTotal: 67108864,
+            heapUsed: 33554432,
+            external: 1048576,
+            arrayBuffers: 524288,
+          },
           websocket: { totalConnections: 0, userConnections: 0, warehouseConnections: 0 },
           features: { auth: 'enabled', database: 'enabled', redis: 'disabled', email: 'disabled' },
         }),
@@ -244,14 +256,14 @@ test.describe('Health Dashboard E2E', () => {
     // Get refresh button and click it
     const refreshButton = page.locator('button').filter({ hasText: 'Refresh' });
     await expect(refreshButton).toBeVisible();
-    
+
     // Click refresh button and check if it becomes disabled briefly
     await refreshButton.click();
-    
+
     // The button should be disabled very briefly during loading
     // We check if it exists and is not permanently disabled
     await expect(refreshButton).toBeVisible();
-    
+
     // Wait for the response and verify button is enabled again
     await page.waitForTimeout(1000);
     await expect(refreshButton).toBeEnabled();

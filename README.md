@@ -110,6 +110,57 @@ graph LR
 
 ---
 
+## ⚡ Developer Quickstart
+
+Get up and running with MaintAInPro's red→green development system:
+
+```bash
+# 1. Install dependencies
+npm install
+
+# 2. Setup database and environment
+npm run db:push
+
+# 3. Start continuous watchers (instant feedback)
+npm run dev:watch
+
+# 4. Run all quality gates
+npm run quality
+
+# 5. View test coverage
+npm run test:coverage
+```
+
+### Development Workflow
+
+1. **Red**: Write failing test or make change that breaks a watcher
+2. **Green**: Make minimal change to fix the failing check
+3. **Refactor**: Clean up while all watchers remain green
+4. **Commit**: When all gates pass
+
+### Quality Gates
+
+- **Linting**: `npm run lint:check` (working toward --max-warnings=0)
+- **Types**: `npm run type-check` (TypeScript strict mode)
+- **Tests**: `npm run test:run` (unit + integration)
+- **Build**: `npm run build` (production build)
+- **E2E**: `npm run test:e2e` (critical user flows)
+
+### Prompt Library
+
+Use surgical, minimal-change prompts in `.copilot/prompts/`:
+
+- `01-fix-tests.md` - Fix failing tests with minimal changes
+- `02-refactor-lint.md` - Clean up warnings without behavior changes
+- `03-add-feature.md` - Add features with full quality gates
+- `04-autofix-strategy.md` - Systematic issue resolution
+- `05-adr.md` - Document architectural decisions
+- `06-e2e-hardening.md` - Add robust end-to-end tests
+
+Access prompts via VS Code snippets: `cp-fix-tests`, `cp-add-feature`, etc.
+
+---
+
 ## 📚 Documentation & Blueprint
 
 - **Blueprint Framework**: Strategic, technical, feature, UX, traceability,

@@ -1,11 +1,98 @@
 {
-	"version": "2.0.0",
-	"tasks": [
-		{
-			"type": "shell",
-			"label": "Run all tests",
-			"command": "npx vitest run",
-			"group": "test"
-		}
-	]
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "shell",
+      "label": "Run all tests",
+      "command": "npx vitest run",
+      "group": "test"
+    },
+    {
+      "type": "shell",
+      "label": "Dev Watchers (All)",
+      "command": "npm",
+      "args": ["run", "dev:watch"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "isBackground": true,
+      "problemMatcher": [
+        "$tsc-watch",
+        "$eslint-stylish",
+        {
+          "owner": "vitest",
+          "pattern": [
+            {
+              "regexp": "^\\s*(FAIL|✗)\\s+(.+)\\s+>\\s+(.+)$",
+              "file": 2,
+              "message": 3,
+              "severity": "error"
+            }
+          ],
+          "background": {
+            "activeOnStart": true,
+            "beginsPattern": "^.*Watching for file changes",
+            "endsPattern": "^.*✓|✗.*$"
+          }
+        }
+      ]
+    },
+    {
+      "type": "shell",
+      "label": "TypeScript Watch",
+      "command": "npm",
+      "args": ["run", "types:watch"],
+      "group": "build",
+      "isBackground": true,
+      "problemMatcher": "$tsc-watch"
+    },
+    {
+      "type": "shell",
+      "label": "ESLint Watch",
+      "command": "npm",
+      "args": ["run", "lint:watch"],
+      "group": "build",
+      "isBackground": true,
+      "problemMatcher": "$eslint-stylish"
+    },
+    {
+      "type": "shell",
+      "label": "Test Watch",
+      "command": "npm",
+      "args": ["run", "test:watch"],
+      "group": "test",
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "vitest",
+        "pattern": [
+          {
+            "regexp": "^\\s*(FAIL|✗)\\s+(.+)\\s+>\\s+(.+)$",
+            "file": 2,
+            "message": 3,
+            "severity": "error"
+          }
+        ],
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^.*Watching for file changes",
+          "endsPattern": "^.*✓|✗.*$"
+        }
+      }
+    },
+    {
+      "type": "shell",
+      "label": "Build Watch",
+      "command": "npm",
+      "args": ["run", "build:watch"],
+      "group": "build",
+      "isBackground": true,
+      "problemMatcher": ["$tsc"]
+    }
+  ]
 }

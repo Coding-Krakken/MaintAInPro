@@ -16,7 +16,6 @@ import {
   AlertCircle,
   CheckCircle,
   XCircle,
-  Users,
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 
@@ -251,7 +250,6 @@ export function HealthDashboard() {
           </CardContent>
         </Card>
       )}
-
     </div>
   );
 }
