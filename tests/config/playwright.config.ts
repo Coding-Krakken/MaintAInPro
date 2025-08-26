@@ -25,11 +25,16 @@ export default defineConfig({
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
-        launchOptions: {
-          // Using system Chrome due to Playwright download issues in CI
-          executablePath: '/usr/bin/google-chrome',
-          args: ['--no-sandbox', '--disable-dev-shm-usage', '--disable-web-security'],
-        },
+          // Use Playwright's managed Chromium instead of a system Chrome binary.
+          // This prevents errors when /usr/bin/google-chrome is missing (common in CI/dev containers).
+          // Playwright will automatically download and manage its own browser binaries.
+          // If you ever see browser launch errors, run: npx playwright install
+          // For CI: ensure 'npx playwright install' is run in setup scripts to pre-download browsers.
+          // For more info: https://playwright.dev/docs/browsers#managing-browsers
+          launchOptions: {
+            // No executablePath: use Playwright's default Chromium
+            args: ['--no-sandbox', '--disable-dev-shm-usage', '--disable-web-security'],
+          },
       },
     },
     // Disable other browsers for now to focus on fixing core issues

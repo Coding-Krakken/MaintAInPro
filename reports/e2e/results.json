@@ -1,8 +1,8 @@
 {
   "config": {
-    "configFile": "/home/runner/work/MaintAInPro/MaintAInPro/tests/config/playwright.config.ts",
-    "rootDir": "/home/runner/work/MaintAInPro/MaintAInPro/tests/e2e",
-    "forbidOnly": true,
+    "configFile": "/workspaces/MaintAInPro/tests/config/playwright.config.ts",
+    "rootDir": "/workspaces/MaintAInPro/tests/e2e",
+    "forbidOnly": false,
     "fullyParallel": true,
     "globalSetup": null,
     "globalTeardown": null,
@@ -10,7 +10,9 @@
     "grep": {},
     "grepInvert": null,
     "maxFailures": 0,
-    "metadata": {},
+    "metadata": {
+      "actualWorkers": 2
+    },
     "preserveOutput": "always",
     "reporter": [
       [
@@ -39,15 +41,19 @@
     "quiet": false,
     "projects": [
       {
-        "outputDir": "/home/runner/work/MaintAInPro/MaintAInPro/test-results/playwright-artifacts",
+        "outputDir": "/workspaces/MaintAInPro/test-results/playwright-artifacts",
         "repeatEach": 1,
-        "retries": 2,
-        "metadata": {},
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
         "id": "chromium",
         "name": "chromium",
-        "testDir": "/home/runner/work/MaintAInPro/MaintAInPro/tests/e2e",
+        "testDir": "/workspaces/MaintAInPro/tests/e2e",
         "testIgnore": [],
-        "testMatch": ["**/*.@(spec|test).?(c|m)[jt]s?(x)"],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
         "timeout": 30000
       }
     ],
@@ -55,7 +61,7 @@
     "updateSnapshots": "missing",
     "updateSourceMethod": "patch",
     "version": "1.55.0",
-    "workers": 1,
+    "workers": 2,
     "webServer": null
   },
   "suites": [
@@ -74,7 +80,7 @@
           "specs": [
             {
               "title": "should display health dashboard correctly",
-              "ok": true,
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -83,8 +89,30 @@
                   "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 4,
+                      "error": {
+                        "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome",
+                        "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-26T18:37:11.110Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
                 }
               ],
               "id": "e43f20ac09fe8a3f1347-6a4be1455b8881942a4b",
@@ -94,7 +122,7 @@
             },
             {
               "title": "should display memory usage information when available",
-              "ok": true,
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -103,8 +131,30 @@
                   "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "failed",
+                      "duration": 5,
+                      "error": {
+                        "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome",
+                        "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-26T18:37:11.093Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
                 }
               ],
               "id": "e43f20ac09fe8a3f1347-28e61fcd4205c7ee89a6",
@@ -114,7 +164,7 @@
             },
             {
               "title": "should display feature status",
-              "ok": true,
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -123,8 +173,30 @@
                   "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 1,
+                      "status": "failed",
+                      "duration": 5,
+                      "error": {
+                        "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome",
+                        "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-26T18:37:11.936Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
                 }
               ],
               "id": "e43f20ac09fe8a3f1347-ece023c7708b826a626f",
@@ -134,7 +206,7 @@
             },
             {
               "title": "should display deployment information when available",
-              "ok": true,
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -143,8 +215,30 @@
                   "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 5,
+                      "error": {
+                        "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome",
+                        "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-26T18:37:11.923Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
                 }
               ],
               "id": "e43f20ac09fe8a3f1347-2a56d5b269d8ee04d89f",
@@ -154,7 +248,7 @@
             },
             {
               "title": "should display websocket connections",
-              "ok": true,
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -163,8 +257,30 @@
                   "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 5,
+                      "error": {
+                        "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome",
+                        "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-26T18:37:12.675Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
                 }
               ],
               "id": "e43f20ac09fe8a3f1347-06df38329da2a8e46402",
@@ -174,7 +290,7 @@
             },
             {
               "title": "should refresh data when refresh button is clicked",
-              "ok": true,
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -183,8 +299,30 @@
                   "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 1,
+                      "status": "failed",
+                      "duration": 5,
+                      "error": {
+                        "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome",
+                        "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-26T18:37:12.681Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
                 }
               ],
               "id": "e43f20ac09fe8a3f1347-0506bb265b8e2ba1b389",
@@ -194,7 +332,7 @@
             },
             {
               "title": "should handle error state correctly",
-              "ok": true,
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -203,8 +341,30 @@
                   "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 5,
+                      "error": {
+                        "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome",
+                        "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-26T18:37:13.450Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
                 }
               ],
               "id": "e43f20ac09fe8a3f1347-2e4c524ff50eb769f765",
@@ -214,7 +374,7 @@
             },
             {
               "title": "should handle unhealthy status",
-              "ok": true,
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -223,8 +383,30 @@
                   "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
+                  "results": [
+                    {
+                      "workerIndex": 7,
+                      "parallelIndex": 1,
+                      "status": "failed",
+                      "duration": 5,
+                      "error": {
+                        "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome",
+                        "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-26T18:37:13.445Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
                 }
               ],
               "id": "e43f20ac09fe8a3f1347-d5fd4c5b849c85bbebf4",
@@ -234,7 +416,7 @@
             },
             {
               "title": "should auto-refresh every 30 seconds",
-              "ok": true,
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -243,8 +425,30 @@
                   "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
+                  "results": [
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 5,
+                      "error": {
+                        "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome",
+                        "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-26T18:37:14.183Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
                 }
               ],
               "id": "e43f20ac09fe8a3f1347-b50eac2dc1d7ffab21ca",
@@ -254,7 +458,7 @@
             },
             {
               "title": "should display loading state during refresh",
-              "ok": true,
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -263,8 +467,30 @@
                   "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
+                  "results": [
+                    {
+                      "workerIndex": 9,
+                      "parallelIndex": 1,
+                      "status": "failed",
+                      "duration": 5,
+                      "error": {
+                        "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome",
+                        "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-26T18:37:14.195Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
                 }
               ],
               "id": "e43f20ac09fe8a3f1347-ebbeab0763afde6405de",
@@ -274,7 +500,7 @@
             },
             {
               "title": "should be accessible",
-              "ok": true,
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -283,8 +509,30 @@
                   "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
+                  "results": [
+                    {
+                      "workerIndex": 10,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 5,
+                      "error": {
+                        "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome",
+                        "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-26T18:37:14.913Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
                 }
               ],
               "id": "e43f20ac09fe8a3f1347-45ea2cf8aa0e4e4ecd18",
@@ -294,7 +542,7 @@
             },
             {
               "title": "should navigate between admin tabs",
-              "ok": true,
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -303,8 +551,30 @@
                   "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
+                  "results": [
+                    {
+                      "workerIndex": 11,
+                      "parallelIndex": 1,
+                      "status": "failed",
+                      "duration": 5,
+                      "error": {
+                        "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome",
+                        "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-26T18:37:14.920Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
                 }
               ],
               "id": "e43f20ac09fe8a3f1347-a16f8a47bacab6bf521c",
@@ -331,7 +601,7 @@
           "specs": [
             {
               "title": "should load the homepage",
-              "ok": true,
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -340,8 +610,30 @@
                   "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
+                  "results": [
+                    {
+                      "workerIndex": 12,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 5,
+                      "error": {
+                        "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome",
+                        "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-26T18:37:15.792Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
                 }
               ],
               "id": "5b9ef2734cb882eb5f5a-4b7943e89f3cfbadd5ca",
@@ -351,7 +643,7 @@
             },
             {
               "title": "should verify test framework",
-              "ok": true,
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -360,8 +652,30 @@
                   "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
+                  "results": [
+                    {
+                      "workerIndex": 13,
+                      "parallelIndex": 1,
+                      "status": "failed",
+                      "duration": 4,
+                      "error": {
+                        "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome",
+                        "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-26T18:37:15.838Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
                 }
               ],
               "id": "5b9ef2734cb882eb5f5a-ae3a766561ff74e1ad96",
@@ -381,7 +695,7 @@
       "specs": [
         {
           "title": "debug admin page access",
-          "ok": true,
+          "ok": false,
           "tags": [],
           "tests": [
             {
@@ -390,8 +704,30 @@
               "expectedStatus": "passed",
               "projectId": "chromium",
               "projectName": "chromium",
-              "results": [],
-              "status": "skipped"
+              "results": [
+                {
+                  "workerIndex": 14,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 4,
+                  "error": {
+                    "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome",
+                    "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                  },
+                  "errors": [
+                    {
+                      "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2025-08-26T18:37:16.509Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "unexpected"
             }
           ],
           "id": "0eaa3247dff469183231-ea9f1e53582c13f0f58a",
@@ -409,7 +745,7 @@
       "specs": [
         {
           "title": "debug authentication status and environment",
-          "ok": true,
+          "ok": false,
           "tags": [],
           "tests": [
             {
@@ -418,8 +754,30 @@
               "expectedStatus": "passed",
               "projectId": "chromium",
               "projectName": "chromium",
-              "results": [],
-              "status": "skipped"
+              "results": [
+                {
+                  "workerIndex": 15,
+                  "parallelIndex": 1,
+                  "status": "failed",
+                  "duration": 5,
+                  "error": {
+                    "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome",
+                    "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                  },
+                  "errors": [
+                    {
+                      "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2025-08-26T18:37:16.549Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "unexpected"
             }
           ],
           "id": "84ccbebac83a2c6ac7e0-d745e67638b22b29b636",
@@ -437,8 +795,10 @@
       "specs": [
         {
           "title": "test working authentication with test@example.com",
-          "ok": true,
-          "tags": ["example.com"],
+          "ok": false,
+          "tags": [
+            "example.com"
+          ],
           "tests": [
             {
               "timeout": 30000,
@@ -446,8 +806,30 @@
               "expectedStatus": "passed",
               "projectId": "chromium",
               "projectName": "chromium",
-              "results": [],
-              "status": "skipped"
+              "results": [
+                {
+                  "workerIndex": 16,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 4,
+                  "error": {
+                    "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome",
+                    "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                  },
+                  "errors": [
+                    {
+                      "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2025-08-26T18:37:17.227Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "unexpected"
             }
           ],
           "id": "3509f83b513d4a866ad9-8af6ce8d70c49c72bfba",
@@ -465,7 +847,7 @@
       "specs": [
         {
           "title": "debug: check database users and authentication flow",
-          "ok": true,
+          "ok": false,
           "tags": [],
           "tests": [
             {
@@ -474,8 +856,30 @@
               "expectedStatus": "passed",
               "projectId": "chromium",
               "projectName": "chromium",
-              "results": [],
-              "status": "skipped"
+              "results": [
+                {
+                  "workerIndex": 17,
+                  "parallelIndex": 1,
+                  "status": "failed",
+                  "duration": 4,
+                  "error": {
+                    "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome",
+                    "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                  },
+                  "errors": [
+                    {
+                      "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2025-08-26T18:37:17.256Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "unexpected"
             }
           ],
           "id": "20bb7b5c45e40ac3b56f-bb1f2a1029281b68cd10",
@@ -493,7 +897,7 @@
       "specs": [
         {
           "title": "debug login error handling",
-          "ok": true,
+          "ok": false,
           "tags": [],
           "tests": [
             {
@@ -502,8 +906,30 @@
               "expectedStatus": "passed",
               "projectId": "chromium",
               "projectName": "chromium",
-              "results": [],
-              "status": "skipped"
+              "results": [
+                {
+                  "workerIndex": 18,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 4,
+                  "error": {
+                    "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome",
+                    "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                  },
+                  "errors": [
+                    {
+                      "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2025-08-26T18:37:18.056Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "unexpected"
             }
           ],
           "id": "5f1889fdd7b10a4db9e9-5310c65e866d1e4c51b9",
@@ -521,7 +947,7 @@
       "specs": [
         {
           "title": "check server environment during test",
-          "ok": true,
+          "ok": false,
           "tags": [],
           "tests": [
             {
@@ -530,8 +956,30 @@
               "expectedStatus": "passed",
               "projectId": "chromium",
               "projectName": "chromium",
-              "results": [],
-              "status": "skipped"
+              "results": [
+                {
+                  "workerIndex": 19,
+                  "parallelIndex": 1,
+                  "status": "failed",
+                  "duration": 5,
+                  "error": {
+                    "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome",
+                    "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                  },
+                  "errors": [
+                    {
+                      "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2025-08-26T18:37:18.101Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "unexpected"
             }
           ],
           "id": "709a2b98ee00497c5cc7-eed09c5208e45fabe25b",
@@ -549,7 +997,7 @@
       "specs": [
         {
           "title": "debug valid credentials login",
-          "ok": true,
+          "ok": false,
           "tags": [],
           "tests": [
             {
@@ -558,8 +1006,30 @@
               "expectedStatus": "passed",
               "projectId": "chromium",
               "projectName": "chromium",
-              "results": [],
-              "status": "skipped"
+              "results": [
+                {
+                  "workerIndex": 20,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 8,
+                  "error": {
+                    "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome",
+                    "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                  },
+                  "errors": [
+                    {
+                      "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2025-08-26T18:37:18.802Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "unexpected"
             }
           ],
           "id": "cda15a4525610ba58bd0-941e0605f113223723e8",
@@ -577,7 +1047,7 @@
       "specs": [
         {
           "title": "debug work order navigation",
-          "ok": true,
+          "ok": false,
           "tags": [],
           "tests": [
             {
@@ -586,8 +1056,30 @@
               "expectedStatus": "passed",
               "projectId": "chromium",
               "projectName": "chromium",
-              "results": [],
-              "status": "skipped"
+              "results": [
+                {
+                  "workerIndex": 21,
+                  "parallelIndex": 1,
+                  "status": "failed",
+                  "duration": 4,
+                  "error": {
+                    "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome",
+                    "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                  },
+                  "errors": [
+                    {
+                      "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2025-08-26T18:37:18.866Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "unexpected"
             }
           ],
           "id": "7dbd842c88f955cc0f06-7f5d7a9cc702b7926dfc",
@@ -605,7 +1097,7 @@
       "specs": [
         {
           "title": "debug work order data",
-          "ok": true,
+          "ok": false,
           "tags": [],
           "tests": [
             {
@@ -614,8 +1106,30 @@
               "expectedStatus": "passed",
               "projectId": "chromium",
               "projectName": "chromium",
-              "results": [],
-              "status": "skipped"
+              "results": [
+                {
+                  "workerIndex": 22,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 5,
+                  "error": {
+                    "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome",
+                    "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                  },
+                  "errors": [
+                    {
+                      "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2025-08-26T18:37:19.531Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "unexpected"
             }
           ],
           "id": "0c19a902e46e2a499e26-b9615583bf69e66de1de",
@@ -640,7 +1154,7 @@
           "specs": [
             {
               "title": "user can login and logout",
-              "ok": true,
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -649,8 +1163,30 @@
                   "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
+                  "results": [
+                    {
+                      "workerIndex": 23,
+                      "parallelIndex": 1,
+                      "status": "failed",
+                      "duration": 4,
+                      "error": {
+                        "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome",
+                        "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-26T18:37:19.580Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
                 }
               ],
               "id": "e8b4ce0637035c87d0a9-80cbd646976e1e87920a",
@@ -660,7 +1196,7 @@
             },
             {
               "title": "shows error for invalid credentials",
-              "ok": true,
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -669,8 +1205,30 @@
                   "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
+                  "results": [
+                    {
+                      "workerIndex": 24,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 5,
+                      "error": {
+                        "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome",
+                        "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-26T18:37:20.328Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
                 }
               ],
               "id": "e8b4ce0637035c87d0a9-36813e0ed1eed3e79244",
@@ -688,8 +1246,10 @@
           "specs": [
             {
               "title": "technician can complete work order flow @smoke",
-              "ok": true,
-              "tags": ["smoke"],
+              "ok": false,
+              "tags": [
+                "smoke"
+              ],
               "tests": [
                 {
                   "timeout": 30000,
@@ -697,8 +1257,30 @@
                   "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
+                  "results": [
+                    {
+                      "workerIndex": 25,
+                      "parallelIndex": 1,
+                      "status": "failed",
+                      "duration": 5,
+                      "error": {
+                        "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome",
+                        "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-26T18:37:20.366Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
                 }
               ],
               "id": "e8b4ce0637035c87d0a9-d26fc709bebd890b3b22",
@@ -708,7 +1290,7 @@
             },
             {
               "title": "can create new work order",
-              "ok": true,
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -717,8 +1299,30 @@
                   "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
+                  "results": [
+                    {
+                      "workerIndex": 26,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 5,
+                      "error": {
+                        "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome",
+                        "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-26T18:37:21.073Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
                 }
               ],
               "id": "e8b4ce0637035c87d0a9-fe2fadbbb89fa96fbd57",
@@ -728,7 +1332,7 @@
             },
             {
               "title": "can filter work orders",
-              "ok": true,
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -737,8 +1341,30 @@
                   "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
+                  "results": [
+                    {
+                      "workerIndex": 27,
+                      "parallelIndex": 1,
+                      "status": "failed",
+                      "duration": 5,
+                      "error": {
+                        "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome",
+                        "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-26T18:37:21.092Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
                 }
               ],
               "id": "e8b4ce0637035c87d0a9-a9dc825e90e4ef95876f",
@@ -748,7 +1374,7 @@
             },
             {
               "title": "can search work orders",
-              "ok": true,
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -757,8 +1383,30 @@
                   "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
+                  "results": [
+                    {
+                      "workerIndex": 28,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 5,
+                      "error": {
+                        "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome",
+                        "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-26T18:37:21.834Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
                 }
               ],
               "id": "e8b4ce0637035c87d0a9-9bb00d2ee452d134b547",
@@ -776,7 +1424,7 @@
           "specs": [
             {
               "title": "can view equipment list",
-              "ok": true,
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -785,8 +1433,30 @@
                   "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
+                  "results": [
+                    {
+                      "workerIndex": 29,
+                      "parallelIndex": 1,
+                      "status": "failed",
+                      "duration": 5,
+                      "error": {
+                        "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome",
+                        "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-26T18:37:21.858Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
                 }
               ],
               "id": "e8b4ce0637035c87d0a9-f4c4e6cbac2da2f6d832",
@@ -796,7 +1466,7 @@
             },
             {
               "title": "can create new equipment",
-              "ok": true,
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -805,8 +1475,30 @@
                   "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
+                  "results": [
+                    {
+                      "workerIndex": 30,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 5,
+                      "error": {
+                        "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome",
+                        "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-26T18:37:22.592Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
                 }
               ],
               "id": "e8b4ce0637035c87d0a9-b816486afbf00d4740bd",
@@ -816,7 +1508,7 @@
             },
             {
               "title": "can scan QR code for equipment",
-              "ok": true,
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -825,8 +1517,30 @@
                   "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
+                  "results": [
+                    {
+                      "workerIndex": 31,
+                      "parallelIndex": 1,
+                      "status": "failed",
+                      "duration": 4,
+                      "error": {
+                        "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome",
+                        "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-26T18:37:22.603Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
                 }
               ],
               "id": "e8b4ce0637035c87d0a9-04320d9080af5a45b108",
@@ -844,7 +1558,7 @@
           "specs": [
             {
               "title": "displays dashboard metrics",
-              "ok": true,
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -853,8 +1567,30 @@
                   "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
+                  "results": [
+                    {
+                      "workerIndex": 32,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 5,
+                      "error": {
+                        "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome",
+                        "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-26T18:37:23.348Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
                 }
               ],
               "id": "e8b4ce0637035c87d0a9-ac55a7ac53dcb8e0b538",
@@ -864,7 +1600,7 @@
             },
             {
               "title": "can filter dashboard by date range",
-              "ok": true,
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -873,8 +1609,30 @@
                   "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
+                  "results": [
+                    {
+                      "workerIndex": 33,
+                      "parallelIndex": 1,
+                      "status": "failed",
+                      "duration": 5,
+                      "error": {
+                        "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome",
+                        "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-26T18:37:23.340Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
                 }
               ],
               "id": "e8b4ce0637035c87d0a9-7167bbb6e593a5e7ee04",
@@ -892,7 +1650,7 @@
           "specs": [
             {
               "title": "mobile navigation works correctly",
-              "ok": true,
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -901,8 +1659,30 @@
                   "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
+                  "results": [
+                    {
+                      "workerIndex": 34,
+                      "parallelIndex": 1,
+                      "status": "failed",
+                      "duration": 5,
+                      "error": {
+                        "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome",
+                        "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-26T18:37:24.119Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
                 }
               ],
               "id": "e8b4ce0637035c87d0a9-62b50f6824e7c80a5359",
@@ -912,7 +1692,7 @@
             },
             {
               "title": "work order cards are touch-friendly",
-              "ok": true,
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -921,8 +1701,30 @@
                   "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
+                  "results": [
+                    {
+                      "workerIndex": 35,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 5,
+                      "error": {
+                        "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome",
+                        "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-26T18:37:24.111Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
                 }
               ],
               "id": "e8b4ce0637035c87d0a9-4c7c2b43d932d1041fc8",
@@ -940,7 +1742,7 @@
           "specs": [
             {
               "title": "shows offline indicator when network is unavailable",
-              "ok": true,
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -949,8 +1751,30 @@
                   "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
+                  "results": [
+                    {
+                      "workerIndex": 36,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 5,
+                      "error": {
+                        "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome",
+                        "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-26T18:37:24.898Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
                 }
               ],
               "id": "e8b4ce0637035c87d0a9-5fea19c68dd8c53c03b5",
@@ -960,7 +1784,7 @@
             },
             {
               "title": "can complete work orders offline",
-              "ok": true,
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -969,8 +1793,30 @@
                   "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
+                  "results": [
+                    {
+                      "workerIndex": 37,
+                      "parallelIndex": 1,
+                      "status": "failed",
+                      "duration": 5,
+                      "error": {
+                        "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome",
+                        "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-26T18:37:24.915Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
                 }
               ],
               "id": "e8b4ce0637035c87d0a9-29d99e3608f9e8f03cd6",
@@ -988,7 +1834,7 @@
           "specs": [
             {
               "title": "supports keyboard navigation",
-              "ok": true,
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -997,8 +1843,30 @@
                   "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
+                  "results": [
+                    {
+                      "workerIndex": 38,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 5,
+                      "error": {
+                        "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome",
+                        "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-26T18:37:25.617Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
                 }
               ],
               "id": "e8b4ce0637035c87d0a9-27ba76ea6425e6bab8a3",
@@ -1008,7 +1876,7 @@
             },
             {
               "title": "has proper focus indicators",
-              "ok": true,
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -1017,8 +1885,30 @@
                   "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
+                  "results": [
+                    {
+                      "workerIndex": 39,
+                      "parallelIndex": 1,
+                      "status": "failed",
+                      "duration": 4,
+                      "error": {
+                        "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome",
+                        "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-26T18:37:25.644Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
                 }
               ],
               "id": "e8b4ce0637035c87d0a9-18176d1898e37807b6e8",
@@ -1036,7 +1926,7 @@
           "specs": [
             {
               "title": "dashboard loads within acceptable time",
-              "ok": true,
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -1045,8 +1935,30 @@
                   "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
+                  "results": [
+                    {
+                      "workerIndex": 40,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 4,
+                      "error": {
+                        "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome",
+                        "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-26T18:37:26.355Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
                 }
               ],
               "id": "e8b4ce0637035c87d0a9-8fe811ba33c5de45e697",
@@ -1056,7 +1968,7 @@
             },
             {
               "title": "work order list handles large datasets",
-              "ok": true,
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -1065,8 +1977,30 @@
                   "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
+                  "results": [
+                    {
+                      "workerIndex": 41,
+                      "parallelIndex": 1,
+                      "status": "failed",
+                      "duration": 4,
+                      "error": {
+                        "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome",
+                        "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-26T18:37:26.386Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
                 }
               ],
               "id": "e8b4ce0637035c87d0a9-1a56076374babe4ab61d",
@@ -1086,7 +2020,7 @@
       "specs": [
         {
           "title": "minimal test - page loads",
-          "ok": true,
+          "ok": false,
           "tags": [],
           "tests": [
             {
@@ -1095,8 +2029,30 @@
               "expectedStatus": "passed",
               "projectId": "chromium",
               "projectName": "chromium",
-              "results": [],
-              "status": "skipped"
+              "results": [
+                {
+                  "workerIndex": 42,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 4,
+                  "error": {
+                    "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome",
+                    "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                  },
+                  "errors": [
+                    {
+                      "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2025-08-26T18:37:27.056Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "unexpected"
             }
           ],
           "id": "157f6153f234d2b270fc-9c692f500fe07433bbf4",
@@ -1106,7 +2062,7 @@
         },
         {
           "title": "minimal login form test",
-          "ok": true,
+          "ok": false,
           "tags": [],
           "tests": [
             {
@@ -1115,8 +2071,30 @@
               "expectedStatus": "passed",
               "projectId": "chromium",
               "projectName": "chromium",
-              "results": [],
-              "status": "skipped"
+              "results": [
+                {
+                  "workerIndex": 43,
+                  "parallelIndex": 1,
+                  "status": "failed",
+                  "duration": 5,
+                  "error": {
+                    "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome",
+                    "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                  },
+                  "errors": [
+                    {
+                      "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2025-08-26T18:37:27.079Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "unexpected"
             }
           ],
           "id": "157f6153f234d2b270fc-2e55d988e807ef4a0e6c",
@@ -1134,7 +2112,7 @@
       "specs": [
         {
           "title": "sanity: homepage loads and root element is visible",
-          "ok": true,
+          "ok": false,
           "tags": [],
           "tests": [
             {
@@ -1143,8 +2121,30 @@
               "expectedStatus": "passed",
               "projectId": "chromium",
               "projectName": "chromium",
-              "results": [],
-              "status": "skipped"
+              "results": [
+                {
+                  "workerIndex": 44,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 4,
+                  "error": {
+                    "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome",
+                    "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                  },
+                  "errors": [
+                    {
+                      "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2025-08-26T18:37:27.761Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "unexpected"
             }
           ],
           "id": "c1bc3b82f35bec97f7ef-eb19f9b9a968c1e26b25",
@@ -1162,7 +2162,7 @@
       "specs": [
         {
           "title": "browser test",
-          "ok": true,
+          "ok": false,
           "tags": [],
           "tests": [
             {
@@ -1171,8 +2171,30 @@
               "expectedStatus": "passed",
               "projectId": "chromium",
               "projectName": "chromium",
-              "results": [],
-              "status": "skipped"
+              "results": [
+                {
+                  "workerIndex": 45,
+                  "parallelIndex": 1,
+                  "status": "failed",
+                  "duration": 4,
+                  "error": {
+                    "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome",
+                    "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                  },
+                  "errors": [
+                    {
+                      "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2025-08-26T18:37:27.792Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "unexpected"
             }
           ],
           "id": "e33182337be27a39af1d-e5871394f51344855cf5",
@@ -1185,11 +2207,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2025-08-26T17:55:35.387Z",
-    "duration": 104.63,
+    "startTime": "2025-08-26T18:37:09.931Z",
+    "duration": 17917.926,
     "expected": 0,
-    "skipped": 46,
-    "unexpected": 0,
+    "skipped": 0,
+    "unexpected": 46,
     "flaky": 0
   }
 }
