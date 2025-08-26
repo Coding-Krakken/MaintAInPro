@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
 import { loginAs, TEST_USERS } from './helpers/auth';
 
 test('debug work orders page', async ({ page }) => {
