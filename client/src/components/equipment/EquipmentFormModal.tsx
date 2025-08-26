@@ -154,6 +154,7 @@ export default function EquipmentFormModal({ isOpen, onClose }: EquipmentFormMod
                 value={model}
                 onChange={e => setModel(e.target.value)}
                 placeholder='Enter equipment model'
+                data-testid='equipment-model-input'
                 required
               />
             </div>
@@ -165,6 +166,7 @@ export default function EquipmentFormModal({ isOpen, onClose }: EquipmentFormMod
                 value={area}
                 onChange={e => setArea(e.target.value)}
                 placeholder='Enter location area'
+                data-testid='location-input'
               />
             </div>
           </div>
@@ -205,7 +207,7 @@ export default function EquipmentFormModal({ isOpen, onClose }: EquipmentFormMod
             <Button type='button' variant='outline' onClick={handleClose}>
               Cancel
             </Button>
-            <Button type='submit'>Create Equipment</Button>
+            <Button type='submit' data-testid='submit-equipment-button'>Create Equipment</Button>
           </div>
         </form>
       </DialogContent>

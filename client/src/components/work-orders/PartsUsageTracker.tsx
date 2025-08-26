@@ -244,7 +244,7 @@ const PartsUsageTracker: React.FC<PartsUsageTrackerProps> = ({
             <div className='flex justify-between items-center'>
               <h3 className='font-medium'>Add Parts</h3>
               {!isAddingPart && (
-                <Button size='sm' onClick={() => setIsAddingPart(true)} className='text-xs'>
+                <Button size='sm' onClick={() => setIsAddingPart(true)} className='text-xs' data-testid='add-parts-button'>
                   <Plus className='w-4 h-4 mr-1' />
                   Add Part
                 </Button>
@@ -265,6 +265,7 @@ const PartsUsageTracker: React.FC<PartsUsageTrackerProps> = ({
                       value={searchQuery}
                       onChange={e => setSearchQuery(e.target.value)}
                       className='pl-10'
+                      data-testid='part-search'
                     />
                   </div>
                 </div>
@@ -272,7 +273,7 @@ const PartsUsageTracker: React.FC<PartsUsageTrackerProps> = ({
                 <div className='space-y-2'>
                   <label className='text-sm font-medium'>Select Part</label>
                   <Select value={newEntry.partId || ''} onValueChange={handlePartSelect}>
-                    <SelectTrigger>
+                    <SelectTrigger data-testid='part-select'>
                       <SelectValue placeholder='Choose a part...' />
                     </SelectTrigger>
                     <SelectContent>
@@ -303,6 +304,7 @@ const PartsUsageTracker: React.FC<PartsUsageTrackerProps> = ({
                       value={newEntry.quantityUsed || ''}
                       onChange={e => handleQuantityChange(parseInt(e.target.value) || 0)}
                       placeholder='Quantity'
+                      data-testid='quantity-input'
                     />
                   </div>
                   <div className='space-y-2'>
@@ -361,6 +363,7 @@ const PartsUsageTracker: React.FC<PartsUsageTrackerProps> = ({
                     size='sm'
                     onClick={handleAddPart}
                     disabled={!newEntry.partId || !newEntry.quantityUsed || addPartsUsage.isPending}
+                    data-testid='confirm-parts-button'
                   >
                     Add Part
                   </Button>

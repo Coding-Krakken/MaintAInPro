@@ -61,6 +61,7 @@ const OfflineIndicator: React.FC = () => {
             ? 'border-l-blue-500 bg-blue-50'
             : 'border-l-orange-500 bg-orange-50'
         }`}
+        data-testid='offline-indicator'
       >
         <div className='flex items-center space-x-3'>
           <div className='flex items-center space-x-2'>
@@ -76,7 +77,7 @@ const OfflineIndicator: React.FC = () => {
 
           {pendingCount > 0 && (
             <>
-              <Badge variant='outline' className='text-xs'>
+              <Badge variant='outline' className='text-xs' data-testid='sync-queue-indicator'>
                 {pendingCount} pending
               </Badge>
 

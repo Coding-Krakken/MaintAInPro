@@ -86,6 +86,7 @@ export default function Header({ onMobileMenuToggle, showMobileMenuButton }: Hea
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
                 className='pl-10'
+                data-testid='search-input'
               />
               <Search className='absolute left-3 top-2.5 w-5 h-5 text-gray-400' />
             </div>

@@ -99,6 +99,7 @@ export default function QRScanner({ isOpen, onClose, onScan }: QRScannerProps) {
                     className='w-full h-64 bg-black rounded-lg object-cover'
                     autoPlay
                     playsInline
+                    data-testid='qr-scanner'
                   />
 
                   {/* Viewfinder Overlay */}

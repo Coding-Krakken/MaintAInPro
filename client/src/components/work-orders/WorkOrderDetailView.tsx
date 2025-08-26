@@ -367,8 +367,8 @@ const WorkOrderDetailView: React.FC<WorkOrderDetailViewProps> = ({ workOrderId, 
           <Wrench className='w-4 h-4 mr-2' />
           Edit Work Order
         </Button>
-        {workOrder.status === 'new' && <Button>Start Work</Button>}
-        {workOrder.status === 'in_progress' && <Button>Complete Work</Button>}
+        {workOrder.status === 'new' && <Button data-testid='update-status-button'>Start Work</Button>}
+        {workOrder.status === 'in_progress' && <Button data-testid='complete-button'>Complete Work</Button>}
       </div>
     </div>
   );
