@@ -199,6 +199,7 @@
     "@vercel/node": "^2.3.0",
     "@vitejs/plugin-react": "^5.0.1",
     "autoprefixer": "^10.4.21",
+    "chromium": "^3.0.3",
     "dotenv": "^17.2.1",
     "drizzle-kit": "^0.31.4",
     "esbuild": "^0.25.8",

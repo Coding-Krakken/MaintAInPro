@@ -25,9 +25,9 @@ export default defineConfig({
       name: 'chromium',
       use: { 
         ...devices['Desktop Chrome'],
-        // Use system google-chrome browser
+        // Use Playwright-managed Chromium
+        // No executablePath: Playwright will use its bundled browser
         launchOptions: {
-          executablePath: '/usr/bin/google-chrome',
           args: ['--no-sandbox', '--disable-dev-shm-usage', '--disable-web-security']
         }
       },
