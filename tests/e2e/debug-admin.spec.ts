@@ -10,11 +10,6 @@ test('debug admin page access', async ({ page }) => {
     logs.push(`${msg.type()}: ${msg.text()}`);
   });
   
-  // Collect errors
-  page.on('pageerror', (error) => {
-    console.log('Page error:', error.message);
-  });
-  
   // Navigate to admin page directly
   await page.goto('http://localhost:5000/admin');
   
@@ -34,23 +29,22 @@ test('debug admin page access', async ({ page }) => {
   console.log('Current URL:', page.url());
   console.log('Page title:', await page.title());
   
-  // Check what's visible on the page
+  // Get all visible text for debugging
   const visibleText = await page.locator('body').textContent();
-  console.log('Page contains System Administration:', visibleText?.includes('System Administration'));
-  console.log('Page contains System Health:', visibleText?.includes('System Health'));
-  console.log('Page contains login:', visibleText?.includes('Sign in to your account'));
-  console.log('Page contains error:', visibleText?.includes('Something went wrong'));
+  console.log('Full page text:', visibleText?.slice(0, 1000));
   
-  // List all h1, h2, h3 headings
-  const headings = await page.locator('h1, h2, h3').allTextContents();
-  console.log('All headings found:', headings);
+  // Check if specific cards are present
+  const memoryCard = await page.locator('text=Memory Usage').isVisible();
+  const featureCard = await page.locator('text=Feature Status').isVisible();
   
-  // Check if there are any error details
-  const errorDetails = await page.locator('details, .error-details, pre').allTextContents();
-  if (errorDetails.length > 0) {
-    console.log('Error details:', errorDetails);
-  }
+  console.log('Memory Usage card visible:', memoryCard);
+  console.log('Feature Status card visible:', featureCard);
   
-  // Show recent console logs
-  console.log('Console logs:', logs.slice(-5));
+  // Check for all card titles
+  const cardTitles = await page.locator('h3, .card-title, [class*="card"] h2, [class*="card"] h3, [class*="card"] h4').allTextContents();
+  console.log('All card titles found:', cardTitles);
+  
+  // Check if there are error messages
+  const errorText = await page.locator('text=Failed to').count();
+  console.log('Number of "Failed to" messages:', errorText);
 });

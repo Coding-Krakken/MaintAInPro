@@ -253,6 +253,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const healthResult = await advancedHealth.performHealthCheck();
       const connectionStats = notificationService.getConnectionStats();
+      const memoryUsage = process.memoryUsage();
 
       const response = {
         ...healthResult,
@@ -260,6 +261,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
         port: process.env.PORT || 5000,
         websocket: connectionStats,
         version: '1.0.0',
+        memory: {
+          rss: memoryUsage.rss,
+          heapTotal: memoryUsage.heapTotal,
+          heapUsed: memoryUsage.heapUsed,
+          external: memoryUsage.external,
+          arrayBuffers: memoryUsage.arrayBuffers,
+        },
+        features: {
+          auth: 'enabled',
+          database: 'enabled',
+          redis: 'disabled',
+          email: 'disabled',
+        },
       };
 
       // Return appropriate HTTP status based on health

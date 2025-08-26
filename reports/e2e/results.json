@@ -17,19 +17,19 @@
         "buildHref": "https://github.com/Coding-Krakken/MaintAInPro/actions/runs/17238008763"
       },
       "gitCommit": {
-        "shortHash": "c72231f",
-        "hash": "c72231f5ea8f6b6f4c15797af8b68a29be0fe9a6",
-        "subject": "refactor: update Playwright configuration to use bundled Chromium instead of system Google Chrome",
-        "body": "refactor: update Playwright configuration to use bundled Chromium instead of system Google Chrome\n",
+        "shortHash": "481e28c",
+        "hash": "481e28c136ac3405e5be6c07db470ff4bfd09bb8",
+        "subject": "Fix Playwright e2e tests: resolve build errors, lint issues, and health dashboard component crashes",
+        "body": "Fix Playwright e2e tests: resolve build errors, lint issues, and health dashboard component crashes\n\nCo-authored-by: Coding-Krakken <220203495+Coding-Krakken@users.noreply.github.com>\n",
         "author": {
-          "name": "Coding-Krakken",
-          "email": "davidtraversmailbox@gmail.com",
-          "time": 1756177493000
+          "name": "copilot-swe-agent[bot]",
+          "email": "198982749+Copilot@users.noreply.github.com",
+          "time": 1756212845000
         },
         "committer": {
-          "name": "GitHub",
-          "email": "noreply@github.com",
-          "time": 1756177493000
+          "name": "copilot-swe-agent[bot]",
+          "email": "198982749+Copilot@users.noreply.github.com",
+          "time": 1756212845000
         },
         "branch": "copilot/fix-5b4695c5-4631-443a-b1c7-eac251747d17"
       },
@@ -73,19 +73,19 @@
             "buildHref": "https://github.com/Coding-Krakken/MaintAInPro/actions/runs/17238008763"
           },
           "gitCommit": {
-            "shortHash": "c72231f",
-            "hash": "c72231f5ea8f6b6f4c15797af8b68a29be0fe9a6",
-            "subject": "refactor: update Playwright configuration to use bundled Chromium instead of system Google Chrome",
-            "body": "refactor: update Playwright configuration to use bundled Chromium instead of system Google Chrome\n",
+            "shortHash": "481e28c",
+            "hash": "481e28c136ac3405e5be6c07db470ff4bfd09bb8",
+            "subject": "Fix Playwright e2e tests: resolve build errors, lint issues, and health dashboard component crashes",
+            "body": "Fix Playwright e2e tests: resolve build errors, lint issues, and health dashboard component crashes\n\nCo-authored-by: Coding-Krakken <220203495+Coding-Krakken@users.noreply.github.com>\n",
             "author": {
-              "name": "Coding-Krakken",
-              "email": "davidtraversmailbox@gmail.com",
-              "time": 1756177493000
+              "name": "copilot-swe-agent[bot]",
+              "email": "198982749+Copilot@users.noreply.github.com",
+              "time": 1756212845000
             },
             "committer": {
-              "name": "GitHub",
-              "email": "noreply@github.com",
-              "time": 1756177493000
+              "name": "copilot-swe-agent[bot]",
+              "email": "198982749+Copilot@users.noreply.github.com",
+              "time": 1756212845000
             },
             "branch": "copilot/fix-5b4695c5-4631-443a-b1c7-eac251747d17"
           },
@@ -131,7 +131,7 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 4447,
+                  "duration": 7115,
                   "errors": [],
                   "stdout": [
                     {
@@ -141,27 +141,24 @@
                       "text": "Page title: MaintainPro CMMS\n"
                     },
                     {
-                      "text": "Page contains System Administration: \u001b[33mfalse\u001b[39m\n"
+                      "text": "Full page text: \n    MaintAInProEnterprise CMMSJSJohn SmithsupervisorDashboardWork OrdersEquipmentInventoryPreventive MaintenanceVendorsAnalyticsPerformanceEnterprise MonitorSystem HealthPhase 1 DemoSettings1JSJohn SmithSystem AdministrationMonitor and manage system health, performance, and configurationSystem HealthPerformanceSystem HealthMonitor system status and performance metricsRefreshSystem StatusUnhealthydevelopment environmentUptimeabout 1 hourSince last restartWebSocket0Active connectionsVersion1.0.0Port 5000Feature StatusCurrent status of system features\n    \n  \n\n\n"
                     },
                     {
-                      "text": "Page contains System Health: \u001b[33mfalse\u001b[39m\n"
+                      "text": "Memory Usage card visible: \u001b[33mfalse\u001b[39m\n"
                     },
                     {
-                      "text": "Page contains login: \u001b[33mfalse\u001b[39m\n"
+                      "text": "Feature Status card visible: \u001b[33mtrue\u001b[39m\n"
                     },
                     {
-                      "text": "Page contains error: \u001b[33mtrue\u001b[39m\n"
+                      "text": "All card titles found: []\n"
                     },
                     {
-                      "text": "All headings found: [ \u001b[32m'Something went wrong'\u001b[39m ]\n"
-                    },
-                    {
-                      "text": "Console logs: [\n  \u001b[32m'error: URL: http://localhost:5000/admin'\u001b[39m,\n  \u001b[32m'error: Timestamp: 2025-08-26T12:49:04.804Z'\u001b[39m,\n  \u001b[32m'endGroup: console.groupEnd'\u001b[39m,\n  \u001b[32m\"error: Error caught by ErrorBoundary: TypeError: Cannot read properties of undefined (reading 'heapUsed')\\n\"\u001b[39m +\n    \u001b[32m'    at MemoryUsageCard (http://localhost:5000/src/components/admin/HealthDashboard.tsx:79:48)\\n'\u001b[39m +\n    \u001b[32m'    at Object.react_stack_bottom_frame (http://localhost:5000/@fs/home/runner/work/MaintAInPro/MaintAInPro/node_modules/.vite/deps/react-dom_client.js?v=28aa086c:17424:20)\\n'\u001b[39m +\n    \u001b[32m'    at renderWithHooks (http://localhost:5000/@fs/home/runner/work/MaintAInPro/MaintAInPro/node_modules/.vite/deps/react-dom_client.js?v=28aa086c:4206:24)\\n'\u001b[39m +\n    \u001b[32m'    at updateFunctionComponent (http://localhost:5000/@fs/home/runner/work/MaintAInPro/MaintAInPro/node_modules/.vite/deps/react-dom_client.js?v=28aa086c:6619:21)\\n'\u001b[39m +\n    \u001b[32m'    at beginWork (http://localhost:5000/@fs/home/runner/work/MaintAInPro/MaintAInPro/node_modules/.vite/deps/react-dom_client.js?v=28aa086c:7654:20)\\n'\u001b[39m +\n    \u001b[32m'    at runWithFiberInDEV (http://localhost:5000/@fs/home/runner/work/MaintAInPro/MaintAInPro/node_modules/.vite/deps/react-dom_client.js?v=28aa086c:1485:72)\\n'\u001b[39m +\n    \u001b[32m'    at performUnitOfWork (http://localhost:5000/@fs/home/runner/work/MaintAInPro/MaintAInPro/node_modules/.vite/deps/react-dom_client.js?v=28aa086c:10868:98)\\n'\u001b[39m +\n    \u001b[32m'    at workLoopSync (http://localhost:5000/@fs/home/runner/work/MaintAInPro/MaintAInPro/node_modules/.vite/deps/react-dom_client.js?v=28aa086c:10728:43)\\n'\u001b[39m +\n    \u001b[32m'    at renderRootSync (http://localhost:5000/@fs/home/runner/work/MaintAInPro/MaintAInPro/node_modules/.vite/deps/react-dom_client.js?v=28aa086c:10711:13)\\n'\u001b[39m +\n    \u001b[32m'    at performWorkOnRoot (http://localhost:5000/@fs/home/runner/work/MaintAInPro/MaintAInPro/node_modules/.vite/deps/react-dom_client.js?v=28aa086c:10359:46)'\u001b[39m,\n  \u001b[32m'error: Error info: {componentStack: \\n'\u001b[39m +\n    \u001b[32m'    at MemoryUsageCard (http://localhost:5000/src…y/ErrorBoundary.tsx:8:5)\\n'\u001b[39m +\n    \u001b[32m'    at App (<anonymous>), errorBoundary: ErrorBoundary, errorBoundaryStack: \\n'\u001b[39m +\n    \u001b[32m'    at MemoryUsageCard (http://localhost:5000/src…y/ErrorBoundary.tsx:8:5)\\n'\u001b[39m +\n    \u001b[32m'    at App (<anonymous>)}'\u001b[39m\n]\n"
+                      "text": "Number of \"Failed to\" messages: \u001b[33m0\u001b[39m\n"
                     }
                   ],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2025-08-26T12:49:02.576Z",
+                  "startTime": "2025-08-26T13:12:29.979Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -179,8 +176,8 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2025-08-26T12:49:01.798Z",
-    "duration": 5472.544,
+    "startTime": "2025-08-26T13:12:29.397Z",
+    "duration": 7942.919000000001,
     "expected": 1,
     "skipped": 0,
     "unexpected": 0,
