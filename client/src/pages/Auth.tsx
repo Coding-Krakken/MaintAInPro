@@ -150,13 +150,13 @@ export default function Auth() {
               <h3 className='text-sm font-medium text-blue-900 mb-2'>Demo Credentials</h3>
               <div className='space-y-1 text-sm text-blue-700'>
                 <p>
-                  <strong>Supervisor:</strong> supervisor@warehouse.com
+                  <strong>Supervisor:</strong> supervisor@company.com
                 </p>
                 <p>
-                  <strong>Technician:</strong> technician@warehouse.com
+                  <strong>Technician:</strong> technician@company.com
                 </p>
                 <p>
-                  <strong>Manager:</strong> manager@warehouse.com
+                  <strong>Manager:</strong> manager@company.com
                 </p>
                 <p>
                   <strong>Password:</strong> demo123
