@@ -130,8 +130,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const response = await fetch('/api/profiles/me', {
         headers: {
           Authorization: `Bearer ${token}`,
-          'x-user-id': localStorage.getItem('userId') || 'default-supervisor-id',
-          'x-warehouse-id': localStorage.getItem('warehouseId') || 'default-warehouse-id',
+          'x-user-id': localStorage.getItem('userId') || '00000000-0000-0000-0000-000000000003',
+          'x-warehouse-id': localStorage.getItem('warehouseId') || '00000000-0000-0000-0000-000000000001',
         },
         signal: controller.signal,
       });

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { useLocation } from 'wouter';
 import { Button } from '../components/ui/button';
@@ -13,9 +13,16 @@ export default function Auth() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const { login } = useAuth();
+  const { login, isAuthenticated, loading } = useAuth();
   const [, setLocation] = useLocation();
   const { toast } = useToast();
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (!loading && isAuthenticated) {
+      setLocation('/dashboard');
+    }
+  }, [isAuthenticated, loading, setLocation]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
