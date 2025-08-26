@@ -9,7 +9,17 @@ dotenv.config();
 const router = Router();
 
 // Safe environment variables to expose
-const SAFE_ENV = ['NODE_ENV', 'TEST_AUTH_MODE', 'PLAYWRIGHT', 'DISABLE_RATE_LIMITING', 'DATABASE_URL', 'VERCEL', 'VERCEL_ENV', 'RAILWAY_STATIC_URL', 'PORT'];
+const SAFE_ENV = [
+  'NODE_ENV',
+  'TEST_AUTH_MODE',
+  'PLAYWRIGHT',
+  'DISABLE_RATE_LIMITING',
+  'DATABASE_URL',
+  'VERCEL',
+  'VERCEL_ENV',
+  'RAILWAY_STATIC_URL',
+  'PORT',
+];
 
 router.get('/env', (req: Request, res: Response) => {
   const env: Record<string, string | undefined> = {};
@@ -25,7 +35,7 @@ router.get('/auth-mode', (req: Request, res: Response) => {
     NODE_ENV: process.env.NODE_ENV,
     PLAYWRIGHT: process.env.PLAYWRIGHT,
     DISABLE_RATE_LIMITING: process.env.DISABLE_RATE_LIMITING,
-    authBypassActive: process.env.TEST_AUTH_MODE === 'true'
+    authBypassActive: process.env.TEST_AUTH_MODE === 'true',
   });
 });
 
@@ -40,8 +50,8 @@ router.get('/users', async (req: Request, res: Response) => {
         firstName: u.firstName,
         lastName: u.lastName,
         role: u.role,
-        active: u.active
-      }))
+        active: u.active,
+      })),
     });
   } catch (error) {
     console.error('Debug users error:', error);
@@ -53,7 +63,7 @@ router.get('/user/:email', async (req: Request, res: Response) => {
   try {
     const { email } = req.params;
     const user = await storage.getProfileByEmail(email);
-    
+
     if (user) {
       const credentials = await storage.getUserCredentials(user.id);
       res.json({
@@ -64,14 +74,14 @@ router.get('/user/:email', async (req: Request, res: Response) => {
           firstName: user.firstName,
           lastName: user.lastName,
           role: user.role,
-          active: user.active
+          active: user.active,
         },
-        hasCredentials: !!credentials
+        hasCredentials: !!credentials,
       });
     } else {
       res.json({
         found: false,
-        email
+        email,
       });
     }
   } catch (error) {
@@ -84,17 +94,17 @@ router.get('/reset-credentials', async (req: Request, res: Response) => {
   try {
     // Get all users
     const users = await storage.getProfiles();
-    
+
     // Delete existing credentials
     const { db } = await import('../db');
     const { userCredentials } = await import('../../shared/schema');
     await db.delete(userCredentials);
-    
+
     // Recreate credentials with the current pepper
     const { PasswordService } = await import('../services/auth/password.service');
     const defaultPassword = 'demo123';
     const credentialsList = [];
-    
+
     for (const user of users) {
       const { hash, salt } = await PasswordService.hashPassword(defaultPassword);
       credentialsList.push({
@@ -109,13 +119,13 @@ router.get('/reset-credentials', async (req: Request, res: Response) => {
         updatedAt: new Date(),
       });
     }
-    
+
     await db.insert(userCredentials).values(credentialsList);
-    
+
     res.json({
       success: true,
       message: `Reset credentials for ${users.length} users`,
-      users: users.map(u => u.email)
+      users: users.map(u => u.email),
     });
   } catch (error) {
     console.error('Reset credentials error:', error);

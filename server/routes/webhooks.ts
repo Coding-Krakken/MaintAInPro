@@ -101,8 +101,8 @@ export function registerWebhookRoutes(
         return res.status(404).json({ message: 'Webhook not found' });
       }
 
-      const user = (req as any).user;
-      if (existing.warehouseId && existing.warehouseId !== user.warehouseId) {
+      const user = (req as Request & { user?: { warehouseId?: string } }).user;
+      if (existing.warehouseId && existing.warehouseId !== user?.warehouseId) {
         return res.status(403).json({ message: 'Access denied' });
       }
 

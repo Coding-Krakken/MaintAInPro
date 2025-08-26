@@ -333,7 +333,12 @@ export default function WorkOrderForm({ onSuccess, onCancel, initialData }: Work
                 Cancel
               </Button>
             )}
-            <Button type='submit' className='flex-1' disabled={createWorkOrder.isPending} data-testid='submit-work-order-button'>
+            <Button
+              type='submit'
+              className='flex-1'
+              disabled={createWorkOrder.isPending}
+              data-testid='submit-work-order-button'
+            >
               {createWorkOrder.isPending ? 'Creating...' : 'Create Work Order'}
             </Button>
           </div>

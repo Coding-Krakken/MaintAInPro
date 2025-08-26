@@ -1,25 +1,13 @@
 import { test, expect } from '@playwright/test';
-
-// Static auth token for testing - corresponds to supervisor@company.com
-const authToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YmI5OTE2OS0zMmY5LTRjMTEtOTIyYy01MDc2MmEzYzRlNzMiLCJlbWFpbCI6InN1cGVydmlzb3JAY29tcGFueS5jb20iLCJyb2xlIjoic3VwZXJ2aXNvciIsIndhcmVob3VzZUlkIjoiMTc3ZWNjMjQtYmI1YS00NzRkLWI3YjAtYzJmMGI0NzBhYTY4IiwidHlwZSI6ImFjY2VzcyIsImlhdCI6MTc1NjE3NDI4OSwiZXhwIjo5OTk5OTk5OTk5LCJhdWQiOiJtYWludGFpbnByby1hcHAiLCJpc3MiOiJtYWludGFpbnByby1jbW1zIn0.test-token';
+import { loginAs, TEST_USERS } from '../helpers/auth';
 
 test.describe('Health Dashboard E2E', () => {
   test.beforeEach(async ({ page }) => {
-    // Navigate to the admin page
+    // Use proper authentication flow instead of hardcoded tokens
+    await loginAs(page, TEST_USERS.supervisor);
+
+    // Navigate to the admin page after authentication
     await page.goto('http://localhost:5000/admin');
-    
-    // Set authentication token in localStorage
-    await page.evaluate((tokenData) => {
-      if (tokenData) {
-        window.localStorage.setItem('authToken', tokenData);
-        // Set the user data from the API response (extracted from JWT or API response)
-        window.localStorage.setItem('userId', '6bb99169-32f9-4c11-922c-50762a3c4e73');
-        window.localStorage.setItem('warehouseId', '177ecc24-bb5a-474d-b7b0-c2f0b470aa68');
-      }
-    }, authToken);
-    
-    // Reload to apply authentication
-    await page.reload();
   });
 
   test('should display health dashboard correctly', async ({ page }) => {
@@ -33,7 +21,7 @@ test.describe('Health Dashboard E2E', () => {
     await expect(page.locator('text=Monitor system status and performance metrics')).toBeVisible();
 
     // Check status cards - expect real API data
-    await expect(page.locator('text=Unhealthy')).toBeVisible(); // Real API shows status: 'degraded' or 'unhealthy' 
+    await expect(page.locator('text=Unhealthy')).toBeVisible(); // Real API shows status: 'degraded' or 'unhealthy'
     await expect(page.locator('text=development environment')).toBeVisible();
     await expect(page.locator('text=0').first()).toBeVisible(); // Active connections from real API
     await expect(page.locator('text=1.0.0').first()).toBeVisible(); // Version
@@ -46,7 +34,7 @@ test.describe('Health Dashboard E2E', () => {
     // Check if memory usage card is present (it's conditional based on data availability)
     const memoryCard = page.locator('text=Memory Usage');
     const isVisible = await memoryCard.isVisible();
-    
+
     if (isVisible) {
       // Check for presence of memory data (values will be dynamic based on actual memory)
       await expect(page.locator('text=Heap:')).toBeVisible();
@@ -64,7 +52,7 @@ test.describe('Health Dashboard E2E', () => {
     // Check feature status card exists
     await expect(page.locator('text=Feature Status')).toBeVisible();
     await expect(page.locator('text=Current status of system features')).toBeVisible();
-    
+
     // The individual features might not show if health.features is empty
     // This is expected behavior - the card shows but no features are listed
     console.log('Feature Status card is displayed correctly');
@@ -76,7 +64,7 @@ test.describe('Health Dashboard E2E', () => {
     // Check if deployment information card is present (it's conditional based on data availability)
     const deploymentCard = page.locator('text=Deployment Information');
     const isVisible = await deploymentCard.isVisible();
-    
+
     if (isVisible) {
       // If deployment information is available, check its contents
       await expect(deploymentCard).toBeVisible();
@@ -131,6 +119,8 @@ test.describe('Health Dashboard E2E', () => {
       });
     });
 
+    // Use proper authentication first, then the mock will take effect
+    await loginAs(page, TEST_USERS.supervisor);
     await page.goto('http://localhost:5000/admin');
     await page.waitForLoadState('networkidle');
 
@@ -177,6 +167,8 @@ test.describe('Health Dashboard E2E', () => {
       });
     });
 
+    // Use proper authentication first, then the mock will take effect
+    await loginAs(page, TEST_USERS.supervisor);
     await page.goto('http://localhost:5000/admin');
     await page.waitForLoadState('networkidle');
 

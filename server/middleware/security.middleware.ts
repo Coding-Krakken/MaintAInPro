@@ -60,6 +60,19 @@ export const createRateLimit = (
       if (process.env.NODE_ENV === 'development' && req.path === '/api/health') {
         return true;
       }
+      
+      // Skip rate limiting in test environments
+      const isTestEnv =
+        process.env.NODE_ENV === 'test' ||
+        process.env.TEST === 'e2e' ||
+        process.env.PLAYWRIGHT === 'true' ||
+        process.env.CI === 'true' ||
+        process.env.DISABLE_RATE_LIMITING === 'true';
+        
+      if (isTestEnv) {
+        return true;
+      }
+      
       return false;
     },
   });
@@ -128,23 +141,26 @@ export function advancedSecurityHeaders(req: Request, res: Response, next: NextF
   // Use Helmet.js for comprehensive security headers
   helmet({
     // Content Security Policy - disabled in development for Vite compatibility
-    contentSecurityPolicy: process.env.NODE_ENV === 'development' ? false : {
-      directives: {
-        defaultSrc: ["'self'"],
-        styleSrc: ["'self'", "'unsafe-inline'", 'fonts.googleapis.com'],
-        scriptSrc: ["'self'", `'nonce-${nonce}'`, 'vercel.live'],
-        imgSrc: ["'self'", 'data:', 'https:', '*.vercel-insights.com'],
-        connectSrc: ["'self'", 'vercel.live', '*.vercel-insights.com'],
-        fontSrc: ["'self'", 'fonts.gstatic.com'],
-        objectSrc: ["'none'"],
-        mediaSrc: ["'self'"],
-        frameSrc: ["'none'"],
-        childSrc: ["'none'"],
-        formAction: ["'self'"],
-        upgradeInsecureRequests: process.env.NODE_ENV === 'production' ? [] : null,
-      },
-      reportOnly: false,
-    },
+    contentSecurityPolicy:
+      process.env.NODE_ENV === 'development'
+        ? false
+        : {
+            directives: {
+              defaultSrc: ["'self'"],
+              styleSrc: ["'self'", "'unsafe-inline'", 'fonts.googleapis.com'],
+              scriptSrc: ["'self'", `'nonce-${nonce}'`, 'vercel.live'],
+              imgSrc: ["'self'", 'data:', 'https:', '*.vercel-insights.com'],
+              connectSrc: ["'self'", 'vercel.live', '*.vercel-insights.com'],
+              fontSrc: ["'self'", 'fonts.gstatic.com'],
+              objectSrc: ["'none'"],
+              mediaSrc: ["'self'"],
+              frameSrc: ["'none'"],
+              childSrc: ["'none'"],
+              formAction: ["'self'"],
+              upgradeInsecureRequests: process.env.NODE_ENV === 'production' ? [] : null,
+            },
+            reportOnly: false,
+          },
 
     // Strict Transport Security
     hsts: {
@@ -455,7 +471,7 @@ export function validateRequestSchema(schema: z.ZodSchema) {
 /**
  * Enhanced security monitoring and logging middleware
  */
-export function securityAuditLogger(req: any, res: Response, next: NextFunction): void {
+export function securityAuditLogger(req: Request, res: Response, next: NextFunction): void {
   const startTime = Date.now();
   const originalJson = res.json;
 

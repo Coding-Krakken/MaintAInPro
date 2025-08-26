@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 test('debug: check database users and authentication flow', async ({ page }) => {
   // Navigate to the app first
   await page.goto('http://localhost:5000/login');
-  
+
   // Test database connectivity and users
   const dbResponse = await page.evaluate(async () => {
     const res = await fetch('http://localhost:5000/api/health');
@@ -18,13 +18,13 @@ test('debug: check database users and authentication flow', async ({ page }) => 
     { email: 'supervisor@maintainpro.com', role: 'supervisor' },
     { email: 'technician@maintainpro.com', role: 'technician' },
     { email: 'test@example.com', role: 'technician' },
-    { email: 'manager@example.com', role: 'manager' }
+    { email: 'manager@example.com', role: 'manager' },
   ];
 
   for (const user of testUsers) {
     console.log(`\n--- Testing user: ${user.email} ---`);
-    
-    const loginResponse = await page.evaluate(async (userData) => {
+
+    const loginResponse = await page.evaluate(async userData => {
       const res = await fetch('http://localhost:5000/api/auth/login', {
         method: 'POST',
         headers: {
@@ -44,7 +44,7 @@ test('debug: check database users and authentication flow', async ({ page }) => 
 
     console.log(`Status: ${loginResponse.status}`);
     console.log(`Body: ${loginResponse.body}`);
-    
+
     if (loginResponse.status === 200) {
       console.log('✅ Login successful');
       break; // Found working credentials

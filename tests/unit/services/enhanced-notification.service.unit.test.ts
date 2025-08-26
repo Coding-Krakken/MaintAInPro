@@ -12,32 +12,34 @@ vi.spyOn(console, 'error').mockImplementation(() => {});
 
 let testUserId: string;
 describe('Enhanced Notification Storage', () => {
-
   beforeEach(async () => {
     testUserId = '11111111-1111-1111-1111-111111111111';
     // Insert test profile if not exists
-      // Clean up notification data before each test
-      await db.delete(notifications).where(eq(notifications.userId, testUserId));
-      await db.delete(notificationPreferences).where(eq(notificationPreferences.userId, testUserId));
-      await db.delete(pushSubscriptions).where(eq(pushSubscriptions.userId, testUserId));
-      // Insert test profile with all required fields
-      await db.insert(profiles).values({
+    // Clean up notification data before each test
+    await db.delete(notifications).where(eq(notifications.userId, testUserId));
+    await db.delete(notificationPreferences).where(eq(notificationPreferences.userId, testUserId));
+    await db.delete(pushSubscriptions).where(eq(pushSubscriptions.userId, testUserId));
+    // Insert test profile with all required fields
+    await db
+      .insert(profiles)
+      .values({
         id: testUserId,
         email: 'testuser@example.com',
         firstName: 'Test',
         lastName: 'User',
         role: 'technician',
-        active: true
-      }).onConflictDoNothing();
+        active: true,
+      })
+      .onConflictDoNothing();
   });
 
   afterAll(async () => {
-  // Clean up notifications and preferences for test user
-  await db.delete(notifications).where(eq(notifications.userId, testUserId));
-  await db.delete(notificationPreferences).where(eq(notificationPreferences.userId, testUserId));
-  await db.delete(pushSubscriptions).where(eq(pushSubscriptions.userId, testUserId));
-  // Clean up test profile
-  await db.delete(profiles).where(eq(profiles.id, testUserId));
+    // Clean up notifications and preferences for test user
+    await db.delete(notifications).where(eq(notifications.userId, testUserId));
+    await db.delete(notificationPreferences).where(eq(notificationPreferences.userId, testUserId));
+    await db.delete(pushSubscriptions).where(eq(pushSubscriptions.userId, testUserId));
+    // Clean up test profile
+    await db.delete(profiles).where(eq(profiles.id, testUserId));
   });
 
   describe('Notification Preferences', () => {
@@ -181,14 +183,17 @@ describe('Enhanced Notification Storage', () => {
 
     it('should retrieve push subscriptions for a specific user', async () => {
       // Ensure test profile exists for FK constraint
-      await db.insert(profiles).values({
-        id: testUserId,
-        email: 'testuser@example.com',
-        firstName: 'Test',
-        lastName: 'User',
-        role: 'technician',
-        active: true
-      }).onConflictDoNothing();
+      await db
+        .insert(profiles)
+        .values({
+          id: testUserId,
+          email: 'testuser@example.com',
+          firstName: 'Test',
+          lastName: 'User',
+          role: 'technician',
+          active: true,
+        })
+        .onConflictDoNothing();
 
       // Create subscriptions for the test user
       await storage.createPushSubscription({
@@ -342,5 +347,5 @@ describe('Enhanced Notification Storage', () => {
       expect(notification.expiresAt).toEqual(expiresAt);
     });
   });
-    // End of tests
-  });
+  // End of tests
+});

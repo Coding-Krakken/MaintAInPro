@@ -43,7 +43,8 @@ export default function PMTemplateManager() {
     queryFn: async () => {
       const response = await fetch('/api/pm-templates', {
         headers: {
-          'x-warehouse-id': localStorage.getItem('warehouseId') || '00000000-0000-0000-0000-000000000001',
+          'x-warehouse-id':
+            localStorage.getItem('warehouseId') || '00000000-0000-0000-0000-000000000001',
         },
       });
       if (!response.ok) throw new Error('Failed to fetch PM templates');

@@ -303,9 +303,9 @@ export class MemStorage implements IStorage {
   }
 
   private seedData() {
-  // Create default warehouse
-  const warehouseId = '00000000-0000-0000-0000-000000000001'; // Use valid UUID for tests
-  const organizationId = '00000000-0000-0000-0000-000000000002'; // Use valid UUID for tests
+    // Create default warehouse
+    const warehouseId = '00000000-0000-0000-0000-000000000001'; // Use valid UUID for tests
+    const organizationId = '00000000-0000-0000-0000-000000000002'; // Use valid UUID for tests
     const warehouse: Warehouse = {
       id: warehouseId,
       name: 'Main Warehouse',
@@ -320,9 +320,9 @@ export class MemStorage implements IStorage {
     this.warehouses.set(warehouseId, warehouse);
 
     // Create default users
-  const supervisorId = '00000000-0000-0000-0000-000000000003'; // Use valid UUID for tests
-  const technicianId = '00000000-0000-0000-0000-000000000004'; // Use valid UUID for tests
-  const managerId = '00000000-0000-0000-0000-000000000005'; // Use valid UUID for tests
+    const supervisorId = '00000000-0000-0000-0000-000000000003'; // Use valid UUID for tests
+    const technicianId = '00000000-0000-0000-0000-000000000004'; // Use valid UUID for tests
+    const managerId = '00000000-0000-0000-0000-000000000005'; // Use valid UUID for tests
 
     const supervisor: Profile = {
       id: supervisorId,
@@ -862,7 +862,7 @@ export class MemStorage implements IStorage {
     // Return a mock credential for demo purposes
     const user = this.profiles.get(userId);
     if (!user) return undefined;
-    
+
     // Create mock credential with hashed "demo123" password
     return {
       id: `cred-${userId}`,

@@ -4,7 +4,13 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import {
   Calendar,
   Clock,
@@ -207,7 +213,9 @@ const WorkOrderDetailView: React.FC<WorkOrderDetailViewProps> = ({ workOrderId, 
             <CardContent className='space-y-4'>
               <div className='flex items-center space-x-4'>
                 <div className='flex-1'>
-                  <label className='text-sm font-medium text-gray-700 mb-2 block'>Update Status</label>
+                  <label className='text-sm font-medium text-gray-700 mb-2 block'>
+                    Update Status
+                  </label>
                   <Select defaultValue={workOrder.status}>
                     <SelectTrigger data-testid='status-select'>
                       <SelectValue />
@@ -222,11 +230,9 @@ const WorkOrderDetailView: React.FC<WorkOrderDetailViewProps> = ({ workOrderId, 
                     </SelectContent>
                   </Select>
                 </div>
-                <Button data-testid='update-status-button'>
-                  Update Status
-                </Button>
+                <Button data-testid='update-status-button'>Update Status</Button>
               </div>
-              
+
               <div className='space-y-2'>
                 <label className='text-sm font-medium text-gray-700'>Add Notes</label>
                 <textarea
@@ -260,17 +266,15 @@ const WorkOrderDetailView: React.FC<WorkOrderDetailViewProps> = ({ workOrderId, 
                     data-testid='part-search'
                   />
                 </div>
-                <Button data-testid='add-parts-button'>
-                  Add Parts
-                </Button>
+                <Button data-testid='add-parts-button'>Add Parts</Button>
               </div>
-              
+
               <div className='hidden' data-testid='part-select'>
                 <div className='p-2 border rounded cursor-pointer hover:bg-gray-50'>
                   HYT106 - Test Part
                 </div>
               </div>
-              
+
               <div className='hidden'>
                 <label className='text-sm font-medium text-gray-700'>Quantity</label>
                 <input

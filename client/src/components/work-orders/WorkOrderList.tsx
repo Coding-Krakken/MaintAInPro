@@ -65,7 +65,12 @@ export default function WorkOrderList() {
               </Select>
 
               {/* Create Button */}
-              <Button onClick={() => setShowCreateModal(true)} data-testid='create-work-order-button'>+ New Work Order</Button>
+              <Button
+                onClick={() => setShowCreateModal(true)}
+                data-testid='create-work-order-button'
+              >
+                + New Work Order
+              </Button>
             </div>
           </div>
         </CardHeader>

@@ -81,7 +81,8 @@ export default function VendorsPage() {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('authToken') || 'demo-token'}`,
           'x-user-id': localStorage.getItem('userId') || '00000000-0000-0000-0000-000000000003',
-          'x-warehouse-id': localStorage.getItem('warehouseId') || '00000000-0000-0000-0000-000000000001',
+          'x-warehouse-id':
+            localStorage.getItem('warehouseId') || '00000000-0000-0000-0000-000000000001',
         },
       });
       if (!response.ok) throw new Error('Failed to fetch vendors');

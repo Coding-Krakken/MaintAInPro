@@ -59,22 +59,24 @@ export class DatabaseStorage implements IStorage {
     const existingWarehouses = await db.select().from(warehouses).limit(1);
     if (existingWarehouses.length > 0) {
       console.log('Warehouses already exist, checking for missing credentials...');
-      
+
       // Check if all users have credentials
       const allUsers = await db.select().from(profiles);
       const allCredentials = await db.select().from(userCredentials);
       const userIdsWithCredentials = new Set(allCredentials.map(cred => cred.userId));
-      
+
       const usersWithoutCredentials = allUsers.filter(user => !userIdsWithCredentials.has(user.id));
-      
+
       if (usersWithoutCredentials.length > 0) {
-        console.log(`Found ${usersWithoutCredentials.length} users without credentials, creating them...`);
-        
+        console.log(
+          `Found ${usersWithoutCredentials.length} users without credentials, creating them...`
+        );
+
         const passwordServiceImport = await import('./services/auth/password.service');
         const PasswordService = passwordServiceImport.PasswordService;
         const defaultPassword = 'demo123';
         const credentialsList = [];
-        
+
         for (const user of usersWithoutCredentials) {
           const { hash, salt } = await PasswordService.hashPassword(defaultPassword);
           credentialsList.push({
@@ -89,11 +91,11 @@ export class DatabaseStorage implements IStorage {
             updatedAt: new Date(),
           });
         }
-        
+
         await db.insert(userCredentials).values(credentialsList).returning();
         console.log(`✅ Created credentials for ${credentialsList.length} users`);
       }
-      
+
       return; // Data already exists, credentials checked
     }
 
@@ -398,7 +400,11 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getUserCredentials(userId: string): Promise<UserCredential | undefined> {
-    const result = await db.select().from(userCredentials).where(eq(userCredentials.userId, userId)).limit(1);
+    const result = await db
+      .select()
+      .from(userCredentials)
+      .where(eq(userCredentials.userId, userId))
+      .limit(1);
     return result[0];
   }
 

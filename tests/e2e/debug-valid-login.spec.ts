@@ -14,7 +14,7 @@ test('debug valid credentials login', async ({ page }) => {
       loginRequests.push({
         url: request.url(),
         method: request.method(),
-        postData: request.postData()
+        postData: request.postData(),
       });
     }
   });
@@ -27,7 +27,7 @@ test('debug valid credentials login', async ({ page }) => {
         url: response.url(),
         status: response.status(),
         statusText: response.statusText(),
-        body: text
+        body: text,
       });
     }
   });

@@ -26,7 +26,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-  const warehouseId = (req.headers['x-warehouse-id'] as string) || '00000000-0000-0000-0000-000000000001';
+    const warehouseId =
+      (req.headers['x-warehouse-id'] as string) || '00000000-0000-0000-0000-000000000001';
     const stats = await storageModule.getDashboardStats(warehouseId);
     console.log(`Retrieved dashboard stats for warehouse ${warehouseId}`);
 

@@ -23,11 +23,13 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { 
+      use: {
         ...devices['Desktop Chrome'],
         launchOptions: {
-          args: ['--no-sandbox', '--disable-dev-shm-usage', '--disable-web-security']
-        }
+          // Using system Chrome due to Playwright download issues in CI
+          executablePath: '/usr/bin/google-chrome',
+          args: ['--no-sandbox', '--disable-dev-shm-usage', '--disable-web-security'],
+        },
       },
     },
     // Disable other browsers for now to focus on fixing core issues
