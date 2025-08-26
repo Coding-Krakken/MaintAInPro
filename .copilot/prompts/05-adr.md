@@ -1,9 +1,12 @@
 # Architecture Decision Record (ADR)
 
-**Objective**: Generate structured ADR for architectural decisions. Ensure consistency and traceability.
+**Objective**: Generate structured ADR for architectural decisions. Ensure
+consistency and traceability.
 
 ## Usage
-Use this prompt when making significant architectural or design decisions that need documentation.
+
+Use this prompt when making significant architectural or design decisions that
+need documentation.
 
 ## ADR Template
 
@@ -20,7 +23,7 @@ Create an ADR in docs/decisions/adr-{TOPIC_SLUG}.md:
 
 Current situation:
 - {Current state}
-- {Pain points}  
+- {Pain points}
 - {Constraints}
 
 ## Decision
@@ -38,7 +41,7 @@ We will implement/use/adopt:
 - {Improved capabilities}
 - {Reduced risks}
 
-### Negative  
+### Negative
 - {Trade-offs}
 - {New risks}
 - {Additional complexity}
@@ -71,7 +74,7 @@ Create an ADR in docs/decisions/adr-database-migration-strategy.md:
 
 Key decisions:
 - Use Drizzle ORM for database abstraction
-- Feature flag controlled migration per tenant  
+- Feature flag controlled migration per tenant
 - Automated data consistency validation
 - Rollback capability within 4 hours
 
@@ -82,7 +85,7 @@ Key decisions:
 - tests/integration/migration.test.ts
 ```
 
-### Example: Frontend State Management  
+### Example: Frontend State Management
 
 ```
 Create an ADR in docs/decisions/adr-frontend-state-management.md:
@@ -99,7 +102,7 @@ Key decisions:
 
 **Implementation**:
 - client/src/hooks/queries/ (React Query hooks)
-- Remove client/src/store/ gradually  
+- Remove client/src/store/ gradually
 - Update component imports
 - Add error boundary for query failures
 ```
@@ -107,12 +110,12 @@ Key decisions:
 ## Integration with MaintAInPro Processes
 
 **ADR Numbering**: Use sequential numbers: adr-001-topic.md, adr-002-topic.md
-**Review Process**: All ADRs must be reviewed in PR process
-**Status Updates**: Update status when decisions change
-**Cross-References**: Link related ADRs and issues
-**Implementation Tracking**: Reference ADR in implementation PRs
+**Review Process**: All ADRs must be reviewed in PR process **Status Updates**:
+Update status when decisions change **Cross-References**: Link related ADRs and
+issues **Implementation Tracking**: Reference ADR in implementation PRs
 
 **Template Files**:
+
 - Use existing ADRs in artifacts/adr/ as reference
 - Follow the established format and tone
 - Include implementation details specific to our stack

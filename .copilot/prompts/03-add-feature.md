@@ -1,9 +1,12 @@
 # Add New Feature
 
-**Objective**: Add new functionality while passing all quality gates. Include tests.
+**Objective**: Add new functionality while passing all quality gates. Include
+tests.
 
-## Usage  
-Copy this prompt when implementing new features or extending existing functionality.
+## Usage
+
+Copy this prompt when implementing new features or extending existing
+functionality.
 
 ## Template
 
@@ -13,19 +16,19 @@ Add {FEATURE_NAME} in {FILE_PATH} to satisfy: {SPECIFICATION}
 **Requirements**:
 - Follow existing code patterns in the repository
 - Pass TypeScript compilation (`npm run type-check`)
-- Pass linting (`npm run lint:check --max-warnings=0`)  
+- Pass linting (`npm run lint:check --max-warnings=0`)
 - Include unit tests with good coverage
 - Follow the repository's testing patterns
 
 **Architecture Alignment**:
 - Frontend: React 18 + TypeScript patterns
-- Backend: Express.js + Drizzle ORM patterns  
+- Backend: Express.js + Drizzle ORM patterns
 - Shared: Use types from `shared/` directory
 - Testing: Vitest with Testing Library patterns
 
 **Deliverables**:
 1. Implementation following existing patterns
-2. Unit tests with AAA pattern (Arrange, Act, Assert)  
+2. Unit tests with AAA pattern (Arrange, Act, Assert)
 3. Type definitions if needed
 4. Integration with existing components/services
 5. Verification that all quality gates pass
@@ -42,7 +45,7 @@ Add {FEATURE_NAME} in {FILE_PATH} to satisfy: {SPECIFICATION}
 ```
 Add QR code generation feature in client/src/components/equipment/QRCodeGenerator.tsx to satisfy: Generate QR codes for equipment tracking
 
-**Specification**: 
+**Specification**:
 - Accept equipment ID as prop
 - Generate QR code containing equipment URL
 - Display QR code with download option
@@ -60,7 +63,7 @@ Add bulk inventory operations in server/services/inventory.service.ts to satisfy
 
 **Specification**:
 - Bulk import from CSV format
-- Bulk export to CSV format  
+- Bulk export to CSV format
 - Validation and error reporting
 - Transaction support for consistency
 

@@ -1,8 +1,10 @@
 # Refactor Lint Issues
 
-**Objective**: Eliminate lint errors/warnings without changing behavior. Mirror existing patterns.
+**Objective**: Eliminate lint errors/warnings without changing behavior. Mirror
+existing patterns.
 
 ## Usage
+
 Copy this prompt when ESLint or other linters report issues that need fixing.
 
 ## Template
@@ -10,9 +12,9 @@ Copy this prompt when ESLint or other linters report issues that need fixing.
 ```
 Eliminate lint errors in: {PATHS}
 
-**Rules**: 
+**Rules**:
 - NO behavioral changes
-- NO logic modifications  
+- NO logic modifications
 - Mirror patterns from: {REFERENCE_FILE}
 - Keep changes minimal
 - Focus on: unused variables, type annotations, formatting
@@ -25,7 +27,7 @@ Eliminate lint errors in: {PATHS}
 3. Fix formatting issues
 4. Ensure consistent code style
 
-**Verification**: 
+**Verification**:
 - `npm run lint:check --max-warnings=0` must pass
 - `npm run test:run` must still pass (no behavioral changes)
 

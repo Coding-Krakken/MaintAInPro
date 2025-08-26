@@ -1,8 +1,10 @@
 # Fix Failing Tests
 
-**Objective**: Implement only what's required to pass failing tests. Make minimal changes.
+**Objective**: Implement only what's required to pass failing tests. Make
+minimal changes.
 
 ## Usage
+
 Copy this prompt when you need to fix failing tests without side effects.
 
 ## Template
@@ -10,11 +12,11 @@ Copy this prompt when you need to fix failing tests without side effects.
 ```
 Fix the failing tests: {TEST_NAMES}
 
-**Scope**: Modify only files in: {PATHS} 
+**Scope**: Modify only files in: {PATHS}
 
 **Requirements**:
 - Implement minimal code to pass the failing tests
-- Do NOT refactor unrelated code 
+- Do NOT refactor unrelated code
 - Do NOT fix unrelated tests
 - Keep changes surgical and focused
 - Preserve existing behavior for passing tests

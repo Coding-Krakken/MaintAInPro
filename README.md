@@ -134,7 +134,7 @@ npm run test:coverage
 ### Development Workflow
 
 1. **Red**: Write failing test or make change that breaks a watcher
-2. **Green**: Make minimal change to fix the failing check  
+2. **Green**: Make minimal change to fix the failing check
 3. **Refactor**: Clean up while all watchers remain green
 4. **Commit**: When all gates pass
 
@@ -149,8 +149,9 @@ npm run test:coverage
 ### Prompt Library
 
 Use surgical, minimal-change prompts in `.copilot/prompts/`:
+
 - `01-fix-tests.md` - Fix failing tests with minimal changes
-- `02-refactor-lint.md` - Clean up warnings without behavior changes  
+- `02-refactor-lint.md` - Clean up warnings without behavior changes
 - `03-add-feature.md` - Add features with full quality gates
 - `04-autofix-strategy.md` - Systematic issue resolution
 - `05-adr.md` - Document architectural decisions
