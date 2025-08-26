@@ -117,7 +117,7 @@ export function registerLaborTimeRoutes(app: Express) {
         duration: durationMinutes,
         isActive: false,
         description: req.body.description || activeSession.description,
-      } as any);
+      });
 
       res.json(updatedLaborTime);
     } catch (_error) {

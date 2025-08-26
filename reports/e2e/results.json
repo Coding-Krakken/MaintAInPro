@@ -17,19 +17,19 @@
         "buildHref": "https://github.com/Coding-Krakken/MaintAInPro/actions/runs/17239783865"
       },
       "gitCommit": {
-        "shortHash": "d1ccc0d",
-        "hash": "d1ccc0d3c75292ddaafc36538e7128b2eeadaa1f",
-        "subject": "Remove executablePath for Chromium in Playwright config to resolve download issues",
-        "body": "Remove executablePath for Chromium in Playwright config to resolve download issues\n",
+        "shortHash": "8ed5693",
+        "hash": "8ed56932040efd7e4d7eb33b183dc423d742e0a9",
+        "subject": "Fix critical test issues: resolve unit test failures and enable Playwright e2e tests",
+        "body": "Fix critical test issues: resolve unit test failures and enable Playwright e2e tests\n\nCo-authored-by: Coding-Krakken <220203495+Coding-Krakken@users.noreply.github.com>\n",
         "author": {
-          "name": "Coding-Krakken",
-          "email": "davidtraversmailbox@gmail.com",
-          "time": 1756214962000
+          "name": "copilot-swe-agent[bot]",
+          "email": "198982749+Copilot@users.noreply.github.com",
+          "time": 1756215899000
         },
         "committer": {
-          "name": "GitHub",
-          "email": "noreply@github.com",
-          "time": 1756214962000
+          "name": "copilot-swe-agent[bot]",
+          "email": "198982749+Copilot@users.noreply.github.com",
+          "time": 1756215899000
         },
         "branch": "copilot/fix-5b4695c5-4631-443a-b1c7-eac251747d17"
       },
@@ -73,19 +73,19 @@
             "buildHref": "https://github.com/Coding-Krakken/MaintAInPro/actions/runs/17239783865"
           },
           "gitCommit": {
-            "shortHash": "d1ccc0d",
-            "hash": "d1ccc0d3c75292ddaafc36538e7128b2eeadaa1f",
-            "subject": "Remove executablePath for Chromium in Playwright config to resolve download issues",
-            "body": "Remove executablePath for Chromium in Playwright config to resolve download issues\n",
+            "shortHash": "8ed5693",
+            "hash": "8ed56932040efd7e4d7eb33b183dc423d742e0a9",
+            "subject": "Fix critical test issues: resolve unit test failures and enable Playwright e2e tests",
+            "body": "Fix critical test issues: resolve unit test failures and enable Playwright e2e tests\n\nCo-authored-by: Coding-Krakken <220203495+Coding-Krakken@users.noreply.github.com>\n",
             "author": {
-              "name": "Coding-Krakken",
-              "email": "davidtraversmailbox@gmail.com",
-              "time": 1756214962000
+              "name": "copilot-swe-agent[bot]",
+              "email": "198982749+Copilot@users.noreply.github.com",
+              "time": 1756215899000
             },
             "committer": {
-              "name": "GitHub",
-              "email": "noreply@github.com",
-              "time": 1756214962000
+              "name": "copilot-swe-agent[bot]",
+              "email": "198982749+Copilot@users.noreply.github.com",
+              "time": 1756215899000
             },
             "branch": "copilot/fix-5b4695c5-4631-443a-b1c7-eac251747d17"
           },
@@ -110,108 +110,182 @@
   },
   "suites": [
     {
-      "title": "minimal-test.spec.ts",
-      "file": "minimal-test.spec.ts",
+      "title": "basic.e2e.test.ts",
+      "file": "basic.e2e.test.ts",
       "column": 0,
       "line": 0,
-      "specs": [
+      "specs": [],
+      "suites": [
         {
-          "title": "minimal test - page loads",
-          "ok": true,
-          "tags": [],
-          "tests": [
+          "title": "Basic E2E Tests",
+          "file": "basic.e2e.test.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
             {
-              "timeout": 15000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "chromium",
-              "projectName": "chromium",
-              "results": [
+              "title": "should load the homepage",
+              "ok": true,
+              "tags": [],
+              "tests": [
                 {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 1139,
-                  "errors": [],
-                  "stdout": [
+                  "timeout": 30000,
+                  "annotations": [
                     {
-                      "text": "Starting minimal test...\n"
-                    },
-                    {
-                      "text": "Page loaded, checking body visibility...\n"
-                    },
-                    {
-                      "text": "Body is visible, test completed successfully\n"
+                      "type": "skip",
+                      "location": {
+                        "file": "/home/runner/work/MaintAInPro/MaintAInPro/tests/e2e/basic.e2e.test.ts",
+                        "line": 4,
+                        "column": 8
+                      }
                     }
                   ],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2025-08-26T13:44:38.073Z",
-                  "annotations": [],
-                  "attachments": []
+                  "expectedStatus": "skipped",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": -1,
+                      "parallelIndex": -1,
+                      "status": "skipped",
+                      "duration": 0,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-26T13:55:51.392Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
                 }
               ],
-              "status": "expected"
+              "id": "5b9ef2734cb882eb5f5a-4b7943e89f3cfbadd5ca",
+              "file": "basic.e2e.test.ts",
+              "line": 4,
+              "column": 8
+            },
+            {
+              "title": "should verify test framework",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 202,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-26T13:55:51.941Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "5b9ef2734cb882eb5f5a-ae3a766561ff74e1ad96",
+              "file": "basic.e2e.test.ts",
+              "line": 16,
+              "column": 3
             }
-          ],
-          "id": "157f6153f234d2b270fc-9c692f500fe07433bbf4",
-          "file": "minimal-test.spec.ts",
-          "line": 3,
-          "column": 1
+          ]
         },
         {
-          "title": "minimal login form test",
-          "ok": true,
-          "tags": [],
-          "tests": [
+          "title": "Responsive Design Tests",
+          "file": "basic.e2e.test.ts",
+          "line": 23,
+          "column": 6,
+          "specs": [
             {
-              "timeout": 15000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "chromium",
-              "projectName": "chromium",
-              "results": [
+              "title": "should work on mobile viewport",
+              "ok": true,
+              "tags": [],
+              "tests": [
                 {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 820,
-                  "errors": [],
-                  "stdout": [
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
                     {
-                      "text": "Starting login form test...\n"
-                    },
-                    {
-                      "text": "Login page loaded, checking form elements...\n"
-                    },
-                    {
-                      "text": "Form inputs found, test completed successfully\n"
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 117,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-26T13:55:52.307Z",
+                      "annotations": [],
+                      "attachments": []
                     }
                   ],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2025-08-26T13:44:39.397Z",
-                  "annotations": [],
-                  "attachments": []
+                  "status": "expected"
                 }
               ],
-              "status": "expected"
+              "id": "5b9ef2734cb882eb5f5a-db1ca3d45b76d089f1ae",
+              "file": "basic.e2e.test.ts",
+              "line": 24,
+              "column": 3
+            },
+            {
+              "title": "should work on desktop viewport",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 114,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-26T13:55:52.441Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "5b9ef2734cb882eb5f5a-ed5ba6972dcb25be5d0a",
+              "file": "basic.e2e.test.ts",
+              "line": 33,
+              "column": 3
             }
-          ],
-          "id": "157f6153f234d2b270fc-2e55d988e807ef4a0e6c",
-          "file": "minimal-test.spec.ts",
-          "line": 18,
-          "column": 1
+          ]
         }
       ]
     }
   ],
   "errors": [],
   "stats": {
-    "startTime": "2025-08-26T13:44:37.489Z",
-    "duration": 2821.484,
-    "expected": 2,
-    "skipped": 0,
+    "startTime": "2025-08-26T13:55:51.355Z",
+    "duration": 1282.836,
+    "expected": 3,
+    "skipped": 1,
     "unexpected": 0,
     "flaky": 0
   }

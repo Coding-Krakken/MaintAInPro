@@ -4,7 +4,7 @@ import { notificationService } from '../services/notification.service';
 import { z } from 'zod';
 
 // Helper function to get current user from request
-function getCurrentUser(req: any): string {
+function getCurrentUser(req: { user?: { id?: string } }): string {
   return req.user?.id || 'system';
 }
 

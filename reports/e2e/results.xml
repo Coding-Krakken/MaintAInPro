@@ -1,20 +1,18 @@
-<testsuites id="" name="" tests="2" failures="0" skipped="0" errors="0" time="2.821484">
-<testsuite name="minimal-test.spec.ts" timestamp="2025-08-26T13:44:37.524Z" hostname="chromium" tests="2" failures="0" skipped="0" time="1.959" errors="0">
-<testcase name="minimal test - page loads" classname="minimal-test.spec.ts" time="1.139">
-<system-out>
-<![CDATA[Starting minimal test...
-Page loaded, checking body visibility...
-Body is visible, test completed successfully
-]]>
-</system-out>
+<testsuites id="" name="" tests="4" failures="0" skipped="1" errors="0" time="1.282836">
+<testsuite name="basic.e2e.test.ts" timestamp="2025-08-26T13:55:51.392Z" hostname="chromium" tests="4" failures="0" skipped="1" time="0.433" errors="0">
+<testcase name="Basic E2E Tests › should load the homepage" classname="basic.e2e.test.ts" time="0">
+<properties>
+<property name="skip" value="">
+</property>
+</properties>
+<skipped>
+</skipped>
 </testcase>
-<testcase name="minimal login form test" classname="minimal-test.spec.ts" time="0.82">
-<system-out>
-<![CDATA[Starting login form test...
-Login page loaded, checking form elements...
-Form inputs found, test completed successfully
-]]>
-</system-out>
+<testcase name="Basic E2E Tests › should verify test framework" classname="basic.e2e.test.ts" time="0.202">
+</testcase>
+<testcase name="Responsive Design Tests › should work on mobile viewport" classname="basic.e2e.test.ts" time="0.117">
+</testcase>
+<testcase name="Responsive Design Tests › should work on desktop viewport" classname="basic.e2e.test.ts" time="0.114">
 </testcase>
 </testsuite>
 </testsuites>

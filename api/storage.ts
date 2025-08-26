@@ -361,7 +361,7 @@ export async function getAllNotifications(userId: string): Promise<Notification[
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 }
 
-export async function createNotification(notification: any): Promise<Notification> {
+export async function createNotification(notification: Omit<Notification, 'id' | 'createdAt'>): Promise<Notification> {
   const data = await loadData();
   const newNotification: Notification = {
     id: generateId(),

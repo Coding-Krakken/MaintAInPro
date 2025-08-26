@@ -455,7 +455,7 @@ export function validateRequestSchema(schema: z.ZodSchema) {
 /**
  * Enhanced security monitoring and logging middleware
  */
-export function securityAuditLogger(req: any, res: Response, next: NextFunction): void {
+export function securityAuditLogger(req: Request, res: Response, next: NextFunction): void {
   const startTime = Date.now();
   const originalJson = res.json;
 
