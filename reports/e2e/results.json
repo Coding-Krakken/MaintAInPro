@@ -93,23 +93,37 @@
                     {
                       "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 6,
+                      "status": "timedOut",
+                      "duration": 30065,
                       "error": {
-                        "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/chromium",
-                        "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/chromium"
+                        "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
                       },
                       "errors": [
                         {
-                          "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/chromium"
+                          "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "/workspaces/MaintAInPro/tests/e2e/admin/health-dashboard.spec.ts",
+                            "column": 16,
+                            "line": 53
+                          },
+                          "message": "Error: page.waitForLoadState: Test timeout of 30000ms exceeded.\n\n\u001b[0m \u001b[90m 51 |\u001b[39m   test(\u001b[32m'should display health dashboard correctly'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n \u001b[90m 52 |\u001b[39m     \u001b[90m// Wait for the page to load\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 53 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 54 |\u001b[39m\n \u001b[90m 55 |\u001b[39m     \u001b[90m// Check if the System Health heading is visible\u001b[39m\n \u001b[90m 56 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h2'\u001b[39m)\u001b[33m.\u001b[39mfilter({ hasText\u001b[33m:\u001b[39m \u001b[32m'System Health'\u001b[39m }))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at /workspaces/MaintAInPro/tests/e2e/admin/health-dashboard.spec.ts:53:16\u001b[22m"
                         }
                       ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-08-25T22:59:13.099Z",
+                      "startTime": "2025-08-26T00:00:46.159Z",
                       "annotations": [],
-                      "attachments": []
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/workspaces/MaintAInPro/test-results/playwright-artifacts/admin-health-dashboard-Hea-7eb77--health-dashboard-correctly-chromium/error-context.md"
+                        }
+                      ]
                     }
                   ],
                   "status": "unexpected"
@@ -135,23 +149,37 @@
                     {
                       "workerIndex": 1,
                       "parallelIndex": 1,
-                      "status": "failed",
-                      "duration": 5,
+                      "status": "timedOut",
+                      "duration": 30086,
                       "error": {
-                        "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/chromium",
-                        "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/chromium"
+                        "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
                       },
                       "errors": [
                         {
-                          "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/chromium"
+                          "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "/workspaces/MaintAInPro/tests/e2e/admin/health-dashboard.spec.ts",
+                            "column": 16,
+                            "line": 70
+                          },
+                          "message": "Error: page.waitForLoadState: Test timeout of 30000ms exceeded.\n\n\u001b[0m \u001b[90m 68 |\u001b[39m\n \u001b[90m 69 |\u001b[39m   test(\u001b[32m'should display memory usage information'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 70 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 71 |\u001b[39m\n \u001b[90m 72 |\u001b[39m     \u001b[90m// Check memory usage card\u001b[39m\n \u001b[90m 73 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=Memory Usage'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at /workspaces/MaintAInPro/tests/e2e/admin/health-dashboard.spec.ts:70:16\u001b[22m"
                         }
                       ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-08-25T22:59:13.070Z",
+                      "startTime": "2025-08-26T00:00:46.170Z",
                       "annotations": [],
-                      "attachments": []
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/workspaces/MaintAInPro/test-results/playwright-artifacts/admin-health-dashboard-Hea-3eb66-ay-memory-usage-information-chromium/error-context.md"
+                        }
+                      ]
                     }
                   ],
                   "status": "unexpected"
@@ -176,24 +204,38 @@
                   "results": [
                     {
                       "workerIndex": 2,
-                      "parallelIndex": 1,
-                      "status": "failed",
-                      "duration": 6,
+                      "parallelIndex": 0,
+                      "status": "timedOut",
+                      "duration": 30061,
                       "error": {
-                        "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/chromium",
-                        "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/chromium"
+                        "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
                       },
                       "errors": [
                         {
-                          "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/chromium"
+                          "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "/workspaces/MaintAInPro/tests/e2e/admin/health-dashboard.spec.ts",
+                            "column": 16,
+                            "line": 80
+                          },
+                          "message": "Error: page.waitForLoadState: Test timeout of 30000ms exceeded.\n\n\u001b[0m \u001b[90m 78 |\u001b[39m\n \u001b[90m 79 |\u001b[39m   test(\u001b[32m'should display feature status'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 80 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 81 |\u001b[39m\n \u001b[90m 82 |\u001b[39m     \u001b[90m// Check feature status card\u001b[39m\n \u001b[90m 83 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=Feature Status'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at /workspaces/MaintAInPro/tests/e2e/admin/health-dashboard.spec.ts:80:16\u001b[22m"
                         }
                       ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-08-25T22:59:13.931Z",
+                      "startTime": "2025-08-26T00:01:17.111Z",
                       "annotations": [],
-                      "attachments": []
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/workspaces/MaintAInPro/test-results/playwright-artifacts/admin-health-dashboard-Hea-0017e-ould-display-feature-status-chromium/error-context.md"
+                        }
+                      ]
                     }
                   ],
                   "status": "unexpected"
@@ -218,24 +260,38 @@
                   "results": [
                     {
                       "workerIndex": 3,
-                      "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 6,
+                      "parallelIndex": 1,
+                      "status": "timedOut",
+                      "duration": 30086,
                       "error": {
-                        "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/chromium",
-                        "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/chromium"
+                        "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
                       },
                       "errors": [
                         {
-                          "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/chromium"
+                          "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "/workspaces/MaintAInPro/tests/e2e/admin/health-dashboard.spec.ts",
+                            "column": 16,
+                            "line": 98
+                          },
+                          "message": "Error: page.waitForLoadState: Test timeout of 30000ms exceeded.\n\n\u001b[0m \u001b[90m  96 |\u001b[39m\n \u001b[90m  97 |\u001b[39m   test(\u001b[32m'should display deployment information'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m  98 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m  99 |\u001b[39m\n \u001b[90m 100 |\u001b[39m     \u001b[90m// Check deployment information card\u001b[39m\n \u001b[90m 101 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=Deployment Information'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at /workspaces/MaintAInPro/tests/e2e/admin/health-dashboard.spec.ts:98:16\u001b[22m"
                         }
                       ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-08-25T22:59:13.959Z",
+                      "startTime": "2025-08-26T00:01:17.181Z",
                       "annotations": [],
-                      "attachments": []
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/workspaces/MaintAInPro/test-results/playwright-artifacts/admin-health-dashboard-Hea-41f3e-play-deployment-information-chromium/error-context.md"
+                        }
+                      ]
                     }
                   ],
                   "status": "unexpected"
@@ -260,24 +316,38 @@
                   "results": [
                     {
                       "workerIndex": 4,
-                      "parallelIndex": 1,
-                      "status": "failed",
-                      "duration": 5,
+                      "parallelIndex": 0,
+                      "status": "timedOut",
+                      "duration": 30059,
                       "error": {
-                        "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/chromium",
-                        "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/chromium"
+                        "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
                       },
                       "errors": [
                         {
-                          "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/chromium"
+                          "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "/workspaces/MaintAInPro/tests/e2e/admin/health-dashboard.spec.ts",
+                            "column": 16,
+                            "line": 108
+                          },
+                          "message": "Error: page.waitForLoadState: Test timeout of 30000ms exceeded.\n\n\u001b[0m \u001b[90m 106 |\u001b[39m\n \u001b[90m 107 |\u001b[39m   test(\u001b[32m'should display websocket connections'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 108 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 109 |\u001b[39m\n \u001b[90m 110 |\u001b[39m     \u001b[90m// Check websocket connections card\u001b[39m\n \u001b[90m 111 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=Active Connections by Warehouse'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at /workspaces/MaintAInPro/tests/e2e/admin/health-dashboard.spec.ts:108:16\u001b[22m"
                         }
                       ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-08-25T22:59:14.726Z",
+                      "startTime": "2025-08-26T00:01:48.045Z",
                       "annotations": [],
-                      "attachments": []
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/workspaces/MaintAInPro/test-results/playwright-artifacts/admin-health-dashboard-Hea-292d6-splay-websocket-connections-chromium/error-context.md"
+                        }
+                      ]
                     }
                   ],
                   "status": "unexpected"
@@ -302,24 +372,38 @@
                   "results": [
                     {
                       "workerIndex": 5,
-                      "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 5,
+                      "parallelIndex": 1,
+                      "status": "timedOut",
+                      "duration": 30072,
                       "error": {
-                        "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/chromium",
-                        "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/chromium"
+                        "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
                       },
                       "errors": [
                         {
-                          "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/chromium"
+                          "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "/workspaces/MaintAInPro/tests/e2e/admin/health-dashboard.spec.ts",
+                            "column": 16,
+                            "line": 119
+                          },
+                          "message": "Error: page.waitForLoadState: Test timeout of 30000ms exceeded.\n\n\u001b[0m \u001b[90m 117 |\u001b[39m\n \u001b[90m 118 |\u001b[39m   test(\u001b[32m'should refresh data when refresh button is clicked'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 119 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 120 |\u001b[39m\n \u001b[90m 121 |\u001b[39m     \u001b[90m// Track API calls\u001b[39m\n \u001b[90m 122 |\u001b[39m     \u001b[36mlet\u001b[39m apiCallCount \u001b[33m=\u001b[39m \u001b[35m0\u001b[39m\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at /workspaces/MaintAInPro/tests/e2e/admin/health-dashboard.spec.ts:119:16\u001b[22m"
                         }
                       ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-08-25T22:59:14.731Z",
+                      "startTime": "2025-08-26T00:01:48.163Z",
                       "annotations": [],
-                      "attachments": []
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/workspaces/MaintAInPro/test-results/playwright-artifacts/admin-health-dashboard-Hea-9240f-n-refresh-button-is-clicked-chromium/error-context.md"
+                        }
+                      ]
                     }
                   ],
                   "status": "unexpected"
@@ -344,24 +428,38 @@
                   "results": [
                     {
                       "workerIndex": 6,
-                      "parallelIndex": 1,
-                      "status": "failed",
-                      "duration": 13,
+                      "parallelIndex": 0,
+                      "status": "timedOut",
+                      "duration": 30048,
                       "error": {
-                        "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/chromium",
-                        "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/chromium"
+                        "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
                       },
                       "errors": [
                         {
-                          "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/chromium"
+                          "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "/workspaces/MaintAInPro/tests/e2e/admin/health-dashboard.spec.ts",
+                            "column": 16,
+                            "line": 152
+                          },
+                          "message": "Error: page.waitForLoadState: Test timeout of 30000ms exceeded.\n\n\u001b[0m \u001b[90m 150 |\u001b[39m\n \u001b[90m 151 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/admin'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 152 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 153 |\u001b[39m\n \u001b[90m 154 |\u001b[39m     \u001b[90m// Check error state\u001b[39m\n \u001b[90m 155 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=Failed to Load Health Data'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at /workspaces/MaintAInPro/tests/e2e/admin/health-dashboard.spec.ts:152:16\u001b[22m"
                         }
                       ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-08-25T22:59:15.483Z",
+                      "startTime": "2025-08-26T00:02:18.946Z",
                       "annotations": [],
-                      "attachments": []
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/workspaces/MaintAInPro/test-results/playwright-artifacts/admin-health-dashboard-Hea-0a19f-andle-error-state-correctly-chromium/error-context.md"
+                        }
+                      ]
                     }
                   ],
                   "status": "unexpected"
@@ -386,24 +484,38 @@
                   "results": [
                     {
                       "workerIndex": 7,
-                      "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 8,
+                      "parallelIndex": 1,
+                      "status": "timedOut",
+                      "duration": 30057,
                       "error": {
-                        "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/chromium",
-                        "stack": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/chromium"
+                        "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
                       },
                       "errors": [
                         {
-                          "message": "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/chromium"
+                          "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "/workspaces/MaintAInPro/tests/e2e/admin/health-dashboard.spec.ts",
+                            "column": 16,
+                            "line": 198
+                          },
+                          "message": "Error: page.waitForLoadState: Test timeout of 30000ms exceeded.\n\n\u001b[0m \u001b[90m 196 |\u001b[39m\n \u001b[90m 197 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/admin'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 198 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 199 |\u001b[39m\n \u001b[90m 200 |\u001b[39m     \u001b[90m// Should show error state due to 503 status\u001b[39m\n \u001b[90m 201 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=Failed to Load Health Data'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at /workspaces/MaintAInPro/tests/e2e/admin/health-dashboard.spec.ts:198:16\u001b[22m"
                         }
                       ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-08-25T22:59:15.509Z",
+                      "startTime": "2025-08-26T00:02:19.158Z",
                       "annotations": [],
-                      "attachments": []
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/workspaces/MaintAInPro/test-results/playwright-artifacts/admin-health-dashboard-Hea-94704-uld-handle-unhealthy-status-chromium/error-context.md"
+                        }
+                      ]
                     }
                   ],
                   "status": "unexpected"
@@ -416,7 +528,7 @@
             },
             {
               "title": "should auto-refresh every 30 seconds",
-              "ok": true,
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -428,19 +540,41 @@
                   "results": [
                     {
                       "workerIndex": 8,
-                      "parallelIndex": 1,
-                      "status": "skipped",
-                      "duration": 0,
-                      "errors": [],
+                      "parallelIndex": 0,
+                      "status": "timedOut",
+                      "duration": 30060,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "/workspaces/MaintAInPro/tests/e2e/admin/health-dashboard.spec.ts",
+                            "column": 16,
+                            "line": 205
+                          },
+                          "message": "Error: page.waitForLoadState: Test timeout of 30000ms exceeded.\n\n\u001b[0m \u001b[90m 203 |\u001b[39m\n \u001b[90m 204 |\u001b[39m   test(\u001b[32m'should auto-refresh every 30 seconds'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 205 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 206 |\u001b[39m\n \u001b[90m 207 |\u001b[39m     \u001b[90m// Track API calls\u001b[39m\n \u001b[90m 208 |\u001b[39m     \u001b[36mconst\u001b[39m apiCalls\u001b[33m:\u001b[39m string[] \u001b[33m=\u001b[39m []\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at /workspaces/MaintAInPro/tests/e2e/admin/health-dashboard.spec.ts:205:16\u001b[22m"
+                        }
+                      ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-08-25T22:59:16.268Z",
+                      "startTime": "2025-08-26T00:02:49.819Z",
                       "annotations": [],
-                      "attachments": []
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/workspaces/MaintAInPro/test-results/playwright-artifacts/admin-health-dashboard-Hea-b67d3-to-refresh-every-30-seconds-chromium/error-context.md"
+                        }
+                      ]
                     }
                   ],
-                  "status": "skipped"
+                  "status": "unexpected"
                 }
               ],
               "id": "e43f20ac09fe8a3f1347-b50eac2dc1d7ffab21ca",
@@ -450,7 +584,7 @@
             },
             {
               "title": "should display loading state during refresh",
-              "ok": true,
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -462,19 +596,41 @@
                   "results": [
                     {
                       "workerIndex": 9,
-                      "parallelIndex": 0,
-                      "status": "skipped",
-                      "duration": 0,
-                      "errors": [],
+                      "parallelIndex": 1,
+                      "status": "timedOut",
+                      "duration": 30082,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "/workspaces/MaintAInPro/tests/e2e/admin/health-dashboard.spec.ts",
+                            "column": 16,
+                            "line": 224
+                          },
+                          "message": "Error: page.waitForLoadState: Test timeout of 30000ms exceeded.\n\n\u001b[0m \u001b[90m 222 |\u001b[39m\n \u001b[90m 223 |\u001b[39m   test(\u001b[32m'should display loading state during refresh'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 224 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 225 |\u001b[39m\n \u001b[90m 226 |\u001b[39m     \u001b[90m// Mock slow API response\u001b[39m\n \u001b[90m 227 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mroute(\u001b[32m'/api/health'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m route \u001b[33m=>\u001b[39m {\u001b[0m\n\u001b[2m    at /workspaces/MaintAInPro/tests/e2e/admin/health-dashboard.spec.ts:224:16\u001b[22m"
+                        }
+                      ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-08-25T22:59:16.319Z",
+                      "startTime": "2025-08-26T00:02:50.123Z",
                       "annotations": [],
-                      "attachments": []
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/workspaces/MaintAInPro/test-results/playwright-artifacts/admin-health-dashboard-Hea-57d84-oading-state-during-refresh-chromium/error-context.md"
+                        }
+                      ]
                     }
                   ],
-                  "status": "skipped"
+                  "status": "unexpected"
                 }
               ],
               "id": "e43f20ac09fe8a3f1347-ebbeab0763afde6405de",
@@ -493,7 +649,45 @@
                   "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
+                  "results": [
+                    {
+                      "workerIndex": 10,
+                      "parallelIndex": 0,
+                      "status": "interrupted",
+                      "duration": 12123,
+                      "error": {
+                        "message": "Error: page.waitForLoadState: Test ended.",
+                        "stack": "Error: page.waitForLoadState: Test ended.\n    at /workspaces/MaintAInPro/tests/e2e/admin/health-dashboard.spec.ts:255:16",
+                        "location": {
+                          "file": "/workspaces/MaintAInPro/tests/e2e/admin/health-dashboard.spec.ts",
+                          "column": 16,
+                          "line": 255
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 253 |\u001b[39m\n \u001b[90m 254 |\u001b[39m   test(\u001b[32m'should be accessible'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 255 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 256 |\u001b[39m\n \u001b[90m 257 |\u001b[39m     \u001b[90m// Check for proper heading hierarchy\u001b[39m\n \u001b[90m 258 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h1'\u001b[39m)\u001b[33m.\u001b[39mfilter({ hasText\u001b[33m:\u001b[39m \u001b[32m'System Administration'\u001b[39m }))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/workspaces/MaintAInPro/tests/e2e/admin/health-dashboard.spec.ts",
+                            "column": 16,
+                            "line": 255
+                          },
+                          "message": "Error: page.waitForLoadState: Test ended.\n\n\u001b[0m \u001b[90m 253 |\u001b[39m\n \u001b[90m 254 |\u001b[39m   test(\u001b[32m'should be accessible'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 255 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 256 |\u001b[39m\n \u001b[90m 257 |\u001b[39m     \u001b[90m// Check for proper heading hierarchy\u001b[39m\n \u001b[90m 258 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'h1'\u001b[39m)\u001b[33m.\u001b[39mfilter({ hasText\u001b[33m:\u001b[39m \u001b[32m'System Administration'\u001b[39m }))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at /workspaces/MaintAInPro/tests/e2e/admin/health-dashboard.spec.ts:255:16\u001b[22m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-26T00:03:20.680Z",
+                      "annotations": [],
+                      "attachments": [],
+                      "errorLocation": {
+                        "file": "/workspaces/MaintAInPro/tests/e2e/admin/health-dashboard.spec.ts",
+                        "column": 16,
+                        "line": 255
+                      }
+                    }
+                  ],
                   "status": "skipped"
                 }
               ],
@@ -513,7 +707,45 @@
                   "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
+                  "results": [
+                    {
+                      "workerIndex": 11,
+                      "parallelIndex": 1,
+                      "status": "interrupted",
+                      "duration": 11293,
+                      "error": {
+                        "message": "Error: page.waitForLoadState: Test ended.",
+                        "stack": "Error: page.waitForLoadState: Test ended.\n    at /workspaces/MaintAInPro/tests/e2e/admin/health-dashboard.spec.ts:272:16",
+                        "location": {
+                          "file": "/workspaces/MaintAInPro/tests/e2e/admin/health-dashboard.spec.ts",
+                          "column": 16,
+                          "line": 272
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 270 |\u001b[39m\n \u001b[90m 271 |\u001b[39m   test(\u001b[32m'should navigate between admin tabs'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 272 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 273 |\u001b[39m\n \u001b[90m 274 |\u001b[39m     \u001b[90m// Check that Health tab is active by default\u001b[39m\n \u001b[90m 275 |\u001b[39m     \u001b[36mconst\u001b[39m healthTab \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'button'\u001b[39m)\u001b[33m.\u001b[39mfilter({ hasText\u001b[33m:\u001b[39m \u001b[32m'System Health'\u001b[39m })\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/workspaces/MaintAInPro/tests/e2e/admin/health-dashboard.spec.ts",
+                            "column": 16,
+                            "line": 272
+                          },
+                          "message": "Error: page.waitForLoadState: Test ended.\n\n\u001b[0m \u001b[90m 270 |\u001b[39m\n \u001b[90m 271 |\u001b[39m   test(\u001b[32m'should navigate between admin tabs'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 272 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 273 |\u001b[39m\n \u001b[90m 274 |\u001b[39m     \u001b[90m// Check that Health tab is active by default\u001b[39m\n \u001b[90m 275 |\u001b[39m     \u001b[36mconst\u001b[39m healthTab \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'button'\u001b[39m)\u001b[33m.\u001b[39mfilter({ hasText\u001b[33m:\u001b[39m \u001b[32m'System Health'\u001b[39m })\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at /workspaces/MaintAInPro/tests/e2e/admin/health-dashboard.spec.ts:272:16\u001b[22m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-26T00:03:21.446Z",
+                      "annotations": [],
+                      "attachments": [],
+                      "errorLocation": {
+                        "file": "/workspaces/MaintAInPro/tests/e2e/admin/health-dashboard.spec.ts",
+                        "column": 16,
+                        "line": 272
+                      }
+                    }
+                  ],
                   "status": "skipped"
                 }
               ],
@@ -536,7 +768,7 @@
         {
           "title": "Basic E2E Tests",
           "file": "basic.e2e.test.ts",
-          "line": 3,
+          "line": 2,
           "column": 6,
           "specs": [
             {
@@ -551,7 +783,7 @@
                       "type": "skip",
                       "location": {
                         "file": "/workspaces/MaintAInPro/tests/e2e/basic.e2e.test.ts",
-                        "line": 4,
+                        "line": 3,
                         "column": 8
                       }
                     }
@@ -565,7 +797,7 @@
               ],
               "id": "5b9ef2734cb882eb5f5a-4b7943e89f3cfbadd5ca",
               "file": "basic.e2e.test.ts",
-              "line": 4,
+              "line": 3,
               "column": 8
             },
             {
@@ -593,7 +825,7 @@
         {
           "title": "Responsive Design Tests",
           "file": "basic.e2e.test.ts",
-          "line": 23,
+          "line": 24,
           "column": 6,
           "specs": [
             {
@@ -613,7 +845,7 @@
               ],
               "id": "5b9ef2734cb882eb5f5a-db1ca3d45b76d089f1ae",
               "file": "basic.e2e.test.ts",
-              "line": 24,
+              "line": 25,
               "column": 3
             },
             {
@@ -633,7 +865,7 @@
               ],
               "id": "5b9ef2734cb882eb5f5a-ed5ba6972dcb25be5d0a",
               "file": "basic.e2e.test.ts",
-              "line": 33,
+              "line": 37,
               "column": 3
             }
           ]
@@ -1322,11 +1554,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2025-08-25T22:59:12.336Z",
-    "duration": 3997.092,
+    "startTime": "2025-08-26T00:00:45.141Z",
+    "duration": 167858.207,
     "expected": 0,
-    "skipped": 35,
-    "unexpected": 8,
+    "skipped": 33,
+    "unexpected": 10,
     "flaky": 0
   }
 }

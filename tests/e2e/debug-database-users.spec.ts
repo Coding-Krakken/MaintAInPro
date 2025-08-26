@@ -2,11 +2,11 @@ import { test, expect } from '@playwright/test';
 
 test('debug: check database users and authentication flow', async ({ page }) => {
   // Navigate to the app first
-  await page.goto('/login');
+  await page.goto('http://localhost:5000/login');
   
   // Test database connectivity and users
   const dbResponse = await page.evaluate(async () => {
-    const res = await fetch('/api/health');
+    const res = await fetch('http://localhost:5000/api/health');
     const data = await res.json();
     return data.checks.find((check: any) => check.name === 'storage_layer');
   });
@@ -25,7 +25,7 @@ test('debug: check database users and authentication flow', async ({ page }) => 
     console.log(`\n--- Testing user: ${user.email} ---`);
     
     const loginResponse = await page.evaluate(async (userData) => {
-      const res = await fetch('/api/auth/login', {
+      const res = await fetch('http://localhost:5000/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

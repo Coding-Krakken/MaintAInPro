@@ -46,7 +46,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
 async function handleGet(req: VercelRequest, res: VercelResponse) {
   try {
-    const warehouseId = (req.headers['x-warehouse-id'] as string) || 'default-warehouse-id';
+  const warehouseId = (req.headers['x-warehouse-id'] as string) || '00000000-0000-0000-0000-000000000001';
     const { status } = req.query;
 
     const filters: { status?: string[] } = {};
@@ -69,8 +69,8 @@ async function handleGet(req: VercelRequest, res: VercelResponse) {
 
 async function handlePost(req: VercelRequest, res: VercelResponse) {
   try {
-    const warehouseId = (req.headers['x-warehouse-id'] as string) || 'default-warehouse-id';
-    const userId = (req.headers['x-user-id'] as string) || 'default-user-id';
+  const warehouseId = (req.headers['x-warehouse-id'] as string) || '00000000-0000-0000-0000-000000000001';
+  const userId = (req.headers['x-user-id'] as string) || '00000000-0000-0000-0000-000000000003';
 
     const workOrderData = req.body;
 
@@ -101,7 +101,7 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
 
 async function handlePatch(req: VercelRequest, res: VercelResponse) {
   try {
-    const warehouseId = (req.headers['x-warehouse-id'] as string) || 'default-warehouse-id';
+  const warehouseId = (req.headers['x-warehouse-id'] as string) || '00000000-0000-0000-0000-000000000001';
     const { id } = req.query;
 
     if (!id || typeof id !== 'string') {
@@ -126,7 +126,7 @@ async function handlePatch(req: VercelRequest, res: VercelResponse) {
 
 async function handleDelete(req: VercelRequest, res: VercelResponse) {
   try {
-    const warehouseId = (req.headers['x-warehouse-id'] as string) || 'default-warehouse-id';
+  const warehouseId = (req.headers['x-warehouse-id'] as string) || '00000000-0000-0000-0000-000000000001';
     const { id } = req.query;
 
     if (!id || typeof id !== 'string') {

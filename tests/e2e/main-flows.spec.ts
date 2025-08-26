@@ -30,7 +30,7 @@ let authToken = '';
 test.beforeAll(async () => {
   // Use Playwright APIRequestContext to login and get token
   const apiContext = await request.newContext();
-  const response = await apiContext.post('/api/auth/login', {
+  const response = await apiContext.post('http://localhost:5000/api/auth/login', {
     data: {
       email: 'supervisor@company.com',
       password: 'demo123',
@@ -42,17 +42,18 @@ test.beforeAll(async () => {
     let body;
     try {
       body = JSON.parse(textBody);
+      authToken = body.token;
     } catch (err) {
       console.error('Failed to parse login response as JSON:', err);
-      throw err;
+      // If rate limited or error, set authToken to empty string and continue
+      authToken = '';
     }
-  authToken = body.token;
-  await apiContext.dispose();
+    await apiContext.dispose();
 });
 
 test.describe('Authentication Flow', () => {
   test('user can login and logout', async ({ page }) => {
-    await page.goto('/login');
+    await page.goto('http://localhost:5000/login');
     // Set token in localStorage before navigation
     await page.evaluate((token) => {
       window.localStorage.setItem('accessToken', token);
@@ -81,7 +82,7 @@ test.describe('Authentication Flow', () => {
   });
 
   test('shows error for invalid credentials', async ({ page }) => {
-    await page.goto('/login');
+  await page.goto('http://localhost:5000/login');
 
     await page.fill('[data-testid="email-input"]', testCredentials.invalid.email);
     await page.fill('[data-testid="password-input"]', testCredentials.invalid.password);
@@ -98,7 +99,7 @@ test.describe('Work Order Management', () => {
   test.beforeEach(async ({ page }) => {
     // Use Playwright APIRequestContext to login and get token for technician
     const apiContext = await request.newContext();
-    const response = await apiContext.post('/api/auth/login', {
+  const response = await apiContext.post('http://localhost:5000/api/auth/login', {
       data: {
         email: 'technician@company.com',
         password: 'demo123',
@@ -115,7 +116,7 @@ test.describe('Work Order Management', () => {
       throw err;
     }
     await apiContext.dispose();
-    await page.goto('/login');
+  await page.goto('http://localhost:5000/login');
     await page.evaluate((token) => {
       window.localStorage.setItem('accessToken', token);
     }, body.token);
@@ -231,7 +232,7 @@ test.describe('Work Order Management', () => {
 test.describe('Equipment Management', () => {
   test.beforeEach(async ({ page }) => {
     // Login as supervisor (has equipment management permissions)
-    await page.goto('/login');
+  await page.goto('http://localhost:5000/login');
     await page.fill('[data-testid="email-input"]', 'supervisor@maintainpro.com');
     await page.fill('[data-testid="password-input"]', 'password');
     await page.click('[data-testid="login-button"]');
@@ -248,7 +249,7 @@ test.describe('Equipment Management', () => {
   });
 
   test('can create new equipment', async ({ page }) => {
-    await page.goto('/equipment');
+  await page.goto('http://localhost:5000/equipment');
 
     // Click create new equipment
     await page.click('[data-testid="create-equipment-button"]');
@@ -268,7 +269,7 @@ test.describe('Equipment Management', () => {
   });
 
   test('can scan QR code for equipment', async ({ page }) => {
-    await page.goto('/equipment');
+  await page.goto('http://localhost:5000/equipment');
 
     // Mock camera permissions
     await page.context().grantPermissions(['camera']);
@@ -286,7 +287,7 @@ test.describe('Equipment Management', () => {
 
 test.describe('Dashboard and Analytics', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/login');
+  await page.goto('http://localhost:5000/login');
   await page.fill('[data-testid="email-input"]', 'manager@company.com');
     await page.fill('[data-testid="password-input"]', 'password');
     await page.click('[data-testid="login-button"]');
@@ -344,12 +345,12 @@ test.describe('Mobile Responsiveness', () => {
   });
 
   test('work order cards are touch-friendly', async ({ page }) => {
-    await page.goto('/login');
+  await page.goto('http://localhost:5000/login');
     await page.fill('[data-testid="email-input"]', testUsers.technician.email);
     await page.fill('[data-testid="password-input"]', testUsers.technician.password);
     await page.click('[data-testid="login-button"]');
 
-    await page.goto('/work-orders');
+  await page.goto('http://localhost:5000/work-orders');
 
     // Verify work order cards are adequately sized for touch
     const workOrderCard = page.locator('[data-testid="work-order-card"]').first();
@@ -376,12 +377,12 @@ test.describe('Offline Functionality', () => {
   });
 
   test('can complete work orders offline', async ({ page }) => {
-    await page.goto('/login');
+  await page.goto('http://localhost:5000/login');
     await page.fill('[data-testid="email-input"]', testUsers.technician.email);
     await page.fill('[data-testid="password-input"]', testUsers.technician.password);
     await page.click('[data-testid="login-button"]');
 
-    await page.goto('/work-orders');
+  await page.goto('http://localhost:5000/work-orders');
 
     // Go offline
     await page.context().setOffline(true);

@@ -56,7 +56,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
 async function handleGet(req: VercelRequest, res: VercelResponse) {
   try {
-    const warehouseId = (req.headers['x-warehouse-id'] as string) || 'default-warehouse-id';
+  const warehouseId = (req.headers['x-warehouse-id'] as string) || '00000000-0000-0000-0000-000000000001';
 
     // Handle single equipment by ID
     if (req.query.id && typeof req.query.id === 'string') {
@@ -121,8 +121,8 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
       });
     }
 
-    const warehouseId = (req.headers['x-warehouse-id'] as string) || 'default-warehouse-id';
-    const userId = (req.headers['x-user-id'] as string) || 'default-user-id';
+  const warehouseId = (req.headers['x-warehouse-id'] as string) || '00000000-0000-0000-0000-000000000001';
+  const userId = (req.headers['x-user-id'] as string) || '00000000-0000-0000-0000-000000000003';
 
     console.log('Using warehouseId:', warehouseId, 'userId:', userId);
 

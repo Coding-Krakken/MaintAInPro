@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test('debug valid credentials login', async ({ page }) => {
-  await page.goto('/login');
+  await page.goto('http://localhost:5000/login');
 
   // Fill in valid credentials
   await page.fill('[data-testid="email-input"]', 'supervisor@company.com');

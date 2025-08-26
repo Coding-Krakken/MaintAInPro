@@ -5,7 +5,7 @@ let authToken = '';
 
 test.beforeAll(async () => {
   const apiContext = await request.newContext();
-  const response = await apiContext.post('/api/auth/login', {
+  const response = await apiContext.post('http://localhost:5000/api/auth/login', {
     data: {
       email: 'technician@company.com',
       password: 'demo123',
@@ -17,7 +17,7 @@ test.beforeAll(async () => {
 });
 
 test('debug work order navigation', async ({ page }) => {
-  await page.goto('/login');
+  await page.goto('http://localhost:5000/login');
   await page.evaluate((token) => {
     window.localStorage.setItem('accessToken', token);
   }, authToken);
@@ -32,8 +32,8 @@ test('debug work order navigation', async ({ page }) => {
   console.log('Nav work orders visible:', isNavVisible);
 
   if (isNavVisible) {
-    await navElement.click();
-    await page.waitForURL('/work-orders');
+  await navElement.click();
+  await page.waitForURL('http://localhost:5000/work-orders');
     console.log('Successfully navigated to work orders');
 
     // Wait for work orders to load

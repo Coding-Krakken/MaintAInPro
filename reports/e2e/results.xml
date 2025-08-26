@@ -1,87 +1,275 @@
-<testsuites id="" name="" tests="43" failures="8" skipped="35" errors="0" time="3.9970920000000003">
-<testsuite name="admin/health-dashboard.spec.ts" timestamp="2025-08-25T22:59:12.427Z" hostname="chromium" tests="12" failures="8" skipped="4" time="0.054" errors="0">
-<testcase name="Health Dashboard E2E › should display health dashboard correctly" classname="admin/health-dashboard.spec.ts" time="0.006">
+<testsuites id="" name="" tests="43" failures="10" skipped="33" errors="0" time="167.858207">
+<testsuite name="admin/health-dashboard.spec.ts" timestamp="2025-08-26T00:00:45.252Z" hostname="chromium" tests="12" failures="10" skipped="2" time="324.092" errors="0">
+<testcase name="Health Dashboard E2E › should display health dashboard correctly" classname="admin/health-dashboard.spec.ts" time="30.065">
 <failure message="health-dashboard.spec.ts:51:3 should display health dashboard correctly" type="FAILURE">
 <![CDATA[  [chromium] › admin/health-dashboard.spec.ts:51:3 › Health Dashboard E2E › should display health dashboard correctly 
 
-    Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/chromium
+    Test timeout of 30000ms exceeded.
+
+    Error: page.waitForLoadState: Test timeout of 30000ms exceeded.
+
+      51 |   test('should display health dashboard correctly', async ({ page }) => {
+      52 |     // Wait for the page to load
+    > 53 |     await page.waitForLoadState('networkidle');
+         |                ^
+      54 |
+      55 |     // Check if the System Health heading is visible
+      56 |     await expect(page.locator('h2').filter({ hasText: 'System Health' })).toBeVisible();
+        at /workspaces/MaintAInPro/tests/e2e/admin/health-dashboard.spec.ts:53:16
+
+    Error Context: ../../test-results/playwright-artifacts/admin-health-dashboard-Hea-7eb77--health-dashboard-correctly-chromium/error-context.md
 ]]>
 </failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../../test-results/playwright-artifacts/admin-health-dashboard-Hea-7eb77--health-dashboard-correctly-chromium/error-context.md]]
+]]>
+</system-out>
 </testcase>
-<testcase name="Health Dashboard E2E › should display memory usage information" classname="admin/health-dashboard.spec.ts" time="0.005">
+<testcase name="Health Dashboard E2E › should display memory usage information" classname="admin/health-dashboard.spec.ts" time="30.086">
 <failure message="health-dashboard.spec.ts:69:3 should display memory usage information" type="FAILURE">
 <![CDATA[  [chromium] › admin/health-dashboard.spec.ts:69:3 › Health Dashboard E2E › should display memory usage information 
 
-    Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/chromium
+    Test timeout of 30000ms exceeded.
+
+    Error: page.waitForLoadState: Test timeout of 30000ms exceeded.
+
+      68 |
+      69 |   test('should display memory usage information', async ({ page }) => {
+    > 70 |     await page.waitForLoadState('networkidle');
+         |                ^
+      71 |
+      72 |     // Check memory usage card
+      73 |     await expect(page.locator('text=Memory Usage')).toBeVisible();
+        at /workspaces/MaintAInPro/tests/e2e/admin/health-dashboard.spec.ts:70:16
+
+    Error Context: ../../test-results/playwright-artifacts/admin-health-dashboard-Hea-3eb66-ay-memory-usage-information-chromium/error-context.md
 ]]>
 </failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../../test-results/playwright-artifacts/admin-health-dashboard-Hea-3eb66-ay-memory-usage-information-chromium/error-context.md]]
+]]>
+</system-out>
 </testcase>
-<testcase name="Health Dashboard E2E › should display feature status" classname="admin/health-dashboard.spec.ts" time="0.006">
+<testcase name="Health Dashboard E2E › should display feature status" classname="admin/health-dashboard.spec.ts" time="30.061">
 <failure message="health-dashboard.spec.ts:79:3 should display feature status" type="FAILURE">
 <![CDATA[  [chromium] › admin/health-dashboard.spec.ts:79:3 › Health Dashboard E2E › should display feature status 
 
-    Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/chromium
+    Test timeout of 30000ms exceeded.
+
+    Error: page.waitForLoadState: Test timeout of 30000ms exceeded.
+
+      78 |
+      79 |   test('should display feature status', async ({ page }) => {
+    > 80 |     await page.waitForLoadState('networkidle');
+         |                ^
+      81 |
+      82 |     // Check feature status card
+      83 |     await expect(page.locator('text=Feature Status')).toBeVisible();
+        at /workspaces/MaintAInPro/tests/e2e/admin/health-dashboard.spec.ts:80:16
+
+    Error Context: ../../test-results/playwright-artifacts/admin-health-dashboard-Hea-0017e-ould-display-feature-status-chromium/error-context.md
 ]]>
 </failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../../test-results/playwright-artifacts/admin-health-dashboard-Hea-0017e-ould-display-feature-status-chromium/error-context.md]]
+]]>
+</system-out>
 </testcase>
-<testcase name="Health Dashboard E2E › should display deployment information" classname="admin/health-dashboard.spec.ts" time="0.006">
+<testcase name="Health Dashboard E2E › should display deployment information" classname="admin/health-dashboard.spec.ts" time="30.086">
 <failure message="health-dashboard.spec.ts:97:3 should display deployment information" type="FAILURE">
 <![CDATA[  [chromium] › admin/health-dashboard.spec.ts:97:3 › Health Dashboard E2E › should display deployment information 
 
-    Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/chromium
+    Test timeout of 30000ms exceeded.
+
+    Error: page.waitForLoadState: Test timeout of 30000ms exceeded.
+
+       96 |
+       97 |   test('should display deployment information', async ({ page }) => {
+    >  98 |     await page.waitForLoadState('networkidle');
+          |                ^
+       99 |
+      100 |     // Check deployment information card
+      101 |     await expect(page.locator('text=Deployment Information')).toBeVisible();
+        at /workspaces/MaintAInPro/tests/e2e/admin/health-dashboard.spec.ts:98:16
+
+    Error Context: ../../test-results/playwright-artifacts/admin-health-dashboard-Hea-41f3e-play-deployment-information-chromium/error-context.md
 ]]>
 </failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../../test-results/playwright-artifacts/admin-health-dashboard-Hea-41f3e-play-deployment-information-chromium/error-context.md]]
+]]>
+</system-out>
 </testcase>
-<testcase name="Health Dashboard E2E › should display websocket connections" classname="admin/health-dashboard.spec.ts" time="0.005">
+<testcase name="Health Dashboard E2E › should display websocket connections" classname="admin/health-dashboard.spec.ts" time="30.059">
 <failure message="health-dashboard.spec.ts:107:3 should display websocket connections" type="FAILURE">
 <![CDATA[  [chromium] › admin/health-dashboard.spec.ts:107:3 › Health Dashboard E2E › should display websocket connections 
 
-    Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/chromium
+    Test timeout of 30000ms exceeded.
+
+    Error: page.waitForLoadState: Test timeout of 30000ms exceeded.
+
+      106 |
+      107 |   test('should display websocket connections', async ({ page }) => {
+    > 108 |     await page.waitForLoadState('networkidle');
+          |                ^
+      109 |
+      110 |     // Check websocket connections card
+      111 |     await expect(page.locator('text=Active Connections by Warehouse')).toBeVisible();
+        at /workspaces/MaintAInPro/tests/e2e/admin/health-dashboard.spec.ts:108:16
+
+    Error Context: ../../test-results/playwright-artifacts/admin-health-dashboard-Hea-292d6-splay-websocket-connections-chromium/error-context.md
 ]]>
 </failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../../test-results/playwright-artifacts/admin-health-dashboard-Hea-292d6-splay-websocket-connections-chromium/error-context.md]]
+]]>
+</system-out>
 </testcase>
-<testcase name="Health Dashboard E2E › should refresh data when refresh button is clicked" classname="admin/health-dashboard.spec.ts" time="0.005">
+<testcase name="Health Dashboard E2E › should refresh data when refresh button is clicked" classname="admin/health-dashboard.spec.ts" time="30.072">
 <failure message="health-dashboard.spec.ts:118:3 should refresh data when refresh button is clicked" type="FAILURE">
 <![CDATA[  [chromium] › admin/health-dashboard.spec.ts:118:3 › Health Dashboard E2E › should refresh data when refresh button is clicked 
 
-    Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/chromium
+    Test timeout of 30000ms exceeded.
+
+    Error: page.waitForLoadState: Test timeout of 30000ms exceeded.
+
+      117 |
+      118 |   test('should refresh data when refresh button is clicked', async ({ page }) => {
+    > 119 |     await page.waitForLoadState('networkidle');
+          |                ^
+      120 |
+      121 |     // Track API calls
+      122 |     let apiCallCount = 0;
+        at /workspaces/MaintAInPro/tests/e2e/admin/health-dashboard.spec.ts:119:16
+
+    Error Context: ../../test-results/playwright-artifacts/admin-health-dashboard-Hea-9240f-n-refresh-button-is-clicked-chromium/error-context.md
 ]]>
 </failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../../test-results/playwright-artifacts/admin-health-dashboard-Hea-9240f-n-refresh-button-is-clicked-chromium/error-context.md]]
+]]>
+</system-out>
 </testcase>
-<testcase name="Health Dashboard E2E › should handle error state correctly" classname="admin/health-dashboard.spec.ts" time="0.013">
+<testcase name="Health Dashboard E2E › should handle error state correctly" classname="admin/health-dashboard.spec.ts" time="30.048">
 <failure message="health-dashboard.spec.ts:141:3 should handle error state correctly" type="FAILURE">
 <![CDATA[  [chromium] › admin/health-dashboard.spec.ts:141:3 › Health Dashboard E2E › should handle error state correctly 
 
-    Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/chromium
+    Test timeout of 30000ms exceeded.
+
+    Error: page.waitForLoadState: Test timeout of 30000ms exceeded.
+
+      150 |
+      151 |     await page.goto('/admin');
+    > 152 |     await page.waitForLoadState('networkidle');
+          |                ^
+      153 |
+      154 |     // Check error state
+      155 |     await expect(page.locator('text=Failed to Load Health Data')).toBeVisible();
+        at /workspaces/MaintAInPro/tests/e2e/admin/health-dashboard.spec.ts:152:16
+
+    Error Context: ../../test-results/playwright-artifacts/admin-health-dashboard-Hea-0a19f-andle-error-state-correctly-chromium/error-context.md
 ]]>
 </failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../../test-results/playwright-artifacts/admin-health-dashboard-Hea-0a19f-andle-error-state-correctly-chromium/error-context.md]]
+]]>
+</system-out>
 </testcase>
-<testcase name="Health Dashboard E2E › should handle unhealthy status" classname="admin/health-dashboard.spec.ts" time="0.008">
+<testcase name="Health Dashboard E2E › should handle unhealthy status" classname="admin/health-dashboard.spec.ts" time="30.057">
 <failure message="health-dashboard.spec.ts:160:3 should handle unhealthy status" type="FAILURE">
 <![CDATA[  [chromium] › admin/health-dashboard.spec.ts:160:3 › Health Dashboard E2E › should handle unhealthy status 
 
-    Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/chromium
+    Test timeout of 30000ms exceeded.
+
+    Error: page.waitForLoadState: Test timeout of 30000ms exceeded.
+
+      196 |
+      197 |     await page.goto('/admin');
+    > 198 |     await page.waitForLoadState('networkidle');
+          |                ^
+      199 |
+      200 |     // Should show error state due to 503 status
+      201 |     await expect(page.locator('text=Failed to Load Health Data')).toBeVisible();
+        at /workspaces/MaintAInPro/tests/e2e/admin/health-dashboard.spec.ts:198:16
+
+    Error Context: ../../test-results/playwright-artifacts/admin-health-dashboard-Hea-94704-uld-handle-unhealthy-status-chromium/error-context.md
 ]]>
 </failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../../test-results/playwright-artifacts/admin-health-dashboard-Hea-94704-uld-handle-unhealthy-status-chromium/error-context.md]]
+]]>
+</system-out>
 </testcase>
-<testcase name="Health Dashboard E2E › should auto-refresh every 30 seconds" classname="admin/health-dashboard.spec.ts" time="0">
+<testcase name="Health Dashboard E2E › should auto-refresh every 30 seconds" classname="admin/health-dashboard.spec.ts" time="30.06">
+<failure message="health-dashboard.spec.ts:204:3 should auto-refresh every 30 seconds" type="FAILURE">
+<![CDATA[  [chromium] › admin/health-dashboard.spec.ts:204:3 › Health Dashboard E2E › should auto-refresh every 30 seconds 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: page.waitForLoadState: Test timeout of 30000ms exceeded.
+
+      203 |
+      204 |   test('should auto-refresh every 30 seconds', async ({ page }) => {
+    > 205 |     await page.waitForLoadState('networkidle');
+          |                ^
+      206 |
+      207 |     // Track API calls
+      208 |     const apiCalls: string[] = [];
+        at /workspaces/MaintAInPro/tests/e2e/admin/health-dashboard.spec.ts:205:16
+
+    Error Context: ../../test-results/playwright-artifacts/admin-health-dashboard-Hea-b67d3-to-refresh-every-30-seconds-chromium/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../../test-results/playwright-artifacts/admin-health-dashboard-Hea-b67d3-to-refresh-every-30-seconds-chromium/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Health Dashboard E2E › should display loading state during refresh" classname="admin/health-dashboard.spec.ts" time="30.082">
+<failure message="health-dashboard.spec.ts:223:3 should display loading state during refresh" type="FAILURE">
+<![CDATA[  [chromium] › admin/health-dashboard.spec.ts:223:3 › Health Dashboard E2E › should display loading state during refresh 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: page.waitForLoadState: Test timeout of 30000ms exceeded.
+
+      222 |
+      223 |   test('should display loading state during refresh', async ({ page }) => {
+    > 224 |     await page.waitForLoadState('networkidle');
+          |                ^
+      225 |
+      226 |     // Mock slow API response
+      227 |     await page.route('/api/health', async route => {
+        at /workspaces/MaintAInPro/tests/e2e/admin/health-dashboard.spec.ts:224:16
+
+    Error Context: ../../test-results/playwright-artifacts/admin-health-dashboard-Hea-57d84-oading-state-during-refresh-chromium/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../../test-results/playwright-artifacts/admin-health-dashboard-Hea-57d84-oading-state-during-refresh-chromium/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Health Dashboard E2E › should be accessible" classname="admin/health-dashboard.spec.ts" time="12.123">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Health Dashboard E2E › should display loading state during refresh" classname="admin/health-dashboard.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Health Dashboard E2E › should be accessible" classname="admin/health-dashboard.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Health Dashboard E2E › should navigate between admin tabs" classname="admin/health-dashboard.spec.ts" time="0">
+<testcase name="Health Dashboard E2E › should navigate between admin tabs" classname="admin/health-dashboard.spec.ts" time="11.293">
 <skipped>
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="basic.e2e.test.ts" timestamp="2025-08-25T22:59:12.427Z" hostname="chromium" tests="4" failures="0" skipped="4" time="0" errors="0">
+<testsuite name="basic.e2e.test.ts" timestamp="2025-08-26T00:00:45.252Z" hostname="chromium" tests="4" failures="0" skipped="4" time="0" errors="0">
 <testcase name="Basic E2E Tests › should load the homepage" classname="basic.e2e.test.ts" time="0">
 <properties>
 <property name="skip" value="">
@@ -103,49 +291,49 @@
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="debug-auth-status.spec.ts" timestamp="2025-08-25T22:59:12.427Z" hostname="chromium" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testsuite name="debug-auth-status.spec.ts" timestamp="2025-08-26T00:00:45.252Z" hostname="chromium" tests="1" failures="0" skipped="1" time="0" errors="0">
 <testcase name="debug authentication status and environment" classname="debug-auth-status.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="debug-database-users.spec.ts" timestamp="2025-08-25T22:59:12.427Z" hostname="chromium" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testsuite name="debug-database-users.spec.ts" timestamp="2025-08-26T00:00:45.252Z" hostname="chromium" tests="1" failures="0" skipped="1" time="0" errors="0">
 <testcase name="debug: check database users and authentication flow" classname="debug-database-users.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="debug-login.spec.ts" timestamp="2025-08-25T22:59:12.427Z" hostname="chromium" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testsuite name="debug-login.spec.ts" timestamp="2025-08-26T00:00:45.252Z" hostname="chromium" tests="1" failures="0" skipped="1" time="0" errors="0">
 <testcase name="debug login error handling" classname="debug-login.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="debug-server-env.spec.ts" timestamp="2025-08-25T22:59:12.427Z" hostname="chromium" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testsuite name="debug-server-env.spec.ts" timestamp="2025-08-26T00:00:45.252Z" hostname="chromium" tests="1" failures="0" skipped="1" time="0" errors="0">
 <testcase name="check server environment during test" classname="debug-server-env.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="debug-valid-login.spec.ts" timestamp="2025-08-25T22:59:12.427Z" hostname="chromium" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testsuite name="debug-valid-login.spec.ts" timestamp="2025-08-26T00:00:45.252Z" hostname="chromium" tests="1" failures="0" skipped="1" time="0" errors="0">
 <testcase name="debug valid credentials login" classname="debug-valid-login.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="debug-work-orders.spec.ts" timestamp="2025-08-25T22:59:12.427Z" hostname="chromium" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testsuite name="debug-work-orders.spec.ts" timestamp="2025-08-26T00:00:45.252Z" hostname="chromium" tests="1" failures="0" skipped="1" time="0" errors="0">
 <testcase name="debug work order navigation" classname="debug-work-orders.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="debug-workorders.spec.ts" timestamp="2025-08-25T22:59:12.427Z" hostname="chromium" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testsuite name="debug-workorders.spec.ts" timestamp="2025-08-26T00:00:45.252Z" hostname="chromium" tests="1" failures="0" skipped="1" time="0" errors="0">
 <testcase name="debug work order data" classname="debug-workorders.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="main-flows.spec.ts" timestamp="2025-08-25T22:59:12.427Z" hostname="chromium" tests="19" failures="0" skipped="19" time="0" errors="0">
+<testsuite name="main-flows.spec.ts" timestamp="2025-08-26T00:00:45.252Z" hostname="chromium" tests="19" failures="0" skipped="19" time="0" errors="0">
 <testcase name="Authentication Flow › user can login and logout" classname="main-flows.spec.ts" time="0">
 <skipped>
 </skipped>
@@ -223,7 +411,7 @@
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="sanity.spec.ts" timestamp="2025-08-25T22:59:12.427Z" hostname="chromium" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testsuite name="sanity.spec.ts" timestamp="2025-08-26T00:00:45.252Z" hostname="chromium" tests="1" failures="0" skipped="1" time="0" errors="0">
 <testcase name="sanity: homepage loads and root element is visible" classname="sanity.spec.ts" time="0">
 <skipped>
 </skipped>

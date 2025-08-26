@@ -2,10 +2,10 @@ import { test, expect } from '@playwright/test';
 
 test('debug authentication status and environment', async ({ page }) => {
   // Check if TEST_AUTH_MODE is active by making a direct API call
-  await page.goto('/login');
+  await page.goto('http://localhost:5000/login');
 
   const response = await page.evaluate(async () => {
-    const res = await fetch('/api/auth/login', {
+    const res = await fetch('http://localhost:5000/api/auth/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -32,7 +32,7 @@ test('debug authentication status and environment', async ({ page }) => {
 
   // Test with valid credentials as well
   const validResponse = await page.evaluate(async () => {
-    const res = await fetch('/api/auth/login', {
+    const res = await fetch('http://localhost:5000/api/auth/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

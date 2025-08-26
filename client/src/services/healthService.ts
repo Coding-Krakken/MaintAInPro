@@ -54,8 +54,8 @@ export function useHealthData(enabled = true) {
       const response = await fetch('/api/health', {
         headers: {
           Authorization: 'Bearer demo-token',
-          'x-user-id': localStorage.getItem('userId') || 'default-user-id',
-          'x-warehouse-id': localStorage.getItem('warehouseId') || 'default-warehouse-id',
+          'x-user-id': localStorage.getItem('userId') || '00000000-1111-2222-3333-444444444444',
+          'x-warehouse-id': localStorage.getItem('warehouseId') || '11111111-2222-3333-4444-555555555555',
         },
       });
       if (!response.ok) throw new Error('Failed to fetch health data');
@@ -79,8 +79,8 @@ class HealthServiceImpl implements HealthService {
     const response = await fetch('/api/health', {
       headers: {
         Authorization: 'Bearer demo-token',
-        'x-user-id': localStorage.getItem('userId') || 'default-user-id',
-        'x-warehouse-id': localStorage.getItem('warehouseId') || 'default-warehouse-id',
+  'x-user-id': localStorage.getItem('userId') || '00000000-1111-2222-3333-444444444444',
+  'x-warehouse-id': localStorage.getItem('warehouseId') || '11111111-2222-3333-4444-555555555555',
       },
     });
 
