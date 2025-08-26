@@ -44,10 +44,7 @@ export async function loginAs(page: Page, user: TestUser): Promise<void> {
   // Click login button
   await page.click('[data-testid="login-button"]');
 
-  // Wait for navigation to complete
-  await page.waitForTimeout(2000);
-
-  // Verify we're on the expected page (usually dashboard)
+  // Wait for navigation to complete - use proper URL expectation instead of timeout
   const expectedUrl = user.expectedDashboard || '/dashboard';
   await expect(page).toHaveURL(expectedUrl, { timeout: 10000 });
 }

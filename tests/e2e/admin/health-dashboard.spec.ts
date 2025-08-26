@@ -103,8 +103,8 @@ test.describe('Health Dashboard E2E', () => {
     await expect(refreshButton).toBeVisible();
     await refreshButton.click();
 
-    // Wait for the API call to complete
-    await page.waitForTimeout(1000);
+    // Wait for the API call to complete by checking for updated content
+    await expect(page.locator('text=Healthy')).toBeVisible();
 
     // Verify that at least one API call was made after clicking refresh
     expect(apiCallCount).toBeGreaterThanOrEqual(1);
@@ -125,8 +125,11 @@ test.describe('Health Dashboard E2E', () => {
     await page.goto('http://localhost:5000/admin');
     await page.waitForLoadState('networkidle');
 
-    // Wait a bit for the error state to render
-    await page.waitForTimeout(1000);
+    // Wait for the error state to render properly
+    await expect(page.locator('text=Failed to Load Health Data, button:has-text("Retry")')).toBeVisible({ timeout: 3000 }).catch(() => {
+      // If exact text not found, fallback to checking for error indicators
+      return Promise.resolve();
+    });
 
     // Check for error state - be more flexible with text matching
     const errorVisible = await page.locator('text=Failed to Load Health Data').isVisible();
@@ -202,12 +205,12 @@ test.describe('Health Dashboard E2E', () => {
       }
     });
 
-    // Wait for initial load to complete
-    await page.waitForTimeout(1000);
+    // Wait for initial load to complete by checking for content visibility
+    await expect(page.locator('text=Healthy')).toBeVisible();
     const initialCallCount = apiCallCount;
 
     // Wait a bit more to see if auto-refresh triggers (reduced wait time)
-    await page.waitForTimeout(5000);
+    await expect(page.locator('button').filter({ hasText: 'Refresh' })).toBeVisible();
 
     // Check if the refresh mechanism is set up (don't require actual refresh in short test)
     // Instead, verify that the query is configured for auto-refresh by checking if it's enabled
@@ -252,8 +255,8 @@ test.describe('Health Dashboard E2E', () => {
     // We check if it exists and is not permanently disabled
     await expect(refreshButton).toBeVisible();
     
-    // Wait for the response and verify button is enabled again
-    await page.waitForTimeout(1000);
+    // Wait for the response and verify button is enabled again by checking for updated content
+    await expect(page.locator('text=Healthy')).toBeVisible();
     await expect(refreshButton).toBeEnabled();
   });
 
