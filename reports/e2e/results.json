@@ -17,19 +17,19 @@
         "buildHref": "https://github.com/Coding-Krakken/MaintAInPro/actions/runs/17239783865"
       },
       "gitCommit": {
-        "shortHash": "8ed5693",
-        "hash": "8ed56932040efd7e4d7eb33b183dc423d742e0a9",
-        "subject": "Fix critical test issues: resolve unit test failures and enable Playwright e2e tests",
-        "body": "Fix critical test issues: resolve unit test failures and enable Playwright e2e tests\n\nCo-authored-by: Coding-Krakken <220203495+Coding-Krakken@users.noreply.github.com>\n",
+        "shortHash": "b9b7559",
+        "hash": "b9b75591f2dd0667e7bca0fec474238ddddc77b3",
+        "subject": "Improve code quality: fix 12 lint warnings and remove unsafe type assertions",
+        "body": "Improve code quality: fix 12 lint warnings and remove unsafe type assertions\n\nCo-authored-by: Coding-Krakken <220203495+Coding-Krakken@users.noreply.github.com>\n",
         "author": {
           "name": "copilot-swe-agent[bot]",
           "email": "198982749+Copilot@users.noreply.github.com",
-          "time": 1756215899000
+          "time": 1756216578000
         },
         "committer": {
           "name": "copilot-swe-agent[bot]",
           "email": "198982749+Copilot@users.noreply.github.com",
-          "time": 1756215899000
+          "time": 1756216578000
         },
         "branch": "copilot/fix-5b4695c5-4631-443a-b1c7-eac251747d17"
       },
@@ -73,19 +73,19 @@
             "buildHref": "https://github.com/Coding-Krakken/MaintAInPro/actions/runs/17239783865"
           },
           "gitCommit": {
-            "shortHash": "8ed5693",
-            "hash": "8ed56932040efd7e4d7eb33b183dc423d742e0a9",
-            "subject": "Fix critical test issues: resolve unit test failures and enable Playwright e2e tests",
-            "body": "Fix critical test issues: resolve unit test failures and enable Playwright e2e tests\n\nCo-authored-by: Coding-Krakken <220203495+Coding-Krakken@users.noreply.github.com>\n",
+            "shortHash": "b9b7559",
+            "hash": "b9b75591f2dd0667e7bca0fec474238ddddc77b3",
+            "subject": "Improve code quality: fix 12 lint warnings and remove unsafe type assertions",
+            "body": "Improve code quality: fix 12 lint warnings and remove unsafe type assertions\n\nCo-authored-by: Coding-Krakken <220203495+Coding-Krakken@users.noreply.github.com>\n",
             "author": {
               "name": "copilot-swe-agent[bot]",
               "email": "198982749+Copilot@users.noreply.github.com",
-              "time": 1756215899000
+              "time": 1756216578000
             },
             "committer": {
               "name": "copilot-swe-agent[bot]",
               "email": "198982749+Copilot@users.noreply.github.com",
-              "time": 1756215899000
+              "time": 1756216578000
             },
             "branch": "copilot/fix-5b4695c5-4631-443a-b1c7-eac251747d17"
           },
@@ -110,182 +110,67 @@
   },
   "suites": [
     {
-      "title": "basic.e2e.test.ts",
-      "file": "basic.e2e.test.ts",
+      "title": "debug-valid-login.spec.ts",
+      "file": "debug-valid-login.spec.ts",
       "column": 0,
       "line": 0,
-      "specs": [],
-      "suites": [
+      "specs": [
         {
-          "title": "Basic E2E Tests",
-          "file": "basic.e2e.test.ts",
+          "title": "debug valid credentials login",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3993,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "Login Requests: [\n  {\n    \"url\": \"http://localhost:5000/api/auth/login\",\n    \"method\": \"POST\",\n    \"postData\": \"{\\\"email\\\":\\\"supervisor@company.com\\\",\\\"password\\\":\\\"demo123\\\",\\\"deviceFingerprint\\\":\\\"eyJ1c2VyQWdlbnQiOiJNb3ppbGxhLzUuMCAoV2luZG93cyBOVCAxMC4wOyBXaW42NDsgeDY0KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvMTQwLjAuNzMzOS4xNiBTYWZhcmkvNTM3LjM2IiwibGFuZ3VhZ2UiOiJlbi1VUyIsInBsYXRmb3JtIjoiTGludXggeDg2XzY0Iiwic2NyZWVuUmVzb2x1dGlvbiI6IjEyODB4NzIwIiwidGltZXpvbmUiOiJVVEMiLCJjYW52YXMiOiJkYXRhOmltYWdlL3BuZztiYXNlNjQsaVZCT1J3MEtHZ29BQUFBTlNVaEVVZ0FBQVN3QUFBQ1dDQVlBQUFCa1c3WFNBQUFNVVVsRVFWUjRBZXlhZGNnMFhSbUh4KzVBL094dXhTNHN4TVF1c0F2RlFQM0RSQlFWQ3pGUjdFTEV4TzVBUmNYdXdzTHVMdXpXNy90ZHovZk93NzY3Nys3T3p1N3NuSm01WHM0OTU4eVpNeWV1KzkzZmMySk9XdmxQQWhLUXdFQUlLRmdEY1pUZGxJQUVxbXJmZ25YbVFEOCtkdW5ZcnNQOVUrRXZZcStPUFRQMnV0aFF3dWZTMFFmRURCS1F3QW9DODRMMTFaUkZVTEIvSlAydDJCdGpGNDd0SXZ3MWxWdzM5c1BZcnNQalUrRlRZbmVMdlNqMnBOaFFBbUwxam9hZHZVbktYU3kyY2ZBRkNReWR3THhnTVo2SDVYS1NHTE9oT3lmK2ZleHJzZXZGdGczL1RRVWZpZjB0dHN0dzhsUjJ0dGpuWTRUdjVmS04yRkRDRjlMUm44ZWFoSWVuMEVWakJnbE1qc0N4Qkt1RzhLOGt2aFJqcWNXTTVhVkpueXBHT0djdWI0cjlOdmFqMlBOanA0NFJQcDRMczUxRWgrRUpTWDAwaGdneWU2dVhoQmRJM3J0aWY0eDlObmJMV0IxV3RWR1hJVDU5THYrSkVUNmR5L3lTa0JuSk41Ti8xOWg3WXN3YVg1eTQ3dThwa241MjdEZXhEOGV1RTJQY2QwcE1ZTXpQU3VMN3NUL0UzaDQ3YjR4QTI0em5Qcm41YWV5QnNkdkVhT04raWI4VDR4MzRVVTl1cTZmbDhwTFlPMk1zWVJOVnMwdkNUeVNER2RjYkVuOG85cGxZL2NmaVkwa3pRMzEzNGlFdGVkTmRnd1MySjdCS3NHWnJmMFp1V0JaZUpqSGhiYm44TG5ibDJCMWpDTkJURXhQZW1zdk5ZN1BoVnJsNWMydzJNSXQ3U3pMNDBUSmplRzdTcjQ5ZFBVWlkxUWJQYTJPWmllaHd6N3NzQ1VuWDl2OGt6aCtqanpkTHpCaXVsZmllTWNLOWM3bGQ3TGF4TzhUdUVrT1FlQy9KaXFYbEZaSmduRmRLL09zWXl6ZjZ6NHd4dDlXTmM2SE8xeWJtdmZNbHZueU12QnNtdmxvTU1VdFU4UTRDaEhoZWtZdzU0LzBISmU4UnNldkhYaGg3VFl6MnJwMFk3dkN0QlRWWkJnbk1FUmpwYlZQQitsWEcvL2ZZeFdOWGpWMDI5dURZajJQTUFCNlgrRjR4QWlMRUQ1dlpFL2U4ZzBpd0Y4WjliVmRKZ2gvMW94SXpVK1BIZm8ray94UmIxMGFLYkJST205SlBqaEdZamJFRXV4UTNNY1QwbFltWnZkQ1BweWQ5MWhnQmtiaHZFaytNc2R4azc0MXhYeVQzaUdPaWc0RFF3b0xsTXhtbnllV3hNV1p0WDB6TWJJbDJrandJLzh5VldSWmNrMXdJQ0NJelZ4NThLaGRtbXl4NWt6UklZTG9FbWdvV2hCQ1NVeVp4d1JnL1NINTBMSWN3OXFWWUh2SHNKM25PajcvK2dkNDY5eCtNTVROSmRCZ3VsQlI1OVk4OHR4V2l4dktOZWxhMVFkbE5qTDcvZWVZRitrNzlaSjBuRi9hOEVoMkU3K1pLdnhKVlo4L2xqREdXaW93VFE3alBrTHpaalcrV2c4azZESXdKc2FvekVDWm1YZlY5TFViMS9YeE0rVHFQdnBLdSswdGFrOEFrQ1RRVkxIN1UvSGo1TVRQcllGbENQRy9NUUFBNXV5eThSVElRb2tTTkEvV3VhNk54WldzS3dnQWhtaTMydnlNMzlJTWtTMExTcy9ZS0hod3hsbmxIa2djUk03cUR4SkxMZlBrbHhjeVdnQVJtQ2ZCam5iMWZsbVlQNnl0NStNbllEMklzbVdabkRLZEwzcmxpZFdDL2l2Mld5eVdEcFIvTHhDU1BDdFNEQ0I0M2s4dGUwZzF5ejdOMWJhVFlUZ0o3YUN5NTZzcU9xNnFxSGdzekhmYklXTkxXejRrdmtRdmlsZWlZZ2RrUSsyYjF3M01ud1pJeGtVRUNFbWhMWUpWZ3NaRjl6VlQ4OGhpYnl1d3ZNUlBoUklzVFBUYkoyYWVpSFBzK2owbTVPbkJFajdoeElzYm1NcWVBOWJNNlprOElFZVJkaEF1eGVrRWVzdW5jcEkwVTNVbjRRR3JoSlBRYWlWbnljbmpBa2k2M0ZlUGxSUEdSdVdIakhKRmlVNThUdXZyVUw0OFdBdCt3TVhZMjc5bnI0c1NRMDlDRmdpMHlXSzZlSSsrNXB4VUlobWtST0paZzhaVTRQOVIvQndWSDdNeVNicG8wMzJJbE9nZ2MzZk1jWWZseWNsaENQVFR4Yk9DVTcwYkpPTmJzS3RrSFlzREpIRCs4YnllRFV6Rk8wdGd2eW0zVnBBM0tiV3ZQU3dYc3diMDNNZnRPYkhJanNBaG5zaXFFK0gxSmNGTDN5OFI4SnNHSlliMjNsS3lGd0tjTUNDR2ZKU0RZMkhNV1NyWEw0Qk1NeEpCTiszWTErSllFQmtwZ1hyQTQvV01XTVd1YytQRjkwK3dRK2VIZVBobUlEWjhMSURUelAyQ0VnSG80L1V2Umc0QVFrUGYxZzd1cVlzK0xUdzM0UG90UEpEaHRPL0tvYXRKR1haWTlJZXJseEpJOFBuNnRqLzNmbnd6cVQzUVltUEh3T1FNWnpJYVlOVkVHWXpuTEp4d3NCM25POTJqVXg4a2dNeHMrcGtWZ2VjYVlhWmRUUis1ck8xa1N6RXpabUQ5TDByUkhQVWxXajg0Rk1VNTBHRGdWNWZNRk1saEs4OTBYYWV4bnVkQkd2Vkgvc3R5elhKNnZJOW1HelFuNHhwQUl6QXZXa1BxK3E3N2VQUlZ4TXNuQkFvTEVKeHFJRmN2VlBESklRQUtsRUZDd3F1cFZjUWF6TUQ1TllPWjB5ZHl6bi9hWHhBWUpTS0FnQWdyV2ljNTRTQ0tXWFdkS3pCNFZlM2RKdGdwODlEbDc2dGlxRWwrU2dBUVdDV3dwV0lzVm1pTUJDVWlnS3dJS1ZsZGtyVmNDRXRnNUFRVnI1MGl0VUFJUzZJcUFndFVWMmZIVjY0Z2swRHNCQmF0M0Y5Z0JDVWlnS1FFRnF5a3B5MGxBQXIwVFVMQjZkNEVka0VCNUJFcnRrWUpWcW1mc2x3UWtzRUJBd1ZwQVlvWUVKRkFxQVFXclZNL1lMd2xJWUlHQWdyV0FaUHNNYTVDQUJMb2hvR0IxdzlWYUpTQ0JEZ2dvV0IxQXRVb0pTS0FiQWdwV04xeXRkU29FSE9kZUNTaFllOFZ0WXhLUXdEWUVGS3h0NlBtdUJDU3dWd0lLMWw1eDI1Z0VKTEFOZ1g0RmE1dWUrNjRFSkRBNUFnclc1Rnp1Z0NVd1hBSUsxbkI5Wjg4bE1Ea0NDdGJrWE43WGdHMVhBdHNUVUxDMloyZ05FcERBbmdnb1dIc0NiVE1Ta01EMkJCU3M3UmxhZ3dRa2NEU0J6dTRVck03UVdyRUVKTEJyQWdyV3JvbGFud1FrMEJrQkJhc3p0RllzQVFuc21vQ0N0V3VpMjlkbkRSS1F3QklDQ3RZU01HWkxRQUxsRVZDd3l2T0pQWktBQkpZUVVMQ1dnREZiQXZzZ1lCdWJFVkN3TnVObGFRbElvRWNDQ2xhUDhHMWFBaExZaklDQ3RSa3ZTMHRBQWowU0dMUmc5Y2pOcGlVZ2dSNElLRmc5UUxkSkNVaWdIUUVGcXgwMzM1S0FCSG9nb0dEMUFOMG1XeER3RlFtRWdJSVZDQVlKU0dBWUJCU3NZZmpKWGtwQUFpR2dZQVdDUVFJU0tJbkE4cjRvV012WitFUUNFaWlNZ0lKVm1FUHNqZ1Frc0p5QWdyV2NqVThrSUlIQ0NDaFloVGxrKys1WWd3VEdTMERCR3E5dkhaa0VSa2RBd1JxZFN4MlFCTVpMUU1FYXIyOGQyZmdKVEc2RUN0YmtYTzZBSlRCY0FncldjSDFuenlVd09RSUsxdVJjN29BbE1Gd0NVeGFzNFhyTm5rdGdvZ1FVcklrNjNtRkxZSWdFRkt3aGVzMCtTMkNpQkJTc2lUcCthc04ydk9NZ29HQ053NCtPUWdLVElLQmdUY0xORGxJQzR5Q2dZSTNEajQ1Q0FwTWcwRWl3SmtIQ1FVcEFBc1VUVUxDS2Q1RWRsSUFFYWdJS1ZrM0NXQUlTS0o2QWdsVzhpL2JjUVp1VFFNRUVGS3lDbldQWEpDQ0Jvd2tvV0VmejhFNENFaWlZZ0lKVnNIUHNtZ1M2SlRDODJoV3M0Zm5NSGt0Z3NnUVVyTW02M29GTFlIZ0VGS3poK2N3ZVMyQ3lCQlNzMXE3M1JRbElZTjhFRkt4OUU3YzlDVWlnTlFFRnF6VTZYNVNBQlBaTlFNSGFOM0hiR3lJQisxd0lBUVdyRUVmWURRbElZRDBCQldzOUkwdElRQUtGRUZDd0NuR0UzWkNBQk5ZVDJJZGdyZStGSlNRZ0FRazBJS0JnTllCa0VRbElvQXdDQ2xZWmZyQVhFcEJBQXdJS1ZnTklGbWxPd0pJUzZKS0FndFVsWGV1V2dBUjJTa0RCMmlsT0s1T0FCTG9rb0dCMVNkZTZKVEJtQWoyTVRjSHFBYnBOU2tBQzdRZ29XTzI0K1pZRUpOQURBUVdyQitnMktRRUp0Q09nWUxYanR2MWIxaUFCQ1d4TVFNSGFHSmt2U0VBQ2ZSRlFzUG9pYjdzU2tNREdCQlNzalpINWdnUTJKV0Q1WFJGUXNIWkYwbm9rSUlIT0NTaFluU08yQVFsSVlGY0VGS3hka2JRZUNVaWdjd0lERUt6T0dkaUFCQ1F3RUFJSzFrQWNaVGNsSUlHcVVyRDhYeUFCQ1F5R2dJSTFHRmROb3FNT1VnSXJDU2hZSy9INFVBSVNLSW1BZ2xXU04reUxCQ1N3a29DQ3RSS1BEeVVnZ2E0SXRLbFh3V3BEelhja0lJRmVDQ2hZdldDM1VRbElvQTBCQmFzTk5kK1JnQVI2SWFCZzlZSjkrMGF0UVFKVEpLQmdUZEhyamxrQ0F5V2dZQTNVY1haYkFsTWtvR0JOMGV1T2VWZ0U3TzBoQVFYckVJVUpDVWlnZEFJS1Z1a2VzbjhTa01BaEFRWHJFSVVKQ1VpZ2RBTGpGNnpTUFdEL0pDQ0J4Z1FVck1hb0xDZ0JDZlJOUU1IcTJ3TzJMd0VKTkNhZ1lEVkdaY0h5Q2RqRHNSTlFzTWJ1WWNjbmdSRVJVTEJHNUV5SElvR3hFMUN3eHU1aHh5ZUJFUkdZRWF3UmpjcWhTRUFDb3lTZ1lJM1NyUTVLQXVNa29HQ04wNitPU2dLakpLQmdqZEt0YXdkbEFRa01rb0NDTlVpMzJXa0pUSk9BZ2pWTnZ6dHFDUXlTZ0lJMVNMZlphUWswSnpDbWtncldtTHpwV0NRd2NnSUsxc2dkN1BBa01DWUNDdGFZdk9sWUpEQnlBZ3JXR2dmN1dBSVNLSWVBZ2xXT0wreUpCQ1N3aG9DQ3RRYVFqeVVnZ1hJSUtGamwrTUtlOUUzQTlvc25vR0FWN3lJN0tBRUoxQVFVckpxRXNRUWtVRHdCQmF0NEY5bEJDVWlnSm5BQ0FBQUEvLzgzVEtHTEFBQUFCa2xFUVZRREFGandNRHo5Tm5XSEFBQUFBRWxGVGtTdVFtQ0MifQ==\\\"}\"\n  }\n]\n"
+                    },
+                    {
+                      "text": "Login Responses: [\n  {\n    \"url\": \"http://localhost:5000/api/auth/login\",\n    \"status\": 429,\n    \"statusText\": \"Too Many Requests\",\n    \"body\": \"Too many authentication attempts from this IP, please try again after 15 minutes.\"\n  }\n]\n"
+                    },
+                    {
+                      "text": "Current URL: http://localhost:5000/login\n"
+                    },
+                    {
+                      "text": "Toast error text: ErrorLogin failed\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2025-08-26T14:02:46.039Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "cda15a4525610ba58bd0-941e0605f113223723e8",
+          "file": "debug-valid-login.spec.ts",
           "line": 3,
-          "column": 6,
-          "specs": [
-            {
-              "title": "should load the homepage",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip",
-                      "location": {
-                        "file": "/home/runner/work/MaintAInPro/MaintAInPro/tests/e2e/basic.e2e.test.ts",
-                        "line": 4,
-                        "column": 8
-                      }
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": -1,
-                      "parallelIndex": -1,
-                      "status": "skipped",
-                      "duration": 0,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-08-26T13:55:51.392Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "skipped"
-                }
-              ],
-              "id": "5b9ef2734cb882eb5f5a-4b7943e89f3cfbadd5ca",
-              "file": "basic.e2e.test.ts",
-              "line": 4,
-              "column": 8
-            },
-            {
-              "title": "should verify test framework",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 202,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-08-26T13:55:51.941Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "5b9ef2734cb882eb5f5a-ae3a766561ff74e1ad96",
-              "file": "basic.e2e.test.ts",
-              "line": 16,
-              "column": 3
-            }
-          ]
-        },
-        {
-          "title": "Responsive Design Tests",
-          "file": "basic.e2e.test.ts",
-          "line": 23,
-          "column": 6,
-          "specs": [
-            {
-              "title": "should work on mobile viewport",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 117,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-08-26T13:55:52.307Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "5b9ef2734cb882eb5f5a-db1ca3d45b76d089f1ae",
-              "file": "basic.e2e.test.ts",
-              "line": 24,
-              "column": 3
-            },
-            {
-              "title": "should work on desktop viewport",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 114,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-08-26T13:55:52.441Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "5b9ef2734cb882eb5f5a-ed5ba6972dcb25be5d0a",
-              "file": "basic.e2e.test.ts",
-              "line": 33,
-              "column": 3
-            }
-          ]
+          "column": 1
         }
       ]
     }
   ],
   "errors": [],
   "stats": {
-    "startTime": "2025-08-26T13:55:51.355Z",
-    "duration": 1282.836,
-    "expected": 3,
-    "skipped": 1,
+    "startTime": "2025-08-26T14:02:45.456Z",
+    "duration": 4803.828,
+    "expected": 1,
+    "skipped": 0,
     "unexpected": 0,
     "flaky": 0
   }

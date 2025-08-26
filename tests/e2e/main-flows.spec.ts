@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { testData, testCredentials } from '../helpers/testData';
+import { loginAs, logout, TEST_USERS } from './helpers/auth';
 
 // Test data - use actual emails from database
 const testUsers = {
@@ -84,15 +85,8 @@ test.describe('Authentication Flow', () => {
 
 test.describe('Work Order Management', () => {
   test.beforeEach(async ({ page }) => {
-    // Set up authentication for technician user
-    await page.goto('http://localhost:5000/login');
-    await page.evaluate(() => {
-      window.localStorage.setItem('authToken', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIzY2YyNzlkOC05NzBhLTQxZTEtYjQzMS1mOGUxNzEwNWM2Y2EiLCJlbWFpbCI6InRlY2huaWNpYW5AY29tcGFueS5jb20iLCJyb2xlIjoidGVjaG5pY2lhbiIsIndhcmVob3VzZUlkIjoiMTc3ZWNjMjQtYmI1YS00NzRkLWI3YjAtYzJmMGI0NzBhYTY4IiwidHlwZSI6ImFjY2VzcyIsImlhdCI6MTc1NjE3NDI4OSwiZXhwIjo5OTk5OTk5OTk5LCJhdWQiOiJtYWludGFpbnByby1hcHAiLCJpc3MiOiJtYWludGFpbnByby1jbW1zIn0.test-token');
-      window.localStorage.setItem('userId', '3cf279d8-970a-41e1-b431-f8e17105c6ca');
-      window.localStorage.setItem('warehouseId', '177ecc24-bb5a-474d-b7b0-c2f0b470aa68');
-    });
-    await page.reload();
-    await expect(page).toHaveURL('/dashboard');
+    // Use proper login instead of hardcoded tokens
+    await loginAs(page, TEST_USERS.technician);
   });
 
   test('technician can complete work order flow @smoke', async ({ page }) => {
@@ -142,13 +136,13 @@ test.describe('Work Order Management', () => {
     await page.fill('[data-testid="description-input"]', testWorkOrder.description);
     // Select priority (Radix UI combobox)
     await page.click('[data-testid="priority-select"]');
-    // Wait for combobox overlay to be visible
-  const comboboxOverlay = page.locator('.fixed.inset-0.z-50.bg-black/80');
+    // Wait for combobox overlay to be visible - use a more specific locator
+    const comboboxOverlay = page.locator('[role="listbox"], [role="combobox"][aria-expanded="true"], [data-state="open"]').first();
     await comboboxOverlay.waitFor({ state: 'visible', timeout: 5000 });
     // Select priority
     await page.click(`text=${testWorkOrder.priority}`);
     // Wait for overlay to disappear before next action
-    await comboboxOverlay.waitFor({ state: 'hidden', timeout: 5000 });
+    await page.waitForTimeout(500); // Simple timeout instead of complex selector
 
     // Select equipment
     await page.click('[data-testid="equipment-select"]');
