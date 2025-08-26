@@ -8,7 +8,7 @@ import pkg from 'pg';
 const { Pool } = pkg;
 import * as schema from '../shared/schema';
 
-// Define proper type for database connection but keep compatible with existing usage  
+// Define proper type for database connection but keep compatible with existing usage
 type DrizzleDatabase = ReturnType<typeof drizzle<typeof schema>>;
 // Use any temporarily to maintain compatibility with existing code
 let db: DrizzleDatabase | null | any = null;

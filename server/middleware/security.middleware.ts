@@ -128,23 +128,26 @@ export function advancedSecurityHeaders(req: Request, res: Response, next: NextF
   // Use Helmet.js for comprehensive security headers
   helmet({
     // Content Security Policy - disabled in development for Vite compatibility
-    contentSecurityPolicy: process.env.NODE_ENV === 'development' ? false : {
-      directives: {
-        defaultSrc: ["'self'"],
-        styleSrc: ["'self'", "'unsafe-inline'", 'fonts.googleapis.com'],
-        scriptSrc: ["'self'", `'nonce-${nonce}'`, 'vercel.live'],
-        imgSrc: ["'self'", 'data:', 'https:', '*.vercel-insights.com'],
-        connectSrc: ["'self'", 'vercel.live', '*.vercel-insights.com'],
-        fontSrc: ["'self'", 'fonts.gstatic.com'],
-        objectSrc: ["'none'"],
-        mediaSrc: ["'self'"],
-        frameSrc: ["'none'"],
-        childSrc: ["'none'"],
-        formAction: ["'self'"],
-        upgradeInsecureRequests: process.env.NODE_ENV === 'production' ? [] : null,
-      },
-      reportOnly: false,
-    },
+    contentSecurityPolicy:
+      process.env.NODE_ENV === 'development'
+        ? false
+        : {
+            directives: {
+              defaultSrc: ["'self'"],
+              styleSrc: ["'self'", "'unsafe-inline'", 'fonts.googleapis.com'],
+              scriptSrc: ["'self'", `'nonce-${nonce}'`, 'vercel.live'],
+              imgSrc: ["'self'", 'data:', 'https:', '*.vercel-insights.com'],
+              connectSrc: ["'self'", 'vercel.live', '*.vercel-insights.com'],
+              fontSrc: ["'self'", 'fonts.gstatic.com'],
+              objectSrc: ["'none'"],
+              mediaSrc: ["'self'"],
+              frameSrc: ["'none'"],
+              childSrc: ["'none'"],
+              formAction: ["'self'"],
+              upgradeInsecureRequests: process.env.NODE_ENV === 'production' ? [] : null,
+            },
+            reportOnly: false,
+          },
 
     // Strict Transport Security
     hsts: {

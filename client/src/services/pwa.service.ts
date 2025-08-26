@@ -205,10 +205,14 @@ export class PWAService {
         body: JSON.stringify({
           endpoint: subscription.endpoint,
           p256dhKey: subscription.getKey('p256dh')
-            ? btoa(String.fromCharCode(...new Uint8Array(subscription.getKey('p256dh') as ArrayBuffer)))
+            ? btoa(
+                String.fromCharCode(...new Uint8Array(subscription.getKey('p256dh') as ArrayBuffer))
+              )
             : '',
           authKey: subscription.getKey('auth')
-            ? btoa(String.fromCharCode(...new Uint8Array(subscription.getKey('auth') as ArrayBuffer)))
+            ? btoa(
+                String.fromCharCode(...new Uint8Array(subscription.getKey('auth') as ArrayBuffer))
+              )
             : '',
           userAgent: navigator.userAgent,
         }),

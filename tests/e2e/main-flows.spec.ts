@@ -30,7 +30,7 @@ test.describe('Authentication Flow', () => {
   test('user can login and logout', async ({ page }) => {
     // Use proper authentication helper instead of hardcoded tokens
     await loginAs(page, TEST_USERS.supervisor);
-    
+
     // Verify successful login - we should be on dashboard after loginAs
     await expect(page).toHaveURL('/dashboard');
     // Wait for dashboard stats to be visible
@@ -42,7 +42,9 @@ test.describe('Authentication Flow', () => {
     // Debug: log dashboard HTML and check for overlays
     const dashboardHtml = await page.content();
     console.log('Dashboard HTML after login:', dashboardHtml.slice(0, 1000));
-    const overlays = await page.locator('[aria-hidden="true"], [aria-busy="true"], .modal, .overlay, .loader, .spinner').count();
+    const overlays = await page
+      .locator('[aria-hidden="true"], [aria-busy="true"], .modal, .overlay, .loader, .spinner')
+      .count();
     console.log('Overlay/loader count after login:', overlays);
     // Note: Some overlays may be acceptable (e.g., toast notifications)
     // Main requirement is that user can interact with dashboard elements
@@ -54,7 +56,7 @@ test.describe('Authentication Flow', () => {
   });
 
   test('shows error for invalid credentials', async ({ page }) => {
-  await page.goto('http://localhost:5000/login');
+    await page.goto('http://localhost:5000/login');
 
     await page.fill('[data-testid="email-input"]', testCredentials.invalid.email);
     await page.fill('[data-testid="password-input"]', testCredentials.invalid.password);
@@ -121,7 +123,9 @@ test.describe('Work Order Management', () => {
     // Select priority (Radix UI combobox)
     await page.click('[data-testid="priority-select"]');
     // Wait for combobox overlay to be visible - use a more specific locator
-    const comboboxOverlay = page.locator('[role="listbox"], [role="combobox"][aria-expanded="true"], [data-state="open"]').first();
+    const comboboxOverlay = page
+      .locator('[role="listbox"], [role="combobox"][aria-expanded="true"], [data-state="open"]')
+      .first();
     await comboboxOverlay.waitFor({ state: 'visible', timeout: 5000 });
     // Select priority
     await page.click(`text=${testWorkOrder.priority}`);
@@ -176,7 +180,7 @@ test.describe('Work Order Management', () => {
 test.describe('Equipment Management', () => {
   test.beforeEach(async ({ page }) => {
     // Login as supervisor (has equipment management permissions)
-  await page.goto('http://localhost:5000/login');
+    await page.goto('http://localhost:5000/login');
     await page.fill('[data-testid="email-input"]', 'supervisor@maintainpro.com');
     await page.fill('[data-testid="password-input"]', 'password');
     await page.click('[data-testid="login-button"]');
@@ -193,7 +197,7 @@ test.describe('Equipment Management', () => {
   });
 
   test('can create new equipment', async ({ page }) => {
-  await page.goto('http://localhost:5000/equipment');
+    await page.goto('http://localhost:5000/equipment');
 
     // Click create new equipment
     await page.click('[data-testid="create-equipment-button"]');
@@ -213,7 +217,7 @@ test.describe('Equipment Management', () => {
   });
 
   test('can scan QR code for equipment', async ({ page }) => {
-  await page.goto('http://localhost:5000/equipment');
+    await page.goto('http://localhost:5000/equipment');
 
     // Mock camera permissions
     await page.context().grantPermissions(['camera']);
@@ -231,8 +235,8 @@ test.describe('Equipment Management', () => {
 
 test.describe('Dashboard and Analytics', () => {
   test.beforeEach(async ({ page }) => {
-  await page.goto('http://localhost:5000/login');
-  await page.fill('[data-testid="email-input"]', 'manager@company.com');
+    await page.goto('http://localhost:5000/login');
+    await page.fill('[data-testid="email-input"]', 'manager@company.com');
     await page.fill('[data-testid="password-input"]', 'password');
     await page.click('[data-testid="login-button"]');
     await expect(page).toHaveURL('/dashboard');
@@ -289,12 +293,12 @@ test.describe('Mobile Responsiveness', () => {
   });
 
   test('work order cards are touch-friendly', async ({ page }) => {
-  await page.goto('http://localhost:5000/login');
+    await page.goto('http://localhost:5000/login');
     await page.fill('[data-testid="email-input"]', testUsers.technician.email);
     await page.fill('[data-testid="password-input"]', testUsers.technician.password);
     await page.click('[data-testid="login-button"]');
 
-  await page.goto('http://localhost:5000/work-orders');
+    await page.goto('http://localhost:5000/work-orders');
 
     // Verify work order cards are adequately sized for touch
     const workOrderCard = page.locator('[data-testid="work-order-card"]').first();
@@ -321,12 +325,12 @@ test.describe('Offline Functionality', () => {
   });
 
   test('can complete work orders offline', async ({ page }) => {
-  await page.goto('http://localhost:5000/login');
+    await page.goto('http://localhost:5000/login');
     await page.fill('[data-testid="email-input"]', testUsers.technician.email);
     await page.fill('[data-testid="password-input"]', testUsers.technician.password);
     await page.click('[data-testid="login-button"]');
 
-  await page.goto('http://localhost:5000/work-orders');
+    await page.goto('http://localhost:5000/work-orders');
 
     // Go offline
     await page.context().setOffline(true);

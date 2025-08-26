@@ -31,7 +31,7 @@ export default function Auth() {
 
     try {
       const result = await login(email, password);
-      
+
       if (result.success) {
         toast({
           title: 'Success',

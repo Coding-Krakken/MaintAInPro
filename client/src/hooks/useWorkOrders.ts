@@ -25,7 +25,8 @@ export function useWorkOrders(filters?: WorkOrderFilters) {
         headers: {
           Authorization: 'Bearer demo-token',
           'x-user-id': localStorage.getItem('userId') || '00000000-0000-0000-0000-000000000003',
-          'x-warehouse-id': localStorage.getItem('warehouseId') || '00000000-0000-0000-0000-000000000001',
+          'x-warehouse-id':
+            localStorage.getItem('warehouseId') || '00000000-0000-0000-0000-000000000001',
         },
       });
       if (!response.ok) throw new Error('Failed to fetch work orders');
@@ -42,7 +43,8 @@ export function useWorkOrder(id: string) {
         headers: {
           Authorization: 'Bearer demo-token',
           'x-user-id': localStorage.getItem('userId') || '00000000-0000-0000-0000-000000000003',
-          'x-warehouse-id': localStorage.getItem('warehouseId') || '00000000-0000-0000-0000-000000000001',
+          'x-warehouse-id':
+            localStorage.getItem('warehouseId') || '00000000-0000-0000-0000-000000000001',
         },
       });
       if (!response.ok) throw new Error('Failed to fetch work order');
@@ -60,7 +62,8 @@ export function useAssignedWorkOrders(userId: string) {
         headers: {
           Authorization: 'Bearer demo-token',
           'x-user-id': localStorage.getItem('userId') || '00000000-0000-0000-0000-000000000003',
-          'x-warehouse-id': localStorage.getItem('warehouseId') || '00000000-0000-0000-0000-000000000001',
+          'x-warehouse-id':
+            localStorage.getItem('warehouseId') || '00000000-0000-0000-0000-000000000001',
         },
       });
       if (!response.ok) throw new Error('Failed to fetch assigned work orders');
@@ -82,7 +85,8 @@ export function useCreateWorkOrder() {
           'Content-Type': 'application/json',
           Authorization: 'Bearer demo-token',
           'x-user-id': localStorage.getItem('userId') || '00000000-0000-0000-0000-000000000003',
-          'x-warehouse-id': localStorage.getItem('warehouseId') || '00000000-0000-0000-0000-000000000001',
+          'x-warehouse-id':
+            localStorage.getItem('warehouseId') || '00000000-0000-0000-0000-000000000001',
         },
         body: JSON.stringify(workOrder),
       });
@@ -106,7 +110,8 @@ export function useUpdateWorkOrder() {
           'Content-Type': 'application/json',
           Authorization: 'Bearer demo-token',
           'x-user-id': localStorage.getItem('userId') || '00000000-0000-0000-0000-000000000003',
-          'x-warehouse-id': localStorage.getItem('warehouseId') || '00000000-0000-0000-0000-000000000001',
+          'x-warehouse-id':
+            localStorage.getItem('warehouseId') || '00000000-0000-0000-0000-000000000001',
         },
         body: JSON.stringify(data),
       });
@@ -128,7 +133,8 @@ export function useWorkOrderChecklist(workOrderId: string) {
         headers: {
           Authorization: 'Bearer demo-token',
           'x-user-id': localStorage.getItem('userId') || '00000000-0000-0000-0000-000000000003',
-          'x-warehouse-id': localStorage.getItem('warehouseId') || '00000000-0000-0000-0000-000000000001',
+          'x-warehouse-id':
+            localStorage.getItem('warehouseId') || '00000000-0000-0000-0000-000000000001',
         },
       });
       if (!response.ok) throw new Error('Failed to fetch checklist');

@@ -131,7 +131,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         headers: {
           Authorization: `Bearer ${token}`,
           'x-user-id': localStorage.getItem('userId') || '00000000-0000-0000-0000-000000000003',
-          'x-warehouse-id': localStorage.getItem('warehouseId') || '00000000-0000-0000-0000-000000000001',
+          'x-warehouse-id':
+            localStorage.getItem('warehouseId') || '00000000-0000-0000-0000-000000000001',
         },
         signal: controller.signal,
       });

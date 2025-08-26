@@ -15,8 +15,8 @@ test('debug work order navigation', async ({ page }) => {
   console.log('Nav work orders visible:', isNavVisible);
 
   if (isNavVisible) {
-  await navElement.click();
-  await page.waitForURL('http://localhost:5000/work-orders');
+    await navElement.click();
+    await page.waitForURL('http://localhost:5000/work-orders');
     console.log('Successfully navigated to work orders');
 
     // Wait for work orders to load

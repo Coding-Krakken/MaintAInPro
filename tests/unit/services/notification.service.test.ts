@@ -1,7 +1,12 @@
 let _testUserId: string;
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { afterAll } from 'vitest';
-import { profiles, notifications, notificationPreferences, pushSubscriptions } from '../../../shared/schema';
+import {
+  profiles,
+  notifications,
+  notificationPreferences,
+  pushSubscriptions,
+} from '../../../shared/schema';
 import { eq } from 'drizzle-orm';
 import { db } from '../../../server/db';
 import { notificationService } from '../../../server/services/notification.service';
@@ -16,26 +21,29 @@ describe('NotificationService', () => {
   beforeEach(async () => {
     testUserId = '11111111-1111-1111-1111-111111111111';
     // Insert test profile if not exists
-      await db.insert(profiles).values({
+    await db
+      .insert(profiles)
+      .values({
         id: testUserId,
         email: 'testuser@example.com',
         firstName: 'Test',
         lastName: 'User',
         role: 'technician',
-        active: true
-      }).onConflictDoNothing();
+        active: true,
+      })
+      .onConflictDoNothing();
     // Clean up notification data before each test
     await db.delete(notifications).where(eq(notifications.userId, testUserId));
     await db.delete(notificationPreferences).where(eq(notificationPreferences.userId, testUserId));
     await db.delete(pushSubscriptions).where(eq(pushSubscriptions.userId, testUserId));
   });
   afterAll(async () => {
-  // Clean up notifications and preferences for test user
-  await db.delete(notifications).where(eq(notifications.userId, testUserId));
-  await db.delete(notificationPreferences).where(eq(notificationPreferences.userId, testUserId));
-  await db.delete(pushSubscriptions).where(eq(pushSubscriptions.userId, testUserId));
-  // Clean up test profile
-  await db.delete(profiles).where(eq(profiles.id, testUserId));
+    // Clean up notifications and preferences for test user
+    await db.delete(notifications).where(eq(notifications.userId, testUserId));
+    await db.delete(notificationPreferences).where(eq(notificationPreferences.userId, testUserId));
+    await db.delete(pushSubscriptions).where(eq(pushSubscriptions.userId, testUserId));
+    // Clean up test profile
+    await db.delete(profiles).where(eq(profiles.id, testUserId));
   });
   describe('sendNotification', () => {
     it('should send notification through storage layer', async () => {
@@ -45,50 +53,55 @@ describe('NotificationService', () => {
         message: 'This is a test message',
         type: 'wo_assigned' as const,
         read: false,
-  priority: 'medium' as const,
+        priority: 'medium' as const,
       };
 
       await expect(notificationService.sendNotification(notificationData)).resolves.not.toThrow();
     });
   });
-// ...existing code...
+  // ...existing code...
 
-describe('Notification Storage Integration', () => {
-let testUserId: string;
-beforeEach(async () => {
-  testUserId = '11111111-1111-1111-1111-111111111111';
-  // Insert test profile if not exists
-  await db.insert(profiles).values({
-    id: testUserId,
-    email: 'testuser@example.com',
-    firstName: 'Test',
-    lastName: 'User',
-    role: 'technician',
-    active: true
-  }).onConflictDoNothing();
-});
-
-afterAll(async () => {
-  // Clean up notifications and preferences for test user
-  await db.delete(notifications).where(eq(notifications.userId, testUserId));
-  await db.delete(notificationPreferences).where(eq(notificationPreferences.userId, testUserId));
-  await db.delete(pushSubscriptions).where(eq(pushSubscriptions.userId, testUserId));
-  // Clean up test profile
-  await db.delete(profiles).where(eq(profiles.id, testUserId));
-});
-  it('should create and retrieve a notification for the test user', async () => {
-    const notification = await storage.createNotification({
-      userId: testUserId,
-      title: 'Integration Notification',
-      message: 'Integration test message',
-      type: 'wo_assigned',
-      read: false,
+  describe('Notification Storage Integration', () => {
+    let testUserId: string;
+    beforeEach(async () => {
+      testUserId = '11111111-1111-1111-1111-111111111111';
+      // Insert test profile if not exists
+      await db
+        .insert(profiles)
+        .values({
+          id: testUserId,
+          email: 'testuser@example.com',
+          firstName: 'Test',
+          lastName: 'User',
+          role: 'technician',
+          active: true,
+        })
+        .onConflictDoNothing();
     });
-    expect(notification.id).toBeDefined();
-    const notificationsList = await storage.getNotifications(testUserId);
-    expect(notificationsList.length).toBe(1);
-    expect(notificationsList[0].id).toBe(notification.id);
-  });
+
+    afterAll(async () => {
+      // Clean up notifications and preferences for test user
+      await db.delete(notifications).where(eq(notifications.userId, testUserId));
+      await db
+        .delete(notificationPreferences)
+        .where(eq(notificationPreferences.userId, testUserId));
+      await db.delete(pushSubscriptions).where(eq(pushSubscriptions.userId, testUserId));
+      // Clean up test profile
+      await db.delete(profiles).where(eq(profiles.id, testUserId));
+    });
+    it('should create and retrieve a notification for the test user', async () => {
+      const notification = await storage.createNotification({
+        userId: testUserId,
+        title: 'Integration Notification',
+        message: 'Integration test message',
+        type: 'wo_assigned',
+        read: false,
+      });
+      expect(notification.id).toBeDefined();
+      const notificationsList = await storage.getNotifications(testUserId);
+      expect(notificationsList.length).toBe(1);
+      expect(notificationsList[0].id).toBe(notification.id);
+    });
   });
 
   describe('createNotification', () => {
@@ -128,7 +141,7 @@ afterAll(async () => {
     });
 
     it('should handle empty notifications list', async () => {
-  const notifications = await storage.getNotifications('22222222-2222-2222-2222-222222222222');
+      const notifications = await storage.getNotifications('22222222-2222-2222-2222-222222222222');
       expect(Array.isArray(notifications)).toBe(true);
       expect(notifications.length).toBe(0);
     });
@@ -154,7 +167,9 @@ afterAll(async () => {
 
     it('should handle marking non-existent notification', async () => {
       // The storage layer should handle this gracefully without throwing
-  await expect(storage.markNotificationRead('33333333-3333-3333-3333-333333333333')).resolves.not.toThrow();
+      await expect(
+        storage.markNotificationRead('33333333-3333-3333-3333-333333333333')
+      ).resolves.not.toThrow();
     });
   });
 });

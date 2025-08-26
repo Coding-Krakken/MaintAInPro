@@ -12,20 +12,20 @@ export const TEST_USERS = {
     email: 'supervisor@company.com',
     password: 'demo123',
     role: 'supervisor',
-    expectedDashboard: '/dashboard'
+    expectedDashboard: '/dashboard',
   },
   technician: {
-    email: 'technician@company.com', 
+    email: 'technician@company.com',
     password: 'demo123',
     role: 'technician',
-    expectedDashboard: '/dashboard'
+    expectedDashboard: '/dashboard',
   },
   admin: {
     email: 'admin@company.com',
-    password: 'demo123', 
+    password: 'demo123',
     role: 'admin',
-    expectedDashboard: '/dashboard'
-  }
+    expectedDashboard: '/dashboard',
+  },
 } as const;
 
 /**
@@ -33,20 +33,20 @@ export const TEST_USERS = {
  */
 export async function loginAs(page: Page, user: TestUser): Promise<void> {
   await page.goto('http://localhost:5000/login');
-  
+
   // Wait for login form to be visible
   await page.waitForLoadState('networkidle');
-  
+
   // Fill in credentials
   await page.fill('[data-testid="email-input"]', user.email);
   await page.fill('[data-testid="password-input"]', user.password);
-  
+
   // Click login button
   await page.click('[data-testid="login-button"]');
-  
+
   // Wait for navigation to complete
   await page.waitForTimeout(2000);
-  
+
   // Verify we're on the expected page (usually dashboard)
   const expectedUrl = user.expectedDashboard || '/dashboard';
   await expect(page).toHaveURL(expectedUrl, { timeout: 10000 });
@@ -67,8 +67,8 @@ export async function logout(page: Page): Promise<void> {
     });
     await page.goto('http://localhost:5000/login');
   }
-  
-  // Verify we're back to login page  
+
+  // Verify we're back to login page
   await expect(page).toHaveURL('/login', { timeout: 5000 });
 }
 

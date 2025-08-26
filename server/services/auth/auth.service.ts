@@ -148,7 +148,7 @@ export class AuthService {
 
       // Use database storage instead of mock storage
       const { storage } = await import('../../storage');
-      
+
       // Find user by email using database
       const user = await storage.getProfileByEmail(email);
       if (!user) {

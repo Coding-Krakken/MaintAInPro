@@ -12,8 +12,8 @@ export const getUsers = async (req: Request, res: Response) => {
         firstName: u.firstName,
         lastName: u.lastName,
         role: u.role,
-        active: u.active
-      }))
+        active: u.active,
+      })),
     });
   } catch (error) {
     console.error('Debug users error:', error);
@@ -25,7 +25,7 @@ export const checkUser = async (req: Request, res: Response) => {
   try {
     const { email } = req.params;
     const user = await storage.getProfileByEmail(email);
-    
+
     if (user) {
       const credentials = await storage.getUserCredentials(user.id);
       res.json({
@@ -36,14 +36,14 @@ export const checkUser = async (req: Request, res: Response) => {
           firstName: user.firstName,
           lastName: user.lastName,
           role: user.role,
-          active: user.active
+          active: user.active,
         },
-        hasCredentials: !!credentials
+        hasCredentials: !!credentials,
       });
     } else {
       res.json({
         found: false,
-        email
+        email,
       });
     }
   } catch (error) {

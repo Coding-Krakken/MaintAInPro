@@ -119,7 +119,10 @@ export function createAdvancedRateLimit(
       }
 
       // Skip for admins if configured
-      if (options.skipAdmins && (req as Request & { user?: { role?: string } }).user?.role === 'admin') {
+      if (
+        options.skipAdmins &&
+        (req as Request & { user?: { role?: string } }).user?.role === 'admin'
+      ) {
         return true;
       }
 
