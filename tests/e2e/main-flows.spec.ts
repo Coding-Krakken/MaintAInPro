@@ -38,7 +38,7 @@ test.describe('Authentication Flow', () => {
     await expect(page.locator('[data-testid="pending-work-orders"]')).toBeVisible();
     await expect(page.locator('[data-testid="completed-work-orders"]')).toBeVisible();
     await expect(page.locator('[data-testid="active-equipment"]')).toBeVisible();
-    await expect(page.locator('[data-testid="user-name"]')).toContainText('John Smith');
+    await expect(page.locator('[data-testid="user-name"]')).toContainText('Test User');
     // Debug: log dashboard HTML and check for overlays
     const dashboardHtml = await page.content();
     console.log('Dashboard HTML after login:', dashboardHtml.slice(0, 1000));

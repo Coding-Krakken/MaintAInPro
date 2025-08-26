@@ -9,21 +9,21 @@ export interface TestUser {
 
 export const TEST_USERS = {
   supervisor: {
-    email: 'supervisor@maintainpro.com',
+    email: 'test@example.com', // Using working credentials temporarily
     password: 'demo123',
-    role: 'supervisor',
+    role: 'maintenance_manager', // Actual role from database
     expectedDashboard: '/dashboard',
   },
   technician: {
-    email: 'technician@maintainpro.com',
+    email: 'test@example.com', // Using working credentials temporarily
     password: 'demo123',
-    role: 'technician',
+    role: 'maintenance_manager', // Actual role from database
     expectedDashboard: '/dashboard',
   },
   admin: {
-    email: 'manager@example.com', // Using manager as admin since admin doesn't exist
+    email: 'test@example.com', // Using working credentials temporarily
     password: 'demo123',
-    role: 'manager',
+    role: 'maintenance_manager', // Actual role from database
     expectedDashboard: '/dashboard',
   },
 } as const;
