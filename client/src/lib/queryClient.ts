@@ -13,8 +13,8 @@ export async function apiRequest(
   data?: unknown | undefined
 ): Promise<Response> {
   const headers: Record<string, string> = {
-    'x-user-id': localStorage.getItem('userId') || 'default-user-id',
-    'x-warehouse-id': localStorage.getItem('warehouseId') || 'default-warehouse-id',
+    'x-user-id': localStorage.getItem('userId') || '00000000-0000-0000-0000-000000000003',
+    'x-warehouse-id': localStorage.getItem('warehouseId') || '00000000-0000-0000-0000-000000000001',
   };
 
   if (data) {

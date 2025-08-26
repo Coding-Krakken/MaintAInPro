@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test('debug login error handling', async ({ page }) => {
-  await page.goto('/login');
+  await page.goto('http://localhost:5000/login');
 
   // Fill invalid credentials
   await page.fill('[data-testid="email-input"]', 'invalid@example.com');

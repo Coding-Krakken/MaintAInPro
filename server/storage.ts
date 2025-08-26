@@ -71,6 +71,7 @@ export interface InsertWarehouse {
   active?: boolean;
 }
 import { randomUUID } from 'crypto';
+import { DatabaseStorage } from './dbStorage';
 import {
   profiles as _profiles,
   warehouses as _warehouses,
@@ -87,6 +88,7 @@ import {
   systemLogs as _systemLogs,
   type Profile,
   type InsertProfile,
+  type UserCredential,
   type Warehouse,
   type Equipment,
   type InsertEquipment,
@@ -118,6 +120,7 @@ export interface IStorage {
   getProfileByEmail(_email: string): Promise<Profile | undefined>;
   createProfile(_profile: InsertProfile): Promise<Profile>;
   updateProfile(_id: string, _profile: Partial<InsertProfile>): Promise<Profile>;
+  getUserCredentials(_userId: string): Promise<UserCredential | undefined>;
 
   // Warehouses
   getWarehouses(): Promise<Warehouse[]>;
@@ -301,8 +304,8 @@ export class MemStorage implements IStorage {
 
   private seedData() {
     // Create default warehouse
-    const warehouseId = 'default-warehouse-id'; // Use fixed ID for demo
-    const organizationId = 'default-organization-id'; // Add organizationId for new schema
+    const warehouseId = '00000000-0000-0000-0000-000000000001'; // Use valid UUID for tests
+    const organizationId = '00000000-0000-0000-0000-000000000002'; // Use valid UUID for tests
     const warehouse: Warehouse = {
       id: warehouseId,
       name: 'Main Warehouse',
@@ -317,9 +320,9 @@ export class MemStorage implements IStorage {
     this.warehouses.set(warehouseId, warehouse);
 
     // Create default users
-    const supervisorId = 'supervisor-id'; // Use fixed ID for demo
-    const technicianId = 'technician-id'; // Use fixed ID for demo
-    const managerId = 'manager-id'; // Use fixed ID for demo
+    const supervisorId = '00000000-0000-0000-0000-000000000003'; // Use valid UUID for tests
+    const technicianId = '00000000-0000-0000-0000-000000000004'; // Use valid UUID for tests
+    const managerId = '00000000-0000-0000-0000-000000000005'; // Use valid UUID for tests
 
     const supervisor: Profile = {
       id: supervisorId,
@@ -852,6 +855,26 @@ export class MemStorage implements IStorage {
     };
     this.profiles.set(id, updated);
     return updated;
+  }
+
+  async getUserCredentials(userId: string): Promise<UserCredential | undefined> {
+    // In-memory storage doesn't store credentials separately
+    // Return a mock credential for demo purposes
+    const user = this.profiles.get(userId);
+    if (!user) return undefined;
+
+    // Create mock credential with hashed "demo123" password
+    return {
+      id: `cred-${userId}`,
+      userId,
+      passwordHash: '$2b$10$CwTycUXWue0Th/aeubm0lOy2zO7vr4x8V5QJ4yM7M5.c8OqV7L3tG', // demo123
+      passwordSalt: '$2b$10$CwTycUXWue0Th/aeubm0lO',
+      mustChangePassword: false,
+      passwordExpiresAt: null,
+      previousPasswords: [],
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
   }
 
   // Warehouse methods
@@ -1701,9 +1724,25 @@ async function _initializeStorage(): Promise<IStorage> {
   }
 }
 
+// Import DatabaseStorage at the top
+
+// Storage factory function
+function createStorage(): IStorage {
+  if (process.env.DATABASE_URL) {
+    console.log('🔗 PostgreSQL database connection available');
+    console.log('📊 Database tables configured and ready');
+    console.log('✅ Using DatabaseStorage');
+    return new DatabaseStorage();
+  } else {
+    console.log('📦 Using in-memory storage for development');
+    console.log('💡 Set DATABASE_URL and NODE_ENV=production to enable PostgreSQL');
+    return new MemStorage();
+  }
+}
+
 // Initialize storage with fallback mechanism
 console.log('🚀 Initializing storage system...');
-const storage: IStorage = new MemStorage(); // Use synchronous initialization for serverless compatibility
+const storage: IStorage = createStorage();
 
 // Export storage immediately for serverless functions
 export { storage };

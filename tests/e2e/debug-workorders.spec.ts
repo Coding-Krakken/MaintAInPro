@@ -1,21 +1,21 @@
 import { test } from '@playwright/test';
 
 test('debug work order data', async ({ page }) => {
-  await page.goto('/login');
+  await page.goto('http://localhost:5000/login');
 
   // Use valid credentials
-  await page.fill('[data-testid="email-input"]', 'technician@maintainpro.com');
+  await page.fill('[data-testid="email-input"]', 'technician@company.com');
   await page.fill('[data-testid="password-input"]', 'demo123');
 
   // Click login
   await page.click('[data-testid="login-button"]');
 
   // Wait for login to complete
-  await page.waitForURL('/dashboard');
+  await page.waitForURL('http://localhost:5000/dashboard');
 
   // Navigate to work orders
   await page.click('[data-testid="nav-work-orders"]');
-  await page.waitForURL('/work-orders');
+  await page.waitForURL('http://localhost:5000/work-orders');
 
   // Wait for work orders to load
   await page.waitForTimeout(2000);

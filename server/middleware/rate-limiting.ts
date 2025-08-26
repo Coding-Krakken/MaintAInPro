@@ -119,7 +119,10 @@ export function createAdvancedRateLimit(
       }
 
       // Skip for admins if configured
-      if (options.skipAdmins && (req as any).user?.role === 'admin') {
+      if (
+        options.skipAdmins &&
+        (req as Request & { user?: { role?: string } }).user?.role === 'admin'
+      ) {
         return true;
       }
 
@@ -128,7 +131,7 @@ export function createAdvancedRateLimit(
 
     // Enhanced error handler
     handler: (req: Request, res: Response) => {
-      const userInfo = (req as any).user;
+      const userInfo = (req as Request & { user?: { id?: string; email?: string } }).user;
 
       // Log suspicious activity
       if (profile === 'auth' || profile === 'passwordReset') {

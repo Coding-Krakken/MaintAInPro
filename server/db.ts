@@ -8,9 +8,10 @@ import pkg from 'pg';
 const { Pool } = pkg;
 import * as schema from '../shared/schema';
 
-// Check if DATABASE_URL is set for production PostgreSQL usage
-// TODO: Import correct Database type from actual DB library or define locally if needed
-let db: any = null; // TODO: Replace 'any' with actual database type
+// Define proper type for database connection but keep compatible with existing usage
+type DrizzleDatabase = ReturnType<typeof drizzle<typeof schema>>;
+// Use any temporarily to maintain compatibility with existing code
+let db: DrizzleDatabase | null | any = null;
 
 if (!process.env.DATABASE_URL) {
   console.log('DATABASE_URL not set - using in-memory storage for development');

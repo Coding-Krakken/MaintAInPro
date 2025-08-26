@@ -24,7 +24,7 @@ export const testCredentials = {
     password: 'wrongpassword',
   },
   valid: {
-    email: 'test@example.com',
-    password: 'PlaywrightTest123!',
+    email: 'technician@company.com',
+    password: 'demo123',
   },
 };

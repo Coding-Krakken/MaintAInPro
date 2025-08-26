@@ -1,23 +1,37 @@
 #!/bin/bash
 # Playwright E2E Startup Script: Starts both frontend and backend, with error handling
 
+
 set -e
 
-
-FRONTEND_PORT=4173
-BACKEND_PORT=5000
-FRONTEND_START_CMD="npm run preview --prefix client"
-BACKEND_START_CMD="npm run start"
-
-
-echo "� Building frontend and backend for E2E tests..."
-npm run build
+echo "🔄 Seeding database for E2E tests..."
+npm run seed
 if [ $? -ne 0 ]; then
-  echo "❌ Build failed. Aborting E2E tests."
+  echo "❌ Database seeding failed. Aborting E2E tests."
   exit 1
 fi
 
+FRONTEND_PORT=4173
+BACKEND_PORT=5000
+FRONTEND_START_CMD="vite --port 4173"
+BACKEND_START_CMD="npm run dev"
+# FRONTEND_START_CMD="npm run preview --prefix client"
+# BACKEND_START_CMD="npm run start"
+
+
+# echo "� Building frontend and backend for E2E tests..."
+# npm run build
+# if [ $? -ne 0 ]; then
+#   echo "❌ Build failed. Aborting E2E tests."
+#   exit 1
+# fi
+
 echo "🚀 Starting backend and serving built frontend..."
+# Set environment variables for proper E2E testing
+export TEST_AUTH_MODE=disabled
+export DISABLE_RATE_LIMITING=true
+export TEST=e2e
+export NODE_ENV=development
 PLAYWRIGHT=true $BACKEND_START_CMD &
 SERVER_PID=$!
 

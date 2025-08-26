@@ -38,7 +38,7 @@ export default function WorkOrderList() {
             <div className='flex items-center space-x-3'>
               {/* Status Filter */}
               <Select onValueChange={handleStatusFilter}>
-                <SelectTrigger className='w-32'>
+                <SelectTrigger className='w-32' data-testid='status-filter'>
                   <SelectValue placeholder='All Status' />
                 </SelectTrigger>
                 <SelectContent>
@@ -65,7 +65,12 @@ export default function WorkOrderList() {
               </Select>
 
               {/* Create Button */}
-              <Button onClick={() => setShowCreateModal(true)}>+ New Work Order</Button>
+              <Button
+                onClick={() => setShowCreateModal(true)}
+                data-testid='create-work-order-button'
+              >
+                + New Work Order
+              </Button>
             </div>
           </div>
         </CardHeader>

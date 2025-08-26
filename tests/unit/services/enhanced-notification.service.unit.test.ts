@@ -1,16 +1,45 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { afterAll } from 'vitest';
+import { profiles } from '../../../shared/schema';
+import { eq } from 'drizzle-orm';
+import { db } from '../../../server/db';
+import { notifications, notificationPreferences, pushSubscriptions } from '../../../shared/schema';
 import { storage } from '../../../server/storage';
 
 // Mock console methods
 vi.spyOn(console, 'log').mockImplementation(() => {});
 vi.spyOn(console, 'error').mockImplementation(() => {});
 
+let testUserId: string;
 describe('Enhanced Notification Storage', () => {
-  let testUserId: string;
-
   beforeEach(async () => {
-    // Use a unique user ID for each test to avoid interference
-    testUserId = `test-user-${Date.now()}-${Math.random().toString(36).substring(7)}`;
+    testUserId = '11111111-1111-1111-1111-111111111111';
+    // Insert test profile if not exists
+    // Clean up notification data before each test
+    await db.delete(notifications).where(eq(notifications.userId, testUserId));
+    await db.delete(notificationPreferences).where(eq(notificationPreferences.userId, testUserId));
+    await db.delete(pushSubscriptions).where(eq(pushSubscriptions.userId, testUserId));
+    // Insert test profile with all required fields
+    await db
+      .insert(profiles)
+      .values({
+        id: testUserId,
+        email: 'testuser@example.com',
+        firstName: 'Test',
+        lastName: 'User',
+        role: 'technician',
+        active: true,
+      })
+      .onConflictDoNothing();
+  });
+
+  afterAll(async () => {
+    // Clean up notifications and preferences for test user
+    await db.delete(notifications).where(eq(notifications.userId, testUserId));
+    await db.delete(notificationPreferences).where(eq(notificationPreferences.userId, testUserId));
+    await db.delete(pushSubscriptions).where(eq(pushSubscriptions.userId, testUserId));
+    // Clean up test profile
+    await db.delete(profiles).where(eq(profiles.id, testUserId));
   });
 
   describe('Notification Preferences', () => {
@@ -153,6 +182,19 @@ describe('Enhanced Notification Storage', () => {
     });
 
     it('should retrieve push subscriptions for a specific user', async () => {
+      // Ensure test profile exists for FK constraint
+      await db
+        .insert(profiles)
+        .values({
+          id: testUserId,
+          email: 'testuser@example.com',
+          firstName: 'Test',
+          lastName: 'User',
+          role: 'technician',
+          active: true,
+        })
+        .onConflictDoNothing();
+
       // Create subscriptions for the test user
       await storage.createPushSubscription({
         userId: testUserId,
@@ -305,4 +347,5 @@ describe('Enhanced Notification Storage', () => {
       expect(notification.expiresAt).toEqual(expiresAt);
     });
   });
+  // End of tests
 });

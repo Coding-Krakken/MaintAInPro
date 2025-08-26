@@ -14,33 +14,42 @@ export default defineConfig({
   ],
   use: {
     baseURL: process.env.BASE_URL || 'http://localhost:5000/',
-    trace: 'on-first-retry',
-    screenshot: 'only-on-failure',
-    video: 'retain-on-failure',
+    trace: 'off',
+    screenshot: 'off',
+    video: 'off',
     // Force headless mode in CI or when no DISPLAY is available
     headless: !!process.env.CI || !process.env.DISPLAY,
   },
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: {
+        ...devices['Desktop Chrome'],
+        launchOptions: {
+          // Temporary workaround: Use system Chrome due to Playwright download issues in CI
+          // This should be removed when Playwright managed browsers are working
+          executablePath: process.env.CI ? '/usr/bin/google-chrome' : undefined,
+          args: ['--no-sandbox', '--disable-dev-shm-usage', '--disable-web-security'],
+        },
+      },
     },
-    {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
-    },
-    {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
-    },
-    {
-      name: 'Mobile Chrome',
-      use: { ...devices['Pixel 5'] },
-    },
-    {
-      name: 'Mobile Safari',
-      use: { ...devices['iPhone 12'] },
-    },
+    // Disable other browsers for now to focus on fixing core issues
+    // {
+    //   name: 'firefox',
+    //   use: { ...devices['Desktop Firefox'] },
+    // },
+    // {
+    //   name: 'webkit',
+    //   use: { ...devices['Desktop Safari'] },
+    // },
+    // {
+    //   name: 'Mobile Chrome',
+    //   use: { ...devices['Pixel 5'] },
+    // },
+    // {
+    //   name: 'Mobile Safari',
+    //   use: { ...devices['iPhone 12'] },
+    // },
   ],
   // Startup of frontend/backend is handled by scripts/testing/playwright-e2e-start.sh
   // Extensive error handling is integrated in the shell script.

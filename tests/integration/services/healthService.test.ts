@@ -117,8 +117,8 @@ describe('Health Service Integration', () => {
       expect(mockFetch).toHaveBeenCalledWith('/api/health', {
         headers: {
           Authorization: 'Bearer demo-token',
-          'x-user-id': 'default-user-id',
-          'x-warehouse-id': 'default-warehouse-id',
+          'x-user-id': '00000000-1111-2222-3333-444444444444',
+          'x-warehouse-id': '11111111-2222-3333-4444-555555555555',
         },
       });
     });

@@ -44,7 +44,7 @@ export class MFAService {
 
     return {
       secret: secret.base32,
-      qrCodeUrl: secret.otpauth_url!,
+      qrCodeUrl: secret.otpauth_url || '',
       backupCodes,
     };
   }
@@ -241,7 +241,7 @@ export class MFAService {
     return cleaned;
   }
 
-  static getMFAMethods(userPreferences?: any): string[] {
+  static getMFAMethods(userPreferences?: { disabledMfaMethods?: string[] }): string[] {
     const availableMethods = ['totp', 'sms', 'email'];
 
     if (userPreferences?.disabledMfaMethods) {
