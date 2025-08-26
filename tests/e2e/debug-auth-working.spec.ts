@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
 
 test('test working authentication with test@example.com', async ({ page }) => {
   await page.goto('http://localhost:5000/login');
@@ -31,8 +31,7 @@ test('test working authentication with test@example.com', async ({ page }) => {
     // Wait for dashboard elements to load
     await page.waitForSelector('body', { timeout: 5000 });
     
-    // Check dashboard content
-    const dashboardContent = await page.content();
+    // Dashboard loaded
     console.log('Dashboard loaded successfully');
   }
 });

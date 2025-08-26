@@ -10,31 +10,7 @@
     "grep": {},
     "grepInvert": null,
     "maxFailures": 0,
-    "metadata": {
-      "ci": {
-        "commitHref": "https://github.com/Coding-Krakken/MaintAInPro/commit/771ebbdee1f1d0ef5e9fe021e6d980b6bfc2fcbe",
-        "commitHash": "771ebbdee1f1d0ef5e9fe021e6d980b6bfc2fcbe",
-        "buildHref": "https://github.com/Coding-Krakken/MaintAInPro/actions/runs/17245395814"
-      },
-      "gitCommit": {
-        "shortHash": "ad47fd2",
-        "hash": "ad47fd29109f195f3fbecdcb9e6b3276f735dc83",
-        "subject": "Fix e2e test infrastructure: resolve rate limiting and authentication setup",
-        "body": "Fix e2e test infrastructure: resolve rate limiting and authentication setup\n\nCo-authored-by: Coding-Krakken <220203495+Coding-Krakken@users.noreply.github.com>\n",
-        "author": {
-          "name": "copilot-swe-agent[bot]",
-          "email": "198982749+Copilot@users.noreply.github.com",
-          "time": 1756230323000
-        },
-        "committer": {
-          "name": "copilot-swe-agent[bot]",
-          "email": "198982749+Copilot@users.noreply.github.com",
-          "time": 1756230323000
-        },
-        "branch": "copilot/fix-5b4695c5-4631-443a-b1c7-eac251747d17"
-      },
-      "actualWorkers": 1
-    },
+    "metadata": {},
     "preserveOutput": "always",
     "reporter": [
       [
@@ -66,31 +42,7 @@
         "outputDir": "/home/runner/work/MaintAInPro/MaintAInPro/test-results/playwright-artifacts",
         "repeatEach": 1,
         "retries": 2,
-        "metadata": {
-          "ci": {
-            "commitHref": "https://github.com/Coding-Krakken/MaintAInPro/commit/771ebbdee1f1d0ef5e9fe021e6d980b6bfc2fcbe",
-            "commitHash": "771ebbdee1f1d0ef5e9fe021e6d980b6bfc2fcbe",
-            "buildHref": "https://github.com/Coding-Krakken/MaintAInPro/actions/runs/17245395814"
-          },
-          "gitCommit": {
-            "shortHash": "ad47fd2",
-            "hash": "ad47fd29109f195f3fbecdcb9e6b3276f735dc83",
-            "subject": "Fix e2e test infrastructure: resolve rate limiting and authentication setup",
-            "body": "Fix e2e test infrastructure: resolve rate limiting and authentication setup\n\nCo-authored-by: Coding-Krakken <220203495+Coding-Krakken@users.noreply.github.com>\n",
-            "author": {
-              "name": "copilot-swe-agent[bot]",
-              "email": "198982749+Copilot@users.noreply.github.com",
-              "time": 1756230323000
-            },
-            "committer": {
-              "name": "copilot-swe-agent[bot]",
-              "email": "198982749+Copilot@users.noreply.github.com",
-              "time": 1756230323000
-            },
-            "branch": "copilot/fix-5b4695c5-4631-443a-b1c7-eac251747d17"
-          },
-          "actualWorkers": 1
-        },
+        "metadata": {},
         "id": "chromium",
         "name": "chromium",
         "testDir": "/home/runner/work/MaintAInPro/MaintAInPro/tests/e2e",
@@ -109,6 +61,263 @@
     "webServer": null
   },
   "suites": [
+    {
+      "title": "admin/health-dashboard.spec.ts",
+      "file": "admin/health-dashboard.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Health Dashboard E2E",
+          "file": "admin/health-dashboard.spec.ts",
+          "line": 4,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should display health dashboard correctly",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e43f20ac09fe8a3f1347-6a4be1455b8881942a4b",
+              "file": "admin/health-dashboard.spec.ts",
+              "line": 13,
+              "column": 3
+            },
+            {
+              "title": "should display memory usage information when available",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e43f20ac09fe8a3f1347-28e61fcd4205c7ee89a6",
+              "file": "admin/health-dashboard.spec.ts",
+              "line": 31,
+              "column": 3
+            },
+            {
+              "title": "should display feature status",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e43f20ac09fe8a3f1347-ece023c7708b826a626f",
+              "file": "admin/health-dashboard.spec.ts",
+              "line": 49,
+              "column": 3
+            },
+            {
+              "title": "should display deployment information when available",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e43f20ac09fe8a3f1347-2a56d5b269d8ee04d89f",
+              "file": "admin/health-dashboard.spec.ts",
+              "line": 61,
+              "column": 3
+            },
+            {
+              "title": "should display websocket connections",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e43f20ac09fe8a3f1347-06df38329da2a8e46402",
+              "file": "admin/health-dashboard.spec.ts",
+              "line": 78,
+              "column": 3
+            },
+            {
+              "title": "should refresh data when refresh button is clicked",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e43f20ac09fe8a3f1347-0506bb265b8e2ba1b389",
+              "file": "admin/health-dashboard.spec.ts",
+              "line": 89,
+              "column": 3
+            },
+            {
+              "title": "should handle error state correctly",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e43f20ac09fe8a3f1347-2e4c524ff50eb769f765",
+              "file": "admin/health-dashboard.spec.ts",
+              "line": 112,
+              "column": 3
+            },
+            {
+              "title": "should handle unhealthy status",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e43f20ac09fe8a3f1347-d5fd4c5b849c85bbebf4",
+              "file": "admin/health-dashboard.spec.ts",
+              "line": 133,
+              "column": 3
+            },
+            {
+              "title": "should auto-refresh every 30 seconds",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e43f20ac09fe8a3f1347-b50eac2dc1d7ffab21ca",
+              "file": "admin/health-dashboard.spec.ts",
+              "line": 179,
+              "column": 3
+            },
+            {
+              "title": "should display loading state during refresh",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e43f20ac09fe8a3f1347-ebbeab0763afde6405de",
+              "file": "admin/health-dashboard.spec.ts",
+              "line": 198,
+              "column": 3
+            },
+            {
+              "title": "should be accessible",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e43f20ac09fe8a3f1347-45ea2cf8aa0e4e4ecd18",
+              "file": "admin/health-dashboard.spec.ts",
+              "line": 229,
+              "column": 3
+            },
+            {
+              "title": "should navigate between admin tabs",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e43f20ac09fe8a3f1347-a16f8a47bacab6bf521c",
+              "file": "admin/health-dashboard.spec.ts",
+              "line": 246,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
     {
       "title": "basic.e2e.test.ts",
       "file": "basic.e2e.test.ts",
@@ -133,22 +342,8 @@
                   "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1141,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-08-26T17:51:31.739Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
+                  "results": [],
+                  "status": "skipped"
                 }
               ],
               "id": "5b9ef2734cb882eb5f5a-4b7943e89f3cfbadd5ca",
@@ -167,22 +362,8 @@
                   "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 126,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-08-26T17:51:33.077Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
+                  "results": [],
+                  "status": "skipped"
                 }
               ],
               "id": "5b9ef2734cb882eb5f5a-ae3a766561ff74e1ad96",
@@ -191,6 +372,763 @@
               "column": 3
             }
           ]
+        }
+      ]
+    },
+    {
+      "title": "debug-admin.spec.ts",
+      "file": "debug-admin.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "debug admin page access",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "0eaa3247dff469183231-ea9f1e53582c13f0f58a",
+          "file": "debug-admin.spec.ts",
+          "line": 4,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "debug-auth-status.spec.ts",
+      "file": "debug-auth-status.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "debug authentication status and environment",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "84ccbebac83a2c6ac7e0-d745e67638b22b29b636",
+          "file": "debug-auth-status.spec.ts",
+          "line": 3,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "debug-auth-working.spec.ts",
+      "file": "debug-auth-working.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "test working authentication with test@example.com",
+          "ok": true,
+          "tags": [
+            "example.com"
+          ],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "3509f83b513d4a866ad9-8af6ce8d70c49c72bfba",
+          "file": "debug-auth-working.spec.ts",
+          "line": 3,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "debug-database-users.spec.ts",
+      "file": "debug-database-users.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "debug: check database users and authentication flow",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "20bb7b5c45e40ac3b56f-bb1f2a1029281b68cd10",
+          "file": "debug-database-users.spec.ts",
+          "line": 3,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "debug-login.spec.ts",
+      "file": "debug-login.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "debug login error handling",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "5f1889fdd7b10a4db9e9-5310c65e866d1e4c51b9",
+          "file": "debug-login.spec.ts",
+          "line": 3,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "debug-server-env.spec.ts",
+      "file": "debug-server-env.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "check server environment during test",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "709a2b98ee00497c5cc7-eed09c5208e45fabe25b",
+          "file": "debug-server-env.spec.ts",
+          "line": 3,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "debug-valid-login.spec.ts",
+      "file": "debug-valid-login.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "debug valid credentials login",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "cda15a4525610ba58bd0-941e0605f113223723e8",
+          "file": "debug-valid-login.spec.ts",
+          "line": 3,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "debug-work-orders.spec.ts",
+      "file": "debug-work-orders.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "debug work order navigation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "7dbd842c88f955cc0f06-7f5d7a9cc702b7926dfc",
+          "file": "debug-work-orders.spec.ts",
+          "line": 5,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "debug-workorders.spec.ts",
+      "file": "debug-workorders.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "debug work order data",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "0c19a902e46e2a499e26-b9615583bf69e66de1de",
+          "file": "debug-workorders.spec.ts",
+          "line": 3,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "main-flows.spec.ts",
+      "file": "main-flows.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Authentication Flow",
+          "file": "main-flows.spec.ts",
+          "line": 29,
+          "column": 6,
+          "specs": [
+            {
+              "title": "user can login and logout",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b4ce0637035c87d0a9-80cbd646976e1e87920a",
+              "file": "main-flows.spec.ts",
+              "line": 30,
+              "column": 3
+            },
+            {
+              "title": "shows error for invalid credentials",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b4ce0637035c87d0a9-36813e0ed1eed3e79244",
+              "file": "main-flows.spec.ts",
+              "line": 58,
+              "column": 3
+            }
+          ]
+        },
+        {
+          "title": "Work Order Management",
+          "file": "main-flows.spec.ts",
+          "line": 72,
+          "column": 6,
+          "specs": [
+            {
+              "title": "technician can complete work order flow @smoke",
+              "ok": true,
+              "tags": [
+                "smoke"
+              ],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b4ce0637035c87d0a9-d26fc709bebd890b3b22",
+              "file": "main-flows.spec.ts",
+              "line": 78,
+              "column": 3
+            },
+            {
+              "title": "can create new work order",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b4ce0637035c87d0a9-fe2fadbbb89fa96fbd57",
+              "file": "main-flows.spec.ts",
+              "line": 114,
+              "column": 3
+            },
+            {
+              "title": "can filter work orders",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b4ce0637035c87d0a9-a9dc825e90e4ef95876f",
+              "file": "main-flows.spec.ts",
+              "line": 149,
+              "column": 3
+            },
+            {
+              "title": "can search work orders",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b4ce0637035c87d0a9-9bb00d2ee452d134b547",
+              "file": "main-flows.spec.ts",
+              "line": 168,
+              "column": 3
+            }
+          ]
+        },
+        {
+          "title": "Equipment Management",
+          "file": "main-flows.spec.ts",
+          "line": 180,
+          "column": 6,
+          "specs": [
+            {
+              "title": "can view equipment list",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b4ce0637035c87d0a9-f4c4e6cbac2da2f6d832",
+              "file": "main-flows.spec.ts",
+              "line": 190,
+              "column": 3
+            },
+            {
+              "title": "can create new equipment",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b4ce0637035c87d0a9-b816486afbf00d4740bd",
+              "file": "main-flows.spec.ts",
+              "line": 199,
+              "column": 3
+            },
+            {
+              "title": "can scan QR code for equipment",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b4ce0637035c87d0a9-04320d9080af5a45b108",
+              "file": "main-flows.spec.ts",
+              "line": 219,
+              "column": 3
+            }
+          ]
+        },
+        {
+          "title": "Dashboard and Analytics",
+          "file": "main-flows.spec.ts",
+          "line": 236,
+          "column": 6,
+          "specs": [
+            {
+              "title": "displays dashboard metrics",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b4ce0637035c87d0a9-ac55a7ac53dcb8e0b538",
+              "file": "main-flows.spec.ts",
+              "line": 245,
+              "column": 3
+            },
+            {
+              "title": "can filter dashboard by date range",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b4ce0637035c87d0a9-7167bbb6e593a5e7ee04",
+              "file": "main-flows.spec.ts",
+              "line": 257,
+              "column": 3
+            }
+          ]
+        },
+        {
+          "title": "Mobile Responsiveness",
+          "file": "main-flows.spec.ts",
+          "line": 273,
+          "column": 6,
+          "specs": [
+            {
+              "title": "mobile navigation works correctly",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b4ce0637035c87d0a9-62b50f6824e7c80a5359",
+              "file": "main-flows.spec.ts",
+              "line": 276,
+              "column": 3
+            },
+            {
+              "title": "work order cards are touch-friendly",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b4ce0637035c87d0a9-4c7c2b43d932d1041fc8",
+              "file": "main-flows.spec.ts",
+              "line": 295,
+              "column": 3
+            }
+          ]
+        },
+        {
+          "title": "Offline Functionality",
+          "file": "main-flows.spec.ts",
+          "line": 312,
+          "column": 6,
+          "specs": [
+            {
+              "title": "shows offline indicator when network is unavailable",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b4ce0637035c87d0a9-5fea19c68dd8c53c03b5",
+              "file": "main-flows.spec.ts",
+              "line": 313,
+              "column": 3
+            },
+            {
+              "title": "can complete work orders offline",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b4ce0637035c87d0a9-29d99e3608f9e8f03cd6",
+              "file": "main-flows.spec.ts",
+              "line": 327,
+              "column": 3
+            }
+          ]
+        },
+        {
+          "title": "Accessibility",
+          "file": "main-flows.spec.ts",
+          "line": 358,
+          "column": 6,
+          "specs": [
+            {
+              "title": "supports keyboard navigation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b4ce0637035c87d0a9-27ba76ea6425e6bab8a3",
+              "file": "main-flows.spec.ts",
+              "line": 359,
+              "column": 3
+            },
+            {
+              "title": "has proper focus indicators",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b4ce0637035c87d0a9-18176d1898e37807b6e8",
+              "file": "main-flows.spec.ts",
+              "line": 373,
+              "column": 3
+            }
+          ]
+        },
+        {
+          "title": "Performance",
+          "file": "main-flows.spec.ts",
+          "line": 386,
+          "column": 6,
+          "specs": [
+            {
+              "title": "dashboard loads within acceptable time",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b4ce0637035c87d0a9-8fe811ba33c5de45e697",
+              "file": "main-flows.spec.ts",
+              "line": 387,
+              "column": 3
+            },
+            {
+              "title": "work order list handles large datasets",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e8b4ce0637035c87d0a9-1a56076374babe4ab61d",
+              "file": "main-flows.spec.ts",
+              "line": 401,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "minimal-test.spec.ts",
+      "file": "minimal-test.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "minimal test - page loads",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "157f6153f234d2b270fc-9c692f500fe07433bbf4",
+          "file": "minimal-test.spec.ts",
+          "line": 3,
+          "column": 1
+        },
+        {
+          "title": "minimal login form test",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "157f6153f234d2b270fc-2e55d988e807ef4a0e6c",
+          "file": "minimal-test.spec.ts",
+          "line": 18,
+          "column": 1
         }
       ]
     },
@@ -211,22 +1149,8 @@
               "expectedStatus": "passed",
               "projectId": "chromium",
               "projectName": "chromium",
-              "results": [
-                {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 882,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2025-08-26T17:51:33.234Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
+              "results": [],
+              "status": "skipped"
             }
           ],
           "id": "c1bc3b82f35bec97f7ef-eb19f9b9a968c1e26b25",
@@ -253,26 +1177,8 @@
               "expectedStatus": "passed",
               "projectId": "chromium",
               "projectName": "chromium",
-              "results": [
-                {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 80,
-                  "errors": [],
-                  "stdout": [
-                    {
-                      "text": "Browser launched successfully!\n"
-                    }
-                  ],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2025-08-26T17:51:34.136Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
+              "results": [],
+              "status": "skipped"
             }
           ],
           "id": "e33182337be27a39af1d-e5871394f51344855cf5",
@@ -285,10 +1191,10 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2025-08-26T17:51:31.145Z",
-    "duration": 3152.307,
-    "expected": 4,
-    "skipped": 0,
+    "startTime": "2025-08-26T17:55:35.387Z",
+    "duration": 104.63,
+    "expected": 0,
+    "skipped": 46,
     "unexpected": 0,
     "flaky": 0
   }
