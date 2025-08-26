@@ -5,21 +5,21 @@ import { loginAs, TEST_USERS } from './helpers/auth';
 // Test data - use actual emails from database
 const testUsers = {
   technician: {
-    email: 'technician@company.com',
+    email: 'technician@maintainpro.com',
     password: 'demo123',
-    name: 'Jane Doe',
+    name: 'Test User', // Actual name from database
     role: 'technician',
   },
   supervisor: {
-    email: 'supervisor@company.com',
+    email: 'supervisor@maintainpro.com',
     password: 'demo123',
-    name: 'John Smith',
+    name: 'John Smith', // Actual name from database
     role: 'supervisor',
   },
   manager: {
-    email: 'manager@company.com',
+    email: 'manager@example.com',
     password: 'demo123',
-    name: 'Mike Johnson',
+    name: 'Mike Johnson', // Actual name from database
     role: 'manager',
   },
 };

@@ -9,21 +9,21 @@ export interface TestUser {
 
 export const TEST_USERS = {
   supervisor: {
-    email: 'supervisor@company.com',
+    email: 'supervisor@maintainpro.com',
     password: 'demo123',
     role: 'supervisor',
     expectedDashboard: '/dashboard',
   },
   technician: {
-    email: 'technician@company.com',
+    email: 'technician@maintainpro.com',
     password: 'demo123',
     role: 'technician',
     expectedDashboard: '/dashboard',
   },
   admin: {
-    email: 'admin@company.com',
+    email: 'manager@example.com', // Using manager as admin since admin doesn't exist
     password: 'demo123',
-    role: 'admin',
+    role: 'manager',
     expectedDashboard: '/dashboard',
   },
 } as const;
