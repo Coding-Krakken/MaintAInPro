@@ -60,7 +60,7 @@ export const createRateLimit = (
       if (process.env.NODE_ENV === 'development' && req.path === '/api/health') {
         return true;
       }
-      
+
       // Skip rate limiting in test environments
       const isTestEnv =
         process.env.NODE_ENV === 'test' ||
@@ -68,11 +68,11 @@ export const createRateLimit = (
         process.env.PLAYWRIGHT === 'true' ||
         process.env.CI === 'true' ||
         process.env.DISABLE_RATE_LIMITING === 'true';
-        
+
       if (isTestEnv) {
         return true;
       }
-      
+
       return false;
     },
   });

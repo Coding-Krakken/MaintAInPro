@@ -47,9 +47,7 @@
         "name": "chromium",
         "testDir": "/home/runner/work/MaintAInPro/MaintAInPro/tests/e2e",
         "testIgnore": [],
-        "testMatch": [
-          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
-        ],
+        "testMatch": ["**/*.@(spec|test).?(c|m)[jt]s?(x)"],
         "timeout": 30000
       }
     ],
@@ -440,9 +438,7 @@
         {
           "title": "test working authentication with test@example.com",
           "ok": true,
-          "tags": [
-            "example.com"
-          ],
+          "tags": ["example.com"],
           "tests": [
             {
               "timeout": 30000,
@@ -693,9 +689,7 @@
             {
               "title": "technician can complete work order flow @smoke",
               "ok": true,
-              "tags": [
-                "smoke"
-              ],
+              "tags": ["smoke"],
               "tests": [
                 {
                   "timeout": 30000,

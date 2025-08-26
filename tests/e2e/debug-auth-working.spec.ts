@@ -21,16 +21,17 @@ test('test working authentication with test@example.com', async ({ page }) => {
     // Still on login page, check for error messages
     const pageContent = await page.content();
     console.log('Login failed, still on login page');
-    
+
     // Look for error toast
-    const hasErrorToast = pageContent.includes('Invalid credentials') || pageContent.includes('Error');
+    const hasErrorToast =
+      pageContent.includes('Invalid credentials') || pageContent.includes('Error');
     console.log('Has error message:', hasErrorToast);
   } else {
     console.log('Login successful! Redirected to:', currentUrl);
-    
+
     // Wait for dashboard elements to load
     await page.waitForSelector('body', { timeout: 5000 });
-    
+
     // Dashboard loaded
     console.log('Dashboard loaded successfully');
   }
