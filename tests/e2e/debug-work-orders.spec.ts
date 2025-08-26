@@ -1,50 +1,46 @@
-// Simple test script to check work orders
-import { test } from '@playwright/test';
+import { test, expect } from '@playwright/test';
+import { loginAs, TEST_USERS } from './helpers/auth';
 
-test('debug work order navigation', async ({ page }) => {
-  // Login first
-  await page.goto('/login');
-  await page.fill('[data-testid="email-input"]', 'technician@maintainpro.com');
-  await page.fill('[data-testid="password-input"]', 'demo123');
-  await page.click('[data-testid="login-button"]');
+test('debug work orders page', async ({ page }) => {
+  // Use proper authentication helper
+  await loginAs(page, TEST_USERS.technician);
 
-  // Wait for redirect
-  await page.waitForURL('/');
+  // Navigate to work orders via dashboard navigation
+  console.log('Navigating to work orders...');
+  await page.click('[data-testid="nav-work-orders"]');
+  await page.waitForLoadState('networkidle');
 
-  // Navigate to work orders
-  console.log('Current URL:', page.url());
+  // Check what's on the page
+  const pageTitle = await page.title();
+  console.log('Page title:', pageTitle);
 
-  // Try to find navigation element
-  const navElement = page.locator('[data-testid="nav-work-orders"]');
-  const isNavVisible = await navElement.isVisible();
-  console.log('Nav work orders visible:', isNavVisible);
+  const url = page.url();
+  console.log('Current URL:', url);
 
-  if (isNavVisible) {
-    await navElement.click();
-    await page.waitForURL('/work-orders');
-    console.log('Successfully navigated to work orders');
+  // Check for work order cards
+  const workOrderCards = await page.locator('[data-testid="work-order-card"]').count();
+  console.log('Work order cards found:', workOrderCards);
 
-    // Wait for work orders to load
-    await page.waitForTimeout(2000);
+  // Check for any cards or list items
+  const cards = await page.locator('.border').count();
+  console.log('Total card elements:', cards);
 
-    // Check for work order cards
-    const workOrderCards = page.locator('[data-testid="work-order-card"]');
-    const count = await workOrderCards.count();
-    console.log('Work order cards found:', count);
+  // Check for navigation elements
+  const navWorkOrders = await page.locator('[data-testid="nav-work-orders"]').count();
+  console.log('Nav work orders elements:', navWorkOrders);
 
-    if (count > 0) {
-      console.log('Work orders are available');
-    } else {
-      console.log('No work orders found');
-      // Check page content
-      const content = await page.textContent('body');
-      console.log('Page content includes:', content.includes('No work orders'));
-    }
-  } else {
-    console.log('Navigation element not found');
-    // Check if we're on mobile
-    const mobileMenuButton = page.locator('[data-testid="mobile-menu-button"]');
-    const isMobileMenuVisible = await mobileMenuButton.isVisible();
-    console.log('Mobile menu button visible:', isMobileMenuVisible);
-  }
+  // Take a screenshot
+  await page.screenshot({ path: '/tmp/work-orders-debug.png', fullPage: true });
+
+  // Get page content
+  const content = await page.textContent('body');
+  console.log('Page content sample:', content?.substring(0, 500));
+
+  // Check for error messages
+  const errors = await page.locator('text=error').count();
+  console.log('Error messages:', errors);
+
+  // Check for loading states
+  const loaders = await page.locator('[aria-busy="true"], .loading, .spinner').count();
+  console.log('Loading states:', loaders);
 });

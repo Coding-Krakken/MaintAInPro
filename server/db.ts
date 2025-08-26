@@ -8,9 +8,10 @@ import pkg from 'pg';
 const { Pool } = pkg;
 import * as schema from '../shared/schema';
 
-// Check if DATABASE_URL is set for production PostgreSQL usage
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let db: any = null;
+// Define proper type for database connection but keep compatible with existing usage
+type DrizzleDatabase = ReturnType<typeof drizzle<typeof schema>>;
+// Use any temporarily to maintain compatibility with existing code
+let db: DrizzleDatabase | null | any = null;
 
 if (!process.env.DATABASE_URL) {
   console.log('DATABASE_URL not set - using in-memory storage for development');
@@ -31,3 +32,4 @@ if (!process.env.DATABASE_URL) {
 
 export { db };
 export type Database = typeof db;
+// ...existing code...

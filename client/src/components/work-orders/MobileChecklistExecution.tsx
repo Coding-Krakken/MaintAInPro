@@ -192,7 +192,7 @@ const MobileChecklistExecution: React.FC<MobileChecklistExecutionProps> = ({
       }
 
       const SpeechRecognition =
-        (window as unknown as WindowWithSpeechRecognition).webkitSpeechRecognition || 
+        (window as unknown as WindowWithSpeechRecognition).webkitSpeechRecognition ||
         (window as unknown as WindowWithSpeechRecognition).SpeechRecognition;
       type SpeechRecognitionType = {
         continuous: boolean;

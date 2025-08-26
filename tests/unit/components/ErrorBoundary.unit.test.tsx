@@ -13,9 +13,9 @@ vi.mock('../../../client/src/utils/error-reporting', () => ({
 }));
 
 // Test component that throws an error
-const ThrowError: React.FC<{ shouldThrow?: boolean; errorMessage?: string }> = ({ 
-  shouldThrow = true, 
-  errorMessage = 'Test error' 
+const ThrowError: React.FC<{ shouldThrow?: boolean; errorMessage?: string }> = ({
+  shouldThrow = true,
+  errorMessage = 'Test error',
 }) => {
   if (shouldThrow) {
     throw new Error(errorMessage);
@@ -49,7 +49,7 @@ describe('ErrorBoundary', () => {
     it('should catch errors and display default fallback UI', () => {
       render(
         <ErrorBoundary>
-          <ThrowError errorMessage="Something went wrong!" />
+          <ThrowError errorMessage='Something went wrong!' />
         </ErrorBoundary>
       );
 
@@ -73,10 +73,10 @@ describe('ErrorBoundary', () => {
 
     it('should call onError callback when error occurs', async () => {
       const onErrorMock = vi.fn();
-      
+
       render(
         <ErrorBoundary onError={onErrorMock}>
-          <ThrowError errorMessage="Test callback error" />
+          <ThrowError errorMessage='Test callback error' />
         </ErrorBoundary>
       );
 
@@ -102,7 +102,7 @@ describe('ErrorBoundary', () => {
 
       render(
         <ErrorBoundary fallback={CustomFallback}>
-          <ThrowError errorMessage="Custom error test" />
+          <ThrowError errorMessage='Custom error test' />
         </ErrorBoundary>
       );
 
@@ -177,13 +177,9 @@ describe('ErrorBoundary', () => {
 
     it('should render with default props', () => {
       const error = new Error('Test error');
-      
+
       render(
-        <GenericErrorFallback 
-          error={error} 
-          resetError={mockResetError} 
-          eventId="test-event-123"
-        />
+        <GenericErrorFallback error={error} resetError={mockResetError} eventId='test-event-123' />
       );
 
       expect(screen.getByText('Something went wrong')).toBeInTheDocument();
@@ -193,13 +189,13 @@ describe('ErrorBoundary', () => {
 
     it('should render with custom title and description', () => {
       const error = new Error('Test error');
-      
+
       render(
-        <GenericErrorFallback 
-          error={error} 
+        <GenericErrorFallback
+          error={error}
           resetError={mockResetError}
-          title="Custom Error Title"
-          description="Custom error description"
+          title='Custom Error Title'
+          description='Custom error description'
         />
       );
 
@@ -208,12 +204,7 @@ describe('ErrorBoundary', () => {
     });
 
     it('should handle Try Again button click', () => {
-      render(
-        <GenericErrorFallback 
-          error={new Error('Test')} 
-          resetError={mockResetError} 
-        />
-      );
+      render(<GenericErrorFallback error={new Error('Test')} resetError={mockResetError} />);
 
       const tryAgainButton = screen.getByText('Try Again');
       fireEvent.click(tryAgainButton);
@@ -230,8 +221,8 @@ describe('ErrorBoundary', () => {
       });
 
       render(
-        <GenericErrorFallback 
-          error={new Error('Test')} 
+        <GenericErrorFallback
+          error={new Error('Test')}
           resetError={mockResetError}
           showHomeButton={true}
         />
@@ -247,13 +238,7 @@ describe('ErrorBoundary', () => {
       const error = new Error('Test error with stack');
       error.stack = 'Error stack trace here';
 
-      render(
-        <GenericErrorFallback 
-          error={error} 
-          resetError={mockResetError}
-          showDetails={true}
-        />
-      );
+      render(<GenericErrorFallback error={error} resetError={mockResetError} showDetails={true} />);
 
       const showDetailsButton = screen.getByText('Show Error Details');
       fireEvent.click(showDetailsButton);
@@ -276,8 +261,8 @@ describe('ErrorBoundary', () => {
       window.open = mockOpen;
 
       render(
-        <GenericErrorFallback 
-          error={new Error('Test error')} 
+        <GenericErrorFallback
+          error={new Error('Test error')}
           resetError={mockResetError}
           showReportButton={true}
         />
@@ -300,14 +285,14 @@ describe('ErrorBoundary', () => {
 
       const CustomFallback: React.FC<any> = ({ error }) => (
         <div>
-          <span data-testid="error-name">{error?.name}</span>
-          <span data-testid="error-message">{error?.message}</span>
+          <span data-testid='error-name'>{error?.name}</span>
+          <span data-testid='error-message'>{error?.message}</span>
         </div>
       );
 
       render(
         <ErrorBoundary fallback={CustomFallback}>
-          <ThrowError errorMessage="Specific test error" />
+          <ThrowError errorMessage='Specific test error' />
         </ErrorBoundary>
       );
 
@@ -325,14 +310,11 @@ describe('ErrorBoundary', () => {
 
       render(
         <ErrorBoundary>
-          <ThrowError errorMessage="Development error" />
+          <ThrowError errorMessage='Development error' />
         </ErrorBoundary>
       );
 
-      expect(consoleSpy).toHaveBeenCalledWith(
-        'Error caught by ErrorBoundary:',
-        expect.any(Error)
-      );
+      expect(consoleSpy).toHaveBeenCalledWith('Error caught by ErrorBoundary:', expect.any(Error));
 
       process.env.NODE_ENV = originalEnv;
     });

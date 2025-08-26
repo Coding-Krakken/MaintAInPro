@@ -80,8 +80,9 @@ export default function VendorsPage() {
       const response = await fetch(API_BASE, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('authToken') || 'demo-token'}`,
-          'x-user-id': localStorage.getItem('userId') || 'default-user-id',
-          'x-warehouse-id': localStorage.getItem('warehouseId') || 'default-warehouse-id',
+          'x-user-id': localStorage.getItem('userId') || '00000000-0000-0000-0000-000000000003',
+          'x-warehouse-id':
+            localStorage.getItem('warehouseId') || '00000000-0000-0000-0000-000000000001',
         },
       });
       if (!response.ok) throw new Error('Failed to fetch vendors');
@@ -98,7 +99,7 @@ export default function VendorsPage() {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${localStorage.getItem('authToken') || 'demo-token'}`,
-          'x-user-id': localStorage.getItem('userId') || 'default-user-id',
+          'x-user-id': localStorage.getItem('userId') || '00000000-0000-0000-0000-000000000003',
           'x-warehouse-id': localStorage.getItem('warehouseId') || 'default-warehouse-id',
         },
         body: JSON.stringify(data),
@@ -136,7 +137,7 @@ export default function VendorsPage() {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${localStorage.getItem('authToken') || 'demo-token'}`,
-          'x-user-id': localStorage.getItem('userId') || 'default-user-id',
+          'x-user-id': localStorage.getItem('userId') || '00000000-0000-0000-0000-000000000003',
           'x-warehouse-id': localStorage.getItem('warehouseId') || 'default-warehouse-id',
         },
         body: JSON.stringify(data),
@@ -163,7 +164,7 @@ export default function VendorsPage() {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('authToken') || 'demo-token'}`,
-          'x-user-id': localStorage.getItem('userId') || 'default-user-id',
+          'x-user-id': localStorage.getItem('userId') || '00000000-0000-0000-0000-000000000003',
           'x-warehouse-id': localStorage.getItem('warehouseId') || 'default-warehouse-id',
         },
       });

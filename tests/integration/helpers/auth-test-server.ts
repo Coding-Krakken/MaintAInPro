@@ -102,13 +102,17 @@ export class AuthTestServer {
    * Stop the server
    */
   async stop(): Promise<void> {
-    return new Promise((resolve, reject) => {
-      if (this.server) {
+    return new Promise(resolve => {
+      if (this.server && this.server.listening) {
         this.server.close(err => {
-          if (err) reject(err);
-          else resolve();
+          if (err) {
+            console.warn('Warning during server shutdown:', err.message);
+          }
+          this.server = null;
+          resolve();
         });
       } else {
+        this.server = null;
         resolve();
       }
     });

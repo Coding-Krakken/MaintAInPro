@@ -1,20 +1,35 @@
-import type { Express } from 'express';
+import type { Request, Response, NextFunction, Express } from 'express';
 import { z } from 'zod';
 import { storage } from '../storage';
 import { insertLaborTimeSchema } from '@shared/schema';
 
-const authenticateRequest = (req: any, res: any, next: any) => {
+const authenticateRequest = (req: Request, res: Response, next: NextFunction) => {
   // Basic authentication check - replace with actual auth logic
   const user = req.headers['x-user-id'];
   if (!user) {
     return res.status(401).json({ message: 'Authentication required' });
   }
-  req.user = { id: user };
+  req.user = {
+    id: Array.isArray(user) ? user[0] : user,
+    email: typeof req.headers['x-user-email'] === 'string' ? req.headers['x-user-email'] : '',
+    role: typeof req.headers['x-user-role'] === 'string' ? req.headers['x-user-role'] : '',
+    organizationId:
+      typeof req.headers['x-organization-id'] === 'string'
+        ? req.headers['x-organization-id']
+        : undefined,
+    sessionId:
+      typeof req.headers['x-session-id'] === 'string' ? req.headers['x-session-id'] : undefined,
+    warehouseId:
+      typeof req.headers['x-warehouse-id'] === 'string' ? req.headers['x-warehouse-id'] : undefined,
+  };
   next();
 };
 
-const getCurrentUser = (req: any): string => {
-  return req.user?.id || req.headers['x-user-id'] || 'anonymous';
+const getCurrentUser = (req: Request): string => {
+  const headerId = Array.isArray(req.headers['x-user-id'])
+    ? req.headers['x-user-id'][0]
+    : req.headers['x-user-id'];
+  return req.user?.id || headerId || 'anonymous';
 };
 
 export function registerLaborTimeRoutes(app: Express) {
@@ -68,7 +83,7 @@ export function registerLaborTimeRoutes(app: Express) {
         description: req.body.description || 'Work in progress',
         isActive: true,
         isManual: false,
-      } as any);
+      });
 
       res.status(201).json(laborTime);
     } catch (_error) {
@@ -102,7 +117,7 @@ export function registerLaborTimeRoutes(app: Express) {
         duration: durationMinutes,
         isActive: false,
         description: req.body.description || activeSession.description,
-      } as any);
+      });
 
       res.json(updatedLaborTime);
     } catch (_error) {
@@ -128,9 +143,17 @@ export function registerLaborTimeRoutes(app: Express) {
       };
 
       // Validate the data
-      const validatedData = insertLaborTimeSchema.parse(laborTimeData);
+      insertLaborTimeSchema.parse(laborTimeData);
 
-      const laborTime = await storage.createLaborTime(validatedData as any);
+      const laborTime = await storage.createLaborTime({
+        workOrderId: laborTimeData.workOrderId,
+        userId: laborTimeData.userId,
+        startTime: laborTimeData.startTime,
+        duration: laborTimeData.duration,
+        description: laborTimeData.description,
+        isActive: laborTimeData.isActive,
+        isManual: laborTimeData.isManual,
+      });
 
       res.status(201).json(laborTime);
     } catch (_error) {

@@ -119,10 +119,7 @@ export function useErrorBoundaryWrapper<P extends object>(
   Component: React.ComponentType<P>,
   options?: WithErrorBoundaryOptions
 ) {
-  return React.useMemo(
-    () => withErrorBoundary(Component, options),
-    [Component, options]
-  );
+  return React.useMemo(() => withErrorBoundary(Component, options), [Component, options]);
 }
 
 /**
@@ -167,7 +164,7 @@ export function createErrorBoundary(
       };
 
       await reportError(error, convertedErrorInfo, { context });
-      
+
       if (onError) {
         onError(error, convertedErrorInfo);
       }
@@ -187,7 +184,7 @@ export function createErrorBoundary(
   };
 
   BoundaryComponent.displayName = 'IsolatedErrorBoundary';
-  
+
   return BoundaryComponent;
 }
 

@@ -15,8 +15,9 @@ export default function WorkOrderCard({ workOrder, onClick }: WorkOrderCardProps
     queryFn: async () => {
       const response = await fetch(`/api/profiles/${workOrder.assignedTo}`, {
         headers: {
-          'x-user-id': localStorage.getItem('userId') || 'default-user-id',
-          'x-warehouse-id': localStorage.getItem('warehouseId') || 'default-warehouse-id',
+          'x-user-id': localStorage.getItem('userId') || '00000000-0000-0000-0000-000000000003',
+          'x-warehouse-id':
+            localStorage.getItem('warehouseId') || '00000000-0000-0000-0000-000000000001',
         },
       });
       if (!response.ok) throw new Error('Failed to fetch profile');
@@ -92,7 +93,7 @@ export default function WorkOrderCard({ workOrder, onClick }: WorkOrderCardProps
       </div>
 
       <div className='flex items-center space-x-3 flex-shrink-0'>
-        <Badge className={getStatusColor(workOrder.status)}>
+        <Badge className={getStatusColor(workOrder.status)} data-testid='status-badge'>
           {workOrder.status.replace('_', ' ')}
         </Badge>
         <Badge className={getPriorityColor(workOrder.priority)}>{workOrder.priority}</Badge>

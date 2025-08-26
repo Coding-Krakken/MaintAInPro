@@ -75,7 +75,7 @@ class OfflineService {
         effectiveType?: string;
       };
     }
-    
+
     const connection =
       (navigator as NavigatorWithConnection).connection ||
       (navigator as NavigatorWithConnection).mozConnection ||

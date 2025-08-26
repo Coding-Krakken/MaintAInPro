@@ -146,8 +146,11 @@ export class AuthService {
         };
       }
 
-      // Find user by email
-  const user = Array.from(this.users.values()).find(u => u.email === email);
+      // Use database storage instead of mock storage
+      const { storage } = await import('../../storage');
+
+      // Find user by email using database
+      const user = await storage.getProfileByEmail(email);
       if (!user) {
         SecurityService.recordFailedLogin(lockoutKey);
         await AuditService.logLogin('', ipAddress, userAgent, false, {
@@ -172,7 +175,7 @@ export class AuthService {
       }
 
       // Verify password
-      const userCreds = this.userCredentials.get(user.id);
+      const userCreds = await storage.getUserCredentials(user.id);
       if (!userCreds) {
         SecurityService.recordFailedLogin(lockoutKey);
         await AuditService.logLogin(user.id, ipAddress, userAgent, false, {
@@ -786,7 +789,7 @@ export class AuthService {
         resourceId,
       };
 
-  const allowed = RBACService.hasPermission(context, resource as Resource, action as Action);
+      const allowed = RBACService.hasPermission(context, resource as Resource, action as Action);
 
       if (allowed) {
         // Log successful access
@@ -870,7 +873,9 @@ export class AuthService {
   /**
    * Validate JWT token
    */
-  async validateToken(token: string): Promise<{ valid: boolean; payload?: unknown; error?: string }> {
+  async validateToken(
+    token: string
+  ): Promise<{ valid: boolean; payload?: unknown; error?: string }> {
     try {
       const payload = JWTService.verifyAccessToken(token);
       return { valid: true, payload };

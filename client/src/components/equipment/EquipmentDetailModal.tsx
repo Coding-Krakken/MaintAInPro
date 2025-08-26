@@ -6,7 +6,7 @@ import { Equipment, WorkOrder } from '../../types';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { formatDistanceToNow } from 'date-fns';
 import { Settings, Calendar, MapPin, Hash, FileText } from 'lucide-react';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import WorkOrderModal from '../work-orders/WorkOrderModal';
 import FileUpload from '../FileUpload';
 import DocumentPreview from '../DocumentPreview';
@@ -28,6 +28,11 @@ export default function EquipmentDetailModal({
 }: EquipmentDetailModalProps) {
   const [showWorkOrderModal, setShowWorkOrderModal] = useState(false);
   const [activeTab, setActiveTab] = useState('details');
+  // Reset modal state when equipmentId changes
+  useEffect(() => {
+    setActiveTab('details');
+    setShowWorkOrderModal(false);
+  }, [equipmentId]);
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -52,8 +57,9 @@ export default function EquipmentDetailModal({
 
       const response = await fetch(url, {
         headers: {
-          'x-user-id': localStorage.getItem('userId') || 'default-user-id',
-          'x-warehouse-id': localStorage.getItem('warehouseId') || 'default-warehouse-id',
+          'x-user-id': localStorage.getItem('userId') || '00000000-0000-0000-0000-000000000003',
+          'x-warehouse-id':
+            localStorage.getItem('warehouseId') || '00000000-0000-0000-0000-000000000001',
         },
       });
       if (!response.ok) throw new Error('Failed to fetch equipment');
@@ -75,7 +81,7 @@ export default function EquipmentDetailModal({
     queryFn: async () => {
       const response = await fetch(`/api/work-orders?equipmentId=${finalEquipment?.id}`, {
         headers: {
-          'x-user-id': localStorage.getItem('userId') || 'default-user-id',
+          'x-user-id': localStorage.getItem('userId') || '00000000-0000-0000-0000-000000000003',
           'x-warehouse-id': localStorage.getItem('warehouseId') || 'default-warehouse-id',
         },
       });

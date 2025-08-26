@@ -180,7 +180,7 @@ async function initializeData(): Promise<StorageData> {
     status: 'active',
     criticality: 'high',
     organizationId: 'default-org',
-    warehouseId: 'default-warehouse-id',
+    warehouseId: '00000000-0000-0000-0000-000000000001',
     createdBy: 'system',
     updatedBy: 'system',
     createdAt: new Date('2024-01-15'),
@@ -201,7 +201,7 @@ async function initializeData(): Promise<StorageData> {
     status: 'active',
     criticality: 'medium',
     organizationId: 'default-org',
-    warehouseId: 'default-warehouse-id',
+    warehouseId: '00000000-0000-0000-0000-000000000001',
     createdBy: 'system',
     updatedBy: 'system',
     createdAt: new Date('2024-01-15'),
@@ -229,7 +229,7 @@ async function initializeData(): Promise<StorageData> {
     estimatedHours: '4.00',
     notes: 'Belt showing signs of misalignment. Customer reported unusual noise.',
     organizationId: 'default-org',
-    warehouseId: 'default-warehouse-id',
+    warehouseId: '00000000-0000-0000-0000-000000000001',
     createdBy: 'supervisor-1',
     updatedBy: 'supervisor-1',
     createdAt: new Date(),
@@ -361,7 +361,9 @@ export async function getAllNotifications(userId: string): Promise<Notification[
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 }
 
-export async function createNotification(notification: any): Promise<Notification> {
+export async function createNotification(
+  notification: Omit<Notification, 'id' | 'createdAt'>
+): Promise<Notification> {
   const data = await loadData();
   const newNotification: Notification = {
     id: generateId(),
@@ -404,12 +406,19 @@ export async function createNotificationPreference(preference: any): Promise<any
   };
 }
 
-export async function updateNotificationPreference(_userId: string, _notificationType: string, _updates: any): Promise<any> {
+export async function updateNotificationPreference(
+  _userId: string,
+  _notificationType: string,
+  _updates: any
+): Promise<any> {
   // Placeholder implementation
   return null;
 }
 
-export async function deleteNotificationPreference(_userId: string, _notificationType: string): Promise<void> {
+export async function deleteNotificationPreference(
+  _userId: string,
+  _notificationType: string
+): Promise<void> {
   // Placeholder implementation
 }
 

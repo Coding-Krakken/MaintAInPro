@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { useLocation } from 'wouter';
 import { Button } from '../components/ui/button';
@@ -13,9 +13,16 @@ export default function Auth() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const { login } = useAuth();
+  const { login, isAuthenticated, loading } = useAuth();
   const [, setLocation] = useLocation();
   const { toast } = useToast();
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (!loading && isAuthenticated) {
+      setLocation('/dashboard');
+    }
+  }, [isAuthenticated, loading, setLocation]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,14 +30,25 @@ export default function Auth() {
     setError('');
 
     try {
-      await login(email, password);
-      toast({
-        title: 'Success',
-        description: 'Successfully logged in',
-      });
-      setLocation('/dashboard');
+      const result = await login(email, password);
+
+      if (result.success) {
+        toast({
+          title: 'Success',
+          description: 'Successfully logged in',
+        });
+        setLocation('/dashboard');
+      } else {
+        const errorMessage = result.error || 'Invalid credentials';
+        setError(errorMessage);
+        toast({
+          title: 'Error',
+          description: errorMessage,
+          variant: 'destructive',
+        });
+      }
     } catch (_error) {
-      const errorMessage = 'Invalid credentials';
+      const errorMessage = 'Login failed. Please try again.';
       setError(errorMessage);
       toast({
         title: 'Error',
@@ -138,7 +156,7 @@ export default function Auth() {
                   <strong>Technician:</strong> technician@maintainpro.com
                 </p>
                 <p>
-                  <strong>Manager:</strong> manager@maintainpro.com
+                  <strong>Manager:</strong> manager@example.com
                 </p>
                 <p>
                   <strong>Password:</strong> demo123

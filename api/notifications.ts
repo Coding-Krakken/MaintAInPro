@@ -24,7 +24,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   try {
     const { pathname } = new URL(req.url || '', `http://${req.headers.host}`);
-    
+
     // Route to different handlers based on path
     if (pathname === '/api/notifications') {
       switch (req.method) {
@@ -84,7 +84,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 // Notification handlers
 async function handleGetNotifications(req: VercelRequest, res: VercelResponse) {
   try {
-    const userId = (req.headers['x-user-id'] as string) || 'default-user-id';
+    const userId = (req.headers['x-user-id'] as string) || '00000000-0000-0000-0000-000000000003';
 
     const notifications = await storageModule.getAllNotifications(userId);
     console.log(`Retrieved ${notifications.length} notifications for user ${userId}`);
@@ -102,7 +102,7 @@ async function handleGetNotifications(req: VercelRequest, res: VercelResponse) {
 async function handleCreateNotification(req: VercelRequest, res: VercelResponse) {
   try {
     const notificationData = req.body;
-    
+
     const notification = await storageModule.createNotification(notificationData);
     console.log(`Created notification ${notification.id}`);
 
@@ -153,7 +153,7 @@ async function handleDeleteNotification(req: VercelRequest, res: VercelResponse,
 // Notification preferences handlers
 async function handleGetPreferences(req: VercelRequest, res: VercelResponse) {
   try {
-    const userId = (req.headers['x-user-id'] as string) || 'default-user-id';
+    const userId = (req.headers['x-user-id'] as string) || '00000000-0000-0000-0000-000000000003';
 
     const preferences = await storageModule.getNotificationPreferences(userId);
     console.log(`Retrieved ${preferences.length} preferences for user ${userId}`);
@@ -170,9 +170,9 @@ async function handleGetPreferences(req: VercelRequest, res: VercelResponse) {
 
 async function handleCreatePreference(req: VercelRequest, res: VercelResponse) {
   try {
-    const userId = (req.headers['x-user-id'] as string) || 'default-user-id';
+    const userId = (req.headers['x-user-id'] as string) || '00000000-0000-0000-0000-000000000003';
     const preferenceData = { ...req.body, userId };
-    
+
     const preference = await storageModule.createNotificationPreference(preferenceData);
     console.log(`Created preference for user ${userId}, type ${preference.notificationType}`);
 
@@ -188,11 +188,15 @@ async function handleCreatePreference(req: VercelRequest, res: VercelResponse) {
 
 async function handleUpdatePreference(req: VercelRequest, res: VercelResponse) {
   try {
-    const userId = (req.headers['x-user-id'] as string) || 'default-user-id';
+    const userId = (req.headers['x-user-id'] as string) || '00000000-0000-0000-0000-000000000003';
     const { notificationType, ...updates } = req.body;
-    
-    const preference = await storageModule.updateNotificationPreference(userId, notificationType, updates);
-    
+
+    const preference = await storageModule.updateNotificationPreference(
+      userId,
+      notificationType,
+      updates
+    );
+
     if (preference) {
       console.log(`Updated preference for user ${userId}, type ${notificationType}`);
       return res.status(200).json(preference);
@@ -210,9 +214,9 @@ async function handleUpdatePreference(req: VercelRequest, res: VercelResponse) {
 
 async function handleDeletePreference(req: VercelRequest, res: VercelResponse) {
   try {
-    const userId = (req.headers['x-user-id'] as string) || 'default-user-id';
+    const userId = (req.headers['x-user-id'] as string) || '00000000-0000-0000-0000-000000000003';
     const { notificationType } = req.body;
-    
+
     await storageModule.deleteNotificationPreference(userId, notificationType);
     console.log(`Deleted preference for user ${userId}, type ${notificationType}`);
 
@@ -229,7 +233,7 @@ async function handleDeletePreference(req: VercelRequest, res: VercelResponse) {
 // Push subscription handlers
 async function handleGetSubscriptions(req: VercelRequest, res: VercelResponse) {
   try {
-    const userId = (req.headers['x-user-id'] as string) || 'default-user-id';
+    const userId = (req.headers['x-user-id'] as string) || '00000000-0000-0000-0000-000000000003';
 
     const subscriptions = await storageModule.getPushSubscriptions(userId);
     console.log(`Retrieved ${subscriptions.length} push subscriptions for user ${userId}`);
@@ -246,9 +250,9 @@ async function handleGetSubscriptions(req: VercelRequest, res: VercelResponse) {
 
 async function handleCreateSubscription(req: VercelRequest, res: VercelResponse) {
   try {
-    const userId = (req.headers['x-user-id'] as string) || 'default-user-id';
+    const userId = (req.headers['x-user-id'] as string) || '00000000-0000-0000-0000-000000000003';
     const subscriptionData = { ...req.body, userId };
-    
+
     const subscription = await storageModule.createPushSubscription(subscriptionData);
     console.log(`Created push subscription ${subscription.id} for user ${userId}`);
 
@@ -265,7 +269,7 @@ async function handleCreateSubscription(req: VercelRequest, res: VercelResponse)
 async function handleDeleteSubscription(req: VercelRequest, res: VercelResponse) {
   try {
     const { subscriptionId } = req.body;
-    
+
     await storageModule.deletePushSubscription(subscriptionId);
     console.log(`Deleted push subscription ${subscriptionId}`);
 

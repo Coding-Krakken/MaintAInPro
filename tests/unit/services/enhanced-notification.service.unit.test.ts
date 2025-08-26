@@ -1,16 +1,45 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { afterAll } from 'vitest';
+import { profiles } from '../../../shared/schema';
+import { eq } from 'drizzle-orm';
+import { db } from '../../../server/db';
+import { notifications, notificationPreferences, pushSubscriptions } from '../../../shared/schema';
 import { storage } from '../../../server/storage';
 
 // Mock console methods
 vi.spyOn(console, 'log').mockImplementation(() => {});
 vi.spyOn(console, 'error').mockImplementation(() => {});
 
+let testUserId: string;
 describe('Enhanced Notification Storage', () => {
-  let testUserId: string;
-
   beforeEach(async () => {
-    // Use a unique user ID for each test to avoid interference
-    testUserId = `test-user-${Date.now()}-${Math.random().toString(36).substring(7)}`;
+    testUserId = '11111111-1111-1111-1111-111111111111';
+    // Insert test profile if not exists
+    // Clean up notification data before each test
+    await db.delete(notifications).where(eq(notifications.userId, testUserId));
+    await db.delete(notificationPreferences).where(eq(notificationPreferences.userId, testUserId));
+    await db.delete(pushSubscriptions).where(eq(pushSubscriptions.userId, testUserId));
+    // Insert test profile with all required fields
+    await db
+      .insert(profiles)
+      .values({
+        id: testUserId,
+        email: 'testuser@example.com',
+        firstName: 'Test',
+        lastName: 'User',
+        role: 'technician',
+        active: true,
+      })
+      .onConflictDoNothing();
+  });
+
+  afterAll(async () => {
+    // Clean up notifications and preferences for test user
+    await db.delete(notifications).where(eq(notifications.userId, testUserId));
+    await db.delete(notificationPreferences).where(eq(notificationPreferences.userId, testUserId));
+    await db.delete(pushSubscriptions).where(eq(pushSubscriptions.userId, testUserId));
+    // Clean up test profile
+    await db.delete(profiles).where(eq(profiles.id, testUserId));
   });
 
   describe('Notification Preferences', () => {
@@ -60,7 +89,7 @@ describe('Enhanced Notification Storage', () => {
       expect(preferences.length).toBe(2);
       expect(preferences[0].userId).toBe(testUserId);
       expect(preferences[1].userId).toBe(testUserId);
-      
+
       const types = preferences.map(p => p.notificationType);
       expect(types).toContain('wo_assigned');
       expect(types).toContain('part_low_stock');
@@ -153,6 +182,19 @@ describe('Enhanced Notification Storage', () => {
     });
 
     it('should retrieve push subscriptions for a specific user', async () => {
+      // Ensure test profile exists for FK constraint
+      await db
+        .insert(profiles)
+        .values({
+          id: testUserId,
+          email: 'testuser@example.com',
+          firstName: 'Test',
+          lastName: 'User',
+          role: 'technician',
+          active: true,
+        })
+        .onConflictDoNothing();
+
       // Create subscriptions for the test user
       await storage.createPushSubscription({
         userId: testUserId,
@@ -200,7 +242,9 @@ describe('Enhanced Notification Storage', () => {
 
       expect(activeSubscriptions.length).toBe(1);
       expect(activeSubscriptions[0].active).toBe(true);
-      expect(activeSubscriptions[0].endpoint).toBe('https://fcm.googleapis.com/fcm/send/test-endpoint-1');
+      expect(activeSubscriptions[0].endpoint).toBe(
+        'https://fcm.googleapis.com/fcm/send/test-endpoint-1'
+      );
     });
 
     it('should update push subscription', async () => {
@@ -214,10 +258,9 @@ describe('Enhanced Notification Storage', () => {
       });
 
       // Update the subscription
-      const updatedSubscription = await storage.updatePushSubscription(
-        subscription.id,
-        { active: false }
-      );
+      const updatedSubscription = await storage.updatePushSubscription(subscription.id, {
+        active: false,
+      });
 
       expect(updatedSubscription).toBeTruthy();
       expect(updatedSubscription!.active).toBe(false);
@@ -291,7 +334,7 @@ describe('Enhanced Notification Storage', () => {
 
     it('should handle notifications with expiration', async () => {
       const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours from now
-      
+
       const notification = await storage.createNotification({
         userId: testUserId,
         title: 'Expiring Notification',
@@ -304,4 +347,5 @@ describe('Enhanced Notification Storage', () => {
       expect(notification.expiresAt).toEqual(expiresAt);
     });
   });
+  // End of tests
 });

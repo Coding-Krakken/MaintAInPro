@@ -19,7 +19,7 @@ export function auditMiddleware() {
 
     const originalSend = res.send;
     const originalJson = res.json;
-  let responseBody: unknown;
+    let responseBody: unknown;
 
     // Capture response data
     res.send = function (body: unknown) {
