@@ -1,216 +1,83 @@
-<testsuites id="" name="" tests="46" failures="0" skipped="46" errors="0" time="0.10463">
-<testsuite name="admin/health-dashboard.spec.ts" timestamp="2025-08-26T17:55:35.490Z" hostname="chromium" tests="12" failures="0" skipped="12" time="0" errors="0">
-<testcase name="Health Dashboard E2E › should display health dashboard correctly" classname="admin/health-dashboard.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Health Dashboard E2E › should display memory usage information when available" classname="admin/health-dashboard.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Health Dashboard E2E › should display feature status" classname="admin/health-dashboard.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Health Dashboard E2E › should display deployment information when available" classname="admin/health-dashboard.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Health Dashboard E2E › should display websocket connections" classname="admin/health-dashboard.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Health Dashboard E2E › should refresh data when refresh button is clicked" classname="admin/health-dashboard.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Health Dashboard E2E › should handle error state correctly" classname="admin/health-dashboard.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Health Dashboard E2E › should handle unhealthy status" classname="admin/health-dashboard.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Health Dashboard E2E › should auto-refresh every 30 seconds" classname="admin/health-dashboard.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Health Dashboard E2E › should display loading state during refresh" classname="admin/health-dashboard.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Health Dashboard E2E › should be accessible" classname="admin/health-dashboard.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Health Dashboard E2E › should navigate between admin tabs" classname="admin/health-dashboard.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="basic.e2e.test.ts" timestamp="2025-08-26T17:55:35.490Z" hostname="chromium" tests="2" failures="0" skipped="2" time="0" errors="0">
-<testcase name="Basic E2E Tests › should load the homepage" classname="basic.e2e.test.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Basic E2E Tests › should verify test framework" classname="basic.e2e.test.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="debug-admin.spec.ts" timestamp="2025-08-26T17:55:35.490Z" hostname="chromium" tests="1" failures="0" skipped="1" time="0" errors="0">
-<testcase name="debug admin page access" classname="debug-admin.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="debug-auth-status.spec.ts" timestamp="2025-08-26T17:55:35.490Z" hostname="chromium" tests="1" failures="0" skipped="1" time="0" errors="0">
-<testcase name="debug authentication status and environment" classname="debug-auth-status.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="debug-auth-working.spec.ts" timestamp="2025-08-26T17:55:35.490Z" hostname="chromium" tests="1" failures="0" skipped="1" time="0" errors="0">
-<testcase name="test working authentication with test@example.com" classname="debug-auth-working.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="debug-database-users.spec.ts" timestamp="2025-08-26T17:55:35.490Z" hostname="chromium" tests="1" failures="0" skipped="1" time="0" errors="0">
-<testcase name="debug: check database users and authentication flow" classname="debug-database-users.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="debug-login.spec.ts" timestamp="2025-08-26T17:55:35.490Z" hostname="chromium" tests="1" failures="0" skipped="1" time="0" errors="0">
-<testcase name="debug login error handling" classname="debug-login.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="debug-server-env.spec.ts" timestamp="2025-08-26T17:55:35.490Z" hostname="chromium" tests="1" failures="0" skipped="1" time="0" errors="0">
-<testcase name="check server environment during test" classname="debug-server-env.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="debug-valid-login.spec.ts" timestamp="2025-08-26T17:55:35.490Z" hostname="chromium" tests="1" failures="0" skipped="1" time="0" errors="0">
-<testcase name="debug valid credentials login" classname="debug-valid-login.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="debug-work-orders.spec.ts" timestamp="2025-08-26T17:55:35.490Z" hostname="chromium" tests="1" failures="0" skipped="1" time="0" errors="0">
-<testcase name="debug work order navigation" classname="debug-work-orders.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="debug-workorders.spec.ts" timestamp="2025-08-26T17:55:35.490Z" hostname="chromium" tests="1" failures="0" skipped="1" time="0" errors="0">
-<testcase name="debug work order data" classname="debug-workorders.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="main-flows.spec.ts" timestamp="2025-08-26T17:55:35.490Z" hostname="chromium" tests="19" failures="0" skipped="19" time="0" errors="0">
-<testcase name="Authentication Flow › user can login and logout" classname="main-flows.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Authentication Flow › shows error for invalid credentials" classname="main-flows.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Work Order Management › technician can complete work order flow @smoke" classname="main-flows.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Work Order Management › can create new work order" classname="main-flows.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Work Order Management › can filter work orders" classname="main-flows.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Work Order Management › can search work orders" classname="main-flows.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Equipment Management › can view equipment list" classname="main-flows.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Equipment Management › can create new equipment" classname="main-flows.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Equipment Management › can scan QR code for equipment" classname="main-flows.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Dashboard and Analytics › displays dashboard metrics" classname="main-flows.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Dashboard and Analytics › can filter dashboard by date range" classname="main-flows.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Mobile Responsiveness › mobile navigation works correctly" classname="main-flows.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Mobile Responsiveness › work order cards are touch-friendly" classname="main-flows.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Offline Functionality › shows offline indicator when network is unavailable" classname="main-flows.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Offline Functionality › can complete work orders offline" classname="main-flows.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Accessibility › supports keyboard navigation" classname="main-flows.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Accessibility › has proper focus indicators" classname="main-flows.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Performance › dashboard loads within acceptable time" classname="main-flows.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Performance › work order list handles large datasets" classname="main-flows.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="minimal-test.spec.ts" timestamp="2025-08-26T17:55:35.490Z" hostname="chromium" tests="2" failures="0" skipped="2" time="0" errors="0">
-<testcase name="minimal test - page loads" classname="minimal-test.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="minimal login form test" classname="minimal-test.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="sanity.spec.ts" timestamp="2025-08-26T17:55:35.490Z" hostname="chromium" tests="1" failures="0" skipped="1" time="0" errors="0">
-<testcase name="sanity: homepage loads and root element is visible" classname="sanity.spec.ts" time="0">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="simple-test.spec.ts" timestamp="2025-08-26T17:55:35.490Z" hostname="chromium" tests="1" failures="0" skipped="1" time="0" errors="0">
-<testcase name="browser test" classname="simple-test.spec.ts" time="0">
-<skipped>
-</skipped>
+<testsuites id="" name="" tests="1" failures="1" skipped="0" errors="0" time="2.127926">
+<testsuite name="admin/health-dashboard.spec.ts" timestamp="2025-08-26T18:46:32.334Z" hostname="chromium" tests="1" failures="1" skipped="0" time="0.01" errors="0">
+<testcase name="Health Dashboard E2E › should display health dashboard correctly" classname="admin/health-dashboard.spec.ts" time="0.01">
+<failure message="health-dashboard.spec.ts:13:3 should display health dashboard correctly" type="FAILURE">
+<![CDATA[  [chromium] › admin/health-dashboard.spec.ts:13:3 › Health Dashboard E2E › should display health dashboard correctly 
+
+    Error: browserType.launch: Target page, context or browser has been closed
+    Browser logs:
+
+    ╔════════════════════════════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like you launched a headed browser without having a XServer running.                     ║
+    ║ Set either 'headless: true' or use 'xvfb-run <your-playwright-app>' before running Playwright. ║
+    ║                                                                                                ║
+    ║ <3 Playwright Team                                                                             ║
+    ╚════════════════════════════════════════════════════════════════════════════════════════════════╝
+    Call log:
+      - <launching> /usr/bin/google-chrome --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AcceptCHFrame,AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --no-sandbox --no-sandbox --disable-dev-shm-usage --disable-web-security --user-data-dir=/tmp/playwright_chromiumdev_profile-Pv6y7N --remote-debugging-pipe --no-startup-window
+      - <launched> pid=10570
+      - [pid=10570][err] [10570:10570:0826/184632.982323:ERROR:ui/ozone/platform/x11/ozone_platform_x11.cc:249] Missing X server or $DISPLAY
+      - [pid=10570][err] [10570:10570:0826/184632.982365:ERROR:ui/aura/env.cc:257] The platform failed to initialize.  Exiting.
+      - [pid=10570] <process did exit: exitCode=1, signal=null>
+      - [pid=10570] starting temporary directories cleanup
+      - [pid=10570] <gracefully close start>
+      - [pid=10570] <kill>
+      - [pid=10570] <skipped force kill spawnedProcess.killed=false processClosed=true>
+      - [pid=10570] finished temporary directories cleanup
+      - [pid=10570] <gracefully close end>
+
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: browserType.launch: Target page, context or browser has been closed
+    Browser logs:
+
+    ╔════════════════════════════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like you launched a headed browser without having a XServer running.                     ║
+    ║ Set either 'headless: true' or use 'xvfb-run <your-playwright-app>' before running Playwright. ║
+    ║                                                                                                ║
+    ║ <3 Playwright Team                                                                             ║
+    ╚════════════════════════════════════════════════════════════════════════════════════════════════╝
+    Call log:
+      - <launching> /usr/bin/google-chrome --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AcceptCHFrame,AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --no-sandbox --no-sandbox --disable-dev-shm-usage --disable-web-security --user-data-dir=/tmp/playwright_chromiumdev_profile-ygNEvY --remote-debugging-pipe --no-startup-window
+      - <launched> pid=10609
+      - [pid=10609][err] [10609:10609:0826/184633.682693:ERROR:ui/ozone/platform/x11/ozone_platform_x11.cc:249] Missing X server or $DISPLAY
+      - [pid=10609][err] [10609:10609:0826/184633.682733:ERROR:ui/aura/env.cc:257] The platform failed to initialize.  Exiting.
+      - [pid=10609] <process did exit: exitCode=1, signal=null>
+      - [pid=10609] starting temporary directories cleanup
+      - [pid=10609] <gracefully close start>
+      - [pid=10609] <kill>
+      - [pid=10609] <skipped force kill spawnedProcess.killed=false processClosed=true>
+      - [pid=10609] finished temporary directories cleanup
+      - [pid=10609] <gracefully close end>
+
+
+    Retry #2 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: browserType.launch: Target page, context or browser has been closed
+    Browser logs:
+
+    ╔════════════════════════════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like you launched a headed browser without having a XServer running.                     ║
+    ║ Set either 'headless: true' or use 'xvfb-run <your-playwright-app>' before running Playwright. ║
+    ║                                                                                                ║
+    ║ <3 Playwright Team                                                                             ║
+    ╚════════════════════════════════════════════════════════════════════════════════════════════════╝
+    Call log:
+      - <launching> /usr/bin/google-chrome --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AcceptCHFrame,AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --no-sandbox --no-sandbox --disable-dev-shm-usage --disable-web-security --user-data-dir=/tmp/playwright_chromiumdev_profile-Q7WGVH --remote-debugging-pipe --no-startup-window
+      - <launched> pid=10648
+      - [pid=10648][err] [10648:10648:0826/184634.371165:ERROR:ui/ozone/platform/x11/ozone_platform_x11.cc:249] Missing X server or $DISPLAY
+      - [pid=10648][err] [10648:10648:0826/184634.371220:ERROR:ui/aura/env.cc:257] The platform failed to initialize.  Exiting.
+      - [pid=10648] <process did exit: exitCode=1, signal=null>
+      - [pid=10648] starting temporary directories cleanup
+      - [pid=10648] <gracefully close start>
+      - [pid=10648] <kill>
+      - [pid=10648] <skipped force kill spawnedProcess.killed=false processClosed=true>
+      - [pid=10648] finished temporary directories cleanup
+      - [pid=10648] <gracefully close end>
+
+]]>
+</failure>
 </testcase>
 </testsuite>
 </testsuites>

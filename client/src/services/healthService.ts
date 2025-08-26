@@ -16,8 +16,8 @@ export interface HealthData {
   };
   websocket: {
     totalConnections: number;
-    activeConnections: number;
-    connectionsByWarehouse: Record<string, number>;
+    userConnections: number;
+    warehouseConnections: number;
   };
   features: {
     auth: string;
@@ -106,7 +106,7 @@ class HealthServiceImpl implements HealthService {
       const metrics: HealthMetrics = {
         systemStatus: this.mapStatusToSystemStatus(healthData.status),
         databaseConnections: this.extractDatabaseConnections(healthData),
-        activeUsers: healthData.websocket?.activeConnections || 0,
+        activeUsers: healthData.websocket?.totalConnections || 0,
         responseTime,
         errorRate: this.calculateErrorRate(healthData),
         uptime: healthData.uptime,
@@ -161,7 +161,7 @@ class HealthServiceImpl implements HealthService {
     if (healthData.features?.database === 'enabled') {
       // For now, return a reasonable estimate based on active users
       // In a real implementation, this would come from the server
-      return Math.max(1, Math.ceil((healthData.websocket?.activeConnections || 0) / 10));
+      return Math.max(1, Math.ceil((healthData.websocket?.totalConnections || 0) / 10));
     }
     return 0;
   }
