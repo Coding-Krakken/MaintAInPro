@@ -167,7 +167,7 @@ export function HealthDashboard() {
             <Network className='h-4 w-4 text-muted-foreground' />
           </CardHeader>
           <CardContent>
-            <div className='text-2xl font-bold'>{health.websocket?.activeConnections || 0}</div>
+            <div className='text-2xl font-bold'>{health.websocket?.totalConnections || 0}</div>
             <p className='text-xs text-muted-foreground'>Active connections</p>
           </CardContent>
         </Card>
@@ -252,31 +252,6 @@ export function HealthDashboard() {
         </Card>
       )}
 
-      {/* WebSocket Details */}
-      {health.websocket &&
-        Object.keys(health.websocket.connectionsByWarehouse || {}).length > 0 && (
-          <Card>
-            <CardHeader>
-              <CardTitle className='flex items-center gap-2'>
-                <Users className='h-4 w-4' />
-                Active Connections by Warehouse
-              </CardTitle>
-              <CardDescription>Real-time connection distribution</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className='space-y-2'>
-                {Object.entries(health.websocket.connectionsByWarehouse).map(
-                  ([warehouse, count]) => (
-                    <div key={warehouse} className='flex justify-between items-center'>
-                      <span className='text-sm'>{warehouse}</span>
-                      <Badge variant='outline'>{count} connections</Badge>
-                    </div>
-                  )
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        )}
     </div>
   );
 }

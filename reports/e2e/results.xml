@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <testsuites id="" name="" tests="46" failures="46" skipped="0" errors="0" time="17.917925999999998">
 <testsuite name="admin/health-dashboard.spec.ts" timestamp="2025-08-26T18:37:10.435Z" hostname="chromium" tests="12" failures="12" skipped="0" time="0.059" errors="0">
 <testcase name="Health Dashboard E2E › should display health dashboard correctly" classname="admin/health-dashboard.spec.ts" time="0.004">
@@ -393,6 +394,86 @@
 <![CDATA[  [chromium] › simple-test.spec.ts:2:1 › browser test ──────────────────────────────────────────────
 
     Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /usr/bin/google-chrome
+=======
+<testsuites id="" name="" tests="1" failures="1" skipped="0" errors="0" time="2.127926">
+<testsuite name="admin/health-dashboard.spec.ts" timestamp="2025-08-26T18:46:32.334Z" hostname="chromium" tests="1" failures="1" skipped="0" time="0.01" errors="0">
+<testcase name="Health Dashboard E2E › should display health dashboard correctly" classname="admin/health-dashboard.spec.ts" time="0.01">
+<failure message="health-dashboard.spec.ts:13:3 should display health dashboard correctly" type="FAILURE">
+<![CDATA[  [chromium] › admin/health-dashboard.spec.ts:13:3 › Health Dashboard E2E › should display health dashboard correctly 
+
+    Error: browserType.launch: Target page, context or browser has been closed
+    Browser logs:
+
+    ╔════════════════════════════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like you launched a headed browser without having a XServer running.                     ║
+    ║ Set either 'headless: true' or use 'xvfb-run <your-playwright-app>' before running Playwright. ║
+    ║                                                                                                ║
+    ║ <3 Playwright Team                                                                             ║
+    ╚════════════════════════════════════════════════════════════════════════════════════════════════╝
+    Call log:
+      - <launching> /usr/bin/google-chrome --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AcceptCHFrame,AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --no-sandbox --no-sandbox --disable-dev-shm-usage --disable-web-security --user-data-dir=/tmp/playwright_chromiumdev_profile-Pv6y7N --remote-debugging-pipe --no-startup-window
+      - <launched> pid=10570
+      - [pid=10570][err] [10570:10570:0826/184632.982323:ERROR:ui/ozone/platform/x11/ozone_platform_x11.cc:249] Missing X server or $DISPLAY
+      - [pid=10570][err] [10570:10570:0826/184632.982365:ERROR:ui/aura/env.cc:257] The platform failed to initialize.  Exiting.
+      - [pid=10570] <process did exit: exitCode=1, signal=null>
+      - [pid=10570] starting temporary directories cleanup
+      - [pid=10570] <gracefully close start>
+      - [pid=10570] <kill>
+      - [pid=10570] <skipped force kill spawnedProcess.killed=false processClosed=true>
+      - [pid=10570] finished temporary directories cleanup
+      - [pid=10570] <gracefully close end>
+
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: browserType.launch: Target page, context or browser has been closed
+    Browser logs:
+
+    ╔════════════════════════════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like you launched a headed browser without having a XServer running.                     ║
+    ║ Set either 'headless: true' or use 'xvfb-run <your-playwright-app>' before running Playwright. ║
+    ║                                                                                                ║
+    ║ <3 Playwright Team                                                                             ║
+    ╚════════════════════════════════════════════════════════════════════════════════════════════════╝
+    Call log:
+      - <launching> /usr/bin/google-chrome --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AcceptCHFrame,AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --no-sandbox --no-sandbox --disable-dev-shm-usage --disable-web-security --user-data-dir=/tmp/playwright_chromiumdev_profile-ygNEvY --remote-debugging-pipe --no-startup-window
+      - <launched> pid=10609
+      - [pid=10609][err] [10609:10609:0826/184633.682693:ERROR:ui/ozone/platform/x11/ozone_platform_x11.cc:249] Missing X server or $DISPLAY
+      - [pid=10609][err] [10609:10609:0826/184633.682733:ERROR:ui/aura/env.cc:257] The platform failed to initialize.  Exiting.
+      - [pid=10609] <process did exit: exitCode=1, signal=null>
+      - [pid=10609] starting temporary directories cleanup
+      - [pid=10609] <gracefully close start>
+      - [pid=10609] <kill>
+      - [pid=10609] <skipped force kill spawnedProcess.killed=false processClosed=true>
+      - [pid=10609] finished temporary directories cleanup
+      - [pid=10609] <gracefully close end>
+
+
+    Retry #2 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: browserType.launch: Target page, context or browser has been closed
+    Browser logs:
+
+    ╔════════════════════════════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like you launched a headed browser without having a XServer running.                     ║
+    ║ Set either 'headless: true' or use 'xvfb-run <your-playwright-app>' before running Playwright. ║
+    ║                                                                                                ║
+    ║ <3 Playwright Team                                                                             ║
+    ╚════════════════════════════════════════════════════════════════════════════════════════════════╝
+    Call log:
+      - <launching> /usr/bin/google-chrome --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AcceptCHFrame,AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --no-sandbox --no-sandbox --disable-dev-shm-usage --disable-web-security --user-data-dir=/tmp/playwright_chromiumdev_profile-Q7WGVH --remote-debugging-pipe --no-startup-window
+      - <launched> pid=10648
+      - [pid=10648][err] [10648:10648:0826/184634.371165:ERROR:ui/ozone/platform/x11/ozone_platform_x11.cc:249] Missing X server or $DISPLAY
+      - [pid=10648][err] [10648:10648:0826/184634.371220:ERROR:ui/aura/env.cc:257] The platform failed to initialize.  Exiting.
+      - [pid=10648] <process did exit: exitCode=1, signal=null>
+      - [pid=10648] starting temporary directories cleanup
+      - [pid=10648] <gracefully close start>
+      - [pid=10648] <kill>
+      - [pid=10648] <skipped force kill spawnedProcess.killed=false processClosed=true>
+      - [pid=10648] finished temporary directories cleanup
+      - [pid=10648] <gracefully close end>
+
+>>>>>>> 1e1db8c99d75391528df78bba74ffd05e2d64f7e
 ]]>
 </failure>
 </testcase>
