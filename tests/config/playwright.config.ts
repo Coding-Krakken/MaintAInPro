@@ -25,10 +25,10 @@ export default defineConfig({
       name: 'chromium',
       use: { 
         ...devices['Desktop Chrome'],
-        // Use system chromium browser
+        // Use system google-chrome browser
         launchOptions: {
-          executablePath: '/usr/bin/chromium-browser',
-          args: ['--no-sandbox', '--disable-dev-shm-usage']
+          executablePath: '/usr/bin/google-chrome',
+          args: ['--no-sandbox', '--disable-dev-shm-usage', '--disable-web-security']
         }
       },
     },
