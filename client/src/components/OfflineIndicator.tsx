@@ -61,6 +61,7 @@ const OfflineIndicator: React.FC = () => {
             ? 'border-l-blue-500 bg-blue-50'
             : 'border-l-orange-500 bg-orange-50'
         }`}
+        data-testid='offline-indicator'
       >
         <div className='flex items-center space-x-3'>
           <div className='flex items-center space-x-2'>
@@ -69,14 +70,14 @@ const OfflineIndicator: React.FC = () => {
             ) : (
               <WifiOff className='w-5 h-5 text-orange-600' />
             )}
-            <span className='text-sm font-medium'>
+            <span className='text-sm font-medium' data-testid='network-status-text'>
               {networkStatus.isOnline ? 'Online' : 'Offline'}
             </span>
           </div>
 
           {pendingCount > 0 && (
             <>
-              <Badge variant='outline' className='text-xs'>
+              <Badge variant='outline' className='text-xs' data-testid='sync-queue-indicator'>
                 {pendingCount} pending
               </Badge>
 
@@ -87,6 +88,8 @@ const OfflineIndicator: React.FC = () => {
                   onClick={handleSync}
                   disabled={isSync}
                   className='h-6 px-2'
+                  data-testid='sync-button'
+                  aria-label='Sync pending changes'
                 >
                   <RefreshCw className={`w-3 h-3 ${isSync ? 'animate-spin' : ''}`} />
                 </Button>
@@ -95,7 +98,7 @@ const OfflineIndicator: React.FC = () => {
           )}
 
           {!networkStatus.isOnline && pendingCount > 0 && (
-            <div className='flex items-center space-x-1 text-orange-600'>
+            <div className='flex items-center space-x-1 text-orange-600' data-testid='offline-sync-message'>
               <AlertCircle className='w-4 h-4' />
               <span className='text-xs'>Changes will sync when online</span>
             </div>
