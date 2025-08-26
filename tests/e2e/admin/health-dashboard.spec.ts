@@ -45,7 +45,7 @@ test.describe('Health Dashboard E2E', () => {
     });
 
     // Navigate to the admin page
-    await page.goto('/admin');
+    await page.goto('http://localhost:5000/admin');
   });
 
   test('should display health dashboard correctly', async ({ page }) => {
@@ -148,7 +148,7 @@ test.describe('Health Dashboard E2E', () => {
       });
     });
 
-    await page.goto('/admin');
+    await page.goto('http://localhost:5000/admin');
     await page.waitForLoadState('networkidle');
 
     // Check error state
@@ -194,7 +194,7 @@ test.describe('Health Dashboard E2E', () => {
       });
     });
 
-    await page.goto('/admin');
+    await page.goto('http://localhost:5000/admin');
     await page.waitForLoadState('networkidle');
 
     // Should show error state due to 503 status

@@ -4,7 +4,7 @@ test.describe('Basic E2E Tests', () => {
   test.skip('should load the homepage', async ({ page }) => {
     // Skip this test as server is not running
     // Navigate to the homepage
-    await page.goto('/');
+    await page.goto('http://localhost:5000/');
 
     // Check that the page loads
     await expect(page).toHaveTitle(/MaintainPro|Maintenance/);

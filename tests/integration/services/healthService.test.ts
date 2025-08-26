@@ -117,7 +117,7 @@ describe('Health Service Integration', () => {
       expect(mockFetch).toHaveBeenCalledWith('/api/health', {
         headers: {
           Authorization: 'Bearer demo-token',
-          'x-user-id': 'default-user-id',
+          'x-user-id': '00000000-0000-0000-0000-000000000003',
           'x-warehouse-id': 'default-warehouse-id',
         },
       });

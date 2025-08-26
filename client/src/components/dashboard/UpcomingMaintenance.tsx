@@ -25,7 +25,7 @@ export default function UpcomingMaintenance() {
     queryFn: async () => {
       const response = await fetch('/api/equipment', {
         headers: {
-          'x-user-id': localStorage.getItem('userId') || 'default-user-id',
+          'x-user-id': localStorage.getItem('userId') || '00000000-0000-0000-0000-000000000003',
           'x-warehouse-id': localStorage.getItem('warehouseId') || 'default-warehouse-id',
         },
       });

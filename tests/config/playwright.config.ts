@@ -23,10 +23,14 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-        use: { 
-          ...devices['Desktop Chrome'],
-          // Use Playwright-managed Chromium (default)
-        },
+      use: { 
+        ...devices['Desktop Chrome'],
+        // Use system chromium browser
+        launchOptions: {
+          executablePath: '/usr/bin/chromium-browser',
+          args: ['--no-sandbox', '--disable-dev-shm-usage']
+        }
+      },
     },
     // Disable other browsers for now to focus on fixing core issues
     // {

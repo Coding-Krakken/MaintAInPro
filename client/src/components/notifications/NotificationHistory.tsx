@@ -132,7 +132,7 @@ export const NotificationHistory: React.FC = () => {
       // In a real implementation, this would fetch from the API
       const response = await fetch('/api/notifications', {
         headers: {
-          'x-user-id': localStorage.getItem('userId') || 'default-user',
+          'x-user-id': localStorage.getItem('userId') || '00000000-0000-0000-0000-000000000003',
         },
       });
 
@@ -153,7 +153,7 @@ export const NotificationHistory: React.FC = () => {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'x-user-id': localStorage.getItem('userId') || 'default-user',
+          'x-user-id': localStorage.getItem('userId') || '00000000-0000-0000-0000-000000000003',
         },
         body: JSON.stringify({ read: true }),
       });
@@ -173,7 +173,7 @@ export const NotificationHistory: React.FC = () => {
       const response = await fetch(`/api/notifications/${notificationId}`, {
         method: 'DELETE',
         headers: {
-          'x-user-id': localStorage.getItem('userId') || 'default-user',
+          'x-user-id': localStorage.getItem('userId') || '00000000-0000-0000-0000-000000000003',
         },
       });
 
