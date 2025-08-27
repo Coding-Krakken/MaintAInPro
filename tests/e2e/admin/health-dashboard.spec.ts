@@ -194,7 +194,9 @@ test.describe('Health Dashboard E2E', () => {
     });
 
     await page.goto('/admin');
-    await page.waitForLoadState('networkidle');
+    // Wait for DOM to load instead of networkidle, since we expect an error state
+    await page.waitForLoadState('domcontentloaded');
+    await page.waitForTimeout(1000); // Give time for error state to render
 
     // Should show error state due to 503 status
     await expect(page.locator('text=Failed to Load Health Data')).toBeVisible();
