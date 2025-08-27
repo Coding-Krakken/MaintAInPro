@@ -37,17 +37,10 @@ export default defineConfig({
   webServer: [
     {
       command: 'TEST_AUTH_MODE=true DISABLE_RATE_LIMITING=true npm run dev',
-      port: 5000,
-      reuseExistingServer: true,
-      timeout: 120000,
-      cwd: '../../',
-    },
-    {
-      command: 'vite build && npx serve dist/public --port 4173 --single',
       port: 4173,
       reuseExistingServer: true,
       timeout: 120000,
       cwd: '../../',
-    }
+    },
   ],
 });
