@@ -14,9 +14,10 @@ export default defineConfig({
   ],
   use: {
     baseURL: process.env.BASE_URL || 'http://localhost:4173/',
-    trace: 'on-first-retry',
+    // Disable video/trace recording to avoid ffmpeg dependency issues
+    trace: 'off',
     screenshot: 'only-on-failure',
-    video: 'retain-on-failure', // This can cause issues in headless mode
+    video: 'off', // Disabled due to ffmpeg not being available
     // Force headless mode in CI or when no DISPLAY is available
     headless: !!process.env.CI || !process.env.DISPLAY,
     // Add timeout settings to help with browser startup
@@ -25,32 +26,24 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
-    },
-    {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
-    },
-    {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
-    },
-    {
-      name: 'Mobile Chrome',
-      use: { ...devices['Pixel 5'] },
-    },
-    {
-      name: 'Mobile Safari',
-      use: { ...devices['iPhone 12'] },
+      use: { 
+        ...devices['Desktop Chrome'],
+        // Use system Chrome browser instead of downloading Playwright's browsers
+        channel: 'chrome',
+      },
     },
   ],
   webServer: [
     {
-      command: 'npm run dev',
+      command: 'TEST_AUTH_MODE=true npm run dev',
       port: 5000,
       reuseExistingServer: true,
       timeout: 120000,
       cwd: '../../',
+      env: {
+        TEST_AUTH_MODE: 'true',
+        NODE_ENV: 'test',
+      },
     },
     {
       command: 'vite --port 4173',

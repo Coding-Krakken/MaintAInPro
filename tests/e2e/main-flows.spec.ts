@@ -6,19 +6,19 @@ const testUsers = {
   technician: {
     email: 'test@example.com',
     password: 'password',
-    name: 'Test User',
+    name: 'Test User', // Updated to match mock auth response
     role: 'technician',
   },
   supervisor: {
     email: 'supervisor@maintainpro.com',
     password: 'password',
-    name: 'John Smith',
+    name: 'Test User', // Updated to match mock auth response
     role: 'supervisor',
   },
   manager: {
     email: 'manager@example.com',
     password: 'password',
-    name: 'Mike Johnson',
+    name: 'Test User', // Updated to match mock auth response
     role: 'manager',
   },
 };

@@ -499,23 +499,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       // TEST_AUTH_MODE bypass: allow direct login for E2E tests
       if (process.env.TEST_AUTH_MODE === 'true') {
-        // Accept any credentials, return a mock user and token
-        const mockUser = {
-          id: '00000000-0000-0000-0000-000000000001',
-          email: req.body.email,
-          firstName: 'Test',
-          lastName: 'User',
-          role: 'admin',
-          warehouseId: '00000000-0000-0000-0000-000000000001',
-          emailVerified: true,
-          mfaEnabled: false,
-        };
-        return res.json({
-          user: mockUser,
-          token: 'mock-token',
-          refreshToken: 'mock-refresh-token',
-          sessionId: 'mock-session-id',
-        });
+        // Define valid test credentials
+        const validTestEmails = [
+          'test@example.com',
+          'supervisor@maintainpro.com', 
+          'manager@example.com',
+        ];
+        
+        // Check if credentials are valid for testing
+        if (validTestEmails.includes(req.body.email) && req.body.password === 'password') {
+          const mockUser = {
+            id: '00000000-0000-0000-0000-000000000001',
+            email: req.body.email,
+            firstName: 'Test',
+            lastName: 'User',
+            role: 'admin',
+            warehouseId: '00000000-0000-0000-0000-000000000001',
+            emailVerified: true,
+            mfaEnabled: false,
+          };
+          return res.json({
+            user: mockUser,
+            token: 'mock-token',
+            refreshToken: 'mock-refresh-token',
+            sessionId: 'mock-session-id',
+          });
+        } else {
+          // Return error for invalid test credentials
+          return res.status(401).json({
+            message: 'Invalid credentials',
+          });
+        }
       }
 
       const { AuthService } = await import('./services/auth');
