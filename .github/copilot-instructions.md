@@ -72,6 +72,28 @@
 - `README.md`, `config/README.md`, `tests/README.md`, `artifacts/adr/`,
   `Documentation/Blueprint/`, `ci/check_gates.py`
 
+## Handling Failed Tests
+
+When encountering failed tests in the CI/CD pipeline or local test runs, follow this systematic process to resolve them efficiently:
+
+1. **Identify Failed Test Files**: Review the test output to extract the list of files with failures. Use a placeholder like `{FAILED_TESTS_LIST}` to dynamically reference the current set of failed tests.
+
+2. **Run Targeted Tests**: For each failed file in `{FAILED_TESTS_LIST}`, execute targeted tests using the appropriate command (e.g., `npx playwright test tests/e2e/admin/health-dashboard.spec.ts` for E2E tests).
+
+3. **Analyze Failures**: Examine test logs, error messages, and stack traces to understand root causes (e.g., UI element not found, API response mismatch, timing issues).
+
+4. **Fix Issues**: Update code, configurations, or test scripts to address the failures. Ensure changes align with project conventions and do not introduce regressions.
+
+5. **Re-run and Validate**: Re-execute the targeted tests for the file until all pass. Use `npm run test:all` periodically to check for broader impacts.
+
+6. **Commit and Push**: After all tests in a file pass, commit changes with a descriptive message (e.g., "Fix failed tests in health-dashboard.spec.ts") and push to the repository.
+
+7. **Repeat for Next File**: Move to the next failed file in `{FAILED_TESTS_LIST}` and repeat steps 2-6.
+
+8. **Final Validation**: Once all files pass, run full test suite and CI gates to ensure overall system integrity.
+
+This process ensures incremental, traceable fixes while maintaining code quality and minimizing blast radius.
+
 ---
 
 _If any section is unclear or missing, please provide feedback for iterative

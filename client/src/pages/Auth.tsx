@@ -56,14 +56,28 @@ export default function Auth() {
     setError('');
 
     try {
-      await login(email, password);
-      toast({
-        title: 'Success',
-        description: 'Successfully logged in',
-      });
-      setLocation('/dashboard');
+      const result = await login(email, password);
+      if (!result.success) {
+        if (result.requiresMFA) {
+          // Handle MFA if needed
+          setError('MFA required');
+        } else {
+          setError(result.error || 'Invalid credentials');
+        }
+        toast({
+          title: 'Error',
+          description: result.error || 'Invalid credentials',
+          variant: 'destructive',
+        });
+      } else {
+        toast({
+          title: 'Success',
+          description: 'Successfully logged in',
+        });
+        setLocation('/dashboard');
+      }
     } catch (_error) {
-      const errorMessage = 'Invalid credentials';
+      const errorMessage = 'Login failed';
       setError(errorMessage);
       toast({
         title: 'Error',

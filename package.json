@@ -5,7 +5,7 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
-    "dev": "npm run dev:back & npm run dev:front",
+    "dev": "TEST_AUTH_MODE=true DISABLE_RATE_LIMITING=true npm run dev:back & npm run dev:front",
     "dev:back": "NODE_ENV=development tsx server/index.ts",
     "dev:front": "vite --port 4173",
     "seed": "tsx scripts/database/seed.ts",
