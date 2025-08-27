@@ -42,10 +42,20 @@ export default defineConfig({
       use: { ...devices['iPhone 12'] },
     },
   ],
-  webServer: {
-    command: 'npm run dev',
-    port: 5000,
-    reuseExistingServer: true, // Allow reusing existing server
-    timeout: 120000, // 2 minutes timeout for server startup
-  },
+  webServer: [
+    {
+      command: 'npm run dev',
+      port: 5000,
+      reuseExistingServer: true,
+      timeout: 120000,
+      cwd: '../../',
+    },
+    {
+      command: 'vite --port 4173',
+      port: 4173,
+      reuseExistingServer: true,
+      timeout: 120000,
+      cwd: '../../',
+    }
+  ],
 });
