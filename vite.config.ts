@@ -3,6 +3,8 @@ import react from '@vitejs/plugin-react';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import path from 'path';
 
+const apiTarget = process.env.API_TARGET || 'http://localhost:5000';
+
 export default defineConfig({
   plugins: [react(), tsconfigPaths()],
   base: '/',
@@ -22,9 +24,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          // Vendor chunk for large third-party libraries
           vendor: ['react', 'react-dom', 'react-router-dom'],
-          // UI components chunk
           ui: [
             '@radix-ui/react-dialog',
             '@radix-ui/react-dropdown-menu',
@@ -34,18 +34,13 @@ export default defineConfig({
             '@radix-ui/react-tooltip',
             'lucide-react',
           ],
-          // Form handling chunk
           forms: ['react-hook-form', '@hookform/resolvers', 'zod'],
-          // Charts and data visualization
           charts: ['recharts', 'date-fns'],
-          // Utils and smaller libraries
           utils: ['clsx', 'tailwind-merge', 'class-variance-authority'],
         },
       },
     },
-    // Set chunk size warning limit to 800KB
     chunkSizeWarningLimit: 800,
-    // Enable source maps for production debugging
     sourcemap: process.env.NODE_ENV === 'production' ? false : true,
   },
   server: {
@@ -53,20 +48,20 @@ export default defineConfig({
       strict: true,
       deny: ['**/.*'],
     },
-    allowedHosts: ['healthcheck.railway.app'],
+    allowedHosts: true,
     proxy: {
       '/api': {
-        target: 'http://localhost:5000',
+        target: apiTarget,
         changeOrigin: true,
         secure: false,
       },
     },
   },
   preview: {
-    allowedHosts: ['healthcheck.railway.app'],
+    allowedHosts: true,
     proxy: {
       '/api': {
-        target: 'http://localhost:5000',
+        target: apiTarget,
         changeOrigin: true,
         secure: false,
       },
