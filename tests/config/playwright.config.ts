@@ -13,7 +13,7 @@ export default defineConfig({
     ['junit', { outputFile: '../../test-results/e2e/results.xml' }],
   ],
   use: {
-    baseURL: process.env.BASE_URL || 'http://localhost:4174/',
+    baseURL: process.env.BASE_URL || 'http://localhost:4175/',
     // Disable video/trace recording to avoid ffmpeg dependency issues
     trace: 'off',
     screenshot: 'only-on-failure',
@@ -35,7 +35,7 @@ export default defineConfig({
   ],
   webServer: [
     {
-      command: 'TEST_AUTH_MODE=true npm run dev',
+      command: 'TEST_AUTH_MODE=true DISABLE_RATE_LIMITING=true npm run dev',
       port: 5000,
       reuseExistingServer: true,
       timeout: 120000,
