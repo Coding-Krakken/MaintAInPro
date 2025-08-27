@@ -13,7 +13,7 @@ export default defineConfig({
     ['junit', { outputFile: '../../test-results/e2e/results.xml' }],
   ],
   use: {
-    baseURL: process.env.BASE_URL || 'http://localhost:4173/',
+    baseURL: process.env.BASE_URL || 'http://localhost:4174/',
     // Disable video/trace recording to avoid ffmpeg dependency issues
     trace: 'off',
     screenshot: 'only-on-failure',
@@ -40,13 +40,9 @@ export default defineConfig({
       reuseExistingServer: true,
       timeout: 120000,
       cwd: '../../',
-      env: {
-        TEST_AUTH_MODE: 'true',
-        NODE_ENV: 'test',
-      },
     },
     {
-      command: 'vite --port 4173',
+      command: 'vite build && vite preview --port 4173',
       port: 4173,
       reuseExistingServer: true,
       timeout: 120000,

@@ -54,8 +54,22 @@ export default defineConfig({
       deny: ['**/.*'],
     },
     allowedHosts: ['healthcheck.railway.app'],
+    proxy: {
+      '/api': {
+        target: 'http://localhost:5000',
+        changeOrigin: true,
+        secure: false,
+      },
+    },
   },
   preview: {
     allowedHosts: ['healthcheck.railway.app'],
+    proxy: {
+      '/api': {
+        target: 'http://localhost:5000',
+        changeOrigin: true,
+        secure: false,
+      },
+    },
   },
 });
