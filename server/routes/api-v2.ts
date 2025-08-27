@@ -6,43 +6,43 @@ import {
   commonSchemas,
 } from '../middleware/enhanced-validation.middleware';
 
-import { insertWorkOrderSchema, insertEquipmentSchema, insertPartSchema } from '@shared/schema';
+import { insertWorkOrderSchema, insertEquipmentSchema, insertPartSchema, WorkOrder } from '@shared/schema';
 import { storage } from '../storage';
 
 const router = Router();
 
 // Helper functions for analytics
-function calculateAverageResolutionTime(workOrders: unknown[]): number {
+function calculateAverageResolutionTime(workOrders: WorkOrder[]): number {
   const completedOrders = workOrders.filter(
     wo =>
-      ['completed', 'verified', 'closed'].includes((wo as any).status) && (wo as any).completedAt
+      ['completed', 'verified', 'closed'].includes(wo.status) && wo.completedAt
   );
 
   if (completedOrders.length === 0) return 0;
 
   const totalResolutionTime = completedOrders.reduce((sum: number, wo) => {
-    const created = new Date((wo as any).createdAt);
-    const completed = new Date((wo as any).completedAt);
+    const created = new Date(wo.createdAt);
+    const completed = new Date(wo.completedAt!); // We checked for completedAt above
     return sum + (completed.getTime() - created.getTime());
   }, 0);
 
   return Math.round(totalResolutionTime / completedOrders.length / (1000 * 60 * 60)); // in hours
 }
 
-function calculateMTTR(workOrders: unknown[]): number {
+function calculateMTTR(workOrders: WorkOrder[]): number {
   // Mean Time To Repair - similar to average resolution time but specific to corrective maintenance
   const correctiveOrders = workOrders.filter(
     wo =>
-      (wo as any).type === 'corrective' &&
-      ['completed', 'verified', 'closed'].includes((wo as any).status) &&
-      (wo as any).completedAt
+      wo.type === 'corrective' &&
+      ['completed', 'verified', 'closed'].includes(wo.status) &&
+      wo.completedAt
   );
 
   if (correctiveOrders.length === 0) return 0;
 
   const totalRepairTime = correctiveOrders.reduce((sum: number, wo) => {
-    const created = new Date((wo as any).createdAt);
-    const completed = new Date((wo as any).completedAt);
+    const created = new Date(wo.createdAt);
+    const completed = new Date(wo.completedAt!); // We checked for completedAt above
     return sum + (completed.getTime() - created.getTime());
   }, 0);
 

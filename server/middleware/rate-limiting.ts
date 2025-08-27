@@ -1,6 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import rateLimit, { RateLimitRequestHandler } from 'express-rate-limit';
 import { createClient } from 'redis';
+import { AuthenticatedUser } from '../../shared/types/auth';
+
+interface RateLimitRequest extends Request {
+  user?: AuthenticatedUser;
+}
 
 /**
  * Advanced Rate Limiting with Redis Backend
@@ -119,7 +124,7 @@ export function createAdvancedRateLimit(
       }
       
       // Skip for admins if configured
-      if (options.skipAdmins && (req as any).user?.role === 'admin') {
+      if (options.skipAdmins && req.user?.role === 'admin') {
         return true;
       }
       
@@ -128,7 +133,7 @@ export function createAdvancedRateLimit(
     
     // Enhanced error handler
     handler: (req: Request, res: Response) => {
-      const userInfo = (req as any).user;
+      const userInfo = req.user;
       
       // Log suspicious activity
       if (profile === 'auth' || profile === 'passwordReset') {

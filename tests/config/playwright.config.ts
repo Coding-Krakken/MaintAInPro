@@ -16,9 +16,11 @@ export default defineConfig({
     baseURL: process.env.BASE_URL || 'http://localhost:4173/',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
-    video: 'retain-on-failure',
+    video: 'retain-on-failure', // This can cause issues in headless mode
     // Force headless mode in CI or when no DISPLAY is available
     headless: !!process.env.CI || !process.env.DISPLAY,
+    // Add timeout settings to help with browser startup
+    timeout: 30000,
   },
   projects: [
     {
