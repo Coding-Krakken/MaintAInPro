@@ -1,6 +1,16 @@
-import type { Express, RequestHandler } from 'express';
+import type { Express, RequestHandler, Request, Response, NextFunction } from 'express';
 import { createServer, type Server } from 'http';
 import crypto from 'crypto';
+import { AuthenticatedUser } from '../shared/types/auth';
+
+// Extend Express Request type to include user
+declare global {
+  namespace Express {
+    interface Request {
+      user?: AuthenticatedUser;
+    }
+  }
+}
 import { storage } from './storage';
 import {
   insertWorkOrderSchema,
@@ -12,6 +22,7 @@ import {
 import { fieldValidators, flexibleDateSchema } from '@shared/validation-utils';
 import { z } from 'zod';
 import { SecurityService } from './services/auth/security.service';
+import { JWTPayload } from './services/auth/jwt.service';
 import { notificationService } from './services/notification.service';
 import { fileManagementService } from './services/file-management.service';
 import { webhookService, WebhookEvents } from './services/webhook.service';
@@ -254,7 +265,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.use(auditMiddleware());
 
   // Authentication middleware
-  const authenticateRequest = async (req: any, res: any, next: any) => {
+  const authenticateRequest = async (req: Request, res: Response, next: NextFunction) => {
     try {
       // Skip authentication for public endpoints
       const publicEndpoints = ['/api/health', '/api/health/basic', '/api/monitoring'];
@@ -308,7 +319,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Check if session is still valid
-      const payload = tokenValidation.payload as any;
+      const payload = tokenValidation.payload as JWTPayload;
       const sessionValid = await new AuthService().validateSession(
         payload.sessionId
       );
@@ -342,7 +353,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // RBAC middleware for role-based access control
   const requireRole = (..._allowedRoles: string[]) => {
-  return async (req: any, res: any, next: any) => {
+  return async (req: Request, res: Response, next: NextFunction) => {
       try {
         const { AuthService } = await import('./services/auth');
 
@@ -411,22 +422,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Additional rate limiters for auth routes (if needed separately)
   const _generalRateLimit = createRateLimiter(15 * 60 * 1000, 100); // 100 requests per 15 minutes
 
-  const getCurrentUser = (req: unknown) => {
-    const request = req as any;
+  const getCurrentUser = (req: Request) => {
     return (
-      request.user?.id ||
-      request.headers['x-user-id'] ||
+      req.user?.id ||
+      req.headers['x-user-id'] ||
       '00000000-0000-0000-0000-000000000001'
     );
   };
 
-  const getCurrentWarehouse = (req: unknown) => {
-    const request = req as any;
+  const getCurrentWarehouse = (req: Request) => {
     return (
-      request.user?.warehouseId ||
-      request.headers['x-warehouse-id'] ||
+      req.user?.warehouseId ||
+      req.headers['x-warehouse-id'] ||
       '00000000-0000-0000-0000-000000000001'
     );
+  };
+
+  // Utility function to ensure query params are strings
+  const ensureString = (value: string | string[] | undefined): string => {
+    if (Array.isArray(value)) return value[0] || '';
+    return value || '';
   };
 
   /**
@@ -570,7 +585,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { AuthService } = await import('./services/auth');
 
-  const sessionId = (req as any).user?.sessionId;
+  const sessionId = (req).user?.sessionId;
       if (sessionId) {
         const context = {
           ipAddress: req.ip || req.connection.remoteAddress || 'Unknown',
@@ -809,7 +824,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Get user from request (set by authenticateRequest middleware)
-  const user = (req as any).user;
+  const user = (req).user;
       if (!user) {
         return res.status(401).json({ message: 'Not authenticated' });
       }
@@ -1123,7 +1138,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/api/work-orders/assigned/:userId', async (req, res) => {
     try {
-      const workOrders = await storage.getWorkOrdersByAssignee(req.params.userId);
+      const workOrders = await storage.getWorkOrdersByAssignee(ensureString(req.params.userId));
       res.json(workOrders);
     } catch (_error) {
       res.status(500).json({ message: 'Failed to get assigned work orders' });
@@ -1828,7 +1843,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/escalation/stats/:warehouseId', authenticateRequest, async (req, res) => {
     try {
       const { escalationEngine } = await import('./services/escalation-engine');
-      const stats = await escalationEngine.getEscalationStats(req.params.warehouseId);
+      const stats = await escalationEngine.getEscalationStats(ensureString(req.params.warehouseId));
       res.json(stats);
     } catch (_error) {
       res.status(500).json({ message: 'Failed to get escalation stats' });
@@ -1838,7 +1853,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/escalation/rules/:warehouseId', authenticateRequest, async (req, res) => {
     try {
       const { escalationEngine } = await import('./services/escalation-engine');
-      const rules = escalationEngine.getEscalationRules(req.params.warehouseId);
+      const rules = escalationEngine.getEscalationRules(ensureString(req.params.warehouseId));
       res.json(rules);
     } catch (_error) {
       res.status(500).json({ message: 'Failed to get escalation rules' });
@@ -1856,7 +1871,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         // Create new rule
         const newRuleId = await escalationEngine.createEscalationRule({
           ...updates,
-          warehouseId: req.params.warehouseId,
+          warehouseId: ensureString(req.params.warehouseId),
         });
         return res.json({ message: 'Escalation rule created successfully', ruleId: newRuleId });
       }
@@ -2577,7 +2592,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Get online users for warehouse
   app.get('/api/websocket/online/:warehouseId', (req, res) => {
     try {
-      const warehouseId = req.params.warehouseId;
+      const warehouseId = ensureString(req.params.warehouseId);
       const onlineUsers = notificationService.getOnlineUsersForWarehouse(warehouseId);
       res.json({ onlineUsers });
     } catch (_error) {

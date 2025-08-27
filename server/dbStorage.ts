@@ -690,7 +690,7 @@ export class DatabaseStorage implements IStorage {
         ...insertPreference,
         createdAt: new Date(),
         updatedAt: new Date(),
-      } as any)
+      } as InsertNotificationPreference)
       .returning();
     return preference;
   }
@@ -705,7 +705,7 @@ export class DatabaseStorage implements IStorage {
       .set({
         ...updates,
         updatedAt: new Date(),
-      } as any)
+      } as Partial<NotificationPreference>)
       .where(
         and(
           eq(notificationPreferences.userId, userId),
@@ -743,7 +743,7 @@ export class DatabaseStorage implements IStorage {
         ...insertSubscription,
         createdAt: new Date(),
         lastUsed: new Date(),
-      } as any)
+      } as InsertPushSubscription)
       .returning();
     return subscription;
   }
@@ -757,7 +757,7 @@ export class DatabaseStorage implements IStorage {
       .set({
         ...updates,
         lastUsed: new Date(),
-      } as any)
+      } as InsertPushSubscription)
       .where(eq(pushSubscriptions.id, id))
       .returning();
     return subscription || null;

@@ -5,7 +5,7 @@ import { Request } from 'express';
  */
 export interface AuthenticatedUser {
   id: string;
-  email: string;
+  email?: string; // Make optional to match usage across the app
   role: string;
   organizationId?: string; // Optional to match schema
   sessionId?: string;
