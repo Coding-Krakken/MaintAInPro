@@ -140,6 +140,8 @@ export default function Auth() {
                     type='button'
                     className='absolute inset-y-0 right-0 pr-3 flex items-center'
                     onClick={() => setShowPassword(!showPassword)}
+                    data-testid='password-toggle-button'
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
                   >
                     {showPassword ? (
                       <EyeOff className='h-4 w-4 text-gray-400' />
