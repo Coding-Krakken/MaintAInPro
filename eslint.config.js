@@ -21,6 +21,7 @@ export default [
       'public/**',
       'migrations/**/*.sql',
       'client/public/sw.js',
+      'playwright-report/**',
     ],
   },
 
