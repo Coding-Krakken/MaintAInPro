@@ -306,6 +306,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (process.env.NODE_ENV === 'test' && token === 'mock-token') {
         req.user = {
           id: '00000000-0000-0000-0000-000000000001',
+          role: 'admin',
           warehouseId: '00000000-0000-0000-0000-000000000001',
         };
         return next();
@@ -422,20 +423,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Additional rate limiters for auth routes (if needed separately)
   const _generalRateLimit = createRateLimiter(15 * 60 * 1000, 100); // 100 requests per 15 minutes
 
-  const getCurrentUser = (req: Request) => {
-    return (
-      req.user?.id ||
+  const getCurrentUser = (req: Request): string => {
+    const userId = req.user?.id ||
       req.headers['x-user-id'] ||
-      '00000000-0000-0000-0000-000000000001'
-    );
+      '00000000-0000-0000-0000-000000000001';
+    return ensureString(userId);
   };
 
-  const getCurrentWarehouse = (req: Request) => {
-    return (
-      req.user?.warehouseId ||
+  const getCurrentWarehouse = (req: Request): string => {
+    const warehouseId = req.user?.warehouseId ||
       req.headers['x-warehouse-id'] ||
-      '00000000-0000-0000-0000-000000000001'
-    );
+      '00000000-0000-0000-0000-000000000001';
+    return ensureString(warehouseId);
   };
 
   // Utility function to ensure query params are strings
@@ -661,7 +660,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         userAgent: req.headers['user-agent'] || 'Unknown',
       };
 
-      const result = await AuthService.enableMFA(userId, token, context);
+      const result = await AuthService.enableMFA(userId, ensureString(token), context);
       if (!result.success) {
         return res.status(400).json({ message: result.error || 'Invalid MFA token' });
       }

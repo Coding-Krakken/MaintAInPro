@@ -1,5 +1,7 @@
 import type { ParamsDictionary } from 'express-serve-static-core';
 import type { ParsedQs } from 'qs';
+import type { Request, Response, NextFunction } from 'express';
+import { AuthenticatedUser } from '../../shared/types/auth';
 /**
  * Production-Grade API Validation Middleware
  *
@@ -11,8 +13,6 @@ import type { ParsedQs } from 'qs';
  * - Security validation and sanitization
  * - Multi-tenant context validation
  */
-
-import type { Request, Response, NextFunction } from 'express';
 import { z } from 'zod';
 import { rateLimit } from 'express-rate-limit';
 import helmet from 'helmet';
@@ -29,14 +29,7 @@ declare global {
   originalBody?: Record<string, unknown>;
   validatedQuery?: Record<string, unknown>;
   validatedParams?: Record<string, unknown>;
-      user?: {
-        id: string;
-        email: string;
-        role: string;
-        organizationId?: string; // Make optional to match AuthenticatedUser
-        sessionId?: string;
-        warehouseId?: string;
-      };
+      user?: AuthenticatedUser;
       organizationId?: string;
     }
   }

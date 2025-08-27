@@ -49,7 +49,7 @@ function calculateMTTR(workOrders: WorkOrder[]): number {
   return Math.round(totalRepairTime / correctiveOrders.length / (1000 * 60 * 60)); // in hours
 }
 
-function generateTrendData(workOrders: unknown[], period: string, metric: string): unknown[] {
+function generateTrendData(workOrders: WorkOrder[], period: string, metric: string): unknown[] {
   // Simplified trend generation - in a real implementation, this would be more sophisticated
   const now = new Date();
   const periodData: unknown[] = [];
@@ -73,7 +73,7 @@ function generateTrendData(workOrders: unknown[], period: string, metric: string
     }
 
     const periodWorkOrders = workOrders.filter(wo => {
-      const woDate = new Date((wo as any).createdAt);
+      const woDate = new Date(wo.createdAt);
       const nextPeriod = new Date(date);
 
       switch (period) {
@@ -104,7 +104,7 @@ function generateTrendData(workOrders: unknown[], period: string, metric: string
         break;
       case 'priority_distribution':
         value = periodWorkOrders.filter(wo =>
-          ['high', 'critical'].includes((wo as any).priority)
+          ['high', 'critical'].includes(wo.priority)
         ).length;
         break;
     }
