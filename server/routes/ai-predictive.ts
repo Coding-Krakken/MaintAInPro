@@ -1,16 +1,16 @@
-import type { Express, RequestHandler, Request, Response } from 'express';
+import type { Express, RequestHandler, Request } from 'express';
 import { aiPredictiveService } from '../services/ai-predictive.service';
 import { AuthenticatedUser } from '../../shared/types/auth';
 
 // Extend the Request interface for this module
-interface AIPredictiveRequest extends Request {
+interface _AIPredictiveRequest extends Request {
   user?: AuthenticatedUser;
 }
 
 export function registerAIPredictiveRoutes(
   app: Express,
   authenticateRequest: RequestHandler,
-  requireRole: (...roles: string[]) => RequestHandler
+  _requireRole: (..._roles: string[]) => RequestHandler
 ): void {
   // Get equipment health score
   app.get('/api/ai/equipment/:id/health-score', authenticateRequest, async (req, res) => {
@@ -46,7 +46,7 @@ export function registerAIPredictiveRoutes(
   app.get(
     '/api/ai/equipment/:id/optimization',
     authenticateRequest,
-    requireRole('admin', 'manager'),
+    _requireRole('admin', 'manager'),
     async (req, res) => {
       try {
         const { id } = req.params;
@@ -241,7 +241,7 @@ export function registerAIPredictiveRoutes(
   app.get(
     '/api/ai/reports/predictive-maintenance',
     authenticateRequest,
-    requireRole('admin', 'manager'),
+    _requireRole('admin', 'manager'),
     async (req, res) => {
       try {
         const user = req.user;

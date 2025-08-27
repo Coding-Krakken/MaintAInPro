@@ -3,7 +3,7 @@ import rateLimit, { RateLimitRequestHandler } from 'express-rate-limit';
 import { createClient } from 'redis';
 import { AuthenticatedUser } from '../../shared/types/auth';
 
-interface RateLimitRequest extends Request {
+interface _RateLimitRequest extends Request {
   user?: AuthenticatedUser;
 }
 

@@ -35,14 +35,18 @@ vi.mock('@/config/backup', () => ({
 }));
 
 // Mock file system operations
-vi.mock('fs/promises', () => ({
-  mkdir: vi.fn(),
-  readdir: vi.fn(() => []),
-  stat: vi.fn(() => ({ size: 1024 })),
-  readFile: vi.fn(() => '-- PostgreSQL database dump'),
-  writeFile: vi.fn(),
-  unlink: vi.fn(),
-}));
+vi.mock('fs/promises', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    mkdir: vi.fn(),
+    readdir: vi.fn(() => []),
+    stat: vi.fn(() => ({ size: 1024 })),
+    readFile: vi.fn(() => '-- PostgreSQL database dump'),
+    writeFile: vi.fn(),
+    unlink: vi.fn(),
+  };
+});
 
 // Mock child_process
 vi.mock('child_process', async (importOriginal) => {
