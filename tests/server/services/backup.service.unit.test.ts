@@ -53,9 +53,13 @@ vi.mock('child_process', async (importOriginal) => {
   };
 });
 
-vi.mock('util', () => ({
-  promisify: vi.fn((fn) => fn),
-}));
+vi.mock('util', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    promisify: vi.fn((fn) => fn),
+  };
+});
 
 describe('BackupService', () => {
   beforeEach(() => {
