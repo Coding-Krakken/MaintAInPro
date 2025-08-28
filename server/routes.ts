@@ -1,6 +1,7 @@
 import type { Express, RequestHandler, Request, Response, NextFunction } from 'express';
 import { createServer, type Server } from 'http';
 import crypto from 'crypto';
+import cors from 'cors';
 import { AuthenticatedUser } from '../shared/types/auth';
 
 // Extend Express Request type to include user
@@ -138,6 +139,57 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const httpServer = createServer(app);
   notificationService.initialize(httpServer);
   console.log('WebSocket notification service initialized');
+
+  // CORS configuration for development and production
+  const corsOptions = {
+    origin: function (origin: string | undefined, callback: (error: Error | null, allow?: boolean) => void) {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+      
+      // Allow localhost origins for development
+      if (origin.includes('localhost') || origin.includes('127.0.0.1')) {
+        return callback(null, true);
+      }
+      
+      // Allow vercel deployments
+      if (origin.includes('.vercel.app') || origin.includes('maintainpro-cmms.vercel.app')) {
+        return callback(null, true);
+      }
+      
+      // Allow specific production domains
+      const allowedOrigins = [
+        'https://maintainpro.com',
+        'https://www.maintainpro.com',
+        'https://cmms.maintainpro.com'
+      ];
+      
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      
+      // In development, allow all origins
+      if (process.env.NODE_ENV === 'development' || process.env.TEST_AUTH_MODE === 'true') {
+        return callback(null, true);
+      }
+      
+      callback(new Error('Not allowed by CORS'));
+    },
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: [
+      'Content-Type', 
+      'Authorization', 
+      'X-Requested-With', 
+      'Accept', 
+      'Origin',
+      'Cache-Control',
+      'X-File-Name'
+    ],
+    credentials: true,
+    optionsSuccessStatus: 200
+  };
+
+  app.use(cors(corsOptions));
+  console.log('CORS middleware enabled');
 
   // Security middleware (applied first, but skip for PWA files)
   app.use((req, res, next) => {

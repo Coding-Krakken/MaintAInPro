@@ -376,7 +376,7 @@ export function PerformanceDashboard() {
               <CardContent>
                 <ResponsiveContainer width='100%' height={200}>
                   <BarChart
-                    data={Object.entries(performanceData.database.queryTypeBreakdown).map(
+                    data={Object.entries(performanceData.database.queryTypeBreakdown || {}).map(
                       ([type, count]) => ({
                         type,
                         count,
