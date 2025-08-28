@@ -131,7 +131,7 @@ describe('Auth Component Enhanced UI', () => {
 
     await waitFor(() => {
       expect(screen.getByTestId('error-message')).toBeInTheDocument();
-      expect(screen.getByTestId('error-message')).toHaveTextContent('Invalid credentials');
+      expect(screen.getByTestId('error-message')).toHaveTextContent('Login failed');
     });
   });
 
