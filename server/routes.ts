@@ -2093,7 +2093,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Parse with schema first - this will throw if name is missing or invalid
       const parsedData = insertVendorSchema.parse(baseData);
-      
+
       // Add optional field defaults after validation passes
       const vendorData = {
         ...parsedData,

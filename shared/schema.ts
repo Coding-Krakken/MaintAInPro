@@ -820,10 +820,16 @@ export const insertPushSubscriptionSchema = createFlexibleSchema({
 });
 
 // Enhanced vendor schema with proper validation
-export const insertVendorSchema = createInsertSchema(vendors, {
+export const insertVendorSchema = createInsertSchema(vendors).extend({
   type: z.enum(['supplier', 'contractor']),
   name: z.string().min(1, 'Name is required'),
-  email: z.string().email('Invalid email format').optional().or(z.literal('')),
+  email: z
+    .string()
+    .optional()
+    .refine(val => !val || val === '' || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val), {
+      message: 'Invalid email format',
+    }),
+  active: z.boolean().optional(),
 });
 
 export const insertPmTemplateSchema = createInsertSchema(pmTemplates);

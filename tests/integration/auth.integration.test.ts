@@ -9,7 +9,6 @@ import { JWTService } from '../../server/services/auth/jwt.service';
  */
 describe('Authentication Integration Tests', () => {
   let authServer: AuthTestServer;
-  let testUserCounter = 0;
 
   beforeAll(async () => {
     // Initialize the test server with actual authentication routes
@@ -27,7 +26,6 @@ describe('Authentication Integration Tests', () => {
   beforeEach(() => {
     // Reset mocks and increment user counter for unique test data
     vi.clearAllMocks();
-    testUserCounter++;
 
     // Add longer delay to avoid rate limiting between tests
     return new Promise(resolve => setTimeout(resolve, 500));
