@@ -155,6 +155,13 @@ async function initializeApp() {
     // Continue startup even if some optimizations fail
   }
 
+  // Initialize test users for development
+  if (process.env.NODE_ENV === 'development' || process.env.TEST_AUTH_MODE === 'true') {
+    const { AuthService } = await import('./services/auth');
+    AuthService.initializeTestUsers();
+    loggingService.info('✅ Test users initialized');
+  }
+
   const server = await registerRoutes(app);
 
   // Enhanced error handler with logging

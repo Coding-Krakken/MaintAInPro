@@ -4,20 +4,20 @@ import { testData, testCredentials } from '../helpers/testData';
 // Test data - use local definitions to avoid conflicts
 const testUsers = {
   technician: {
-    email: 'test@example.com',
-    password: 'password',
+    email: 'technician@maintainpro.com',
+    password: 'demo123',
     name: 'Test User', // Updated to match mock auth response
     role: 'technician',
   },
   supervisor: {
     email: 'supervisor@maintainpro.com',
-    password: 'password',
+    password: 'demo123',
     name: 'Test User', // Updated to match mock auth response
     role: 'supervisor',
   },
   manager: {
     email: 'manager@example.com',
-    password: 'password',
+    password: 'demo123',
     name: 'Test User', // Updated to match mock auth response
     role: 'manager',
   },
@@ -39,7 +39,8 @@ test.describe('Authentication Flow', () => {
 
     // Wait for navigation and authentication to complete
     await expect(page).toHaveURL('/dashboard');
-    await page.waitForLoadState('networkidle');
+    // Wait for user name to be visible (robust indicator of successful login)
+    await expect(page.locator('[data-testid="user-name"]')).toBeVisible();
 
     // Verify user name is displayed (now that API proxy should work)
     await expect(page.locator('[data-testid="user-name"]')).toContainText(

@@ -3,6 +3,33 @@ FROM node:20-alpine
 # Install necessary packages for native dependencies
 RUN apk add --no-cache python3 make g++ git
 
+# Install Playwright system dependencies for Alpine
+RUN apk add --no-cache \
+    chromium \
+    nss \
+    freetype \
+    freetype-dev \
+    harfbuzz \
+    ca-certificates \
+    ttf-freefont \
+    curl \
+    udev \
+    ttf-liberation \
+    libx11 \
+    libxcb \
+    libxrandr2 \
+    libxss1 \
+    libgtk-3-0 \
+    libgconf-2-4 \
+    libasound2 \
+    libxtst6 \
+    libxrandr2 \
+    libpangocairo-1.0-0 \
+    libatk1.0-0 \
+    libcairo-gobject2 \
+    libgtk-3-0 \
+    libgdk-pixbuf2.0-0
+
 WORKDIR /app
 
 # Copy package files

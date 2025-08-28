@@ -12,12 +12,14 @@ declare global {
   }
 }
 import { storage } from './storage';
+import type { InsertVendor } from './storage';
 import {
   insertWorkOrderSchema,
   insertEquipmentSchema,
   insertPartSchema,
   insertNotificationSchema,
   insertVendorSchema,
+  type WorkOrder,
 } from '@shared/schema';
 import { fieldValidators, flexibleDateSchema } from '@shared/validation-utils';
 import { z } from 'zod';
@@ -49,8 +51,49 @@ import swaggerUi from 'swagger-ui-express';
 import { specs } from './config/openapi';
 
 // Import PM services with error handling
-let pmEngine: unknown = null;
-let pmScheduler: unknown = null;
+interface PMEngine {
+  generatePMWorkOrders: (_warehouseId: string) => Promise<WorkOrder[]>;
+  getPMSchedule: (
+    _equipmentId: string,
+    _templateId: string
+  ) => Promise<{
+    equipmentId: string;
+    templateId: string;
+    nextDueDate: Date;
+    lastCompletedDate?: Date;
+    frequency: 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'annually';
+    isOverdue: boolean;
+    complianceStatus: 'compliant' | 'due' | 'overdue';
+  }>;
+  checkComplianceStatus: (
+    _equipmentId: string,
+    _warehouseId: string
+  ) => Promise<{
+    equipmentId: string;
+    compliancePercentage: number;
+    missedPMCount: number;
+    totalPMCount: number;
+    lastPMDate?: Date;
+    nextPMDate?: Date;
+  }>;
+  runPMAutomation: (_warehouseId: string) => Promise<{
+    generated: number;
+    errors: string[];
+  }>;
+}
+
+interface PMScheduler {
+  start: () => void;
+  stop: () => void;
+  getStatus: () => {
+    isRunning: boolean;
+    nextRun?: Date;
+  };
+  runForWarehouse: (_warehouseId: string) => Promise<void>;
+}
+
+let pmEngine: PMEngine | null = null;
+let pmScheduler: PMScheduler | null = null;
 
 // Initialize PM services asynchronously
 async function initializePMServices() {
@@ -505,11 +548,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const validTestEmails = [
           'test@example.com',
           'supervisor@maintainpro.com',
-          'manager@example.com',
+          'technician@maintainpro.com',
+          'manager@maintainpro.com',
         ];
 
         // Check if credentials are valid for testing
-        if (validTestEmails.includes(req.body.email) && req.body.password === 'password') {
+        if (validTestEmails.includes(req.body.email) && req.body.password === 'demo123') {
           const mockUser = {
             id: '00000000-0000-0000-0000-000000000001',
             email: req.body.email,
@@ -2050,7 +2094,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       };
 
       const parsedData = insertVendorSchema.parse(vendorData);
-      const vendor = await storage.createVendor(parsedData as any);
+      const vendor = await storage.createVendor(parsedData as InsertVendor);
       res.status(201).json(vendor);
     } catch (_error) {
       if (_error instanceof z.ZodError) {
@@ -2192,7 +2236,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       for (const equip of equipment) {
         if (equip.status === 'active') {
-          const compliance = await (pmEngine as any).checkComplianceStatus(equip.id, warehouseId);
+          const compliance = await pmEngine.checkComplianceStatus(equip.id, warehouseId);
 
           equipmentCompliance.push({
             equipmentId: equip.id,
@@ -2253,8 +2297,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!pmScheduler) {
         return res.status(503).json({ error: 'PM Scheduler service is not available' });
       }
-      (pmScheduler as any).start();
-      res.json({ message: 'PM scheduler started', status: (pmScheduler as any).getStatus() });
+      pmScheduler.start();
+      res.json({ message: 'PM scheduler started', status: pmScheduler.getStatus() });
     } catch (_error) {
       console.error('Error starting PM scheduler:', _error);
       res.status(500).json({ _error: 'Failed to start PM scheduler' });
@@ -2266,8 +2310,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!pmScheduler) {
         return res.status(503).json({ error: 'PM Scheduler service is not available' });
       }
-      (pmScheduler as any).stop();
-      res.json({ message: 'PM scheduler stopped', status: (pmScheduler as any).getStatus() });
+      pmScheduler.stop();
+      res.json({ message: 'PM scheduler stopped', status: pmScheduler.getStatus() });
     } catch (_error) {
       console.error('Error stopping PM scheduler:', _error);
       res.status(500).json({ _error: 'Failed to stop PM scheduler' });
@@ -2279,7 +2323,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!pmScheduler) {
         return res.status(503).json({ error: 'PM Scheduler service is not available' });
       }
-      const status = (pmScheduler as any).getStatus();
+      const status = pmScheduler.getStatus();
       res.json(status);
     } catch (_error) {
       console.error('Error getting PM scheduler status:', _error);
@@ -2297,7 +2341,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: 'Warehouse ID is required' });
       }
 
-      await (pmScheduler as any).runForWarehouse(warehouseId);
+      await pmScheduler.runForWarehouse(warehouseId);
       res.json({ message: 'PM scheduler run completed' });
     } catch (_error) {
       console.error('Error running PM scheduler:', _error);
@@ -2424,7 +2468,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(503).json({ error: 'PM Engine service is not available' });
       }
       const warehouseId = getCurrentWarehouse(req);
-      const result = await (pmEngine as any).generatePMWorkOrders(warehouseId);
+      const result = await pmEngine.generatePMWorkOrders(warehouseId);
       res.json({
         success: true,
         generated: result.length,
@@ -2448,7 +2492,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const schedules = [];
       for (const template of templates) {
         try {
-          const schedule = await (pmEngine as any).getPMSchedule(equipmentId, template.id);
+          const schedule = await pmEngine.getPMSchedule(equipmentId, template.id);
           schedules.push(schedule);
         } catch (_error) {
           // Skip templates that don't apply to this equipment
@@ -2470,7 +2514,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       const warehouseId = getCurrentWarehouse(req);
       const equipmentId = req.params.equipmentId;
-      const compliance = await (pmEngine as any).checkComplianceStatus(equipmentId, warehouseId);
+      const compliance = await pmEngine.checkComplianceStatus(equipmentId, warehouseId);
       res.json(compliance);
     } catch (_error) {
       console.error('PM compliance _error:', _error);
@@ -2484,7 +2528,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(503).json({ error: 'PM Engine service is not available' });
       }
       const warehouseId = getCurrentWarehouse(req);
-      const result = await (pmEngine as any).runPMAutomation(warehouseId);
+      const result = await pmEngine.runPMAutomation(warehouseId);
       res.json(result);
     } catch (_error) {
       console.error('PM automation _error:', _error);
