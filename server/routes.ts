@@ -2084,17 +2084,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post('/api/vendors', authenticateRequest, async (req, res) => {
     try {
-      const vendorData = {
+      // First validate required fields - let schema validation catch missing name
+      const baseData = {
         ...req.body,
         id: req.body.id || crypto.randomUUID(),
-        name: req.body.name || 'Unnamed Vendor', // Ensure name is provided with fallback
         warehouseId: req.body.warehouseId || getCurrentWarehouse(req),
-        type: req.body.type || 'supplier',
-        active: req.body.active !== undefined ? req.body.active : true,
       };
 
-      const parsedData = insertVendorSchema.parse(vendorData);
-      const vendor = await storage.createVendor(parsedData as InsertVendor);
+      // Parse with schema first - this will throw if name is missing or invalid
+      const parsedData = insertVendorSchema.parse(baseData);
+      
+      // Add optional field defaults after validation passes
+      const vendorData = {
+        ...parsedData,
+        type: parsedData.type || 'supplier',
+        active: parsedData.active !== undefined ? parsedData.active : true,
+      };
+
+      const vendor = await storage.createVendor(vendorData as InsertVendor);
       res.status(201).json(vendor);
     } catch (_error) {
       if (_error instanceof z.ZodError) {

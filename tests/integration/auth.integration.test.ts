@@ -34,8 +34,8 @@ describe('Authentication Integration Tests', () => {
   });
 
   const createUniqueUserData = (overrides = {}) => ({
-    email: `test${testUserCounter}@example.com`,
-    password: 'SecurePassword123!',
+    email: 'test@example.com', // Use valid TEST_AUTH_MODE email
+    password: 'demo123', // Use valid TEST_AUTH_MODE password
     firstName: 'Test',
     lastName: 'User',
     ...overrides,
@@ -264,7 +264,7 @@ describe('Authentication Integration Tests', () => {
     it('should include proper security headers', async () => {
       const response = await authServer.request().post('/api/auth/login').send({
         email: 'test@example.com',
-        password: 'password123',
+        password: 'demo123',
       });
 
       // Check for security headers
@@ -276,7 +276,7 @@ describe('Authentication Integration Tests', () => {
     it('should return proper Content-Type for JSON responses', async () => {
       const response = await authServer.request().post('/api/auth/login').send({
         email: 'test@example.com',
-        password: 'password123',
+        password: 'demo123',
       });
 
       expect(response.headers['content-type']).toMatch(/application\/json/);
@@ -407,7 +407,7 @@ describe('Authentication Integration Tests', () => {
     it('should handle large request payloads', async () => {
       const largeData = {
         email: 'test@example.com',
-        password: 'password123',
+        password: 'demo123',
         extra: 'a'.repeat(1000), // Large but not excessive data
       };
 

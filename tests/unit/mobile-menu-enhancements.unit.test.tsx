@@ -136,9 +136,10 @@ describe('MobileMenu Component Enhanced UI', () => {
     const closeButton = screen.getByTestId('mobile-menu-close-button');
     expect(closeButton).toHaveAttribute('aria-label', 'Close mobile menu');
 
-    // Check icons have aria-hidden
-    const icons = screen.getAllByRole('img', { hidden: true });
-    expect(icons.length).toBeGreaterThan(0);
+    // Check that SVG icons have aria-hidden for accessibility
+    const container = screen.getByTestId('mobile-menu-sidebar');
+    const svgs = container.querySelectorAll('svg[aria-hidden="true"]');
+    expect(svgs.length).toBeGreaterThan(0);
   });
 
   test('handles user with no role gracefully', () => {

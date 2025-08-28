@@ -823,6 +823,7 @@ export const insertPushSubscriptionSchema = createFlexibleSchema({
 export const insertVendorSchema = createInsertSchema(vendors, {
   type: z.enum(['supplier', 'contractor']),
   name: z.string().min(1, 'Name is required'),
+  email: z.string().email('Invalid email format').optional().or(z.literal('')),
 });
 
 export const insertPmTemplateSchema = createInsertSchema(pmTemplates);
