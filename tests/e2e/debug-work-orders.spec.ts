@@ -1,10 +1,10 @@
 // Simple test script to check work orders
-import { test } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 
 test('debug work order navigation', async ({ page }) => {
   // Login first
   console.log('Navigating to /login');
-  await page.goto('/login');
+  await page.goto('http://localhost:4173/login');
   console.log('Current URL after goto:', page.url());
   console.log('Page title:', await page.title());
 
@@ -23,21 +23,14 @@ test('debug work order navigation', async ({ page }) => {
   console.log('Submitting login form');
   await page.click('[data-testid="login-button"]');
 
-  // Wait a bit for the request to process
-  await page.waitForTimeout(2000);
+  // Wait for navigation to dashboard (login should redirect automatically)
+  await page.waitForURL('**/dashboard', { timeout: 10000 });
 
-  console.log('Current URL after submit:', page.url());
-
-  // Check for error message
-  const errorMessage = page.locator('[data-testid="error-message"]');
-  if (await errorMessage.isVisible()) {
-    console.log('Error message:', await errorMessage.textContent());
-  } else {
-    console.log('No error message visible');
+  // Wait for user data to load
+  const userNameElement = page.locator('[data-testid="user-name"]');
+  if (await userNameElement.isVisible()) {
+    await expect(userNameElement).toHaveText(/\S+/);
   }
-
-  // Wait for redirect
-  await page.waitForURL('/dashboard');
 
   // Navigate to work orders
   console.log('Current URL:', page.url());
@@ -49,7 +42,7 @@ test('debug work order navigation', async ({ page }) => {
 
   if (isNavVisible) {
     await navElement.click();
-    await page.waitForURL('/work-orders');
+    await page.waitForURL('http://localhost:4173/work-orders');
     console.log('Successfully navigated to work orders');
 
     // Wait for work orders to load

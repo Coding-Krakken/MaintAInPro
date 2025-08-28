@@ -260,7 +260,7 @@ test('Mobile technician workflow with all features enabled', async ({
   });
 
   // Login as mobile technician
-  await page.goto('/mobile/login');
+  await page.goto('http://localhost:4173/mobile/login');
   await loginAsTechnician(page);
 
   // Verify mobile-specific features are available
@@ -304,7 +304,7 @@ test('Fallback workflow with mobile features disabled', async ({ page }) => {
   });
 
   // Mobile users get redirected to desktop interface
-  await page.goto('/mobile/dashboard');
+  await page.goto('http://localhost:4173/mobile/dashboard');
   await expect(page).toHaveURL(/\/dashboard/);
 
   // Verify desktop features work without mobile enhancements
@@ -336,7 +336,7 @@ test('A/B test new analytics dashboard', async ({ page, context }) => {
     };
   }, isInTestGroup);
 
-  await page.goto('/dashboard');
+  await page.goto('http://localhost:4173/dashboard');
   await loginAsManager(page);
 
   if (isInTestGroup) {
@@ -456,7 +456,7 @@ describe('Feature Flag Security', () => {
   });
 
   it('prevents feature flag tampering via client-side', async ({ page }) => {
-    await page.goto('/dashboard');
+    await page.goto('http://localhost:4173/dashboard');
 
     // Attempt to modify flags via browser console
     await page.evaluate(() => {

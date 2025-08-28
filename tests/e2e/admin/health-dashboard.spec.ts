@@ -45,7 +45,7 @@ test.describe('Health Dashboard E2E', () => {
     });
 
     // Navigate to the admin page
-    await page.goto('/admin');
+    await page.goto('http://localhost:4173/admin');
   });
 
   test('should display health dashboard correctly', async ({ page }) => {
@@ -147,7 +147,7 @@ test.describe('Health Dashboard E2E', () => {
       });
     });
 
-    await page.goto('/admin');
+    await page.goto('http://localhost:4173/admin');
     await page.waitForLoadState('networkidle');
 
     // Check error state
@@ -193,7 +193,7 @@ test.describe('Health Dashboard E2E', () => {
       });
     });
 
-    await page.goto('/admin');
+    await page.goto('http://localhost:4173/admin');
     // Wait for DOM to load instead of networkidle, since we expect an error state
     await page.waitForLoadState('domcontentloaded');
     await page.waitForTimeout(1000); // Give time for error state to render

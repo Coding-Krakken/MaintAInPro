@@ -32,5 +32,5 @@ test('debug login error handling', async ({ page }) => {
   console.log('Current URL:', currentUrl);
 
   // Check if we're still on the login page
-  expect(currentUrl).toContain('/login');
+  expect(currentUrl).toContain('http://localhost:4173/login');
 });
