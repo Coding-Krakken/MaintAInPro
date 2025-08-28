@@ -6,6 +6,7 @@ import { Badge } from '../ui/badge';
 import { useAuth } from '../../hooks/useAuth';
 import { useQuery } from '@tanstack/react-query';
 import { useLocation } from 'wouter';
+import { getApiUrl } from '../../lib/api-config';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -36,7 +37,7 @@ export default function Header({ onMobileMenuToggle, showMobileMenuButton }: Hea
   const { data: notifications } = useQuery<Notification[]>({
     queryKey: ['/api/notifications'],
     queryFn: async () => {
-      const response = await fetch('/api/notifications', {
+      const response = await fetch(getApiUrl('/api/notifications'), {
         headers: {
           'x-user-id': localStorage.getItem('userId') || 'default-user-id',
           'x-warehouse-id': localStorage.getItem('warehouseId') || 'default-warehouse-id',

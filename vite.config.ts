@@ -5,6 +5,12 @@ import path from 'path';
 
 const apiTarget = process.env.API_TARGET || 'http://localhost:5000';
 
+// Detect GitHub.dev environment
+const isGitHubDev = process.env.CODESPACE_NAME || process.env.GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN;
+const backendUrl = isGitHubDev
+  ? `https://${process.env.CODESPACE_NAME}-5000.app.github.dev`
+  : apiTarget;
+
 export default defineConfig({
   plugins: [react(), tsconfigPaths()],
   base: '/',
@@ -48,12 +54,34 @@ export default defineConfig({
       strict: true,
       deny: ['**/.*'],
     },
-    allowedHosts: true,
+    allowedHosts: ['localhost', '.github.dev', 'crispy-enigma-wr4qw9w7xvjqf9q7-4173.app.github.dev'],
+    cors: true,
+    host: true,
+    hmr: {
+      port: 4173,
+      host: isGitHubDev ? 'localhost' : undefined,
+      protocol: isGitHubDev ? 'ws' : undefined,
+    },
     proxy: {
       '/api': {
-        target: apiTarget,
+        target: backendUrl,
         changeOrigin: true,
         secure: false,
+        ws: true, // Enable WebSocket proxying
+        configure: (proxy, _options) => {
+          // Handle GitHub.dev environment
+          if (isGitHubDev) {
+            proxy.on('error', (err, _req, _res) => {
+              console.log('Proxy error in GitHub.dev:', err.message);
+            });
+            proxy.on('proxyReq', (proxyReq, req, _res) => {
+              // Remove headers that might cause issues in GitHub.dev
+              proxyReq.removeHeader('origin');
+              proxyReq.removeHeader('referer');
+              console.log('Proxying request to:', backendUrl, 'for path:', req.url);
+            });
+          }
+        },
       },
     },
   },
@@ -61,7 +89,7 @@ export default defineConfig({
     allowedHosts: true,
     proxy: {
       '/api': {
-        target: apiTarget,
+        target: backendUrl,
         changeOrigin: true,
         secure: false,
       },

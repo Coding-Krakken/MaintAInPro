@@ -2,12 +2,13 @@ import { TrendingUp, AlertTriangle, CheckCircle, Package } from 'lucide-react';
 import { Card, CardContent } from '../ui/card';
 import { useQuery } from '@tanstack/react-query';
 import { DashboardStats as StatsType } from '../../types';
+import { getApiUrl } from '../../lib/api-config';
 
 export default function DashboardStats() {
   const { data: stats, isLoading } = useQuery<StatsType>({
     queryKey: ['/api/dashboard/stats'],
     queryFn: async () => {
-      const response = await fetch('/api/dashboard/stats', {
+      const response = await fetch(getApiUrl('/api/dashboard/stats'), {
         headers: {
           'x-user-id': localStorage.getItem('userId') || 'default-user-id',
           'x-warehouse-id': localStorage.getItem('warehouseId') || 'default-warehouse-id',

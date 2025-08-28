@@ -40,8 +40,11 @@ export const useWebSocket = (): UseWebSocketReturn => {
       window.location.hostname.includes('netlify.app') ||
       process.env.NODE_ENV === 'production';
 
-    if (isServerless) {
-      console.log('WebSocket disabled in serverless environment');
+    // Also disable WebSocket in GitHub.dev environment due to port restrictions
+    const isGitHubDev = window.location.hostname.includes('github.dev');
+
+    if (isServerless || isGitHubDev) {
+      console.log('WebSocket disabled in serverless or GitHub.dev environment');
       setConnectionStatus('disconnected');
       return;
     }
