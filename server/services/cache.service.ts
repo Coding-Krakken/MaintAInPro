@@ -172,7 +172,7 @@ export class CacheService {
    * Set value in cache with multi-layer strategy
    */
   async set<T>(key: string, value: T, ttl?: number): Promise<void> {
-  const finalTTL = ttl ?? this.config.defaultTTL ?? 60;
+    const finalTTL = ttl ?? this.config.defaultTTL ?? 60;
 
     try {
       // Set in memory cache
@@ -322,7 +322,7 @@ export class CacheService {
 
       if (!taggedKeys.includes(key)) {
         taggedKeys.push(key);
-  await this.set(tagKey, taggedKeys, ttl ?? this.config.defaultTTL ?? 60);
+        await this.set(tagKey, taggedKeys, ttl ?? this.config.defaultTTL ?? 60);
       }
     }
   }
@@ -361,7 +361,7 @@ export class CacheService {
    */
   private setMemoryCache<T>(key: string, value: T, ttl: number): void {
     // Remove oldest entries if cache is full
-  if (this.memoryCache.size >= (this.config.maxMemoryCacheSize ?? 1000)) {
+    if (this.memoryCache.size >= (this.config.maxMemoryCacheSize ?? 1000)) {
       const firstKey = this.memoryCache.keys().next().value;
       if (firstKey) {
         this.memoryCache.delete(firstKey);

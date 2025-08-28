@@ -1,17 +1,23 @@
 # Enhanced Security Middleware Implementation
 
 ## Overview
-This document outlines the implementation of enhanced security middleware for the MaintAInPro CMMS application, addressing issue #410.
+
+This document outlines the implementation of enhanced security middleware for
+the MaintAInPro CMMS application, addressing issue #410.
 
 ## Features Implemented
 
 ### 1. Advanced Rate Limiting (`server/middleware/rate-limiting.ts`)
 
 #### Redis-Backed Distributed Rate Limiting
-- **Redis Integration**: Optional Redis backend for distributed rate limiting across multiple server instances
-- **Graceful Fallback**: Falls back to in-memory rate limiting if Redis is unavailable
+
+- **Redis Integration**: Optional Redis backend for distributed rate limiting
+  across multiple server instances
+- **Graceful Fallback**: Falls back to in-memory rate limiting if Redis is
+  unavailable
 
 #### Rate Limiting Profiles
+
 ```typescript
 - auth: 5 requests / 15 minutes (authentication endpoints)
 - passwordReset: 3 requests / 1 hour (password reset)
@@ -22,18 +28,26 @@ This document outlines the implementation of enhanced security middleware for th
 ```
 
 #### Suspicious Activity Detection
-- **Pattern-Based Detection**: Identifies suspicious user agents, endpoints, and query patterns
-- **IP Blocking**: Automatically blocks IPs after multiple suspicious activities (configurable threshold)
-- **Admin Management**: Provides functions to unblock IPs and get security statistics
+
+- **Pattern-Based Detection**: Identifies suspicious user agents, endpoints, and
+  query patterns
+- **IP Blocking**: Automatically blocks IPs after multiple suspicious activities
+  (configurable threshold)
+- **Admin Management**: Provides functions to unblock IPs and get security
+  statistics
 
 ### 2. Advanced Input Sanitization (`server/middleware/advanced-sanitization.ts`)
 
 #### XSS Prevention
-- **Comprehensive Pattern Removal**: Removes script tags, event handlers, javascript: URLs
+
+- **Comprehensive Pattern Removal**: Removes script tags, event handlers,
+  javascript: URLs
 - **HTML Entity Encoding**: Encodes remaining HTML entities safely
-- **Dangerous Function Removal**: Removes references to alert(), eval(), setTimeout(), etc.
+- **Dangerous Function Removal**: Removes references to alert(), eval(),
+  setTimeout(), etc.
 
 #### SQL Injection Protection
+
 - **Pattern Detection**: Identifies common SQL injection patterns including:
   - Union-based attacks
   - Boolean-based attacks
@@ -42,14 +56,20 @@ This document outlines the implementation of enhanced security middleware for th
   - Information schema queries
 
 #### NoSQL Injection Protection
-- **MongoDB Operator Detection**: Identifies NoSQL operators like $where, $ne, $gt, etc.
-- **Object and String Analysis**: Scans both object properties and serialized strings
+
+- **MongoDB Operator Detection**: Identifies NoSQL operators like
+  $where, $ne,
+  $gt, etc.
+- **Object and String Analysis**: Scans both object properties and serialized
+  strings
 
 #### Path Traversal Protection
+
 - **Directory Traversal Detection**: Identifies ../, ..\\, URL-encoded variants
 - **File Name Sanitization**: Cleans file names for safe storage
 
 #### Content Validation
+
 - **Content Type Validation**: Ensures only allowed content types are processed
 - **Request Size Validation**: Enforces maximum request payload sizes
 - **File Upload Validation**: Validates and sanitizes uploaded file names
@@ -57,6 +77,7 @@ This document outlines the implementation of enhanced security middleware for th
 ### 3. Enhanced Security Headers (`server/middleware/security.middleware.ts`)
 
 #### Helmet.js Integration
+
 - **Content Security Policy (CSP)**: Comprehensive CSP with nonce support
 - **Strict Transport Security (HSTS)**: Forces HTTPS connections
 - **X-Frame-Options**: Prevents clickjacking
@@ -64,6 +85,7 @@ This document outlines the implementation of enhanced security middleware for th
 - **Referrer Policy**: Controls referrer information
 
 #### Custom Security Headers
+
 - **Permissions Policy**: Restricts access to sensitive browser APIs
 - **Custom API Headers**: Version information, request IDs, powered-by headers
 - **Enhanced CORS**: Configurable CORS policies for API endpoints
@@ -71,12 +93,15 @@ This document outlines the implementation of enhanced security middleware for th
 ### 4. Security Monitoring and Logging
 
 #### Enhanced Audit Logging
-- **Security Event Classification**: Categorizes events as suspicious, blocked, or rate-limited
+
+- **Security Event Classification**: Categorizes events as suspicious, blocked,
+  or rate-limited
 - **Detailed Context**: Logs IP addresses, user agents, user/organization IDs
 - **Database Integration**: Stores security events in system logs table
 - **Performance Tracking**: Monitors request duration and response codes
 
 #### Security Statistics
+
 - **Real-Time Monitoring**: Provides current suspicious activity statistics
 - **IP Management**: Tracks blocked IPs and suspicious activity counts
 - **Admin Dashboard Integration**: Exposes security metrics for monitoring
@@ -84,6 +109,7 @@ This document outlines the implementation of enhanced security middleware for th
 ## Usage Examples
 
 ### Basic Implementation
+
 ```typescript
 import { enhancedSecurityStack } from './middleware/security.middleware';
 
@@ -92,6 +118,7 @@ app.use(enhancedSecurityStack);
 ```
 
 ### Endpoint-Specific Rate Limiting
+
 ```typescript
 import { rateLimiters } from './middleware/security.middleware';
 
@@ -102,6 +129,7 @@ app.use('/api/upload', rateLimiters.upload);
 ```
 
 ### Advanced Schema Validation
+
 ```typescript
 import { advancedSchemaValidation } from './middleware/advanced-sanitization';
 
@@ -112,13 +140,11 @@ const createUserSchema = {
   }),
 };
 
-app.post('/api/users', 
-  advancedSchemaValidation(createUserSchema),
-  handler
-);
+app.post('/api/users', advancedSchemaValidation(createUserSchema), handler);
 ```
 
 ### Security Management
+
 ```typescript
 import { getSecurityStats, unblockIP } from './middleware/security.middleware';
 
@@ -132,6 +158,7 @@ const success = unblockIP('192.168.1.100');
 ## Configuration
 
 ### Environment Variables
+
 ```env
 # Redis configuration for distributed rate limiting
 REDIS_URL=redis://localhost:6379
@@ -142,6 +169,7 @@ PRODUCTION_URL=https://yourdomain.com
 ```
 
 ### Initialization
+
 ```typescript
 import { initializeSecurity } from './middleware/security.middleware';
 
@@ -152,12 +180,16 @@ await initializeSecurity();
 ## Security Testing
 
 ### Test Coverage
-- **Input Sanitization**: 17 unit tests covering XSS, SQL injection, NoSQL injection, path traversal
-- **Rate Limiting**: Tests for different rate limit profiles and bypass functionality
+
+- **Input Sanitization**: 17 unit tests covering XSS, SQL injection, NoSQL
+  injection, path traversal
+- **Rate Limiting**: Tests for different rate limit profiles and bypass
+  functionality
 - **Suspicious Activity**: Tests for detection patterns and IP blocking
 - **Security Headers**: Validation of all security headers
 
 ### Running Tests
+
 ```bash
 # Run all security tests
 npm run test:unit -- tests/security/
@@ -169,27 +201,35 @@ npm run test:unit -- tests/security/sanitization.unit.test.ts
 ## Performance Considerations
 
 ### Redis Integration
-- **Optional Dependency**: System works without Redis but benefits from distributed caching
-- **Connection Handling**: Graceful error handling and fallback to memory storage
+
+- **Optional Dependency**: System works without Redis but benefits from
+  distributed caching
+- **Connection Handling**: Graceful error handling and fallback to memory
+  storage
 - **Prefix Strategy**: Uses 'rl:' prefix for rate limiting keys
 
 ### Memory Usage
-- **Automatic Cleanup**: Suspicious IP tracking automatically removes old entries
+
+- **Automatic Cleanup**: Suspicious IP tracking automatically removes old
+  entries
 - **Configurable Thresholds**: Adjustable limits for memory usage vs. security
 
 ### Request Processing
+
 - **Middleware Order**: Optimized order for minimal performance impact
 - **Early Termination**: Suspicious requests are blocked early in the pipeline
 
 ## Future Enhancements
 
 ### Planned Features
+
 - [ ] IP Geolocation integration for enhanced threat detection
 - [ ] Machine learning-based anomaly detection
 - [ ] Integration with external threat intelligence feeds
 - [ ] Automated security report generation
 
 ### Monitoring Integration
+
 - [ ] Prometheus metrics export
 - [ ] Grafana dashboard templates
 - [ ] Alert manager integration
@@ -207,12 +247,14 @@ This implementation addresses common security vulnerabilities:
 ## Maintenance
 
 ### Regular Tasks
+
 1. **Update Security Patterns**: Review and update detection patterns quarterly
 2. **Review Blocked IPs**: Regularly review and clean up blocked IP lists
 3. **Monitor Performance**: Track middleware performance impact
 4. **Security Audit**: Conduct security audits of the implementation
 
 ### Troubleshooting
+
 - **Rate Limiting Issues**: Check Redis connectivity and configuration
 - **False Positives**: Review and adjust detection patterns
 - **Performance Issues**: Monitor middleware execution times

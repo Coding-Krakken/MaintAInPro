@@ -397,12 +397,20 @@ describe('Monitoring API Integration Tests', () => {
         statusCode: 0,
         body: undefined,
         setHeader: () => {},
-        status: function(code: number) { this.statusCode = code; return this; },
-        json: function(obj: any) { this.body = obj; return this; },
+        status: function (code: number) {
+          this.statusCode = code;
+          return this;
+        },
+        json: function (obj: any) {
+          this.body = obj;
+          return this;
+        },
       };
       // Force error
       const originalMemoryUsage = process.memoryUsage;
-      (process as any).memoryUsage = () => { throw new Error('Memory access failed'); };
+      (process as any).memoryUsage = () => {
+        throw new Error('Memory access failed');
+      };
       healthHandler(mockReq as any, mockRes as any);
       (process as any).memoryUsage = originalMemoryUsage;
 

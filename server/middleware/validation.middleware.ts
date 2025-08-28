@@ -25,10 +25,10 @@ import { snakeToCamel, fieldValidators, createFlexibleSchema } from '../../share
 declare global {
   namespace Express {
     interface Request {
-  validatedBody?: Record<string, unknown>;
-  originalBody?: Record<string, unknown>;
-  validatedQuery?: Record<string, unknown>;
-  validatedParams?: Record<string, unknown>;
+      validatedBody?: Record<string, unknown>;
+      originalBody?: Record<string, unknown>;
+      validatedQuery?: Record<string, unknown>;
+      validatedParams?: Record<string, unknown>;
       user?: AuthenticatedUser;
       organizationId?: string;
     }
@@ -57,7 +57,13 @@ export class ValidationMiddleware {
             field: err.path.join('.'),
             message: err.message,
             code: err.code,
-            received: err.path.reduce((obj: unknown, key) => (typeof obj === 'object' && obj !== null ? (obj as Record<string, unknown>)[key] : undefined), req.body),
+            received: err.path.reduce(
+              (obj: unknown, key) =>
+                typeof obj === 'object' && obj !== null
+                  ? (obj as Record<string, unknown>)[key]
+                  : undefined,
+              req.body
+            ),
           }));
 
           return res.status(400).json({
@@ -102,7 +108,13 @@ export class ValidationMiddleware {
             field: err.path.join('.'),
             message: err.message,
             code: err.code,
-            received: err.path.reduce((obj: unknown, key) => (typeof obj === 'object' && obj !== null ? (obj as Record<string, unknown>)[key] : undefined), req.query),
+            received: err.path.reduce(
+              (obj: unknown, key) =>
+                typeof obj === 'object' && obj !== null
+                  ? (obj as Record<string, unknown>)[key]
+                  : undefined,
+              req.query
+            ),
           }));
 
           return res.status(400).json({
@@ -143,7 +155,13 @@ export class ValidationMiddleware {
             field: err.path.join('.'),
             message: err.message,
             code: err.code,
-            received: err.path.reduce((obj: unknown, key) => (typeof obj === 'object' && obj !== null ? (obj as Record<string, unknown>)[key] : undefined), req.params),
+            received: err.path.reduce(
+              (obj: unknown, key) =>
+                typeof obj === 'object' && obj !== null
+                  ? (obj as Record<string, unknown>)[key]
+                  : undefined,
+              req.params
+            ),
           }));
 
           return res.status(400).json({
@@ -235,7 +253,7 @@ export class ValidationMiddleware {
     return (req: Request, res: Response, next: NextFunction) => {
       const originalJson = res.json.bind(res);
 
-  res.json = function (data: unknown) {
+      res.json = function (data: unknown) {
         try {
           // Transform database field names to API field names for successful responses
           if (data && typeof data === 'object') {
@@ -506,7 +524,7 @@ export const securityMiddleware = [
 
     // Sanitize query parameters
     if (req.query && typeof req.query === 'object') {
-  req.query = sanitizeObject(req.query) as ParsedQs;
+      req.query = sanitizeObject(req.query) as ParsedQs;
     }
 
     next();
@@ -569,7 +587,7 @@ export const handleValidationError = (
   if ((error as Error).name === 'ValidationError') {
     return res.status(400).json({
       success: false,
-  message: (error as Error).message,
+      message: (error as Error).message,
       statusCode: 400,
     });
   }
@@ -624,7 +642,7 @@ export const sanitizeRequest = (req: Request, res: Response, next: NextFunction)
     }
 
     if (value && typeof value === 'object') {
-  const sanitized: Record<string, unknown> = {};
+      const sanitized: Record<string, unknown> = {};
       for (const [key, val] of Object.entries(value)) {
         sanitized[key] = sanitizeValue(val);
       }
@@ -639,11 +657,11 @@ export const sanitizeRequest = (req: Request, res: Response, next: NextFunction)
   }
 
   if (req.query) {
-  req.query = sanitizeValue(req.query) as ParsedQs;
+    req.query = sanitizeValue(req.query) as ParsedQs;
   }
 
   if (req.params) {
-  req.params = sanitizeValue(req.params) as ParamsDictionary;
+    req.params = sanitizeValue(req.params) as ParamsDictionary;
   }
 
   next();
@@ -653,14 +671,24 @@ export const sanitizeRequest = (req: Request, res: Response, next: NextFunction)
  * Enhanced error handling middleware
  */
 export const errorHandler = (error: unknown, req: Request, res: Response, _next: NextFunction) => {
-  const errObj = error as { message?: string; stack?: string; type?: string; errors?: unknown[]; code?: string };
+  const errObj = error as {
+    message?: string;
+    stack?: string;
+    type?: string;
+    errors?: unknown[];
+    code?: string;
+  };
   console.error('API Error:', {
     path: req.path,
     method: req.method,
     error: errObj.message,
     stack: errObj.stack,
     timestamp: new Date().toISOString(),
-    userId: ((req as unknown) as Record<string, unknown>).user && typeof ((req as unknown) as Record<string, unknown>).user === 'object' ? (((req as unknown) as Record<string, unknown>).user as { id?: string }).id : undefined,
+    userId:
+      (req as unknown as Record<string, unknown>).user &&
+      typeof (req as unknown as Record<string, unknown>).user === 'object'
+        ? ((req as unknown as Record<string, unknown>).user as { id?: string }).id
+        : undefined,
     requestId: req.headers['x-request-id'],
   });
 
@@ -703,7 +731,7 @@ export const errorHandler = (error: unknown, req: Request, res: Response, _next:
       message: errObj.message,
     });
   }
-// ...existing code...
+  // ...existing code...
 
   // Generic server error
   res.status(500).json({
@@ -730,7 +758,11 @@ export const requestLogger = (req: Request, res: Response, next: NextFunction) =
     method: req.method,
     path: req.path,
     query: Object.keys(req.query).length > 0 ? req.query : undefined,
-  userId: ((req as unknown) as Record<string, unknown>).user && typeof ((req as unknown) as Record<string, unknown>).user === 'object' ? (((req as unknown) as Record<string, unknown>).user as { id?: string }).id : undefined,
+    userId:
+      (req as unknown as Record<string, unknown>).user &&
+      typeof (req as unknown as Record<string, unknown>).user === 'object'
+        ? ((req as unknown as Record<string, unknown>).user as { id?: string }).id
+        : undefined,
     userAgent: req.headers['user-agent'],
     ip: req.ip,
   });
@@ -762,7 +794,7 @@ export const paginationMiddleware = (req: Request, res: Response, next: NextFunc
   const offset = (page - 1) * limit;
 
   // Add pagination info to request
-  ((req as unknown) as Record<string, unknown>).pagination = {
+  (req as unknown as Record<string, unknown>).pagination = {
     page,
     limit,
     offset,
@@ -779,7 +811,7 @@ export const fieldSelectionMiddleware = (req: Request, res: Response, next: Next
 
   if (fields) {
     const selectedFields = fields.split(',').map(field => field.trim());
-  ((req as unknown) as Record<string, unknown>).selectedFields = selectedFields;
+    (req as unknown as Record<string, unknown>).selectedFields = selectedFields;
   }
 
   next();

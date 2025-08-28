@@ -2,8 +2,8 @@
   "folders": [
     {
       "name": "MaintAInPro",
-      "path": "."
-    }
+      "path": ".",
+    },
   ],
   "settings": {
     "typescript.preferences.includePackageJsonAutoImports": "on",

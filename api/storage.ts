@@ -407,7 +407,9 @@ export async function getAllNotifications(userId: string): Promise<Notification[
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 }
 
-export async function createNotification(notification: CreateNotificationInput): Promise<Notification> {
+export async function createNotification(
+  notification: CreateNotificationInput
+): Promise<Notification> {
   const data = await loadData();
   const newNotification: Notification = {
     id: generateId(),
@@ -435,12 +437,16 @@ export async function deleteNotification(id: string): Promise<void> {
 }
 
 // Notification preferences (placeholder - these would normally be in a separate table)
-export async function getNotificationPreferences(_userId: string): Promise<NotificationPreference[]> {
+export async function getNotificationPreferences(
+  _userId: string
+): Promise<NotificationPreference[]> {
   // For now, return empty array. In production, this would query the preferences table
   return [];
 }
 
-export async function createNotificationPreference(preference: CreateNotificationPreferenceInput): Promise<NotificationPreference> {
+export async function createNotificationPreference(
+  preference: CreateNotificationPreferenceInput
+): Promise<NotificationPreference> {
   // Placeholder implementation
   return {
     id: generateId(),
@@ -450,12 +456,19 @@ export async function createNotificationPreference(preference: CreateNotificatio
   };
 }
 
-export async function updateNotificationPreference(_userId: string, _notificationType: string, _updates: Partial<NotificationPreference>): Promise<NotificationPreference | null> {
+export async function updateNotificationPreference(
+  _userId: string,
+  _notificationType: string,
+  _updates: Partial<NotificationPreference>
+): Promise<NotificationPreference | null> {
   // Placeholder implementation
   return null;
 }
 
-export async function deleteNotificationPreference(_userId: string, _notificationType: string): Promise<void> {
+export async function deleteNotificationPreference(
+  _userId: string,
+  _notificationType: string
+): Promise<void> {
   // Placeholder implementation
 }
 
@@ -465,7 +478,9 @@ export async function getPushSubscriptions(_userId: string): Promise<PushSubscri
   return [];
 }
 
-export async function createPushSubscription(subscription: CreatePushSubscriptionInput): Promise<PushSubscription> {
+export async function createPushSubscription(
+  subscription: CreatePushSubscriptionInput
+): Promise<PushSubscription> {
   // Placeholder implementation
   return {
     id: generateId(),

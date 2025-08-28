@@ -8,13 +8,18 @@ import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
 function MonitoringDebugPage() {
-  const [testResults, setTestResults] = useState<Record<string, {
-    success: boolean;
-    status?: string | number;
-    data?: unknown;
-    error?: string;
-    headers?: Record<string, string>;
-  }>>({});
+  const [testResults, setTestResults] = useState<
+    Record<
+      string,
+      {
+        success: boolean;
+        status?: string | number;
+        data?: unknown;
+        error?: string;
+        headers?: Record<string, string>;
+      }
+    >
+  >({});
 
   const testEndpoint = async (endpoint: string) => {
     try {

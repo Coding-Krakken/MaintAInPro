@@ -37,13 +37,13 @@ describe('MobileMenu Component Enhanced UI', () => {
       isAuthenticated: true,
       isLoading: false,
     } as any);
-    
+
     vi.clearAllMocks();
   });
 
   test('renders all required data-testid attributes when open', () => {
     render(<MobileMenu {...mockProps} />);
-    
+
     // Check main structure
     expect(screen.getByTestId('mobile-menu-overlay')).toBeInTheDocument();
     expect(screen.getByTestId('mobile-menu-sidebar')).toBeInTheDocument();
@@ -51,13 +51,13 @@ describe('MobileMenu Component Enhanced UI', () => {
     expect(screen.getByTestId('mobile-menu-logo')).toBeInTheDocument();
     expect(screen.getByTestId('mobile-menu-title')).toBeInTheDocument();
     expect(screen.getByTestId('mobile-menu-close-button')).toBeInTheDocument();
-    
+
     // Check user profile section
     expect(screen.getByTestId('mobile-menu-user-profile')).toBeInTheDocument();
     expect(screen.getByTestId('mobile-menu-user-avatar')).toBeInTheDocument();
     expect(screen.getByTestId('mobile-menu-user-name')).toBeInTheDocument();
     expect(screen.getByTestId('mobile-menu-user-role')).toBeInTheDocument();
-    
+
     // Check navigation
     expect(screen.getByTestId('mobile-menu-navigation')).toBeInTheDocument();
     expect(screen.getByTestId('mobile-nav-dashboard')).toBeInTheDocument();
@@ -68,24 +68,24 @@ describe('MobileMenu Component Enhanced UI', () => {
     expect(screen.getByTestId('mobile-nav-vendors')).toBeInTheDocument();
     expect(screen.getByTestId('mobile-nav-reports')).toBeInTheDocument();
     expect(screen.getByTestId('mobile-nav-settings')).toBeInTheDocument();
-    
+
     // Check footer
     expect(screen.getByTestId('mobile-menu-footer')).toBeInTheDocument();
   });
 
   test('does not render when closed', () => {
     render(<MobileMenu {...mockProps} isOpen={false} />);
-    
+
     expect(screen.queryByTestId('mobile-menu-overlay')).not.toBeInTheDocument();
   });
 
   test('displays user information correctly', () => {
     render(<MobileMenu {...mockProps} />);
-    
+
     const userName = screen.getByTestId('mobile-menu-user-name');
     const userRole = screen.getByTestId('mobile-menu-user-role');
     const userAvatar = screen.getByTestId('mobile-menu-user-avatar');
-    
+
     expect(userName).toHaveTextContent('John Doe');
     expect(userRole).toHaveTextContent('supervisor');
     expect(userAvatar).toHaveTextContent('JD');
@@ -93,49 +93,49 @@ describe('MobileMenu Component Enhanced UI', () => {
 
   test('displays active navigation indicator for current page', () => {
     render(<MobileMenu {...mockProps} />);
-    
+
     // Dashboard should be active since useLocation returns '/dashboard'
     const dashboardLink = screen.getByTestId('mobile-nav-dashboard');
     expect(dashboardLink).toHaveAttribute('aria-current', 'page');
-    
+
     // Check for active indicator
     expect(screen.getByTestId('mobile-nav-active-indicator')).toBeInTheDocument();
   });
 
   test('close button calls onClose when clicked', () => {
     render(<MobileMenu {...mockProps} />);
-    
+
     const closeButton = screen.getByTestId('mobile-menu-close-button');
     fireEvent.click(closeButton);
-    
+
     expect(mockProps.onClose).toHaveBeenCalledTimes(1);
   });
 
   test('navigation items call onClose when clicked', () => {
     render(<MobileMenu {...mockProps} />);
-    
+
     const dashboardLink = screen.getByTestId('mobile-nav-dashboard');
     fireEvent.click(dashboardLink);
-    
+
     expect(mockProps.onClose).toHaveBeenCalledTimes(1);
   });
 
   test('settings link calls onClose when clicked', () => {
     render(<MobileMenu {...mockProps} />);
-    
+
     const settingsLink = screen.getByTestId('mobile-nav-settings');
     fireEvent.click(settingsLink);
-    
+
     expect(mockProps.onClose).toHaveBeenCalledTimes(1);
   });
 
   test('has proper accessibility attributes', () => {
     render(<MobileMenu {...mockProps} />);
-    
+
     // Check close button has aria-label
     const closeButton = screen.getByTestId('mobile-menu-close-button');
     expect(closeButton).toHaveAttribute('aria-label', 'Close mobile menu');
-    
+
     // Check icons have aria-hidden
     const icons = screen.getAllByRole('img', { hidden: true });
     expect(icons.length).toBeGreaterThan(0);
@@ -151,7 +151,7 @@ describe('MobileMenu Component Enhanced UI', () => {
     } as any);
 
     render(<MobileMenu {...mockProps} />);
-    
+
     const userRole = screen.getByTestId('mobile-menu-user-role');
     expect(userRole).toHaveTextContent('');
   });
@@ -166,7 +166,7 @@ describe('MobileMenu Component Enhanced UI', () => {
     } as any);
 
     render(<MobileMenu {...mockProps} />);
-    
+
     const userRole = screen.getByTestId('mobile-menu-user-role');
     expect(userRole).toHaveTextContent('facility manager');
   });

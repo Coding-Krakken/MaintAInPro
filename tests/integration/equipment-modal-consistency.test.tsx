@@ -1,8 +1,8 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, MockedFunction } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import EquipmentPage from '@/pages/Equipment';
+import EquipmentPage from '../../client/src/pages/Equipment';
 
 // Mock equipment data - matches the actual development data
 const mockEquipmentData = [
@@ -57,7 +57,7 @@ const mockEquipmentData = [
 // Mock the fetch function
 global.fetch = vi.fn();
 
-const mockFetch = fetch as vi.MockedFunction<typeof fetch>;
+const mockFetch = fetch as MockedFunction<typeof fetch>;
 
 describe('Equipment Modal Data Consistency', () => {
   let queryClient: QueryClient;

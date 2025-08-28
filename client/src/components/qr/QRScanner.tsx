@@ -49,7 +49,12 @@ export default function QRScanner({ isOpen, onClose, onScan }: QRScannerProps) {
         <DialogHeader>
           <div className='flex items-center justify-between'>
             <DialogTitle>Scan QR Code</DialogTitle>
-            <Button variant='ghost' size='icon' onClick={handleClose} data-testid='qr-scanner-close'>
+            <Button
+              variant='ghost'
+              size='icon'
+              onClick={handleClose}
+              data-testid='qr-scanner-close'
+            >
               <X className='w-4 h-4' />
             </Button>
           </div>

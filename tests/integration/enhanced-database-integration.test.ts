@@ -40,7 +40,7 @@ const isDatabaseAvailable = () => {
 const describeMode = isDatabaseAvailable() ? describe : describe.skip;
 
 describeMode('Enhanced Database Service - Production Integration Tests', () => {
-  let enhancedDbService: EnhancedDatabaseService;
+  let enhancedDbService: EnhancedDatabaseService | null;
   let testOrganization: Organization;
   let testContext: any;
   let testWorkOrders: WorkOrder[] = [];

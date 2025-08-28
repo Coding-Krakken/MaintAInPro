@@ -204,7 +204,7 @@ test.describe('Health Dashboard E2E', () => {
 
   test('should auto-refresh every 30 seconds', async ({ page }) => {
     test.setTimeout(35000); // Increase timeout for this test
-    
+
     await page.waitForLoadState('networkidle');
 
     // Verify initial state

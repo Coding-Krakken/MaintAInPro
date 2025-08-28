@@ -98,7 +98,10 @@ const OfflineIndicator: React.FC = () => {
           )}
 
           {!networkStatus.isOnline && pendingCount > 0 && (
-            <div className='flex items-center space-x-1 text-orange-600' data-testid='offline-sync-message'>
+            <div
+              className='flex items-center space-x-1 text-orange-600'
+              data-testid='offline-sync-message'
+            >
               <AlertCircle className='w-4 h-4' />
               <span className='text-xs'>Changes will sync when online</span>
             </div>

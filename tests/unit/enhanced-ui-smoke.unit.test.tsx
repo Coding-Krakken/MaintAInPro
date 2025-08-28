@@ -26,13 +26,13 @@ vi.mock('wouter', () => ({
 describe('Enhanced Auth Component - Data TestIDs', () => {
   test('renders all new data-testid selectors', () => {
     render(<Auth />);
-    
+
     // Check that new selectors exist (basic smoke test)
     expect(screen.getByTestId('password-toggle-button')).toBeInTheDocument();
     expect(screen.getByTestId('remember-me-checkbox')).toBeInTheDocument();
     expect(screen.getByTestId('remember-me-label')).toBeInTheDocument();
-    
-    // Original selectors should still exist  
+
+    // Original selectors should still exist
     expect(screen.getByTestId('email-input')).toBeInTheDocument();
     expect(screen.getByTestId('password-input')).toBeInTheDocument();
     expect(screen.getByTestId('login-button')).toBeInTheDocument();

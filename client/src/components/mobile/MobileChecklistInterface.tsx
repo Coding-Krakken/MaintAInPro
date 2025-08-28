@@ -105,22 +105,22 @@ const MobileChecklistInterface: React.FC<MobileChecklistInterfaceProps> = ({
       webkitSpeechRecognition?: unknown;
       SpeechRecognition?: unknown;
     }
-    
+
     const SpeechRecognition =
-      (window as unknown as WindowWithSpeechRecognition).webkitSpeechRecognition || 
+      (window as unknown as WindowWithSpeechRecognition).webkitSpeechRecognition ||
       (window as unknown as WindowWithSpeechRecognition).SpeechRecognition;
-      type SpeechRecognitionType = {
-        continuous: boolean;
-        interimResults: boolean;
-        lang: string;
-        onstart: (() => void) | null;
-  onresult: ((_event: SpeechRecognitionEvent) => void) | null;
-  onerror: ((_event: Event) => void) | null;
-        onend: (() => void) | null;
-        start: () => void;
-        stop: () => void;
-      };
-      const recognition = new (SpeechRecognition as unknown as new () => SpeechRecognitionType)();
+    type SpeechRecognitionType = {
+      continuous: boolean;
+      interimResults: boolean;
+      lang: string;
+      onstart: (() => void) | null;
+      onresult: ((_event: SpeechRecognitionEvent) => void) | null;
+      onerror: ((_event: Event) => void) | null;
+      onend: (() => void) | null;
+      start: () => void;
+      stop: () => void;
+    };
+    const recognition = new (SpeechRecognition as unknown as new () => SpeechRecognitionType)();
 
     recognition.continuous = true;
     recognition.interimResults = true;

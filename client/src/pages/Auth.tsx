@@ -20,19 +20,21 @@ export default function Auth() {
   const { toast } = useToast();
 
   // Password strength calculation
-  const calculatePasswordStrength = (pwd: string): { score: number; feedback: string; color: string } => {
+  const calculatePasswordStrength = (
+    pwd: string
+  ): { score: number; feedback: string; color: string } => {
     if (!pwd) return { score: 0, feedback: '', color: 'bg-gray-200' };
-    
+
     let score = 0;
     let feedback = 'Weak';
-    
+
     if (pwd.length >= 8) score += 25;
     if (pwd.length >= 12) score += 25;
     if (/[A-Z]/.test(pwd)) score += 15;
     if (/[a-z]/.test(pwd)) score += 15;
     if (/[0-9]/.test(pwd)) score += 10;
     if (/[^A-Za-z0-9]/.test(pwd)) score += 10;
-    
+
     if (score >= 80) {
       feedback = 'Strong';
       return { score, feedback, color: 'bg-green-500' };
@@ -168,12 +170,14 @@ export default function Auth() {
                   <div className='mt-2' data-testid='password-strength-meter'>
                     <div className='flex items-center justify-between mb-1'>
                       <span className='text-xs text-gray-600'>Password Strength</span>
-                      <span className={`text-xs font-medium ${passwordStrength.score >= 60 ? 'text-green-600' : passwordStrength.score >= 30 ? 'text-yellow-600' : 'text-red-600'}`}>
+                      <span
+                        className={`text-xs font-medium ${passwordStrength.score >= 60 ? 'text-green-600' : passwordStrength.score >= 30 ? 'text-yellow-600' : 'text-red-600'}`}
+                      >
                         {passwordStrength.feedback}
                       </span>
                     </div>
                     <div className='w-full bg-gray-200 rounded-full h-2'>
-                      <div 
+                      <div
                         className={`h-2 rounded-full transition-all duration-300 ${passwordStrength.color}`}
                         style={{ width: `${passwordStrength.score}%` }}
                         data-testid='password-strength-bar'
@@ -198,14 +202,14 @@ export default function Auth() {
               </div>
 
               <div className='flex items-center space-x-2'>
-                <Checkbox 
+                <Checkbox
                   id='remember-me'
                   checked={rememberMe}
-                  onCheckedChange={(checked) => setRememberMe(checked as boolean)}
+                  onCheckedChange={checked => setRememberMe(checked as boolean)}
                   data-testid='remember-me-checkbox'
                 />
-                <label 
-                  htmlFor='remember-me' 
+                <label
+                  htmlFor='remember-me'
                   className='text-sm text-gray-700 cursor-pointer'
                   data-testid='remember-me-label'
                 >

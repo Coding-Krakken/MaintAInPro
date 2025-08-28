@@ -40,7 +40,7 @@ test.describe('Authentication Flow', () => {
     // Wait for navigation and authentication to complete
     await expect(page).toHaveURL('/dashboard');
     await page.waitForLoadState('networkidle');
-    
+
     // Verify user name is displayed (now that API proxy should work)
     await expect(page.locator('[data-testid="user-name"]')).toContainText(
       testUsers.supervisor.name

@@ -70,19 +70,33 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
   if (!isOpen) return null;
 
   return (
-    <div className='fixed inset-0 bg-black bg-opacity-50 z-50 lg:hidden' data-testid='mobile-menu-overlay'>
-      <div className='fixed inset-y-0 left-0 w-64 bg-white shadow-xl z-50 transform transition-transform duration-300' data-testid='mobile-menu-sidebar'>
+    <div
+      className='fixed inset-0 bg-black bg-opacity-50 z-50 lg:hidden'
+      data-testid='mobile-menu-overlay'
+    >
+      <div
+        className='fixed inset-y-0 left-0 w-64 bg-white shadow-xl z-50 transform transition-transform duration-300'
+        data-testid='mobile-menu-sidebar'
+      >
         <div className='flex flex-col h-full'>
-          <div className='flex items-center justify-between p-4 border-b' data-testid='mobile-menu-header'>
+          <div
+            className='flex items-center justify-between p-4 border-b'
+            data-testid='mobile-menu-header'
+          >
             <div className='flex items-center space-x-3'>
-              <div className='w-8 h-8 bg-primary-500 rounded-lg flex items-center justify-center' data-testid='mobile-menu-logo'>
+              <div
+                className='w-8 h-8 bg-primary-500 rounded-lg flex items-center justify-center'
+                data-testid='mobile-menu-logo'
+              >
                 <Wrench className='w-5 h-5 text-white' />
               </div>
-              <h1 className='text-xl font-bold text-gray-900' data-testid='mobile-menu-title'>MaintAInPro</h1>
+              <h1 className='text-xl font-bold text-gray-900' data-testid='mobile-menu-title'>
+                MaintAInPro
+              </h1>
             </div>
-            <Button 
-              variant='ghost' 
-              size='icon' 
+            <Button
+              variant='ghost'
+              size='icon'
               onClick={onClose}
               data-testid='mobile-menu-close-button'
               aria-label='Close mobile menu'
@@ -94,14 +108,20 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
           {/* User Profile Section */}
           <div className='p-4 border-b border-gray-200' data-testid='mobile-menu-user-profile'>
             <div className='flex items-center space-x-3'>
-              <div className='w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center' data-testid='mobile-menu-user-avatar'>
+              <div
+                className='w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center'
+                data-testid='mobile-menu-user-avatar'
+              >
                 <span className='text-primary-700 font-semibold text-sm'>
                   {user?.firstName?.[0]}
                   {user?.lastName?.[0]}
                 </span>
               </div>
               <div>
-                <p className='text-sm font-medium text-gray-900' data-testid='mobile-menu-user-name'>
+                <p
+                  className='text-sm font-medium text-gray-900'
+                  data-testid='mobile-menu-user-name'
+                >
                   {user?.firstName} {user?.lastName}
                 </p>
                 <p className='text-xs text-gray-500 capitalize' data-testid='mobile-menu-user-role'>
@@ -127,7 +147,10 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                 <item.icon className='w-5 h-5' aria-hidden='true' />
                 <span>{item.name}</span>
                 {item.active && (
-                  <div className='ml-auto w-2 h-2 bg-primary-500 rounded-full' data-testid='mobile-nav-active-indicator' />
+                  <div
+                    className='ml-auto w-2 h-2 bg-primary-500 rounded-full'
+                    data-testid='mobile-nav-active-indicator'
+                  />
                 )}
               </Link>
             ))}

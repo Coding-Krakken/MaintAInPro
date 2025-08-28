@@ -1,5 +1,10 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { ErrorReportingService, reportError, reportNetworkError, reportChunkError } from '../../../client/src/utils/error-reporting';
+import {
+  ErrorReportingService,
+  reportError,
+  reportNetworkError,
+  reportChunkError,
+} from '../../../client/src/utils/error-reporting';
 import type { ErrorInfo } from '../../../client/src/components/ErrorBoundary/ErrorBoundary';
 
 // Mock localStorage
@@ -81,7 +86,7 @@ describe('ErrorReportingService', () => {
       const errorInfo: ErrorInfo = {
         componentStack: '\n    in TestComponent\n    in ErrorBoundary',
       };
-      
+
       const eventId = await service.reportError(error, errorInfo);
       expect(eventId).toMatch(/^error-\d+-\w+$/);
     });
@@ -126,7 +131,7 @@ describe('ErrorReportingService', () => {
 
     it('should not report when disabled', async () => {
       service.setEnabled(false);
-      
+
       const error = new Error('Test error');
       const eventId = await service.reportError(error);
 
@@ -140,7 +145,7 @@ describe('ErrorReportingService', () => {
 
       const error = new Error('Test error');
       error.stack = 'Error stack trace';
-      
+
       const errorInfo: ErrorInfo = {
         componentStack: '\n    in Component',
       };
@@ -162,22 +167,22 @@ describe('ErrorReportingService', () => {
   describe('reportNetworkError', () => {
     it('should report network error with URL and status', async () => {
       const eventId = await service.reportNetworkError('/api/test', 404, 'Not Found');
-      
+
       expect(eventId).toMatch(/^error-\d+-\w+$/);
     });
 
     it('should report network error without status', async () => {
       const eventId = await service.reportNetworkError('/api/test');
-      
+
       expect(eventId).toMatch(/^error-\d+-\w+$/);
     });
 
     it('should include URL in error message', async () => {
       await service.reportNetworkError('/api/test', 500, 'Server Error');
-      
+
       const setItemCall = localStorageMock.setItem.mock.calls[0];
       const storedData = JSON.parse(setItemCall[1]);
-      
+
       expect(storedData[0].error.message).toContain('/api/test');
       expect(storedData[0].error.message).toContain('500');
       expect(storedData[0].error.message).toContain('Server Error');
@@ -187,22 +192,22 @@ describe('ErrorReportingService', () => {
   describe('reportChunkError', () => {
     it('should report chunk error with chunk name', async () => {
       const eventId = await service.reportChunkError('vendor-chunk');
-      
+
       expect(eventId).toMatch(/^error-\d+-\w+$/);
     });
 
     it('should report chunk error without chunk name', async () => {
       const eventId = await service.reportChunkError();
-      
+
       expect(eventId).toMatch(/^error-\d+-\w+$/);
     });
 
     it('should include chunk name in error message', async () => {
       await service.reportChunkError('test-chunk');
-      
+
       const setItemCall = localStorageMock.setItem.mock.calls[0];
       const storedData = JSON.parse(setItemCall[1]);
-      
+
       expect(storedData[0].error.message).toContain('test-chunk');
       expect(storedData[0].error.name).toBe('ChunkLoadError');
     });
@@ -264,7 +269,7 @@ describe('ErrorReportingService', () => {
 
       const setItemCall = localStorageMock.setItem.mock.calls[0];
       const storedData = JSON.parse(setItemCall[1]);
-      
+
       expect(storedData).toHaveLength(50);
       // Should keep the most recent errors (last 49 + the new one)
       expect(storedData[0].error.message).toBe('Error 6'); // First kept error
@@ -295,19 +300,19 @@ describe('Convenience Functions', () => {
   it('should export reportError convenience function', async () => {
     const error = new Error('Convenience test');
     const eventId = await reportError(error);
-    
+
     expect(eventId).toMatch(/^error-\d+-\w+$/);
   });
 
   it('should export reportNetworkError convenience function', async () => {
     const eventId = await reportNetworkError('/api/test', 404);
-    
+
     expect(eventId).toMatch(/^error-\d+-\w+$/);
   });
 
   it('should export reportChunkError convenience function', async () => {
     const eventId = await reportChunkError('test-chunk');
-    
+
     expect(eventId).toMatch(/^error-\d+-\w+$/);
   });
 });

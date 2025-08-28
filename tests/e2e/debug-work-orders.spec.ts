@@ -7,27 +7,27 @@ test('debug work order navigation', async ({ page }) => {
   await page.goto('/login');
   console.log('Current URL after goto:', page.url());
   console.log('Page title:', await page.title());
-  
+
   // Check if elements exist
   const emailInput = page.locator('[data-testid="email-input"]');
   const passwordInput = page.locator('[data-testid="password-input"]');
   const loginButton = page.locator('[data-testid="login-button"]');
-  
+
   console.log('Email input exists:', await emailInput.isVisible());
   console.log('Password input exists:', await passwordInput.isVisible());
   console.log('Login button exists:', await loginButton.isVisible());
-  
+
   await page.fill('[data-testid="email-input"]', 'test@example.com');
   await page.fill('[data-testid="password-input"]', 'password');
-  
+
   console.log('Submitting login form');
   await page.click('[data-testid="login-button"]');
-  
+
   // Wait a bit for the request to process
   await page.waitForTimeout(2000);
-  
+
   console.log('Current URL after submit:', page.url());
-  
+
   // Check for error message
   const errorMessage = page.locator('[data-testid="error-message"]');
   if (await errorMessage.isVisible()) {

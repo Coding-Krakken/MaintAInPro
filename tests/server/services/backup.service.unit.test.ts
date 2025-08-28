@@ -35,7 +35,7 @@ vi.mock('@/config/backup', () => ({
 }));
 
 // Mock file system operations
-vi.mock('fs/promises', async (importOriginal) => {
+vi.mock('fs/promises', async importOriginal => {
   const actual = await importOriginal();
   return {
     ...actual,
@@ -49,7 +49,7 @@ vi.mock('fs/promises', async (importOriginal) => {
 });
 
 // Mock child_process
-vi.mock('child_process', async (importOriginal) => {
+vi.mock('child_process', async importOriginal => {
   const actual = await importOriginal();
   return {
     ...actual,
@@ -57,11 +57,11 @@ vi.mock('child_process', async (importOriginal) => {
   };
 });
 
-vi.mock('util', async (importOriginal) => {
+vi.mock('util', async importOriginal => {
   const actual = await importOriginal();
   return {
     ...actual,
-    promisify: vi.fn((fn) => fn),
+    promisify: vi.fn(fn => fn),
   };
 });
 
@@ -74,16 +74,16 @@ describe('BackupService', () => {
     it('should validate backup configuration structure', async () => {
       // Import here to ensure mocks are in place
       const { getBackupConfig } = await import('../../../config/backup');
-      
+
       const config = getBackupConfig();
-      
+
       expect(config).toHaveProperty('enabled');
       expect(config).toHaveProperty('schedule');
       expect(config).toHaveProperty('retention');
       expect(config).toHaveProperty('storage');
       expect(config).toHaveProperty('validation');
       expect(config).toHaveProperty('notifications');
-      
+
       expect(typeof config.enabled).toBe('boolean');
       expect(typeof config.schedule.interval).toBe('number');
       expect(typeof config.retention.daily).toBe('number');
@@ -104,7 +104,7 @@ describe('BackupService', () => {
     it('should have required methods', async () => {
       const { BackupService } = await import('../../../server/services/backup.service');
       const instance = BackupService.getInstance();
-      
+
       expect(typeof instance.getStatus).toBe('function');
       expect(typeof instance.testBackup).toBe('function');
       expect(typeof instance.createBackup).toBe('function');
@@ -112,10 +112,10 @@ describe('BackupService', () => {
 
     it('should return consistent singleton instance', async () => {
       const { BackupService } = await import('../../../server/services/backup.service');
-      
+
       const instance1 = BackupService.getInstance();
       const instance2 = BackupService.getInstance();
-      
+
       expect(instance1).toBe(instance2);
     });
   });
@@ -123,10 +123,10 @@ describe('BackupService', () => {
   describe('Background Job Integration', () => {
     it('should be integrated with background job scheduler', async () => {
       const { backgroundJobScheduler } = await import('../../../server/services/background-jobs');
-      
+
       const jobs = backgroundJobScheduler.getJobStatus();
       const backupJob = jobs.find(job => job.name === 'Database Backup');
-      
+
       expect(backupJob).toBeDefined();
       if (backupJob) {
         expect(backupJob.name).toBe('Database Backup');

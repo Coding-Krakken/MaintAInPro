@@ -147,8 +147,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     console.log('Rate limiting enabled');
   } else {
     // Create no-op middleware for tests
-  authRateLimit = (req, res, next) => next();
-  apiRateLimit = (req, res, next) => next();
+    authRateLimit = (req, res, next) => next();
+    apiRateLimit = (req, res, next) => next();
     console.log('Rate limiting disabled for tests');
   }
 
@@ -246,13 +246,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // OpenAPI 3.0 Documentation with Swagger UI
-  app.use('/api/api-docs', swaggerUi.serve, swaggerUi.setup(specs, {
-    customCss: '.swagger-ui .topbar { display: none }',
-    customSiteTitle: 'MaintAInPro CMMS API Documentation',
-    swaggerOptions: {
-      persistAuthorization: true,
-    },
-  }));
+  app.use(
+    '/api/api-docs',
+    swaggerUi.serve,
+    swaggerUi.setup(specs, {
+      customCss: '.swagger-ui .topbar { display: none }',
+      customSiteTitle: 'MaintAInPro CMMS API Documentation',
+      swaggerOptions: {
+        persistAuthorization: true,
+      },
+    })
+  );
 
   console.log('Health check endpoint registered');
   console.log('API documentation available at /api/api-docs');
@@ -321,9 +325,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Check if session is still valid
       const payload = tokenValidation.payload as JWTPayload;
-      const sessionValid = await new AuthService().validateSession(
-        payload.sessionId
-      );
+      const sessionValid = await new AuthService().validateSession(payload.sessionId);
       if (!sessionValid) {
         return res.status(401).json({ message: 'Session expired' });
       }
@@ -354,7 +356,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // RBAC middleware for role-based access control
   const requireRole = (..._allowedRoles: string[]) => {
-  return async (req: Request, res: Response, next: NextFunction) => {
+    return async (req: Request, res: Response, next: NextFunction) => {
       try {
         const { AuthService } = await import('./services/auth');
 
@@ -424,14 +426,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const _generalRateLimit = createRateLimiter(15 * 60 * 1000, 100); // 100 requests per 15 minutes
 
   const getCurrentUser = (req: Request): string => {
-    const userId = req.user?.id ||
-      req.headers['x-user-id'] ||
-      '00000000-0000-0000-0000-000000000001';
+    const userId =
+      req.user?.id || req.headers['x-user-id'] || '00000000-0000-0000-0000-000000000001';
     return ensureString(userId);
   };
 
   const getCurrentWarehouse = (req: Request): string => {
-    const warehouseId = req.user?.warehouseId ||
+    const warehouseId =
+      req.user?.warehouseId ||
       req.headers['x-warehouse-id'] ||
       '00000000-0000-0000-0000-000000000001';
     return ensureString(warehouseId);
@@ -502,10 +504,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         // Define valid test credentials
         const validTestEmails = [
           'test@example.com',
-          'supervisor@maintainpro.com', 
+          'supervisor@maintainpro.com',
           'manager@example.com',
         ];
-        
+
         // Check if credentials are valid for testing
         if (validTestEmails.includes(req.body.email) && req.body.password === 'password') {
           const mockUser = {
@@ -598,7 +600,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { AuthService } = await import('./services/auth');
 
-  const sessionId = (req).user?.sessionId;
+      const sessionId = req.user?.sessionId;
       if (sessionId) {
         const context = {
           ipAddress: req.ip || req.connection.remoteAddress || 'Unknown',
@@ -837,7 +839,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Get user from request (set by authenticateRequest middleware)
-  const user = (req).user;
+      const user = req.user;
       if (!user) {
         return res.status(401).json({ message: 'Not authenticated' });
       }

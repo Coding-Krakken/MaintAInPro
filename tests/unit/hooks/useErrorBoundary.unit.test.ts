@@ -42,9 +42,7 @@ describe('useErrorBoundary', () => {
       const onError = vi.fn();
       const context = 'test-context';
 
-      const { result } = renderHook(() => 
-        useErrorBoundary({ context, onError })
-      );
+      const { result } = renderHook(() => useErrorBoundary({ context, onError }));
 
       expect(result.current.captureError).toBeDefined();
     });
@@ -54,10 +52,8 @@ describe('useErrorBoundary', () => {
     it('should report error and throw to trigger boundary with Error object', async () => {
       const onError = vi.fn();
       const context = 'test-capture';
-      
-      const { result } = renderHook(() => 
-        useErrorBoundary({ context, onError })
-      );
+
+      const { result } = renderHook(() => useErrorBoundary({ context, onError }));
 
       const testError = new Error('Test capture error');
 
@@ -137,10 +133,8 @@ describe('useErrorBoundary', () => {
     it('should report error without throwing', async () => {
       const onError = vi.fn();
       const context = 'test-report';
-      
-      const { result } = renderHook(() => 
-        useErrorBoundary({ context, onError })
-      );
+
+      const { result } = renderHook(() => useErrorBoundary({ context, onError }));
 
       const testError = new Error('Test report error');
 
@@ -165,7 +159,7 @@ describe('useErrorBoundary', () => {
 
       expect(errorReporting.errorReportingService.reportError).toHaveBeenCalledWith(
         expect.objectContaining({
-          message: 'String error for reporting'
+          message: 'String error for reporting',
         }),
         undefined,
         expect.any(Object)
@@ -241,10 +235,8 @@ describe('useErrorBoundary', () => {
     it('should report and throw chunk errors', async () => {
       const onError = vi.fn();
       const context = 'test-chunk';
-      
-      const { result } = renderHook(() => 
-        useErrorBoundary({ context, onError })
-      );
+
+      const { result } = renderHook(() => useErrorBoundary({ context, onError }));
 
       try {
         await act(async () => {
@@ -255,7 +247,7 @@ describe('useErrorBoundary', () => {
         expect(thrownError).toBeInstanceOf(Error);
         expect((thrownError as Error).name).toBe('ChunkLoadError');
         expect((thrownError as Error).message).toBe('Failed to load chunk: test-chunk');
-        
+
         expect(errorReporting.errorReportingService.reportChunkError).toHaveBeenCalledWith(
           'test-chunk',
           { context }

@@ -22,12 +22,11 @@ export default defineConfig({
     video: 'off', // Disabled due to ffmpeg not being available
     // Force headless mode in CI or when no DISPLAY is available
     headless: !!process.env.CI || !process.env.DISPLAY,
-    
   },
   projects: [
     {
       name: 'chromium',
-      use: { 
+      use: {
         ...devices['Desktop Chrome'],
         // Use system Chrome browser instead of downloading Playwright's browsers
         channel: 'chrome',
