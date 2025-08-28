@@ -78,6 +78,18 @@ export interface FeatureFlags {
   twoFactorAuthentication: FeatureFlag;
   encryptedFileStorage: FeatureFlag;
   advancedAuditLogging: FeatureFlag;
+
+  // Pest Control Platform Features
+  pestControlPlatform: FeatureFlag;
+  pestControlCustomerPortal: FeatureFlag;
+  pestControlAIChatbot: FeatureFlag;
+  pestControlTechnicianApp: FeatureFlag;
+  pestControlRouteOptimization: FeatureFlag;
+  pestControlChemicalTracking: FeatureFlag;
+  pestControlAIQuotes: FeatureFlag;
+  pestControlCRM: FeatureFlag;
+  pestControlComplianceReporting: FeatureFlag;
+  pestControlPaymentProcessing: FeatureFlag;
 }
 
 /**
@@ -274,6 +286,85 @@ export const featureFlags: FeatureFlags = {
     rolloutPercentage: 100,
     environments: ['staging', 'production'],
   },
+
+  // Pest Control Platform Features
+  pestControlPlatform: {
+    enabled: true,
+    description: 'Core pest control platform functionality',
+    rolloutPercentage: 100,
+    environments: ['development', 'staging', 'production'],
+    metadata: { requiredForPestControlBusiness: true },
+  },
+
+  pestControlCustomerPortal: {
+    enabled: true,
+    description: 'Customer portal for bookings, payments, and service history',
+    rolloutPercentage: 100,
+    environments: ['development', 'staging', 'production'],
+  },
+
+  pestControlAIChatbot: {
+    enabled: false,
+    description: 'AI-powered chatbot for customer service and bookings',
+    rolloutPercentage: 25,
+    environments: ['development', 'staging'],
+    metadata: { requiresAIModel: true, plannedRelease: 'v2.0.0' },
+  },
+
+  pestControlTechnicianApp: {
+    enabled: true,
+    description: 'Mobile app for technicians with routing and compliance',
+    rolloutPercentage: 100,
+    environments: ['development', 'staging', 'production'],
+  },
+
+  pestControlRouteOptimization: {
+    enabled: false,
+    description: 'AI-powered route optimization for technicians',
+    rolloutPercentage: 50,
+    environments: ['development', 'staging'],
+    metadata: { requiresGoogleMapsAPI: true },
+  },
+
+  pestControlChemicalTracking: {
+    enabled: true,
+    description: 'EPA-compliant chemical inventory and usage tracking',
+    rolloutPercentage: 100,
+    environments: ['development', 'staging', 'production'],
+    metadata: { requiresEPACompliance: true },
+  },
+
+  pestControlAIQuotes: {
+    enabled: false,
+    description: 'AI-powered quote generation with risk assessment',
+    rolloutPercentage: 25,
+    environments: ['development'],
+    metadata: { requiresAIModel: true, plannedRelease: 'v2.1.0' },
+  },
+
+  pestControlCRM: {
+    enabled: false,
+    description: 'AI-powered CRM with lead scoring and churn prediction',
+    rolloutPercentage: 0,
+    environments: ['development'],
+    metadata: { requiresAIModel: true, plannedRelease: 'v3.0.0' },
+  },
+
+  pestControlComplianceReporting: {
+    enabled: true,
+    description: 'Regulatory compliance reporting for EPA and state requirements',
+    rolloutPercentage: 100,
+    environments: ['staging', 'production'],
+    metadata: { requiresEPACompliance: true },
+  },
+
+  pestControlPaymentProcessing: {
+    enabled: false,
+    description: 'Integrated payment processing for pest control services',
+    rolloutPercentage: 0,
+    environments: ['development', 'staging'],
+    metadata: { requiresPaymentGateway: true },
+  },
 };
 
 /**
@@ -302,7 +393,7 @@ export function isFeatureEnabled(
   }
 
   // Check environment restrictions
-  if (feature.environments && !feature.environments.includes(environment as string)) {
+  if (feature.environments && !feature.environments.includes(environment as 'development' | 'production' | 'staging')) {
     return false;
   }
 
@@ -357,6 +448,3 @@ export function logFeatureFlags(environment: string = process.env.NODE_ENV || 'd
   });
   console.groupEnd();
 }
-
-// Export the type for use in other modules
-export type { FeatureFlags, FeatureFlag };

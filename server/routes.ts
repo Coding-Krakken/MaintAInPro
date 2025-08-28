@@ -20,6 +20,7 @@ import { registerWebhookRoutes } from './routes/webhooks';
 import { registerAIPredictiveRoutes } from './routes/ai-predictive';
 import { registerAuditRoutes } from './routes/audit';
 import { registerLaborTimeRoutes } from './routes/labor-time';
+import pestControlRoutes from '../api/pest-control';
 import { auditMiddleware } from './middleware/audit.middleware';
 import {
   performanceMiddleware,
@@ -2768,6 +2769,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Register labor time routes
   registerLaborTimeRoutes(app);
   console.log('Labor time routes registered');
+
+  // Register pest control platform routes
+  app.use('/api/pest-control', authenticateRequest, pestControlRoutes);
+  console.log('Pest control platform routes registered');
 
   // Add error tracking middleware (should be last)
   app.use(errorTrackingMiddleware);
