@@ -106,6 +106,9 @@ export class AuthService {
     const { ipAddress, userAgent } = context;
 
     try {
+      console.log('[AUTH][DEBUG] login called:', { email, password });
+      console.log('[AUTH][DEBUG] loaded users:', Array.from(this.users.values()));
+      console.log('[AUTH][DEBUG] loaded credentials:', Array.from(this.userCredentials.values()));
       // Check if IP is blacklisted
       if (SecurityService.isIPBlacklisted(ipAddress)) {
         await AuditService.logLogin('', ipAddress, userAgent, false, {
@@ -147,7 +150,8 @@ export class AuthService {
       }
 
       // Find user by email
-  const user = Array.from(this.users.values()).find(u => u.email === email);
+      const user = Array.from(this.users.values()).find(u => u.email === email);
+      console.log('[AUTH][DEBUG] user lookup result:', user);
       if (!user) {
         SecurityService.recordFailedLogin(lockoutKey);
         await AuditService.logLogin('', ipAddress, userAgent, false, {
@@ -184,6 +188,7 @@ export class AuthService {
         };
       }
 
+      console.log('[AUTH][DEBUG] verifying password for user:', { userCreds, password });
       const passwordValid = await PasswordService.verifyPassword(
         password,
         userCreds.passwordHash,
@@ -786,7 +791,7 @@ export class AuthService {
         resourceId,
       };
 
-  const allowed = RBACService.hasPermission(context, resource as Resource, action as Action);
+      const allowed = RBACService.hasPermission(context, resource as Resource, action as Action);
 
       if (allowed) {
         // Log successful access
@@ -839,7 +844,7 @@ export class AuthService {
       },
       {
         id: 'manager-user-id',
-        email: 'manager@maintainpro.com',
+        email: 'manager@company.com',
         firstName: 'Mike',
         lastName: 'Johnson',
         role: 'manager' as UserRole,
@@ -852,8 +857,8 @@ export class AuthService {
     testUsers.forEach(async user => {
       this.users.set(user.id, user);
 
-      // Create default password "demo123"
-      const { hash, salt } = await PasswordService.hashPassword('demo123');
+      // Create default password "password" to match DB seed
+      const { hash, salt } = await PasswordService.hashPassword('password');
       this.userCredentials.set(user.id, {
         id: randomUUID(),
         userId: user.id,
@@ -870,7 +875,9 @@ export class AuthService {
   /**
    * Validate JWT token
    */
-  async validateToken(token: string): Promise<{ valid: boolean; payload?: unknown; error?: string }> {
+  async validateToken(
+    token: string
+  ): Promise<{ valid: boolean; payload?: unknown; error?: string }> {
     try {
       const payload = JWTService.verifyAccessToken(token);
       return { valid: true, payload };

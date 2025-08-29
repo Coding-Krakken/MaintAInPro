@@ -257,7 +257,7 @@ export class BackgroundJobScheduler {
     try {
       console.log('Starting automated database backup...');
       const result = await backupService.createBackup();
-      
+
       if (result.success) {
         console.log('Database backup completed successfully');
         console.log(`- Backup file: ${result.backupFile}`);

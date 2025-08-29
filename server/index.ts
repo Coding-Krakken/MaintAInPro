@@ -78,17 +78,17 @@ app.use(
   helmet({
     contentSecurityPolicy: {
       directives: {
-  defaultSrc: ["'self'"],
-  scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
-  styleSrc: ["'self'", "'unsafe-inline'"],
-  imgSrc: ["'self'", 'data:', 'blob:'],
-  fontSrc: ["'self'"],
-  connectSrc: ["'self'", 'ws:', 'wss:'],
-  frameSrc: ["'none'"],
-  frameAncestors: ["'none'"],
-  baseUri: ["'self'"],
-  formAction: ["'self'"],
-  workerSrc: ["'self'"],
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        imgSrc: ["'self'", 'data:', 'blob:'],
+        fontSrc: ["'self'"],
+        connectSrc: ["'self'", 'ws:', 'wss:'],
+        frameSrc: ["'none'"],
+        frameAncestors: ["'none'"],
+        baseUri: ["'self'"],
+        formAction: ["'self'"],
+        workerSrc: ["'self'"],
       },
     },
     crossOriginEmbedderPolicy: false, // Allow for development
@@ -153,6 +153,13 @@ async function initializeApp() {
   } catch (_error) {
     loggingService.error('❌ Production initialization failed', _error);
     // Continue startup even if some optimizations fail
+  }
+
+  // Initialize test users for development
+  if (process.env.NODE_ENV === 'development' || process.env.TEST_AUTH_MODE === 'true') {
+    const { AuthService } = await import('./services/auth');
+    AuthService.initializeTestUsers();
+    loggingService.info('✅ Test users initialized');
   }
 
   const server = await registerRoutes(app);

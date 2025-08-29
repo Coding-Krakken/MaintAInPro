@@ -95,8 +95,8 @@ const _partsStorage: Part[] = [
 
 async function handleGet(req: VercelRequest, res: VercelResponse) {
   try {
-  console.log(`Retrieved ${_partsStorage.length} parts`);
-  return res.status(200).json(_partsStorage);
+    console.log(`Retrieved ${_partsStorage.length} parts`);
+    return res.status(200).json(_partsStorage);
   } catch (error) {
     console.error('Error fetching parts:', error);
     return res.status(500).json({
@@ -136,7 +136,7 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
     };
 
     // Add to storage
-  _partsStorage.push(newPart);
+    _partsStorage.push(newPart);
 
     console.log('Created part:', newPart.id, newPart.name);
     return res.status(201).json(newPart);

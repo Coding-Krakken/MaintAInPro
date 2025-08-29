@@ -92,11 +92,13 @@ export default function WorkOrderCard({ workOrder, onClick }: WorkOrderCardProps
       </div>
 
       <div className='flex items-center space-x-3 flex-shrink-0'>
-        <Badge className={getStatusColor(workOrder.status)}>
+        <Badge className={getStatusColor(workOrder.status)} data-testid='status-badge'>
           {workOrder.status.replace('_', ' ')}
         </Badge>
-        <Badge className={getPriorityColor(workOrder.priority)}>{workOrder.priority}</Badge>
-        <div className='text-sm text-gray-500 text-right'>
+        <Badge className={getPriorityColor(workOrder.priority)} data-testid='priority-badge'>
+          {workOrder.priority}
+        </Badge>
+        <div className='text-sm text-gray-500 text-right' data-testid='due-date-display'>
           {workOrder.dueDate ? (
             <span className={isOverdue ? 'text-red-600 font-medium' : ''}>
               Due: {formatDistanceToNow(new Date(workOrder.dueDate), { addSuffix: true })}

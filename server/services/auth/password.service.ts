@@ -58,13 +58,19 @@ export class PasswordService {
 
   static async verifyPassword(password: string, hash: string, _salt?: string): Promise<boolean> {
     try {
-      // Add pepper for verification
-      const pepperedPassword = password + this.PEPPER;
-
-      // Verify password
-      return await bcrypt.compare(pepperedPassword, hash);
+      const pepper = process.env.PASSWORD_PEPPER || PasswordService.PEPPER;
+      const pepperedPassword = password + pepper;
+      console.log('[AUTH][DEBUG] verifyPassword called:', {
+        password,
+        pepper,
+        pepperedPassword,
+        hash,
+      });
+      const result = await bcrypt.compare(pepperedPassword, hash);
+      console.log(`[AUTH][DEBUG] bcrypt.compare result: ${result}`);
+      return result;
     } catch (_error) {
-      console.error('Password verification _error:', _error);
+      console.error('[AUTH][ERROR] Password verification error:', _error);
       return false;
     }
   }
@@ -206,7 +212,8 @@ export class PasswordService {
     feedback: string[];
   } {
     const result = zxcvbn(password);
-
+    const pepper = process.env.PASSWORD_PEPPER;
+    console.log(`[AUTH] Verifying password. Raw: ${password}, Pepper: ${pepper}`);
     return {
       score: result.score,
       entropy: result.guesses_log10,

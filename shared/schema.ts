@@ -391,7 +391,7 @@ export const notifications = pgTable('notifications', {
   createdAt: timestamp('created_at').defaultNow(),
 });
 
-// User Notification Preferences  
+// User Notification Preferences
 export const notificationPreferences = pgTable('notification_preferences', {
   id: uuid('id').primaryKey(),
   userId: uuid('user_id')
@@ -401,7 +401,7 @@ export const notificationPreferences = pgTable('notification_preferences', {
     .notNull()
     .$type<
       | 'wo_assigned'
-      | 'wo_overdue' 
+      | 'wo_overdue'
       | 'part_low_stock'
       | 'pm_due'
       | 'equipment_alert'
@@ -800,8 +800,14 @@ export const insertNotificationPreferenceSchema = createFlexibleSchema({
   emailEnabled: z.boolean().optional().default(true),
   pushEnabled: z.boolean().optional().default(true),
   smsEnabled: z.boolean().optional().default(false),
-  quietHoursStart: z.string().regex(/^\d{2}:\d{2}$/, 'Invalid time format (HH:MM)').optional(),
-  quietHoursEnd: z.string().regex(/^\d{2}:\d{2}$/, 'Invalid time format (HH:MM)').optional(),
+  quietHoursStart: z
+    .string()
+    .regex(/^\d{2}:\d{2}$/, 'Invalid time format (HH:MM)')
+    .optional(),
+  quietHoursEnd: z
+    .string()
+    .regex(/^\d{2}:\d{2}$/, 'Invalid time format (HH:MM)')
+    .optional(),
 });
 
 export const insertPushSubscriptionSchema = createFlexibleSchema({
@@ -814,9 +820,16 @@ export const insertPushSubscriptionSchema = createFlexibleSchema({
 });
 
 // Enhanced vendor schema with proper validation
-export const insertVendorSchema = createInsertSchema(vendors, {
+export const insertVendorSchema = createInsertSchema(vendors).extend({
   type: z.enum(['supplier', 'contractor']),
   name: z.string().min(1, 'Name is required'),
+  email: z
+    .string()
+    .optional()
+    .refine(val => !val || val === '' || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val), {
+      message: 'Invalid email format',
+    }),
+  active: z.boolean().optional(),
 });
 
 export const insertPmTemplateSchema = createInsertSchema(pmTemplates);

@@ -5,7 +5,7 @@ import { Request } from 'express';
  */
 export interface AuthenticatedUser {
   id: string;
-  email: string;
+  email?: string; // Make optional to match usage across the app
   role: string;
   organizationId?: string; // Optional to match schema
   sessionId?: string;
@@ -69,9 +69,12 @@ export function hasCompleteUser(user: unknown): user is AuthenticatedUser {
   return (
     typeof user === 'object' &&
     user !== null &&
-    'id' in user && typeof (user as { id: unknown }).id === 'string' &&
-    'email' in user && typeof (user as { email: unknown }).email === 'string' &&
-    'role' in user && typeof (user as { role: unknown }).role === 'string'
+    'id' in user &&
+    typeof (user as { id: unknown }).id === 'string' &&
+    'email' in user &&
+    typeof (user as { email: unknown }).email === 'string' &&
+    'role' in user &&
+    typeof (user as { role: unknown }).role === 'string'
     // organizationId is optional, so not checking for it
   );
 }

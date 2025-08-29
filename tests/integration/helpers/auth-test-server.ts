@@ -61,7 +61,7 @@ export class AuthTestServer {
     process.env.DISABLE_RATE_LIMITING = 'true'; // Disable rate limiting for tests
 
     // Register all routes including authentication
-    this.server = await registerRoutes(this.app);
+    this.server = await registerRoutes(this.app as any);
   }
 
   /**
@@ -74,7 +74,7 @@ export class AuthTestServer {
   /**
    * Get supertest request object
    */
-  request(): request.Test {
+  request() {
     return request(this.app);
   }
 
@@ -183,7 +183,7 @@ export class AuthTestServer {
   /**
    * Helper to make authenticated requests
    */
-  authenticatedRequest(token: string): request.Test {
+  authenticatedRequest(token: string) {
     return this.request().set('Authorization', `Bearer ${token}`);
   }
 

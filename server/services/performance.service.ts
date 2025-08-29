@@ -348,6 +348,9 @@ export class PerformanceService {
       return {
         totalQueries: 0,
         averageQueryTime: 0,
+        p95QueryTime: 0,
+        p99QueryTime: 0,
+        queryTypeBreakdown: {},
       };
     }
 

@@ -44,7 +44,7 @@ function LoadingScreen() {
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   // In a real app, check authentication status here
   return (
-    <ErrorBoundary 
+    <ErrorBoundary
       fallback={GenericErrorFallback}
       onError={async (error, errorInfo) => {
         await reportError(error, errorInfo, { context: 'Protected Route' });
@@ -148,8 +148,15 @@ function AppRoutes() {
 }
 
 function App() {
+  // Check if we're in development environment
+  const isDevelopment =
+    window.location.hostname.includes('localhost') ||
+    window.location.hostname.includes('github.dev') ||
+    window.location.hostname.includes('app.github.dev') ||
+    process.env.NODE_ENV === 'development';
+
   return (
-    <ErrorBoundary 
+    <ErrorBoundary
       fallback={GenericErrorFallback}
       onError={async (error, errorInfo) => {
         await reportError(error, errorInfo, { context: 'App Root' });
@@ -160,9 +167,13 @@ function App() {
           <TooltipProvider>
             <Toaster />
             <AppRoutes />
-            <PWAInstallPrompt />
-            <PWAUpdatePrompt />
-            <PWAOfflineIndicator />
+            {!isDevelopment && (
+              <>
+                <PWAInstallPrompt />
+                <PWAUpdatePrompt />
+                <PWAOfflineIndicator />
+              </>
+            )}
           </TooltipProvider>
         </AuthProvider>
       </QueryClientProvider>

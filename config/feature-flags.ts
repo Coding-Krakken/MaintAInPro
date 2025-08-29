@@ -327,7 +327,7 @@ export function getEnabledFeatures(
     .filter(
       ([_, feature]) =>
         feature.enabled &&
-  (!feature.environments || feature.environments.includes(environment as string))
+        (!feature.environments || feature.environments.includes(environment as string))
     )
     .map(([name]) => name);
 }

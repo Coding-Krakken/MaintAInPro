@@ -60,7 +60,7 @@ describe('Enhanced Notification Storage', () => {
       expect(preferences.length).toBe(2);
       expect(preferences[0].userId).toBe(testUserId);
       expect(preferences[1].userId).toBe(testUserId);
-      
+
       const types = preferences.map(p => p.notificationType);
       expect(types).toContain('wo_assigned');
       expect(types).toContain('part_low_stock');
@@ -200,7 +200,9 @@ describe('Enhanced Notification Storage', () => {
 
       expect(activeSubscriptions.length).toBe(1);
       expect(activeSubscriptions[0].active).toBe(true);
-      expect(activeSubscriptions[0].endpoint).toBe('https://fcm.googleapis.com/fcm/send/test-endpoint-1');
+      expect(activeSubscriptions[0].endpoint).toBe(
+        'https://fcm.googleapis.com/fcm/send/test-endpoint-1'
+      );
     });
 
     it('should update push subscription', async () => {
@@ -214,10 +216,9 @@ describe('Enhanced Notification Storage', () => {
       });
 
       // Update the subscription
-      const updatedSubscription = await storage.updatePushSubscription(
-        subscription.id,
-        { active: false }
-      );
+      const updatedSubscription = await storage.updatePushSubscription(subscription.id, {
+        active: false,
+      });
 
       expect(updatedSubscription).toBeTruthy();
       expect(updatedSubscription!.active).toBe(false);
@@ -291,7 +292,7 @@ describe('Enhanced Notification Storage', () => {
 
     it('should handle notifications with expiration', async () => {
       const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours from now
-      
+
       const notification = await storage.createNotification({
         userId: testUserId,
         title: 'Expiring Notification',

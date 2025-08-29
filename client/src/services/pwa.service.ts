@@ -69,6 +69,20 @@ export class PWAService {
    * Register service worker
    */
   private async registerServiceWorker(): Promise<void> {
+    // Skip service worker registration in development environments
+    const isDevelopment =
+      window.location.hostname.includes('localhost') ||
+      window.location.hostname.includes('github.dev') ||
+      window.location.hostname.includes('app.github.dev') ||
+      process.env.NODE_ENV === 'development';
+
+    if (isDevelopment) {
+      console.log('Skipping service worker registration in development environment');
+      this.status.serviceWorkerReady = true;
+      this.notifyListeners('statusChange', this.status);
+      return;
+    }
+
     try {
       this.registration = await navigator.serviceWorker.register('/sw.js', {
         scope: '/',
@@ -154,23 +168,23 @@ export class PWAService {
         try {
           // Try to get existing subscription first
           let subscription = await this.registration.pushManager.getSubscription();
-          
+
           if (!subscription) {
             // Create new subscription with VAPID key (for demo purposes)
             const vapidPublicKey = this.getVapidPublicKey();
             subscription = await this.registration.pushManager.subscribe({
               userVisibleOnly: true,
-              applicationServerKey: this.urlBase64ToUint8Array(vapidPublicKey).buffer as ArrayBuffer,
+              applicationServerKey: this.urlBase64ToUint8Array(vapidPublicKey)
+                .buffer as ArrayBuffer,
             });
           }
 
           // Send subscription to server
           await this.sendSubscriptionToServer(subscription);
-          
+
           // Update status
           this.status.serviceWorkerReady = true;
           this.notifyListeners('statusUpdate', this.status);
-          
         } catch (error) {
           console.error('Push subscription failed:', error);
         }
@@ -183,8 +197,10 @@ export class PWAService {
    */
   private getVapidPublicKey(): string {
     // For development/demo purposes. In production, this should be from environment variables
-    return process.env.VITE_VAPID_PUBLIC_KEY || 
-           'BEl62iUYgUivxIkv69yViEuiBIa40HI80NM2eCFBXk2X8TZAEj9DsRPt7t8EG8ZhFZyOkS_Km7HBQZ_KNFxvq7s';
+    return (
+      process.env.VITE_VAPID_PUBLIC_KEY ||
+      'BEl62iUYgUivxIkv69yViEuiBIa40HI80NM2eCFBXk2X8TZAEj9DsRPt7t8EG8ZhFZyOkS_Km7HBQZ_KNFxvq7s'
+    );
   }
 
   /**
@@ -193,7 +209,7 @@ export class PWAService {
   private async sendSubscriptionToServer(subscription: PushSubscription): Promise<void> {
     try {
       const userId = localStorage.getItem('userId') || 'anonymous';
-      
+
       const response = await fetch('/api/push-subscriptions', {
         method: 'POST',
         headers: {
@@ -202,10 +218,16 @@ export class PWAService {
         },
         body: JSON.stringify({
           endpoint: subscription.endpoint,
-          p256dhKey: subscription.getKey('p256dh') ? 
-            btoa(String.fromCharCode(...new Uint8Array(subscription.getKey('p256dh')!))) : '',
-          authKey: subscription.getKey('auth') ? 
-            btoa(String.fromCharCode(...new Uint8Array(subscription.getKey('auth')!))) : '',
+          p256dhKey: subscription.getKey('p256dh')
+            ? btoa(
+                String.fromCharCode(...new Uint8Array(subscription.getKey('p256dh') as ArrayBuffer))
+              )
+            : '',
+          authKey: subscription.getKey('auth')
+            ? btoa(
+                String.fromCharCode(...new Uint8Array(subscription.getKey('auth') as ArrayBuffer))
+              )
+            : '',
           userAgent: navigator.userAgent,
         }),
       });
@@ -232,19 +254,19 @@ export class PWAService {
       const subscription = await this.registration.pushManager.getSubscription();
       if (subscription) {
         const success = await subscription.unsubscribe();
-        
+
         if (success) {
           // Notify server about unsubscription
           await this.removeSubscriptionFromServer(subscription);
           console.log('Successfully unsubscribed from push notifications');
         }
-        
+
         return success;
       }
     } catch (error) {
       console.error('Error unsubscribing from push notifications:', error);
     }
-    
+
     return false;
   }
 
@@ -282,10 +304,10 @@ export class PWAService {
 
     const permission = Notification.permission;
     const granted = permission === 'granted';
-    
+
     let subscribed = false;
     let subscription: PushSubscription | undefined;
-    
+
     if (granted && this.registration) {
       subscription = await this.registration.pushManager.getSubscription();
       subscribed = !!subscription;

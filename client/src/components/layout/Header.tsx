@@ -6,6 +6,7 @@ import { Badge } from '../ui/badge';
 import { useAuth } from '../../hooks/useAuth';
 import { useQuery } from '@tanstack/react-query';
 import { useLocation } from 'wouter';
+import { getApiUrl } from '../../lib/api-config';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -36,7 +37,7 @@ export default function Header({ onMobileMenuToggle, showMobileMenuButton }: Hea
   const { data: notifications } = useQuery<Notification[]>({
     queryKey: ['/api/notifications'],
     queryFn: async () => {
-      const response = await fetch('/api/notifications', {
+      const response = await fetch(getApiUrl('/api/notifications'), {
         headers: {
           'x-user-id': localStorage.getItem('userId') || 'default-user-id',
           'x-warehouse-id': localStorage.getItem('warehouseId') || 'default-warehouse-id',
@@ -77,7 +78,7 @@ export default function Header({ onMobileMenuToggle, showMobileMenuButton }: Hea
         )}
 
         {/* Search Bar */}
-        <div className='hidden sm:block flex-1 max-w-md mx-4'>
+        <div className='hidden sm:block flex-1 max-w-md mx-4' data-testid='header-search-container'>
           <form onSubmit={handleSearch}>
             <div className='relative'>
               <Input
@@ -86,6 +87,7 @@ export default function Header({ onMobileMenuToggle, showMobileMenuButton }: Hea
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
                 className='pl-10'
+                data-testid='header-search-input'
               />
               <Search className='absolute left-3 top-2.5 w-5 h-5 text-gray-400' />
             </div>
@@ -143,8 +145,8 @@ export default function Header({ onMobileMenuToggle, showMobileMenuButton }: Hea
                   <ChevronDown className='w-4 h-4' />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align='end'>
-                <DropdownMenuItem>
+              <DropdownMenuContent align='end' data-testid='user-menu-dropdown'>
+                <DropdownMenuItem data-testid='user-email-item'>
                   <span className='text-sm text-gray-700'>{user?.email}</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />

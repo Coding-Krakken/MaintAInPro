@@ -132,11 +132,14 @@ export interface IStorage {
   updateEquipment(_id: string, _equipment: Partial<InsertEquipment>): Promise<Equipment>;
 
   // Work Orders
-  getWorkOrders(_warehouseId: string, _filters?: {
-    status?: string[];
-    assignedTo?: string;
-    priority?: string[];
-  }): Promise<WorkOrder[]>;
+  getWorkOrders(
+    _warehouseId: string,
+    _filters?: {
+      status?: string[];
+      assignedTo?: string;
+      priority?: string[];
+    }
+  ): Promise<WorkOrder[]>;
   getWorkOrder(_id: string): Promise<WorkOrder | undefined>;
   createWorkOrder(_workOrder: InsertWorkOrder): Promise<WorkOrder>;
   updateWorkOrder(_id: string, _workOrder: Partial<InsertWorkOrder>): Promise<WorkOrder>;
@@ -199,17 +202,26 @@ export interface IStorage {
   createNotification(_notification: InsertNotification): Promise<Notification>;
   markNotificationRead(_id: string): Promise<void>;
   deleteNotification(_id: string): Promise<void>;
-  
+
   // Notification Preferences
   getNotificationPreferences(_userId: string): Promise<NotificationPreference[]>;
-  createNotificationPreference(_preference: InsertNotificationPreference): Promise<NotificationPreference>;
-  updateNotificationPreference(_userId: string, _notificationType: string, _updates: Partial<InsertNotificationPreference>): Promise<NotificationPreference | null>;
+  createNotificationPreference(
+    _preference: InsertNotificationPreference
+  ): Promise<NotificationPreference>;
+  updateNotificationPreference(
+    _userId: string,
+    _notificationType: string,
+    _updates: Partial<InsertNotificationPreference>
+  ): Promise<NotificationPreference | null>;
   deleteNotificationPreference(_userId: string, _notificationType: string): Promise<void>;
-  
+
   // Push Subscriptions
   getPushSubscriptions(_userId: string): Promise<PushSubscription[]>;
   createPushSubscription(_subscription: InsertPushSubscription): Promise<PushSubscription>;
-  updatePushSubscription(_id: string, _updates: Partial<InsertPushSubscription>): Promise<PushSubscription | null>;
+  updatePushSubscription(
+    _id: string,
+    _updates: Partial<InsertPushSubscription>
+  ): Promise<PushSubscription | null>;
   deletePushSubscription(_id: string): Promise<void>;
   getActivePushSubscriptions(_userId: string): Promise<PushSubscription[]>;
 
@@ -763,8 +775,8 @@ export class MemStorage implements IStorage {
       'contractor',
       'requester',
     ] as const;
-    const role = validRoles.includes(insertProfile.role as typeof validRoles[number])
-      ? (insertProfile.role as typeof validRoles[number])
+    const role = validRoles.includes(insertProfile.role as (typeof validRoles)[number])
+      ? (insertProfile.role as (typeof validRoles)[number])
       : 'technician';
     const profile: Profile = {
       id,
@@ -817,7 +829,7 @@ export class MemStorage implements IStorage {
         'contractor',
         'requester',
       ] as const;
-  if (validRoles.includes(processedUpdate.role as typeof validRoles[number])) {
+      if (validRoles.includes(processedUpdate.role as (typeof validRoles)[number])) {
         roleUpdate = processedUpdate.role as
           | 'technician'
           | 'supervisor'
@@ -891,8 +903,10 @@ export class MemStorage implements IStorage {
       model: insertEquipment.model ?? '',
       description: insertEquipment.description ?? '',
       area: insertEquipment.area ?? '',
-      status: (insertEquipment.status as 'active' | 'inactive' | 'maintenance' | 'retired') ?? 'active',
-      criticality: (insertEquipment.criticality as 'low' | 'medium' | 'high' | 'critical') ?? 'medium',
+      status:
+        (insertEquipment.status as 'active' | 'inactive' | 'maintenance' | 'retired') ?? 'active',
+      criticality:
+        (insertEquipment.criticality as 'low' | 'medium' | 'high' | 'critical') ?? 'medium',
       installDate: insertEquipment.installDate ?? null,
       warrantyExpiry: insertEquipment.warrantyExpiry ?? null,
       manufacturer: insertEquipment.manufacturer ?? '',
@@ -929,8 +943,8 @@ export class MemStorage implements IStorage {
     let statusUpdate: 'active' | 'inactive' | 'maintenance' | 'retired' | undefined = undefined;
     if (updates.status) {
       const validStatuses = ['active', 'inactive', 'maintenance', 'retired'] as const;
-      if (validStatuses.includes(updates.status as typeof validStatuses[number])) {
-        statusUpdate = updates.status as typeof validStatuses[number];
+      if (validStatuses.includes(updates.status as (typeof validStatuses)[number])) {
+        statusUpdate = updates.status as (typeof validStatuses)[number];
       } else {
         statusUpdate = 'active'; // Default to active if invalid
       }
@@ -940,8 +954,8 @@ export class MemStorage implements IStorage {
     let criticalityUpdate: 'low' | 'medium' | 'high' | 'critical' | undefined = undefined;
     if (updates.criticality) {
       const validCriticalities = ['low', 'medium', 'high', 'critical'] as const;
-      if (validCriticalities.includes(updates.criticality as typeof validCriticalities[number])) {
-        criticalityUpdate = updates.criticality as typeof validCriticalities[number];
+      if (validCriticalities.includes(updates.criticality as (typeof validCriticalities)[number])) {
+        criticalityUpdate = updates.criticality as (typeof validCriticalities)[number];
       } else {
         criticalityUpdate = 'medium'; // Default to medium if invalid
       }
@@ -961,11 +975,14 @@ export class MemStorage implements IStorage {
   }
 
   // Work Order methods
-  async getWorkOrders(warehouseId: string, filters?: {
-    status?: string[];
-    assignedTo?: string;
-    priority?: string[];
-  }): Promise<WorkOrder[]> {
+  async getWorkOrders(
+    warehouseId: string,
+    filters?: {
+      status?: string[];
+      assignedTo?: string;
+      priority?: string[];
+    }
+  ): Promise<WorkOrder[]> {
     let workOrders = Array.from(this.workOrders.values()).filter(
       wo => wo.warehouseId === warehouseId
     );
@@ -995,23 +1012,34 @@ export class MemStorage implements IStorage {
     const id = this.generateId();
     const foNumber = `WO-${String(this.workOrders.size + 1).padStart(3, '0')}`;
     const validTypes = ['corrective', 'preventive', 'emergency'] as const;
-    const validStatuses = ['new', 'assigned', 'in_progress', 'completed', 'verified', 'closed'] as const;
+    const validStatuses = [
+      'new',
+      'assigned',
+      'in_progress',
+      'completed',
+      'verified',
+      'closed',
+    ] as const;
     const validPriorities = ['low', 'medium', 'high', 'critical'] as const;
-    const type = validTypes.includes(insertWorkOrder.type as typeof validTypes[number])
-      ? (insertWorkOrder.type as typeof validTypes[number])
+    const type = validTypes.includes(insertWorkOrder.type as (typeof validTypes)[number])
+      ? (insertWorkOrder.type as (typeof validTypes)[number])
       : 'corrective';
-    const status = validStatuses.includes(insertWorkOrder.status as typeof validStatuses[number])
-      ? (insertWorkOrder.status as typeof validStatuses[number])
+    const status = validStatuses.includes(insertWorkOrder.status as (typeof validStatuses)[number])
+      ? (insertWorkOrder.status as (typeof validStatuses)[number])
       : 'new';
-    const priority = validPriorities.includes(insertWorkOrder.priority as typeof validPriorities[number])
-      ? (insertWorkOrder.priority as typeof validPriorities[number])
+    const priority = validPriorities.includes(
+      insertWorkOrder.priority as (typeof validPriorities)[number]
+    )
+      ? (insertWorkOrder.priority as (typeof validPriorities)[number])
       : 'medium';
-    const estimatedHours = typeof insertWorkOrder.estimatedHours === 'string'
-      ? insertWorkOrder.estimatedHours
-      : String(insertWorkOrder.estimatedHours ?? '0');
-    const actualHours = typeof insertWorkOrder.actualHours === 'string'
-      ? insertWorkOrder.actualHours
-      : String(insertWorkOrder.actualHours ?? '0');
+    const estimatedHours =
+      typeof insertWorkOrder.estimatedHours === 'string'
+        ? insertWorkOrder.estimatedHours
+        : String(insertWorkOrder.estimatedHours ?? '0');
+    const actualHours =
+      typeof insertWorkOrder.actualHours === 'string'
+        ? insertWorkOrder.actualHours
+        : String(insertWorkOrder.actualHours ?? '0');
     const workOrder: WorkOrder = {
       id,
       foNumber,
@@ -1051,7 +1079,7 @@ export class MemStorage implements IStorage {
     if (!existing) throw new Error('Work order not found');
 
     // Convert dueDate string to Date if needed
-  const processedUpdates: Partial<InsertWorkOrder> = { ...updateWorkOrder };
+    const processedUpdates: Partial<InsertWorkOrder> = { ...updateWorkOrder };
     if (processedUpdates.dueDate && typeof processedUpdates.dueDate === 'string') {
       processedUpdates.dueDate = new Date(processedUpdates.dueDate);
     }
@@ -1060,10 +1088,24 @@ export class MemStorage implements IStorage {
       ...existing,
       ...processedUpdates,
       type: (processedUpdates.type as 'corrective' | 'preventive' | 'emergency') ?? existing.type,
-      status: (processedUpdates.status as 'new' | 'assigned' | 'in_progress' | 'completed' | 'verified' | 'closed') ?? existing.status,
-      priority: (processedUpdates.priority as 'low' | 'medium' | 'high' | 'critical') ?? existing.priority,
-  estimatedHours: processedUpdates.estimatedHours !== undefined ? String(processedUpdates.estimatedHours) : existing.estimatedHours,
-  actualHours: processedUpdates.actualHours !== undefined ? String(processedUpdates.actualHours) : existing.actualHours,
+      status:
+        (processedUpdates.status as
+          | 'new'
+          | 'assigned'
+          | 'in_progress'
+          | 'completed'
+          | 'verified'
+          | 'closed') ?? existing.status,
+      priority:
+        (processedUpdates.priority as 'low' | 'medium' | 'high' | 'critical') ?? existing.priority,
+      estimatedHours:
+        processedUpdates.estimatedHours !== undefined
+          ? String(processedUpdates.estimatedHours)
+          : existing.estimatedHours,
+      actualHours:
+        processedUpdates.actualHours !== undefined
+          ? String(processedUpdates.actualHours)
+          : existing.actualHours,
       updatedAt: new Date(),
     };
     this.workOrders.set(id, updated);
@@ -1139,9 +1181,10 @@ export class MemStorage implements IStorage {
 
   async createPart(insertPart: InsertPart): Promise<Part> {
     const id = this.generateId();
-    const unitCost = typeof insertPart.unitCost === 'string'
-      ? insertPart.unitCost
-      : String(insertPart.unitCost ?? '0');
+    const unitCost =
+      typeof insertPart.unitCost === 'string'
+        ? insertPart.unitCost
+        : String(insertPart.unitCost ?? '0');
     const part: Part = {
       id,
       partNumber: insertPart.partNumber,
@@ -1224,7 +1267,8 @@ export class MemStorage implements IStorage {
     // Filter by date
     if (filters.startDate) {
       usageList = usageList.filter(
-        usage => usage.createdAt && filters.startDate && new Date(usage.createdAt) >= filters.startDate
+        usage =>
+          usage.createdAt && filters.startDate && new Date(usage.createdAt) >= filters.startDate
       );
     }
 
@@ -1328,7 +1372,8 @@ export class MemStorage implements IStorage {
     if (!existing) return null;
 
     // Type-safe frequency update
-    let frequencyUpdate: 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'annually' | undefined = undefined;
+    let frequencyUpdate: 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'annually' | undefined =
+      undefined;
     if (updates.frequency) {
       const validFrequencies = ['daily', 'weekly', 'monthly', 'quarterly', 'annually'] as const;
       if (validFrequencies.includes(updates.frequency)) {
@@ -1397,15 +1442,16 @@ export class MemStorage implements IStorage {
   private notificationPreferences = new Map<string, NotificationPreference>();
 
   async getNotificationPreferences(userId: string): Promise<NotificationPreference[]> {
-    return Array.from(this.notificationPreferences.values())
-      .filter(p => p.userId === userId);
+    return Array.from(this.notificationPreferences.values()).filter(p => p.userId === userId);
   }
 
-  async createNotificationPreference(insertPreference: InsertNotificationPreference): Promise<NotificationPreference> {
+  async createNotificationPreference(
+    insertPreference: InsertNotificationPreference
+  ): Promise<NotificationPreference> {
     const id = this.generateId();
     const preference: NotificationPreference = {
       id,
-      ...(insertPreference as any),
+      ...(insertPreference as Omit<NotificationPreference, 'id' | 'createdAt' | 'updatedAt'>),
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -1414,13 +1460,14 @@ export class MemStorage implements IStorage {
   }
 
   async updateNotificationPreference(
-    userId: string, 
-    notificationType: string, 
+    userId: string,
+    notificationType: string,
     updates: Partial<InsertNotificationPreference>
   ): Promise<NotificationPreference | null> {
-    const existingPreference = Array.from(this.notificationPreferences.values())
-      .find(p => p.userId === userId && p.notificationType === notificationType);
-    
+    const existingPreference = Array.from(this.notificationPreferences.values()).find(
+      p => p.userId === userId && p.notificationType === notificationType
+    );
+
     if (existingPreference) {
       const updated: NotificationPreference = {
         ...existingPreference,
@@ -1434,8 +1481,9 @@ export class MemStorage implements IStorage {
   }
 
   async deleteNotificationPreference(userId: string, notificationType: string): Promise<void> {
-    const preference = Array.from(this.notificationPreferences.values())
-      .find(p => p.userId === userId && p.notificationType === notificationType);
+    const preference = Array.from(this.notificationPreferences.values()).find(
+      p => p.userId === userId && p.notificationType === notificationType
+    );
     if (preference) {
       this.notificationPreferences.delete(preference.id);
     }
@@ -1445,15 +1493,16 @@ export class MemStorage implements IStorage {
   private pushSubscriptions = new Map<string, PushSubscription>();
 
   async getPushSubscriptions(userId: string): Promise<PushSubscription[]> {
-    return Array.from(this.pushSubscriptions.values())
-      .filter(s => s.userId === userId);
+    return Array.from(this.pushSubscriptions.values()).filter(s => s.userId === userId);
   }
 
-  async createPushSubscription(insertSubscription: InsertPushSubscription): Promise<PushSubscription> {
+  async createPushSubscription(
+    insertSubscription: InsertPushSubscription
+  ): Promise<PushSubscription> {
     const id = this.generateId();
     const subscription: PushSubscription = {
       id,
-      ...(insertSubscription as any),
+      ...(insertSubscription as Omit<PushSubscription, 'id' | 'createdAt' | 'lastUsed'>),
       createdAt: new Date(),
       lastUsed: new Date(),
     };
@@ -1462,7 +1511,7 @@ export class MemStorage implements IStorage {
   }
 
   async updatePushSubscription(
-    id: string, 
+    id: string,
     updates: Partial<InsertPushSubscription>
   ): Promise<PushSubscription | null> {
     const subscription = this.pushSubscriptions.get(id);
@@ -1483,8 +1532,7 @@ export class MemStorage implements IStorage {
   }
 
   async getActivePushSubscriptions(userId: string): Promise<PushSubscription[]> {
-    return Array.from(this.pushSubscriptions.values())
-      .filter(s => s.userId === userId && s.active);
+    return Array.from(this.pushSubscriptions.values()).filter(s => s.userId === userId && s.active);
   }
 
   // Attachment methods
@@ -1563,7 +1611,7 @@ export class MemStorage implements IStorage {
   }
 
   async createLaborTime(laborTime: InsertLaborTime): Promise<LaborTime> {
-  const validLaborTime = laborTime as InsertLaborTime;
+    const validLaborTime = laborTime as InsertLaborTime;
     const id = this.generateId();
     const now = new Date();
     const newLaborTime: LaborTime = {

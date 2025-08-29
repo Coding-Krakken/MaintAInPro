@@ -1,17 +1,31 @@
-import type { Express, RequestHandler } from 'express';
+import type { Express, RequestHandler, Request, Response, NextFunction } from 'express';
 import { createServer, type Server } from 'http';
 import crypto from 'crypto';
+import cors from 'cors';
+import { AuthenticatedUser } from '../shared/types/auth';
+
+// Extend Express Request type to include user
+declare global {
+  namespace Express {
+    interface Request {
+      user?: AuthenticatedUser;
+    }
+  }
+}
 import { storage } from './storage';
+import type { InsertVendor } from './storage';
 import {
   insertWorkOrderSchema,
   insertEquipmentSchema,
   insertPartSchema,
   insertNotificationSchema,
   insertVendorSchema,
+  type WorkOrder,
 } from '@shared/schema';
 import { fieldValidators, flexibleDateSchema } from '@shared/validation-utils';
 import { z } from 'zod';
 import { SecurityService } from './services/auth/security.service';
+import { JWTPayload } from './services/auth/jwt.service';
 import { notificationService } from './services/notification.service';
 import { fileManagementService } from './services/file-management.service';
 import { webhookService, WebhookEvents } from './services/webhook.service';
@@ -38,8 +52,49 @@ import swaggerUi from 'swagger-ui-express';
 import { specs } from './config/openapi';
 
 // Import PM services with error handling
-let pmEngine: unknown = null;
-let pmScheduler: unknown = null;
+interface PMEngine {
+  generatePMWorkOrders: (_warehouseId: string) => Promise<WorkOrder[]>;
+  getPMSchedule: (
+    _equipmentId: string,
+    _templateId: string
+  ) => Promise<{
+    equipmentId: string;
+    templateId: string;
+    nextDueDate: Date;
+    lastCompletedDate?: Date;
+    frequency: 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'annually';
+    isOverdue: boolean;
+    complianceStatus: 'compliant' | 'due' | 'overdue';
+  }>;
+  checkComplianceStatus: (
+    _equipmentId: string,
+    _warehouseId: string
+  ) => Promise<{
+    equipmentId: string;
+    compliancePercentage: number;
+    missedPMCount: number;
+    totalPMCount: number;
+    lastPMDate?: Date;
+    nextPMDate?: Date;
+  }>;
+  runPMAutomation: (_warehouseId: string) => Promise<{
+    generated: number;
+    errors: string[];
+  }>;
+}
+
+interface PMScheduler {
+  start: () => void;
+  stop: () => void;
+  getStatus: () => {
+    isRunning: boolean;
+    nextRun?: Date;
+  };
+  runForWarehouse: (_warehouseId: string) => Promise<void>;
+}
+
+let pmEngine: PMEngine | null = null;
+let pmScheduler: PMScheduler | null = null;
 
 // Initialize PM services asynchronously
 async function initializePMServices() {
@@ -84,6 +139,60 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const httpServer = createServer(app);
   notificationService.initialize(httpServer);
   console.log('WebSocket notification service initialized');
+
+  // CORS configuration for development and production
+  const corsOptions = {
+    origin: function (
+      origin: string | undefined,
+      callback: (_error: Error | null, _allow?: boolean) => void
+    ) {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+
+      // Allow localhost origins for development
+      if (origin.includes('localhost') || origin.includes('127.0.0.1')) {
+        return callback(null, true);
+      }
+
+      // Allow vercel deployments
+      if (origin.includes('.vercel.app') || origin.includes('maintainpro-cmms.vercel.app')) {
+        return callback(null, true);
+      }
+
+      // Allow specific production domains
+      const allowedOrigins = [
+        'https://maintainpro.com',
+        'https://www.maintainpro.com',
+        'https://cmms.maintainpro.com',
+      ];
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      // In development, allow all origins
+      if (process.env.NODE_ENV === 'development' || process.env.TEST_AUTH_MODE === 'true') {
+        return callback(null, true);
+      }
+
+      callback(new Error('Not allowed by CORS'));
+    },
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: [
+      'Content-Type',
+      'Authorization',
+      'X-Requested-With',
+      'Accept',
+      'Origin',
+      'Cache-Control',
+      'X-File-Name',
+    ],
+    credentials: true,
+    optionsSuccessStatus: 200,
+  };
+
+  app.use(cors(corsOptions));
+  console.log('CORS middleware enabled');
 
   // Security middleware (applied first, but skip for PWA files)
   app.use((req, res, next) => {
@@ -136,8 +245,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     console.log('Rate limiting enabled');
   } else {
     // Create no-op middleware for tests
-  authRateLimit = (req, res, next) => next();
-  apiRateLimit = (req, res, next) => next();
+    authRateLimit = (req, res, next) => next();
+    apiRateLimit = (req, res, next) => next();
     console.log('Rate limiting disabled for tests');
   }
 
@@ -235,13 +344,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // OpenAPI 3.0 Documentation with Swagger UI
-  app.use('/api/api-docs', swaggerUi.serve, swaggerUi.setup(specs, {
-    customCss: '.swagger-ui .topbar { display: none }',
-    customSiteTitle: 'MaintAInPro CMMS API Documentation',
-    swaggerOptions: {
-      persistAuthorization: true,
-    },
-  }));
+  app.use(
+    '/api/api-docs',
+    swaggerUi.serve,
+    swaggerUi.setup(specs, {
+      customCss: '.swagger-ui .topbar { display: none }',
+      customSiteTitle: 'MaintAInPro CMMS API Documentation',
+      swaggerOptions: {
+        persistAuthorization: true,
+      },
+    })
+  );
 
   console.log('Health check endpoint registered');
   console.log('API documentation available at /api/api-docs');
@@ -254,7 +367,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.use(auditMiddleware());
 
   // Authentication middleware
-  const authenticateRequest = async (req: any, res: any, next: any) => {
+  const authenticateRequest = async (req: Request, res: Response, next: NextFunction) => {
     try {
       // Skip authentication for public endpoints
       const publicEndpoints = ['/api/health', '/api/health/basic', '/api/monitoring'];
@@ -295,6 +408,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (process.env.NODE_ENV === 'test' && token === 'mock-token') {
         req.user = {
           id: '00000000-0000-0000-0000-000000000001',
+          role: 'admin',
           warehouseId: '00000000-0000-0000-0000-000000000001',
         };
         return next();
@@ -308,10 +422,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Check if session is still valid
-      const payload = tokenValidation.payload as any;
-      const sessionValid = await new AuthService().validateSession(
-        payload.sessionId
-      );
+      const payload = tokenValidation.payload as JWTPayload;
+      const sessionValid = await new AuthService().validateSession(payload.sessionId);
       if (!sessionValid) {
         return res.status(401).json({ message: 'Session expired' });
       }
@@ -342,7 +454,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // RBAC middleware for role-based access control
   const requireRole = (..._allowedRoles: string[]) => {
-  return async (req: any, res: any, next: any) => {
+    return async (req: Request, res: Response, next: NextFunction) => {
       try {
         const { AuthService } = await import('./services/auth');
 
@@ -411,22 +523,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Additional rate limiters for auth routes (if needed separately)
   const _generalRateLimit = createRateLimiter(15 * 60 * 1000, 100); // 100 requests per 15 minutes
 
-  const getCurrentUser = (req: unknown) => {
-    const request = req as any;
-    return (
-      request.user?.id ||
-      request.headers['x-user-id'] ||
-      '00000000-0000-0000-0000-000000000001'
-    );
+  const getCurrentUser = (req: Request): string => {
+    const userId =
+      req.user?.id || req.headers['x-user-id'] || '00000000-0000-0000-0000-000000000001';
+    return ensureString(userId);
   };
 
-  const getCurrentWarehouse = (req: unknown) => {
-    const request = req as any;
-    return (
-      request.user?.warehouseId ||
-      request.headers['x-warehouse-id'] ||
-      '00000000-0000-0000-0000-000000000001'
-    );
+  const getCurrentWarehouse = (req: Request): string => {
+    const warehouseId =
+      req.user?.warehouseId ||
+      req.headers['x-warehouse-id'] ||
+      '00000000-0000-0000-0000-000000000001';
+    return ensureString(warehouseId);
+  };
+
+  // Utility function to ensure query params are strings
+  const ensureString = (value: string | string[] | undefined): string => {
+    if (Array.isArray(value)) return value[0] || '';
+    return value || '';
   };
 
   /**
@@ -485,23 +599,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       // TEST_AUTH_MODE bypass: allow direct login for E2E tests
       if (process.env.TEST_AUTH_MODE === 'true') {
-        // Accept any credentials, return a mock user and token
-        const mockUser = {
-          id: '00000000-0000-0000-0000-000000000001',
-          email: req.body.email,
-          firstName: 'Test',
-          lastName: 'User',
-          role: 'admin',
-          warehouseId: '00000000-0000-0000-0000-000000000001',
-          emailVerified: true,
-          mfaEnabled: false,
-        };
-        return res.json({
-          user: mockUser,
-          token: 'mock-token',
-          refreshToken: 'mock-refresh-token',
-          sessionId: 'mock-session-id',
-        });
+        // Define valid test credentials
+        const validTestEmails = [
+          'test@example.com',
+          'supervisor@maintainpro.com',
+          'technician@maintainpro.com',
+          'manager@maintainpro.com',
+        ];
+
+        // Check if credentials are valid for testing
+        if (validTestEmails.includes(req.body.email) && req.body.password === 'demo123') {
+          const mockUser = {
+            id: '00000000-0000-0000-0000-000000000001',
+            email: req.body.email,
+            firstName: 'Test',
+            lastName: 'User',
+            role: 'admin',
+            warehouseId: '00000000-0000-0000-0000-000000000001',
+            emailVerified: true,
+            mfaEnabled: false,
+          };
+          return res.json({
+            user: mockUser,
+            token: 'mock-token',
+            refreshToken: 'mock-refresh-token',
+            sessionId: 'mock-session-id',
+          });
+        } else {
+          // Return error for invalid test credentials
+          return res.status(401).json({
+            message: 'Invalid credentials',
+          });
+        }
       }
 
       const { AuthService } = await import('./services/auth');
@@ -570,7 +699,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { AuthService } = await import('./services/auth');
 
-  const sessionId = (req as any).user?.sessionId;
+      const sessionId = req.user?.sessionId;
       if (sessionId) {
         const context = {
           ipAddress: req.ip || req.connection.remoteAddress || 'Unknown',
@@ -646,7 +775,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         userAgent: req.headers['user-agent'] || 'Unknown',
       };
 
-      const result = await AuthService.enableMFA(userId, token, context);
+      const result = await AuthService.enableMFA(userId, ensureString(token), context);
       if (!result.success) {
         return res.status(400).json({ message: result.error || 'Invalid MFA token' });
       }
@@ -809,7 +938,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Get user from request (set by authenticateRequest middleware)
-  const user = (req as any).user;
+      const user = req.user;
       if (!user) {
         return res.status(401).json({ message: 'Not authenticated' });
       }
@@ -1123,7 +1252,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/api/work-orders/assigned/:userId', async (req, res) => {
     try {
-      const workOrders = await storage.getWorkOrdersByAssignee(req.params.userId);
+      const workOrders = await storage.getWorkOrdersByAssignee(ensureString(req.params.userId));
       res.json(workOrders);
     } catch (_error) {
       res.status(500).json({ message: 'Failed to get assigned work orders' });
@@ -1828,7 +1957,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/escalation/stats/:warehouseId', authenticateRequest, async (req, res) => {
     try {
       const { escalationEngine } = await import('./services/escalation-engine');
-      const stats = await escalationEngine.getEscalationStats(req.params.warehouseId);
+      const stats = await escalationEngine.getEscalationStats(ensureString(req.params.warehouseId));
       res.json(stats);
     } catch (_error) {
       res.status(500).json({ message: 'Failed to get escalation stats' });
@@ -1838,7 +1967,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/escalation/rules/:warehouseId', authenticateRequest, async (req, res) => {
     try {
       const { escalationEngine } = await import('./services/escalation-engine');
-      const rules = escalationEngine.getEscalationRules(req.params.warehouseId);
+      const rules = escalationEngine.getEscalationRules(ensureString(req.params.warehouseId));
       res.json(rules);
     } catch (_error) {
       res.status(500).json({ message: 'Failed to get escalation rules' });
@@ -1856,7 +1985,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         // Create new rule
         const newRuleId = await escalationEngine.createEscalationRule({
           ...updates,
-          warehouseId: req.params.warehouseId,
+          warehouseId: ensureString(req.params.warehouseId),
         });
         return res.json({ message: 'Escalation rule created successfully', ruleId: newRuleId });
       }
@@ -2010,17 +2139,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post('/api/vendors', authenticateRequest, async (req, res) => {
     try {
-      const vendorData = {
+      // First validate required fields - let schema validation catch missing name
+      const baseData = {
         ...req.body,
         id: req.body.id || crypto.randomUUID(),
-        name: req.body.name || 'Unnamed Vendor', // Ensure name is provided with fallback
         warehouseId: req.body.warehouseId || getCurrentWarehouse(req),
-        type: req.body.type || 'supplier',
-        active: req.body.active !== undefined ? req.body.active : true,
       };
 
-      const parsedData = insertVendorSchema.parse(vendorData);
-      const vendor = await storage.createVendor(parsedData as any);
+      // Parse with schema first - this will throw if name is missing or invalid
+      const parsedData = insertVendorSchema.parse(baseData);
+
+      // Add optional field defaults after validation passes
+      const vendorData = {
+        ...parsedData,
+        type: parsedData.type || 'supplier',
+        active: parsedData.active !== undefined ? parsedData.active : true,
+      };
+
+      const vendor = await storage.createVendor(vendorData as InsertVendor);
       res.status(201).json(vendor);
     } catch (_error) {
       if (_error instanceof z.ZodError) {
@@ -2162,7 +2298,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       for (const equip of equipment) {
         if (equip.status === 'active') {
-          const compliance = await (pmEngine as any).checkComplianceStatus(equip.id, warehouseId);
+          const compliance = await pmEngine.checkComplianceStatus(equip.id, warehouseId);
 
           equipmentCompliance.push({
             equipmentId: equip.id,
@@ -2223,8 +2359,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!pmScheduler) {
         return res.status(503).json({ error: 'PM Scheduler service is not available' });
       }
-      (pmScheduler as any).start();
-      res.json({ message: 'PM scheduler started', status: (pmScheduler as any).getStatus() });
+      pmScheduler.start();
+      res.json({ message: 'PM scheduler started', status: pmScheduler.getStatus() });
     } catch (_error) {
       console.error('Error starting PM scheduler:', _error);
       res.status(500).json({ _error: 'Failed to start PM scheduler' });
@@ -2236,8 +2372,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!pmScheduler) {
         return res.status(503).json({ error: 'PM Scheduler service is not available' });
       }
-      (pmScheduler as any).stop();
-      res.json({ message: 'PM scheduler stopped', status: (pmScheduler as any).getStatus() });
+      pmScheduler.stop();
+      res.json({ message: 'PM scheduler stopped', status: pmScheduler.getStatus() });
     } catch (_error) {
       console.error('Error stopping PM scheduler:', _error);
       res.status(500).json({ _error: 'Failed to stop PM scheduler' });
@@ -2249,7 +2385,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!pmScheduler) {
         return res.status(503).json({ error: 'PM Scheduler service is not available' });
       }
-      const status = (pmScheduler as any).getStatus();
+      const status = pmScheduler.getStatus();
       res.json(status);
     } catch (_error) {
       console.error('Error getting PM scheduler status:', _error);
@@ -2267,7 +2403,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: 'Warehouse ID is required' });
       }
 
-      await (pmScheduler as any).runForWarehouse(warehouseId);
+      await pmScheduler.runForWarehouse(warehouseId);
       res.json({ message: 'PM scheduler run completed' });
     } catch (_error) {
       console.error('Error running PM scheduler:', _error);
@@ -2394,7 +2530,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(503).json({ error: 'PM Engine service is not available' });
       }
       const warehouseId = getCurrentWarehouse(req);
-      const result = await (pmEngine as any).generatePMWorkOrders(warehouseId);
+      const result = await pmEngine.generatePMWorkOrders(warehouseId);
       res.json({
         success: true,
         generated: result.length,
@@ -2418,7 +2554,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const schedules = [];
       for (const template of templates) {
         try {
-          const schedule = await (pmEngine as any).getPMSchedule(equipmentId, template.id);
+          const schedule = await pmEngine.getPMSchedule(equipmentId, template.id);
           schedules.push(schedule);
         } catch (_error) {
           // Skip templates that don't apply to this equipment
@@ -2440,7 +2576,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       const warehouseId = getCurrentWarehouse(req);
       const equipmentId = req.params.equipmentId;
-      const compliance = await (pmEngine as any).checkComplianceStatus(equipmentId, warehouseId);
+      const compliance = await pmEngine.checkComplianceStatus(equipmentId, warehouseId);
       res.json(compliance);
     } catch (_error) {
       console.error('PM compliance _error:', _error);
@@ -2454,7 +2590,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(503).json({ error: 'PM Engine service is not available' });
       }
       const warehouseId = getCurrentWarehouse(req);
-      const result = await (pmEngine as any).runPMAutomation(warehouseId);
+      const result = await pmEngine.runPMAutomation(warehouseId);
       res.json(result);
     } catch (_error) {
       console.error('PM automation _error:', _error);
@@ -2577,7 +2713,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Get online users for warehouse
   app.get('/api/websocket/online/:warehouseId', (req, res) => {
     try {
-      const warehouseId = req.params.warehouseId;
+      const warehouseId = ensureString(req.params.warehouseId);
       const onlineUsers = notificationService.getOnlineUsersForWarehouse(warehouseId);
       res.json({ onlineUsers });
     } catch (_error) {

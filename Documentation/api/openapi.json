@@ -55,9 +55,7 @@
             "description": "HTTP status code"
           }
         },
-        "required": [
-          "error"
-        ]
+        "required": ["error"]
       },
       "WorkOrder": {
         "type": "object",
@@ -90,21 +88,12 @@
           },
           "priority": {
             "type": "string",
-            "enum": [
-              "low",
-              "medium",
-              "high",
-              "critical"
-            ],
+            "enum": ["low", "medium", "high", "critical"],
             "description": "Priority level"
           },
           "type": {
             "type": "string",
-            "enum": [
-              "corrective",
-              "preventive",
-              "emergency"
-            ],
+            "enum": ["corrective", "preventive", "emergency"],
             "description": "Type of work order"
           },
           "equipmentId": {
@@ -141,13 +130,7 @@
             "description": "Last update timestamp"
           }
         },
-        "required": [
-          "id",
-          "title",
-          "status",
-          "priority",
-          "type"
-        ]
+        "required": ["id", "title", "status", "priority", "type"]
       },
       "Equipment": {
         "type": "object",
@@ -183,12 +166,7 @@
           },
           "status": {
             "type": "string",
-            "enum": [
-              "active",
-              "inactive",
-              "maintenance",
-              "retired"
-            ],
+            "enum": ["active", "inactive", "maintenance", "retired"],
             "description": "Equipment status"
           },
           "installDate": {
@@ -207,12 +185,7 @@
             "description": "Creation timestamp"
           }
         },
-        "required": [
-          "id",
-          "name",
-          "assetTag",
-          "status"
-        ]
+        "required": ["id", "name", "assetTag", "status"]
       },
       "Part": {
         "type": "object",
@@ -260,12 +233,7 @@
             "description": "Creation timestamp"
           }
         },
-        "required": [
-          "id",
-          "partNumber",
-          "description",
-          "stockQuantity"
-        ]
+        "required": ["id", "partNumber", "description", "stockQuantity"]
       },
       "Profile": {
         "type": "object",
@@ -294,12 +262,7 @@
           },
           "role": {
             "type": "string",
-            "enum": [
-              "admin",
-              "manager",
-              "technician",
-              "user"
-            ],
+            "enum": ["admin", "manager", "technician", "user"],
             "description": "User role"
           },
           "active": {
@@ -317,13 +280,7 @@
             "description": "Account creation timestamp"
           }
         },
-        "required": [
-          "id",
-          "email",
-          "firstName",
-          "lastName",
-          "role"
-        ]
+        "required": ["id", "email", "firstName", "lastName", "role"]
       }
     },
     "responses": {
@@ -399,9 +356,7 @@
       "get": {
         "summary": "Enhanced health check",
         "description": "Returns comprehensive health status of the API including database, WebSocket connections, and system metrics",
-        "tags": [
-          "Health"
-        ],
+        "tags": ["Health"],
         "responses": {
           "200": {
             "description": "System is healthy",
@@ -412,11 +367,7 @@
                   "properties": {
                     "status": {
                       "type": "string",
-                      "enum": [
-                        "healthy",
-                        "degraded",
-                        "unhealthy"
-                      ]
+                      "enum": ["healthy", "degraded", "unhealthy"]
                     },
                     "timestamp": {
                       "type": "string",
@@ -452,9 +403,7 @@
       "get": {
         "summary": "Basic health check",
         "description": "Simple health check endpoint for load balancers (returns just \"OK\")",
-        "tags": [
-          "Health"
-        ],
+        "tags": ["Health"],
         "responses": {
           "200": {
             "description": "Service is up",
@@ -474,9 +423,7 @@
       "post": {
         "summary": "User authentication",
         "description": "Authenticate a user with email and password",
-        "tags": [
-          "Authentication"
-        ],
+        "tags": ["Authentication"],
         "requestBody": {
           "required": true,
           "content": {
@@ -494,10 +441,7 @@
                     "description": "User password"
                   }
                 },
-                "required": [
-                  "email",
-                  "password"
-                ]
+                "required": ["email", "password"]
               }
             }
           }
@@ -550,9 +494,7 @@
       "post": {
         "summary": "User logout",
         "description": "Logout the current user and invalidate their session",
-        "tags": [
-          "Authentication"
-        ],
+        "tags": ["Authentication"],
         "security": [
           {
             "bearerAuth": []
@@ -585,9 +527,7 @@
       "get": {
         "summary": "Get current user profile",
         "description": "Retrieve the profile information for the currently authenticated user",
-        "tags": [
-          "User Profile"
-        ],
+        "tags": ["User Profile"],
         "security": [
           {
             "bearerAuth": []
@@ -614,9 +554,7 @@
       "get": {
         "summary": "Get equipment list",
         "description": "Retrieve a list of all equipment in the organization",
-        "tags": [
-          "Equipment"
-        ],
+        "tags": ["Equipment"],
         "responses": {
           "200": {
             "description": "List of equipment",
@@ -641,9 +579,7 @@
       "get": {
         "summary": "Get work orders",
         "description": "Retrieve a list of work orders with optional filtering",
-        "tags": [
-          "Work Orders"
-        ],
+        "tags": ["Work Orders"],
         "security": [
           {
             "bearerAuth": []
@@ -703,9 +639,7 @@
       "post": {
         "summary": "Create work order",
         "description": "Create a new work order",
-        "tags": [
-          "Work Orders"
-        ],
+        "tags": ["Work Orders"],
         "security": [
           {
             "bearerAuth": []
@@ -729,21 +663,12 @@
                   },
                   "priority": {
                     "type": "string",
-                    "enum": [
-                      "low",
-                      "medium",
-                      "high",
-                      "critical"
-                    ],
+                    "enum": ["low", "medium", "high", "critical"],
                     "description": "Priority level"
                   },
                   "type": {
                     "type": "string",
-                    "enum": [
-                      "corrective",
-                      "preventive",
-                      "emergency"
-                    ],
+                    "enum": ["corrective", "preventive", "emergency"],
                     "description": "Work order type (defaults to 'corrective')"
                   },
                   "equipmentId": {
@@ -766,10 +691,7 @@
                     "description": "Due date for completion"
                   }
                 },
-                "required": [
-                  "title",
-                  "priority"
-                ]
+                "required": ["title", "priority"]
               }
             }
           }
@@ -798,9 +720,7 @@
       "get": {
         "summary": "Get work order by ID",
         "description": "Retrieve a specific work order by its ID",
-        "tags": [
-          "Work Orders"
-        ],
+        "tags": ["Work Orders"],
         "security": [
           {
             "bearerAuth": []
@@ -842,9 +762,7 @@
       "get": {
         "summary": "Get parts inventory",
         "description": "Retrieve a list of all parts in the inventory",
-        "tags": [
-          "Parts & Inventory"
-        ],
+        "tags": ["Parts & Inventory"],
         "responses": {
           "200": {
             "description": "List of parts",

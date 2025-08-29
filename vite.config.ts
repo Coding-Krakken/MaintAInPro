@@ -3,6 +3,15 @@ import react from '@vitejs/plugin-react';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import path from 'path';
 
+const apiTarget = process.env.API_TARGET || 'http://localhost:5000';
+
+// Detect GitHub.dev environment
+const isGitHubDev =
+  process.env.CODESPACE_NAME || process.env.GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN;
+const backendUrl = isGitHubDev
+  ? `https://${process.env.CODESPACE_NAME}-5000.app.github.dev`
+  : apiTarget;
+
 export default defineConfig({
   plugins: [react(), tsconfigPaths()],
   base: '/',
@@ -22,9 +31,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          // Vendor chunk for large third-party libraries
           vendor: ['react', 'react-dom', 'react-router-dom'],
-          // UI components chunk
           ui: [
             '@radix-ui/react-dialog',
             '@radix-ui/react-dropdown-menu',
@@ -34,18 +41,13 @@ export default defineConfig({
             '@radix-ui/react-tooltip',
             'lucide-react',
           ],
-          // Form handling chunk
           forms: ['react-hook-form', '@hookform/resolvers', 'zod'],
-          // Charts and data visualization
           charts: ['recharts', 'date-fns'],
-          // Utils and smaller libraries
           utils: ['clsx', 'tailwind-merge', 'class-variance-authority'],
         },
       },
     },
-    // Set chunk size warning limit to 800KB
     chunkSizeWarningLimit: 800,
-    // Enable source maps for production debugging
     sourcemap: process.env.NODE_ENV === 'production' ? false : true,
   },
   server: {
@@ -53,9 +55,49 @@ export default defineConfig({
       strict: true,
       deny: ['**/.*'],
     },
-    allowedHosts: ['healthcheck.railway.app'],
+    allowedHosts: [
+      'localhost',
+      '.github.dev',
+      'crispy-enigma-wr4qw9w7xvjqf9q7-4173.app.github.dev',
+    ],
+    cors: true,
+    host: true,
+    hmr: {
+      port: 4173,
+      host: isGitHubDev ? 'localhost' : undefined,
+      protocol: isGitHubDev ? 'ws' : undefined,
+    },
+    proxy: {
+      '/api': {
+        target: backendUrl,
+        changeOrigin: true,
+        secure: false,
+        ws: true, // Enable WebSocket proxying
+        configure: (proxy, _options) => {
+          // Handle GitHub.dev environment
+          if (isGitHubDev) {
+            proxy.on('error', (err, _req, _res) => {
+              console.log('Proxy error in GitHub.dev:', err.message);
+            });
+            proxy.on('proxyReq', (proxyReq, req, _res) => {
+              // Remove headers that might cause issues in GitHub.dev
+              proxyReq.removeHeader('origin');
+              proxyReq.removeHeader('referer');
+              console.log('Proxying request to:', backendUrl, 'for path:', req.url);
+            });
+          }
+        },
+      },
+    },
   },
   preview: {
-    allowedHosts: ['healthcheck.railway.app'],
+    allowedHosts: true,
+    proxy: {
+      '/api': {
+        target: backendUrl,
+        changeOrigin: true,
+        secure: false,
+      },
+    },
   },
 });

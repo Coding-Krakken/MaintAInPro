@@ -70,41 +70,69 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
   if (!isOpen) return null;
 
   return (
-    <div className='fixed inset-0 bg-black bg-opacity-50 z-50 lg:hidden'>
-      <div className='fixed inset-y-0 left-0 w-64 bg-white shadow-xl z-50 transform transition-transform duration-300'>
+    <div
+      className='fixed inset-0 bg-black bg-opacity-50 z-50 lg:hidden'
+      data-testid='mobile-menu-overlay'
+    >
+      <div
+        className='fixed inset-y-0 left-0 w-64 bg-white shadow-xl z-50 transform transition-transform duration-300'
+        data-testid='mobile-menu-sidebar'
+      >
         <div className='flex flex-col h-full'>
-          <div className='flex items-center justify-between p-4 border-b'>
+          <div
+            className='flex items-center justify-between p-4 border-b'
+            data-testid='mobile-menu-header'
+          >
             <div className='flex items-center space-x-3'>
-              <div className='w-8 h-8 bg-primary-500 rounded-lg flex items-center justify-center'>
+              <div
+                className='w-8 h-8 bg-primary-500 rounded-lg flex items-center justify-center'
+                data-testid='mobile-menu-logo'
+              >
                 <Wrench className='w-5 h-5 text-white' />
               </div>
-              <h1 className='text-xl font-bold text-gray-900'>MaintAInPro</h1>
+              <h1 className='text-xl font-bold text-gray-900' data-testid='mobile-menu-title'>
+                MaintAInPro
+              </h1>
             </div>
-            <Button variant='ghost' size='icon' onClick={onClose}>
+            <Button
+              variant='ghost'
+              size='icon'
+              onClick={onClose}
+              data-testid='mobile-menu-close-button'
+              aria-label='Close mobile menu'
+            >
               <X className='w-6 h-6' />
             </Button>
           </div>
 
           {/* User Profile Section */}
-          <div className='p-4 border-b border-gray-200'>
+          <div className='p-4 border-b border-gray-200' data-testid='mobile-menu-user-profile'>
             <div className='flex items-center space-x-3'>
-              <div className='w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center'>
+              <div
+                className='w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center'
+                data-testid='mobile-menu-user-avatar'
+              >
                 <span className='text-primary-700 font-semibold text-sm'>
                   {user?.firstName?.[0]}
                   {user?.lastName?.[0]}
                 </span>
               </div>
               <div>
-                <p className='text-sm font-medium text-gray-900'>
+                <p
+                  className='text-sm font-medium text-gray-900'
+                  data-testid='mobile-menu-user-name'
+                >
                   {user?.firstName} {user?.lastName}
                 </p>
-                <p className='text-xs text-gray-500 capitalize'>{user?.role?.replace('_', ' ')}</p>
+                <p className='text-xs text-gray-500 capitalize' data-testid='mobile-menu-user-role'>
+                  {user?.role?.replace('_', ' ')}
+                </p>
               </div>
             </div>
           </div>
 
           {/* Navigation Items */}
-          <nav className='flex-1 p-4 space-y-2'>
+          <nav className='flex-1 p-4 space-y-2' data-testid='mobile-menu-navigation'>
             {navigationItems.map(item => (
               <Link
                 key={item.name}
@@ -114,21 +142,29 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                   item.active ? 'bg-primary-50 text-primary-700' : 'text-gray-700 hover:bg-gray-100'
                 }`}
                 data-testid={`mobile-nav-${item.name.toLowerCase().replace(/\s+/g, '-')}`}
+                aria-current={item.active ? 'page' : undefined}
               >
-                <item.icon className='w-5 h-5' />
+                <item.icon className='w-5 h-5' aria-hidden='true' />
                 <span>{item.name}</span>
+                {item.active && (
+                  <div
+                    className='ml-auto w-2 h-2 bg-primary-500 rounded-full'
+                    data-testid='mobile-nav-active-indicator'
+                  />
+                )}
               </Link>
             ))}
           </nav>
 
           {/* Settings */}
-          <div className='p-4 border-t border-gray-200'>
+          <div className='p-4 border-t border-gray-200' data-testid='mobile-menu-footer'>
             <Link href='/settings'>
               <a
                 onClick={onClose}
                 className='flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100'
+                data-testid='mobile-nav-settings'
               >
-                <Settings className='w-5 h-5' />
+                <Settings className='w-5 h-5' aria-hidden='true' />
                 <span>Settings</span>
               </a>
             </Link>

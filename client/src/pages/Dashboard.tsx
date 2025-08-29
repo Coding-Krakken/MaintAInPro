@@ -38,11 +38,13 @@ export default function Dashboard() {
             data-testid='date-range-picker'
           >
             <Calendar className='w-4 h-4 mr-2' />
-            {dateRange === '7-days'
-              ? 'Last 7 Days'
-              : dateRange === '30-days'
-                ? 'Last 30 Days'
-                : 'Custom Range'}
+            <span data-testid='date-range-display'>
+              {dateRange === '7-days'
+                ? 'Last 7 Days'
+                : dateRange === '30-days'
+                  ? 'Last 30 Days'
+                  : 'Custom Range'}
+            </span>
           </Button>
 
           {showDatePicker && (

@@ -247,15 +247,16 @@ describe('Security Tests', () => {
 
       for (const endpoint of adminEndpoints) {
         // Technician should be denied
+        // prettier-ignore
         const techResponse = await request(app)[endpoint.method](endpoint.path)
           .set('Authorization', `Bearer ${tokens.technician}`);
 
         expect([403, 404]).toContain(techResponse.status);
 
         // Admin should be allowed
+        // prettier-ignore
         const adminResponse = await request(app)[endpoint.method](endpoint.path)
           .set('Authorization', `Bearer ${tokens.admin}`);
-
         expect(adminResponse.status).not.toBe(403);
       }
     });

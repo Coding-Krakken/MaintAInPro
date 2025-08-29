@@ -45,11 +45,16 @@ export default function QRScanner({ isOpen, onClose, onScan }: QRScannerProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className='max-w-md'>
+      <DialogContent className='max-w-md' data-testid='qr-scanner'>
         <DialogHeader>
           <div className='flex items-center justify-between'>
             <DialogTitle>Scan QR Code</DialogTitle>
-            <Button variant='ghost' size='icon' onClick={handleClose}>
+            <Button
+              variant='ghost'
+              size='icon'
+              onClick={handleClose}
+              data-testid='qr-scanner-close'
+            >
               <X className='w-4 h-4' />
             </Button>
           </div>
@@ -65,6 +70,7 @@ export default function QRScanner({ isOpen, onClose, onScan }: QRScannerProps) {
               variant={mode === 'camera' ? 'default' : 'outline'}
               onClick={startCameraScanning}
               className='flex-1 flex items-center space-x-2'
+              data-testid='qr-camera-mode-button'
             >
               <Camera className='w-4 h-4' />
               <span>Camera</span>
@@ -73,6 +79,7 @@ export default function QRScanner({ isOpen, onClose, onScan }: QRScannerProps) {
               variant={mode === 'manual' ? 'default' : 'outline'}
               onClick={() => setMode('manual')}
               className='flex-1 flex items-center space-x-2'
+              data-testid='qr-manual-mode-button'
             >
               <Keyboard className='w-4 h-4' />
               <span>Manual</span>

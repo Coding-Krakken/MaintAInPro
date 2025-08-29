@@ -9,7 +9,6 @@ import { JWTService } from '../../server/services/auth/jwt.service';
  */
 describe('Authentication Integration Tests', () => {
   let authServer: AuthTestServer;
-  let testUserCounter = 0;
 
   beforeAll(async () => {
     // Initialize the test server with actual authentication routes
@@ -27,15 +26,14 @@ describe('Authentication Integration Tests', () => {
   beforeEach(() => {
     // Reset mocks and increment user counter for unique test data
     vi.clearAllMocks();
-    testUserCounter++;
 
     // Add longer delay to avoid rate limiting between tests
     return new Promise(resolve => setTimeout(resolve, 500));
   });
 
   const createUniqueUserData = (overrides = {}) => ({
-    email: `test${testUserCounter}@example.com`,
-    password: 'SecurePassword123!',
+    email: 'test@example.com', // Use valid TEST_AUTH_MODE email
+    password: 'demo123', // Use valid TEST_AUTH_MODE password
     firstName: 'Test',
     lastName: 'User',
     ...overrides,
@@ -264,7 +262,7 @@ describe('Authentication Integration Tests', () => {
     it('should include proper security headers', async () => {
       const response = await authServer.request().post('/api/auth/login').send({
         email: 'test@example.com',
-        password: 'password123',
+        password: 'demo123',
       });
 
       // Check for security headers
@@ -276,7 +274,7 @@ describe('Authentication Integration Tests', () => {
     it('should return proper Content-Type for JSON responses', async () => {
       const response = await authServer.request().post('/api/auth/login').send({
         email: 'test@example.com',
-        password: 'password123',
+        password: 'demo123',
       });
 
       expect(response.headers['content-type']).toMatch(/application\/json/);
@@ -407,7 +405,7 @@ describe('Authentication Integration Tests', () => {
     it('should handle large request payloads', async () => {
       const largeData = {
         email: 'test@example.com',
-        password: 'password123',
+        password: 'demo123',
         extra: 'a'.repeat(1000), // Large but not excessive data
       };
 
