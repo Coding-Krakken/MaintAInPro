@@ -6,7 +6,8 @@ import path from 'path';
 const apiTarget = process.env.API_TARGET || 'http://localhost:5000';
 
 // Detect GitHub.dev environment
-const isGitHubDev = process.env.CODESPACE_NAME || process.env.GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN;
+const isGitHubDev =
+  process.env.CODESPACE_NAME || process.env.GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN;
 const backendUrl = isGitHubDev
   ? `https://${process.env.CODESPACE_NAME}-5000.app.github.dev`
   : apiTarget;
@@ -54,7 +55,11 @@ export default defineConfig({
       strict: true,
       deny: ['**/.*'],
     },
-    allowedHosts: ['localhost', '.github.dev', 'crispy-enigma-wr4qw9w7xvjqf9q7-4173.app.github.dev'],
+    allowedHosts: [
+      'localhost',
+      '.github.dev',
+      'crispy-enigma-wr4qw9w7xvjqf9q7-4173.app.github.dev',
+    ],
     cors: true,
     host: true,
     hmr: {

@@ -149,10 +149,11 @@ function AppRoutes() {
 
 function App() {
   // Check if we're in development environment
-  const isDevelopment = window.location.hostname.includes('localhost') ||
-                       window.location.hostname.includes('github.dev') ||
-                       window.location.hostname.includes('app.github.dev') ||
-                       process.env.NODE_ENV === 'development';
+  const isDevelopment =
+    window.location.hostname.includes('localhost') ||
+    window.location.hostname.includes('github.dev') ||
+    window.location.hostname.includes('app.github.dev') ||
+    process.env.NODE_ENV === 'development';
 
   return (
     <ErrorBoundary

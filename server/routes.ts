@@ -142,50 +142,53 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // CORS configuration for development and production
   const corsOptions = {
-    origin: function (origin: string | undefined, callback: (error: Error | null, allow?: boolean) => void) {
+    origin: function (
+      origin: string | undefined,
+      callback: (_error: Error | null, _allow?: boolean) => void
+    ) {
       // Allow requests with no origin (like mobile apps or curl requests)
       if (!origin) return callback(null, true);
-      
+
       // Allow localhost origins for development
       if (origin.includes('localhost') || origin.includes('127.0.0.1')) {
         return callback(null, true);
       }
-      
+
       // Allow vercel deployments
       if (origin.includes('.vercel.app') || origin.includes('maintainpro-cmms.vercel.app')) {
         return callback(null, true);
       }
-      
+
       // Allow specific production domains
       const allowedOrigins = [
         'https://maintainpro.com',
         'https://www.maintainpro.com',
-        'https://cmms.maintainpro.com'
+        'https://cmms.maintainpro.com',
       ];
-      
+
       if (allowedOrigins.includes(origin)) {
         return callback(null, true);
       }
-      
+
       // In development, allow all origins
       if (process.env.NODE_ENV === 'development' || process.env.TEST_AUTH_MODE === 'true') {
         return callback(null, true);
       }
-      
+
       callback(new Error('Not allowed by CORS'));
     },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: [
-      'Content-Type', 
-      'Authorization', 
-      'X-Requested-With', 
-      'Accept', 
+      'Content-Type',
+      'Authorization',
+      'X-Requested-With',
+      'Accept',
       'Origin',
       'Cache-Control',
-      'X-File-Name'
+      'X-File-Name',
     ],
     credentials: true,
-    optionsSuccessStatus: 200
+    optionsSuccessStatus: 200,
   };
 
   app.use(cors(corsOptions));

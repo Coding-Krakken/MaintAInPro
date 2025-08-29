@@ -70,10 +70,11 @@ export class PWAService {
    */
   private async registerServiceWorker(): Promise<void> {
     // Skip service worker registration in development environments
-    const isDevelopment = window.location.hostname.includes('localhost') ||
-                         window.location.hostname.includes('github.dev') ||
-                         window.location.hostname.includes('app.github.dev') ||
-                         process.env.NODE_ENV === 'development';
+    const isDevelopment =
+      window.location.hostname.includes('localhost') ||
+      window.location.hostname.includes('github.dev') ||
+      window.location.hostname.includes('app.github.dev') ||
+      process.env.NODE_ENV === 'development';
 
     if (isDevelopment) {
       console.log('Skipping service worker registration in development environment');

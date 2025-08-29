@@ -72,8 +72,10 @@ export class WebSocketService {
       process.env.NODE_ENV === 'production';
 
     // Also disable WebSocket in GitHub.dev environment due to port restrictions
-    const isGitHubDev = typeof window !== 'undefined' &&
-      (window.location.hostname.includes('github.dev') || window.location.hostname.includes('app.github.dev'));
+    const isGitHubDev =
+      typeof window !== 'undefined' &&
+      (window.location.hostname.includes('github.dev') ||
+        window.location.hostname.includes('app.github.dev'));
 
     if (isServerless) {
       console.log('WebSocket disabled in serverless environment');
@@ -101,7 +103,7 @@ export class WebSocketService {
 
       // Try multiple connection strategies for robustness
       const connectionStrategies = this.getConnectionStrategies();
-      
+
       this.tryConnectionStrategies(connectionStrategies);
     } catch (_error) {
       console.error('Failed to connect to WebSocket:', _error);
@@ -115,16 +117,22 @@ export class WebSocketService {
       strategies.push(`${window.location.protocol}//${window.location.host}`);
     } else {
       // Primary strategy for GitHub.dev
-      if (window.location.hostname.includes('github.dev') || window.location.hostname.includes('app.github.dev')) {
+      if (
+        window.location.hostname.includes('github.dev') ||
+        window.location.hostname.includes('app.github.dev')
+      ) {
         // Use the configured WebSocket URL
         strategies.push(getWebSocketUrl());
       }
-      
+
       // Fallback to localhost for development
       strategies.push('http://localhost:5000');
-      
+
       // Additional fallback for GitHub.dev with explicit port
-      if (window.location.hostname.includes('github.dev') || window.location.hostname.includes('app.github.dev')) {
+      if (
+        window.location.hostname.includes('github.dev') ||
+        window.location.hostname.includes('app.github.dev')
+      ) {
         strategies.push(`wss://${window.location.hostname.replace('-4173', '-5000')}`);
       }
     }
@@ -136,7 +144,7 @@ export class WebSocketService {
     for (const strategy of strategies) {
       try {
         console.log('Trying WebSocket connection strategy:', strategy);
-        
+
         this.socket = io(strategy, {
           transports: ['websocket', 'polling'],
           autoConnect: true,
@@ -148,10 +156,10 @@ export class WebSocketService {
 
         this.setupEventListeners();
         console.log('WebSocket connection initiated with strategy:', strategy);
-        
+
         // Wait a bit to see if connection succeeds
         await new Promise(resolve => setTimeout(resolve, 2000));
-        
+
         // If we get here without error, break out of the loop
         break;
       } catch (error) {

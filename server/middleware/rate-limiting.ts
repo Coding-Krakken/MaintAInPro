@@ -231,8 +231,8 @@ class SuspiciousActivityDetector {
       existing.count++;
       existing.lastSeen = now;
 
-      // Block IP if too many suspicious activities
-      if (existing.count > 10) {
+      // Block IP immediately on suspicious activity (changed from > 10 to >= 1)
+      if (existing.count >= 1) {
         this.blockedIPs.add(ip);
         console.warn(`IP ${ip} blocked for suspicious activity. Count: ${existing.count}`);
       }
@@ -242,6 +242,9 @@ class SuspiciousActivityDetector {
         firstSeen: now,
         lastSeen: now,
       });
+      // Block immediately on first suspicious activity
+      this.blockedIPs.add(ip);
+      console.warn(`IP ${ip} blocked for suspicious activity. Count: 1`);
     }
 
     // Clean up old entries (older than 1 hour)

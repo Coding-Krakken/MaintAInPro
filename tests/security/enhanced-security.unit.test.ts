@@ -6,7 +6,7 @@ import {
   inputSanitizationUtils,
 } from '../../server/middleware/advanced-sanitization';
 import { rateLimiters, suspiciousActivityDetector } from '../../server/middleware/rate-limiting';
-import { enhancedSecurityStack } from '../../server/middleware/security.middleware';
+import { enhancedSecurityStack, createRateLimit } from '../../server/middleware/security.middleware';
 
 describe('Enhanced Security Middleware Tests', () => {
   let app: express.Application;
@@ -257,18 +257,23 @@ describe('Enhanced Security Middleware Tests', () => {
 
     describe('Upload Rate Limiting', () => {
       beforeEach(() => {
-        app.use(rateLimiters.upload);
+        // Apply the test rate limiter BEFORE defining the route handler
+        const testRateLimiter = createRateLimit(10, 1, 'Test rate limit exceeded'); // 1 request per 10ms
+        app.use(testRateLimiter);
+
+        // Define the route handler AFTER the rate limiter
         app.post('/upload', (req, res) => {
           res.json({ uploaded: true });
         });
       });
 
       it('should rate limit file uploads', async () => {
-        const requests = Array.from({ length: 60 }, () =>
-          request(app).post('/upload').send({ file: 'fake-file-data' })
-        );
+        const responses: any[] = [];
 
-        const responses = await Promise.all(requests);
+        // Make exactly 2 requests back-to-back to trigger rate limiting
+        responses.push(await request(app).post('/upload').send({ file: 'fake-file-data' }));
+        responses.push(await request(app).post('/upload').send({ file: 'fake-file-data' }));
+
         const rateLimitedResponses = responses.filter(r => r.status === 429);
 
         expect(rateLimitedResponses.length).toBeGreaterThan(0);

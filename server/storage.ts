@@ -1451,7 +1451,7 @@ export class MemStorage implements IStorage {
     const id = this.generateId();
     const preference: NotificationPreference = {
       id,
-      ...(insertPreference as any),
+      ...(insertPreference as Omit<NotificationPreference, 'id' | 'createdAt' | 'updatedAt'>),
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -1502,7 +1502,7 @@ export class MemStorage implements IStorage {
     const id = this.generateId();
     const subscription: PushSubscription = {
       id,
-      ...(insertSubscription as any),
+      ...(insertSubscription as Omit<PushSubscription, 'id' | 'createdAt' | 'lastUsed'>),
       createdAt: new Date(),
       lastUsed: new Date(),
     };

@@ -13,9 +13,10 @@ export interface ApiConfig {
  */
 export function getApiConfig(): ApiConfig {
   // Check if we're in GitHub.dev environment
-  const isGitHubDev = typeof window !== 'undefined' &&
+  const isGitHubDev =
+    typeof window !== 'undefined' &&
     (window.location.hostname.includes('github.dev') ||
-     window.location.hostname.includes('app.github.dev'));
+      window.location.hostname.includes('app.github.dev'));
 
   if (isGitHubDev) {
     // Extract codespace name from hostname

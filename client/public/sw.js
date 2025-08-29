@@ -80,7 +80,11 @@ self.addEventListener('fetch', event => {
   // Handle API requests with network-first strategy
   if (url.pathname.startsWith('/api/')) {
     // In development environments, skip service worker handling for API requests
-    if (self.location.hostname.includes('github.dev') || self.location.hostname.includes('localhost') || self.location.hostname.includes('app.github.dev')) {
+    if (
+      self.location.hostname.includes('github.dev') ||
+      self.location.hostname.includes('localhost') ||
+      self.location.hostname.includes('app.github.dev')
+    ) {
       console.log('[SW] Skipping API request handling in development environment:', url.pathname);
       return;
     }
@@ -91,26 +95,33 @@ self.addEventListener('fetch', event => {
   // Handle manifest.json specially - don't cache, always fetch from network
   if (url.pathname === '/manifest.json') {
     // In development, skip network fetch and return cached manifest
-    if (self.location.hostname.includes('github.dev') || self.location.hostname.includes('localhost') || self.location.hostname.includes('app.github.dev')) {
+    if (
+      self.location.hostname.includes('github.dev') ||
+      self.location.hostname.includes('localhost') ||
+      self.location.hostname.includes('app.github.dev')
+    ) {
       console.log('[SW] Skipping manifest.json fetch in development environment');
       return;
     }
-    
+
     event.respondWith(
       fetch(request).catch(error => {
         console.log('[SW] Failed to fetch manifest.json:', error);
         // Return a basic manifest as fallback
-        return new Response(JSON.stringify({
-          name: "MaintainPro CMMS",
-          short_name: "MaintainPro",
-          description: "Enterprise Maintenance Management System",
-          start_url: "/",
-          display: "standalone",
-          theme_color: "#2563eb",
-          background_color: "#ffffff"
-        }), {
-          headers: { 'Content-Type': 'application/json' }
-        });
+        return new Response(
+          JSON.stringify({
+            name: 'MaintainPro CMMS',
+            short_name: 'MaintainPro',
+            description: 'Enterprise Maintenance Management System',
+            start_url: '/',
+            display: 'standalone',
+            theme_color: '#2563eb',
+            background_color: '#ffffff',
+          }),
+          {
+            headers: { 'Content-Type': 'application/json' },
+          }
+        );
       })
     );
     return;
